@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ThingTest < ActiveSupport::TestCase
+class DataTransformationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -69,6 +69,6 @@ class StarsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def star_params
-      params.require(:star).permit(:user_id, :asset_id)
+      params.require(:star).permit(:user_id, :thing_id)
     end
 end

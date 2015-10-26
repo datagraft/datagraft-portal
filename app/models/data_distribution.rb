@@ -1,0 +1,2 @@
+class DataDistribution < Thing
+end

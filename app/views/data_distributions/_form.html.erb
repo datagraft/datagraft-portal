@@ -1,0 +1,28 @@
+<%= form_for(@data_distribution) do |f| %>
+  <% if @data_distribution.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@data_distribution.errors.count, "error") %> prohibited this data_distribution from being saved:</h2>
+
+      <ul>
+      <% @data_distribution.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :public %><br>
+    <%= f.check_box :public %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :code %><br>
+    <%= f.text_area :code %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

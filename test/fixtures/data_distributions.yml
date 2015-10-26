@@ -5,7 +5,11 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
-  email: myemail@example.net
+  name: Roger.csv
+  public: false
+  type: DataDistribution
 
 two:
-  email: bonsoir@always.xyz
+  name: table.csv
+  public: false
+  type: DataDistribution

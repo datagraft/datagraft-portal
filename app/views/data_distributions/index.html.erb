@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Data Distributions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @data_distributions.each do |data_distribution| %>
+      <tr>
+        <td><%= link_to 'Show', data_distribution %></td>
+        <td><%= link_to 'Edit', edit_data_distribution_path(data_distribution) %></td>
+        <td><%= link_to 'Destroy', data_distribution, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Data distribution', new_data_distribution_path %>

@@ -18,7 +18,7 @@ class StarsControllerTest < ActionController::TestCase
 
   test "should create star" do
     assert_difference('Star.count') do
-      post :create, star: { asset_id: @star.asset_id, user_id: @star.user_id }
+      post :create, star: { thing_id: @star.thing_id, user_id: @star.user_id }
     end
 
     assert_redirected_to star_path(assigns(:star))
@@ -35,7 +35,7 @@ class StarsControllerTest < ActionController::TestCase
   end
 
   test "should update star" do
-    patch :update, id: @star, star: { asset_id: @star.asset_id, user_id: @star.user_id }
+    patch :update, id: @star, star: { thing_id: @star.thing_id, user_id: @star.user_id }
     assert_redirected_to star_path(assigns(:star))
   end
 

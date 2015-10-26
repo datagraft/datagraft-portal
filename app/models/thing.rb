@@ -5,7 +5,7 @@ end
 
 class DataDistribution < Thing; end
 class DataTransformation < Thing; end
-# class UtilityFunction < Thing;
 class DataPage < Thing; end
 class Query < Thing; end
 class Widget < Thing; end
+# class UtilityFunction < Thing;

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :things
+  resources :data_distributions
   resources :stars
   devise_for :users
   
