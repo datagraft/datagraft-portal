@@ -49,3 +49,6 @@ end
 gem 'unicorn'
 gem 'unicorn-rails'
 gem 'rack-handlers'
+
+# Devise is the user-management dependency
+gem 'devise'
