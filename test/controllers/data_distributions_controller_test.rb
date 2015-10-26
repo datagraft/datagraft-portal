@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DataDistributionsControllerTest < ActionController::TestCase
   setup do
-    @data_distribution = data_distributions(:one)
+    @data_distribution = things(:one)
   end
 
   test "should get index" do

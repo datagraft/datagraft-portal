@@ -13,3 +13,13 @@ two:
   name: table.csv
   public: false
   type: DataDistribution
+
+roger:
+  name: bob
+  public: false
+  type: Transformation
+
+water:
+  name: bob2
+  public: false
+  type: Transformation

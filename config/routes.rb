@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :data_distributions
+
+  resources :transformations
   resources :stars
   devise_for :users
   

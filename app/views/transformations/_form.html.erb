@@ -1,0 +1,21 @@
+<%= form_for(@transformation) do |f| %>
+  <% if @transformation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@transformation.errors.count, "error") %> prohibited this transformation from being saved:</h2>
+
+      <ul>
+      <% @transformation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

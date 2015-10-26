@@ -1,2 +1,0 @@
-class DataTransformation < Thing
-end
