@@ -45,7 +45,7 @@ group :development do
   gem 'spring'
 end
 
-# Use unicorn
+# Use unicornkaosj
 gem 'unicorn'
 gem 'unicorn-rails'
 gem 'rack-handlers'
@@ -55,3 +55,7 @@ gem 'devise'
 
 # Authorization module
 gem 'cancancan', '~> 1.10'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-material-design-lite'
+end
