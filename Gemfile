@@ -52,3 +52,6 @@ gem 'rack-handlers'
 
 # Devise is the user-management dependency
 gem 'devise'
+
+# Authorization module
+gem 'cancancan', '~> 1.10'

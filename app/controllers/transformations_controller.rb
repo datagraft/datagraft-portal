@@ -1,4 +1,6 @@
 class TransformationsController < ApplicationController
+  load_and_authorize_resource
+
   before_action :set_transformation, only: [:show, :edit, :update, :destroy]
 
   # GET /transformations
@@ -25,6 +27,7 @@ class TransformationsController < ApplicationController
   # POST /transformations.json
   def create
     @transformation = Transformation.new(transformation_params)
+    @transformation.user = current_user
 
     respond_to do |format|
       if @transformation.save
