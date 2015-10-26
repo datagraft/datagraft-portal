@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @star.user_id %>
+</p>
+
+<p>
+  <strong>Asset:</strong>
+  <%= @star.asset_id %>
+</p>
+
+<%= link_to 'Edit', edit_star_path(@star) %> |
+<%= link_to 'Back', stars_path %>

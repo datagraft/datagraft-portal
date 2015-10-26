@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  public: false
+  stars_count: 1
+  name: MyString
+  code: MyText
+  type: 
+
+two:
+  user_id: 1
+  public: false
+  stars_count: 1
+  name: MyString
+  code: MyText
+  type: 

@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @thing.user_id %>
+</p>
+
+<p>
+  <strong>Public:</strong>
+  <%= @thing.public %>
+</p>
+
+<p>
+  <strong>Stars count:</strong>
+  <%= @thing.stars_count %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @thing.name %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @thing.code %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @thing.type %>
+</p>
+
+<%= link_to 'Edit', edit_thing_path(@thing) %> |
+<%= link_to 'Back', things_path %>
