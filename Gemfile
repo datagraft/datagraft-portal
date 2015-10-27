@@ -56,8 +56,12 @@ gem 'devise'
 # Authorization module
 gem 'cancancan', '~> 1.10'
 
-source 'https://rails-assets.org' do
-  gem 'rails-assets-material-design-lite'
-end# ActiveRecord versioning module
 # ActiveRecord versioning module
 gem 'paper_trail', '~> 4.0.0'
+
+# Generates good looking URI safe IDs
+gem 'friendly_id', '~> 5.1.0'
+
+#source 'https://rails-assets.org' do
+#  gem 'rails-assets-material-design-lite'
+#end

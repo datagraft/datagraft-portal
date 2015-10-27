@@ -12,6 +12,6 @@
  *
  *= require_tree .
  *= require_self
- *= require material-design-lite
+ aa = require material-design-lite
  */
 

@@ -1,7 +1,8 @@
 class TransformationsController < ApplicationController
-  load_and_authorize_resource
 
-  before_action :set_transformation, only: [:show, :edit, :update, :destroy]
+  #before_action :set_transformation, only: [:show, :edit, :update, :destroy]
+  before_filter :set_transformation, only: [:show, :edit, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /transformations
   # GET /transformations.json
@@ -12,6 +13,10 @@ class TransformationsController < ApplicationController
   # GET /transformations/1
   # GET /transformations/1.json
   def show
+    puts @transformation.versions
+    #if request.path != transformation_path(@transformation)
+    #  return redirect_to @transformation, :status => :moved_permanently
+    #end
   end
 
   # GET /transformations/new
@@ -67,7 +72,12 @@ class TransformationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_transformation
-      @transformation = Transformation.find(params[:id])
+      if params[:user_id]
+        @transformation = User.find(params[:user_id]).transformations.friendly.find(params[:id])
+      else
+        @transformation = Transformation.friendly.find(params[:id])
+      end
+
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

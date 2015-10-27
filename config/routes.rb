@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :transformations
   resources :stars
   devise_for :users
+
+  get 'transformations/:user_id/:id' => 'transformations#show'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
