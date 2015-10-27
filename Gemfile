@@ -58,4 +58,6 @@ gem 'cancancan', '~> 1.10'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-material-design-lite'
-end
+end# ActiveRecord versioning module
+# ActiveRecord versioning module
+gem 'paper_trail', '~> 4.0.0'

@@ -3,6 +3,9 @@ class Thing < ActiveRecord::Base
   belongs_to :user
 
   validates :name, presence: true
+
+  has_paper_trail
+
 end
 
 class DataPage < Thing; end
