@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>ID</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -12,6 +13,7 @@
   <tbody>
     <% @transformations.each do |transformation| %>
       <tr>
+        <td><%= transformation.slug %></td>
         <td><%= link_to 'Show', transformation %></td>
         <td><%= link_to 'Edit', edit_transformation_path(transformation) %></td>
         <td><%= link_to 'Destroy', transformation, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -1,0 +1,10 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "folder_exclude_patterns": ["tmp"]
+    }
+  ],
+  "index_files": false,
+  "sublime_auto_complete": false
+}

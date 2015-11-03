@@ -9,4 +9,9 @@ class ApplicationController < ActionController::Base
       format.html { render :text => exception.message }
     end
   end
+
+  def users_return_to
+    return "je suis un poney"
+    # current_user.name
+  end
 end

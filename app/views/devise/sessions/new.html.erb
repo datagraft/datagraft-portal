@@ -1,0 +1,35 @@
+<h2>Log in</h2>
+
+<div class="sin-condensed-form">
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--5-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <%= f.label :email, class: "mdl-textfield__label" %>
+      <%= f.email_field :email, autofocus: true, class: "mdl-textfield__input" %>
+    </div>
+  </div>
+
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--5-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <%= f.label :password, class: "mdl-textfield__label" %>
+      <%= f.password_field :password, autocomplete: "off", class: "mdl-textfield__input" %>
+    </div>
+  </div>
+
+  <% if devise_mapping.rememberable? -%>
+     <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect sin-margin-checkbox" for="remember_me">
+        <%= f.check_box :remember_me, class: "mdl-checkbox__input", id:"remember_me" %>
+        <span class="mdl-checkbox__label">Remember me</span>
+      </label>
+  <% end -%>
+
+  <div class="mdl-grid">
+    <div class="actions mdl-cell mdl-cell--4-col">
+      <%= f.submit "Log in", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"%>
+    </div>
+  </div>
+<% end %>
+</div>
+<br>
+<%= render "devise/shared/links" %>

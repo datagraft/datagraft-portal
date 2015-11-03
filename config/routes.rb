@@ -3,9 +3,17 @@ Rails.application.routes.draw do
 
   resources :transformations
   resources :stars
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
 
-  get 'transformations/:user_id/:id' => 'transformations#show'
+  get 'transformations/:username/:id' => 'transformations#show'
+  delete 'transformations/:username/:id' => 'transformations#destroy'
+  get 'transformations/:username/:id/edit' => 'transformations#edit'
+
+  get 'explore' => 'public_portal#explore'
+  get ':username' => 'public_portal#user'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

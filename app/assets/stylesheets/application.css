@@ -12,6 +12,55 @@
  *
  *= require_tree .
  *= require_self
+ *= require material
+ *= require material_icons
  aa = require material-design-lite
  */
 
+html, body.mdl-base {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+section.section--center {
+  margin:1.5em auto;
+  max-width: 860px;
+}
+
+.sin-padding {
+  /*padding: 0.1em 1em 1em 1em;*/
+  /*padding: 0.1em 2em 2em 2.1em;*/
+  padding: 2em;
+}
+
+.alert {
+    background: dimgrey;
+    color: white;
+    padding: 1.2em 1em 1.2em 2em;
+}
+
+.sin-condensed-form {
+  margin: 8px;
+}
+.sin-condensed-form .mdl-grid {
+  margin: 0;
+  padding: 0;
+}
+.sin-condensed-form .mdl-cell {
+  margin: 0;
+  /*padding: 0;*/
+}
+.sin-margin-checkbox.mdl-checkbox {
+  margin-bottom: 21px;
+  margin-top: 10px;
+}
+
+.sin-pagination {
+  margin:0.5em 1em 1em 2em;
+}
+
+.sin-small-card.mdl-card {
+  min-height:150px;
+  height:150px;
+  overflow: hidden;
+  display:flex;
+}

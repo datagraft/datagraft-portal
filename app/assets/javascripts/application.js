@@ -15,3 +15,5 @@
 //= require turbolinks
 //= require_tree .
 //aaa/=require material-design-lite
+
+//= require material

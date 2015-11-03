@@ -62,6 +62,28 @@ gem 'paper_trail', '~> 4.0.0'
 # Generates good looking URI safe IDs
 gem 'friendly_id', '~> 5.1.0'
 
+# Gravatar is evil
+gem 'gravatarify', '~> 3.0.0'
+
+# Iori said Slim is better than ERB
+gem 'slim'
+
+# We should have beautiful URIs
+gem 'validate_url'
+
+# This is beautiful and neat
+gem 'material_design_lite-rails'
+gem 'material_icons'
+
+# We sell our data to satan
+gem 'omniauth-facebook'
+
+# And GitHub as well
+gem 'omniauth-github'
+
+# Pagination
+gem 'will_paginate', '~> 3.0.6'
+
 #source 'https://rails-assets.org' do
 #  gem 'rails-assets-material-design-lite'
 #end

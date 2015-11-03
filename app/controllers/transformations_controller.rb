@@ -72,8 +72,8 @@ class TransformationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_transformation
-      if params[:user_id]
-        @transformation = User.find(params[:user_id]).transformations.friendly.find(params[:id])
+      if params[:username]
+        @transformation = User.find_by_username(params[:username]).transformations.friendly.find(params[:id])
       else
         @transformation = Transformation.friendly.find(params[:id])
       end

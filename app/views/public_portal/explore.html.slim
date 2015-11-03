@@ -1,0 +1,12 @@
+- unless @things.empty?
+  div.mdl-grid
+    - @things.each do |thing|
+      a.mdl-card.mdl-cell.mdl-cell--4-col.mdl-shadow--2dp.sin-small-card href=thing_path(thing)
+        div.mdl-card__title
+          h2.mdl-card__title-text = thing.name
+        div.mdl-card__supporting-text = thing.name
+- else 
+  p No public content found.
+
+div.sin-pagination
+  == will_paginate @things
