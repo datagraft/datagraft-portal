@@ -84,6 +84,12 @@ gem 'omniauth-github'
 # Pagination
 gem 'will_paginate', '~> 3.0.6'
 
+# Fulltext search
+gem 'textacular', '~> 3.0'
+
+# textacular requires postgresql
+gem 'pg'
+
 #source 'https://rails-assets.org' do
 #  gem 'rails-assets-material-design-lite'
 #end

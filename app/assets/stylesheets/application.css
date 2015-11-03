@@ -64,3 +64,11 @@ section.section--center {
   overflow: hidden;
   display:flex;
 }
+
+a.sin-small-card {
+  text-decoration: none;
+}  
+a.sin-small-card:hover {
+  background-color: blue;
+  color: black;
+}
