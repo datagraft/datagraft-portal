@@ -14,4 +14,9 @@ class ApplicationController < ActionController::Base
     return "je suis un poney"
     # current_user.name
   end
+
+  def after_sign_in_path_for(resource)
+    # TODO
+    return "/explore"
+  end
 end

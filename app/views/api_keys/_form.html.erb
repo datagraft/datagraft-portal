@@ -1,0 +1,38 @@
+<div class="sin-condensed-form">
+<%= form_for(@api_key) do |f| %>
+  <% if @api_key.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@api_key.errors.count, "error") %> prohibited this api_key from being saved:</h2>
+
+      <ul>
+      <% @api_key.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--5-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <%= f.label :name, class: "mdl-textfield__label" %>
+      <%= f.text_field :name, class: "mdl-textfield__input" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="checkbox-enabled">
+      <%= f.check_box :enabled, id: "checkbox-enabled", class: "mdl-switch__input" %>
+      <span class="mdl-switch__label">Enabled</span>
+    </label>
+  </div>
+
+  <br>
+
+  <div class="mdl-grid">
+    <div class="actions mdl-cell mdl-cell--4-col">
+      <%= f.submit class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"%>
+    </div>
+  </div>
+<% end %>
+</div>
+<br>

@@ -20,7 +20,7 @@ class PublicPortalController < ApplicationController
 
     ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
 
-    @things = query.includes(:user).paginate(:page => params[:page], :per_page=>30)
+    @things = query.order(created_at: :desc).includes(:user).paginate(:page => params[:page], :per_page=>30)
 
     render layout: "explore"
   end

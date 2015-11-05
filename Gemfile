@@ -90,6 +90,9 @@ gem 'textacular', '~> 3.0'
 # textacular requires postgresql
 gem 'pg'
 
-#source 'https://rails-assets.org' do
-#  gem 'rails-assets-material-design-lite'
-#end
+# file upload with streaming io
+gem "refile", require: "refile/rails"
+gem "refile-mini_magick"
+
+# Generate funny names by default
+gem 'bazaar'

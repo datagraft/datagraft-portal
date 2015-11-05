@@ -25,6 +25,7 @@ class DataDistributionsController < ApplicationController
   # POST /data_distributions.json
   def create
     @data_distribution = DataDistribution.new(data_distribution_params)
+    @data_distribution.user = current_user
 
     respond_to do |format|
       if @data_distribution.save
@@ -69,6 +70,6 @@ class DataDistributionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_distribution_params
-      params.require(:data_distribution).permit(:public, :name, :code)
+      params.require(:data_distribution).permit(:public, :name, :code, :file)
     end
 end

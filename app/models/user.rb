@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
   has_many :stars
   has_many :transformations
+  has_many :data_distributions
+  has_many :data_pages
+  has_many :api_keys
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -9,7 +12,7 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook, :github]
 
   # Username constraints
-  validates :username, uniqueness: true
+  validates :username, uniqueness: true, case_sensitive: false
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
     in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions),
@@ -18,7 +21,7 @@ class User < ActiveRecord::Base
 
   validates :username, format: {
     with: /[a-zA-Z0-9_-]+/,
-    message: "only allows letters, numbers, underscore, and dash" }
+    message: "only allows letters, numbers, underscores, and dashes" }
 
   # Caca de taureau
   validates :terms_of_service, acceptance: true 

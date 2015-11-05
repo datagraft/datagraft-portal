@@ -1,0 +1,1 @@
+json.extract! @api_key, :key, :name, :enabled

@@ -18,10 +18,12 @@
   </div>
 
   <% if devise_mapping.rememberable? -%>
-     <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect sin-margin-checkbox" for="remember_me">
+    <div class="field">
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect sin-margin-checkbox" for="remember_me">
         <%= f.check_box :remember_me, class: "mdl-checkbox__input", id:"remember_me" %>
         <span class="mdl-checkbox__label">Remember me</span>
       </label>
+    </div>
   <% end -%>
 
   <div class="mdl-grid">

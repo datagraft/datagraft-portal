@@ -32,6 +32,10 @@ section.section--center {
   padding: 2em;
 }
 
+.sin-padding > h1 {
+  margin-top:0; 
+}
+
 .alert {
     background: dimgrey;
     color: white;
@@ -59,8 +63,8 @@ section.section--center {
 }
 
 .sin-small-card.mdl-card {
-  min-height:150px;
-  height:150px;
+  min-height:160px;
+  /*height:150px;*/
   overflow: hidden;
   display:flex;
 }
@@ -69,6 +73,103 @@ a.sin-small-card {
   text-decoration: none;
 }  
 a.sin-small-card:hover {
-  background-color: blue;
+  background-color: #ddd;
   color: black;
+}
+.sin-card-center.mdl-card__supporting-text {
+  flex-grow: 1;
+  padding-top: 0 !important;
+  font-size: 1.2em !important;
+}
+
+/* Ugly colors */
+/*.mdl-card.sin-card-transformation {
+  background: #F8F6FF;
+}
+
+.mdl-card.sin-card-datadistribution {
+  background: #E7F7FF;
+}
+
+.mdl-card.sin-card-datapage {
+  background: #F9FFE5;
+}*/
+
+body .mdl-color--primary {
+    background-color: rgb(66,66,66) !important;
+}
+
+body .mdl-color--accent {
+    background-color: red !important;
+}
+
+body .mdl-layout__header-row {
+  padding-left:30px;
+}
+
+.sin-flex-center {
+  display:flex;
+  align-items: center;
+}
+
+.sin-padding-left {
+  padding-left: 2em;
+}
+
+.field_with_errors {
+  display: block;
+  padding:0;
+  background: rgb(255,230,230);
+  background: rgb(230,230,230);
+}
+
+.mdl-checkbox .field_with_errors {
+  position: absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  top:0;
+}
+
+.mdl-card__supporting-text.mdl-grid {
+  width:100%;
+}
+
+.sin-stars-count {
+  text-align: right;
+}
+.sin-stars-count i.material-icons {
+  font-size:16px;
+  line-height: 13px;
+  position:relative;
+  top:2px;
+}
+
+.sin-table-fill {
+  width:100%;
+}
+
+.mdl-data-table .sin-action-table {
+  padding-left:1em;
+  padding-right:0;
+}
+.sin-action-table a {
+  color:inherit;
+}
+.sin-action-table a:hover {
+  background: inherit;
+  color: #333;
+}
+
+.sin-horizontal-scroll {
+  overflow-y: auto;
+  padding-bottom:2em;
+}
+
+a.mdl-button:hover {
+  color:inherit;
+}
+
+.sin-monospace-key {
+  font-family:monospace;
 }

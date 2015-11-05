@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    can :read, :all, :public => true
+    can :read, :thing, :public => true
     if user
         can :manage, :all, :user_id => user.id
     end
