@@ -56,7 +56,6 @@ class User < ActiveRecord::Base
 
   def self.new_with_session(params, session)
     super.tap do |user|
-      p user.uid
       p session["devise.facebook_data"]
       p session["devise.github_data"]
       if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
