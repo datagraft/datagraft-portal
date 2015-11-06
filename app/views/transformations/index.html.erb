@@ -14,9 +14,9 @@
     <% @transformations.each do |transformation| %>
       <tr>
         <td><%= transformation.slug %></td>
-        <td><%= link_to 'Show', transformation %></td>
-        <td><%= link_to 'Edit', edit_transformation_path(transformation) %></td>
-        <td><%= link_to 'Destroy', transformation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', thing_path(transformation) %></td>
+        <td><%= link_to 'Edit', thing_edit_path(transformation) %></td>
+        <td><%= link_to 'Destroy', thing_path(transformation), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

@@ -1,10 +1,19 @@
 - unless @things.empty?
   div.mdl-grid
     - @things.each do |thing|
-      a.mdl-card.mdl-cell.mdl-cell--4-col.mdl-shadow--2dp.sin-small-card href=thing_path(thing)
+      a class=["mdl-card", "mdl-cell", "mdl-cell--4-col", "mdl-shadow--2dp",
+            "sin-small-card", "sin-card-#{thing.class.name.downcase}"] href=thing_path(thing)
         div.mdl-card__title
-          h2.mdl-card__title-text = thing.name
-        div.mdl-card__supporting-text = thing.name
+          h3.mdl-card__title-text = thing.class.name
+        div.mdl-card__supporting-text.sin-card-center = thing.name
+        div.mdl-card__supporting-text.mdl-grid
+          div.mdl-cell.mdl-cell--6-col By #{thing.user.name}
+          div.mdl-cell--3-col
+          div.mdl-cell.sin-stars-count.mdl-cell--3-col
+            span
+              = thing.stars_count
+              ' 
+              i.material-icons star
 - else 
   p No public content found.
 

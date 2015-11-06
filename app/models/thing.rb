@@ -14,7 +14,6 @@ class Thing < ActiveRecord::Base
 
 end
 
-class DataPage < Thing; end
 class Query < Thing; end
 class Widget < Thing; end
 # class UtilityFunction < Thing;

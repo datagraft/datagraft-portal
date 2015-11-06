@@ -17,3 +17,8 @@
 //aaa/=require material-design-lite
 
 //= require material
+
+
+document.addEventListener('page:change', function() {
+  componentHandler.upgradeDom();
+});

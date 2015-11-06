@@ -1,4 +1,4 @@
-<%= form_for(@transformation) do |f| %>
+<%= form_for(@transformation, url: thing_path(@transformation)) do |f| %>
   <% if @transformation.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@transformation.errors.count, "error") %> prohibited this transformation from being saved:</h2>

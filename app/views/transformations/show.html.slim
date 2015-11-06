@@ -1,0 +1,13 @@
+- title @transformation.name
+p.notice = notice
+
+h3 = @transformation.name
+h4 = @transformation.stars_count
+
+p.author Created by #{@transformation.user.name}
+
+== image_tag attachment_url(@transformation, :file, :fill, 300, 300, format: "jpg")
+
+== link_to 'Edit', thing_edit_path(@transformation)
+span  | 
+== link_to 'Back', transformations_path

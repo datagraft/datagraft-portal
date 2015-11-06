@@ -1,4 +1,6 @@
 class StarsController < ApplicationController
+  #before_filter :authenticate_user!
+
   before_action :set_star, only: [:show, :edit, :update, :destroy]
 
   # GET /stars

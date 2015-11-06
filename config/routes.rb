@@ -1,20 +1,31 @@
 Rails.application.routes.draw do
+  resources :api_keys
   resources :data_distributions
 
-  resources :transformations
   resources :stars
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  get 'transformations/:username/:id' => 'transformations#show'
-  delete 'transformations/:username/:id' => 'transformations#destroy'
-  get 'transformations/:username/:id/edit' => 'transformations#edit'
+  #get ':kind/:username/:id' => 'transformations#show'
+  #delete ':kind/:username/:id' => 'transformations#destroy'
+  #get ':kind/:username/:id/edit' => 'transformations#edit'
+
+  get 'data_distributions/new' => 'data_distributions#new'
+  get ':kind/new' => 'transformations#new'
+  post ':kind' => 'transformations#create'
+  get ':username/:kind' => 'transformations#index'
+  get ':username/:kind/:id' => 'transformations#show'
+  delete ':username/:kind/:id' => 'transformations#destroy'
+  put ':username/:kind/:id' => 'transformations#update'
+  patch ':username/:kind/:id' => 'transformations#update'
+  get ':username/:kind/:id/edit' => 'transformations#edit'
 
   get 'explore' => 'public_portal#explore'
   get ':username' => 'public_portal#user'
   
+  resources :transformations
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
