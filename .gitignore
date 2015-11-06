@@ -52,3 +52,4 @@ bower.json
 # sftp configuration file
 sftp-config.json
 
+db/database.yml
