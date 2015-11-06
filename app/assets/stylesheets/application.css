@@ -146,7 +146,9 @@ body .mdl-layout__header-row {
 }
 
 .sin-table-fill {
-  width:100%;
+  /*width:90%;*/
+  /*margin:auto;*/
+  margin-left:2em;
 }
 
 .mdl-data-table .sin-action-table {
@@ -164,6 +166,8 @@ body .mdl-layout__header-row {
 .sin-horizontal-scroll {
   overflow-y: auto;
   padding-bottom:2em;
+  margin-left: -1.6em;
+  margin-right: -2em;
 }
 
 a.mdl-button:hover {

@@ -41,7 +41,11 @@
   <% flash.each do |key, value| %>
     <div class="alert alert-<%= key %>"><%= value %></div>
   <% end %>
+<% if hasOption :noShadow %>
+<section class="section--center sin-padding">
+<% else %>
 <section class="section--center mdl-shadow--2dp mdl-color--white sin-padding">
+<% end %>
     <%= yield %>
   </section>  
   </main>

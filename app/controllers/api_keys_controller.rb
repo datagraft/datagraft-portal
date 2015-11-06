@@ -34,7 +34,6 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     @api_key.name = Bazaar.object if @api_key.name.blank?
     @api_key.user = current_user
-    @api_key.enabled = true
     @api_key.key = Devise.friendly_token(32)
 
     respond_to do |format|
