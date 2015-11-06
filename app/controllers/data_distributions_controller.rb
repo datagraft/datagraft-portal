@@ -1,5 +1,13 @@
 class DataDistributionsController < ApplicationController
   before_action :set_data_distribution, only: [:show, :edit, :update, :destroy]
+  # skip_before_action :verify_authenticity_token
+  # protect_from_forgery :except => [:create]
+
+  # GET /publish
+  def publish
+    authorize! :create, DataDistribution
+    @data_distribution = DataDistribution.new
+  end
 
   # GET /data_distributions
   # GET /data_distributions.json
@@ -14,6 +22,7 @@ class DataDistributionsController < ApplicationController
 
   # GET /data_distributions/new
   def new
+    authorize! :create, DataDistribution
     @data_distribution = DataDistribution.new
   end
 
@@ -26,6 +35,8 @@ class DataDistributionsController < ApplicationController
   def create
     @data_distribution = DataDistribution.new(data_distribution_params)
     @data_distribution.user = current_user
+
+    @data_distribution.name = data_distribution_params[:file].original_filename if @data_distribution.name.blank?
 
     respond_to do |format|
       if @data_distribution.save
@@ -65,7 +76,13 @@ class DataDistributionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_data_distribution
-      @data_distribution = DataDistribution.find(params[:id])
+      if params[:username]
+        user = User.find_by_username(params[:username]) or not_found
+        @data_distribution = user.distributions.friendly.find(params[:id])
+      else
+        #@data_distribution = DataDistribution.find(params[:id])
+        @data_distribution = DataDistribution.friendly.find(params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

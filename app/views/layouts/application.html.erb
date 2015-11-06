@@ -38,12 +38,14 @@
         </ul>
       </div>
     </header>
-  <main class="mdl-layout__content">
+  <main class="mdl-layout__content <%= "#{(hasOption :flexPage) ? 'sin-layout-flex' : ''}" %>">
   <% flash.each do |key, value| %>
     <div class="alert alert-<%= key %>"><%= value %></div>
   <% end %>
 <% if hasOption :noShadow %>
 <section class="section--center sin-padding">
+<% elsif hasOption :flexPage %>
+<section class="sin-section-flex">
 <% else %>
 <section class="section--center mdl-shadow--2dp mdl-color--white sin-padding">
 <% end %>

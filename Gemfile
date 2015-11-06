@@ -96,3 +96,6 @@ gem "refile-mini_magick"
 
 # Generate funny names by default
 gem 'bazaar'
+
+# JavaScript file upload by drag&drop
+gem 'dropzonejs-rails'

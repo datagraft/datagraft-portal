@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   #get ':kind/:username/:id/edit' => 'transformations#edit'
 
   get 'data_distributions/new' => 'data_distributions#new'
+  
   get ':kind/new' => 'transformations#new'
   post ':kind' => 'transformations#create'
   get ':username/:kind' => 'transformations#index'
@@ -23,6 +24,8 @@ Rails.application.routes.draw do
   get ':username/:kind/:id/edit' => 'transformations#edit'
 
   get 'explore' => 'public_portal#explore'
+  get 'publish' => 'data_distributions#publish'
+
   get ':username' => 'public_portal#user'
   
   resources :transformations
