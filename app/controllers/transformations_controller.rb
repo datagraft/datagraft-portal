@@ -8,11 +8,32 @@ class TransformationsController < ApplicationController
   # GET /transformations
   # GET /transformations.json
   def index
-    kind = params[:kind].chop.camelcase
+    # @transformations = []
+    # kind = params[:kind].chop.camelcase
+    # @transformations = Object.const_get(kind).all
+    if user_signed_in? && current_user.username == params[:username]
+      @transformations = current_user.transformations
+    else
+      index_public
+    end
 
-    @transformations = Object.const_get(kind).all
-
+    # @api_keys = current_user.api_keys
     # @transformations = Transformation.all
+      # if params[:username]
+        # user = User.find_by_username(params[:username]) or not_found
+        # p(params[:kind])
+        # @transformation = user.send(params[:kind]).friendly.find(params[:id])
+        # @transformation = user.transformations.friendly.find(params[:id])
+      # end
+  end
+
+  def index_public
+    user = User.find_by_username(params[:username]) or not_found
+    @things = user.transformations.where(public: true).paginate(:page => params[:page], :per_page=>30)
+    respond_to do |format|
+      format.html { render 'public_portal/explore', layout: 'explore'}
+      format.json { render :index }
+    end
   end
 
   # GET /transformations/1
@@ -37,6 +58,8 @@ class TransformationsController < ApplicationController
   # POST /transformations.json
   def create
     @transformation = Transformation.new(transformation_params)
+    # deal with it
+    @transformation.name = Bazaar.object if @transformation.name.blank?
     @transformation.user = current_user
 
     respond_to do |format|
@@ -80,11 +103,11 @@ class TransformationsController < ApplicationController
       if params[:username]
         user = User.find_by_username(params[:username]) or not_found
         # p(params[:kind])
-        @transformation = user.send(params[:kind]).friendly.find(params[:id])
+        # @transformation = user.send(params[:kind]).friendly.find(params[:id])
+        @transformation = user.transformations.friendly.find(params[:id])
       else
         @transformation = Transformation.find(params[:id])
       end
-
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

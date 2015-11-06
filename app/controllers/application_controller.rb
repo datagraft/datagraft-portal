@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
       format.json { head :forbidden }
-      format.html { render :text => exception.message }
+      format.html { render 'public_portal/forbidden', status: :forbidden }
     end
   end
 
@@ -47,7 +47,9 @@ class ApplicationController < ActionController::Base
           enabled: true, key: user_token
           }).first
         if user
+          request.env['devise.skip_trackable'] = true
           sign_in user, store: false
+          request.env.delete('devise.skip_trackable')
         end
       end
     end
