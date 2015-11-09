@@ -1,0 +1,20 @@
+.sin-quotas-bar {
+  position:relative;
+  $height: 1.8em;
+  height:$height;
+  background: #9E9E9E;
+
+  .sin-quotas-bar-fill {
+    background:#444444;
+    left:0;
+    top:0;
+    bottom:0;
+    position:absolute;
+  }
+  .sin-quotas-text {
+    position:absolute;
+    line-height:$height;
+    padding-left:0.6em;
+    color: white;
+  }
+}

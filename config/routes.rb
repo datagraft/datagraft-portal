@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
+  get 'quotas' => 'quotas#index'
 
   get ':username' => 'public_portal#user'
   
