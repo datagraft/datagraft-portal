@@ -32,23 +32,15 @@ class ApplicationController < ActionController::Base
           request.headers['X-user-token']
         params[:user_token] = token
       end
-
-      if identifer_param = params[:user_email].blank? &&
-          request.headers['X-user-email']
-        params[:user_email] = identifer_param
-      end
-
-      user_email = params[:user_email].presence
+      
       user_token = params[:user_token].presence
 
-      if user_email && user_token
+      if user_token
+        token = ApiKey.where(key: user_token, enabled: true).first
         # This is maybe not safe for timing attacks but who cares?
-        user = User.joins(:api_keys).where(email: user_email, api_keys: {
-          enabled: true, key: user_token
-          }).first
-        if user
+        if token
           request.env['devise.skip_trackable'] = true
-          sign_in user, store: false
+          sign_in token.user, store: false
           request.env.delete('devise.skip_trackable')
         end
       end
