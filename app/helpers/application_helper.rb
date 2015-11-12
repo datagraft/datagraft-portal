@@ -34,6 +34,10 @@ module ApplicationHelper
     return "/#{current_user.username}/data_distributions"
   end
 
+  def dashboard_path
+    return "/dashboard"
+  end
+
   def title(page_title)
     content_for :title, page_title.to_s
   end

@@ -32,7 +32,7 @@
           <nav class="mdl-navigation">
             <%= link_to('Explore', explore_path, class: "mdl-navigation__link")  %>  
             <% if user_signed_in? %>
-              <%= link_to('Dashboard', publish_path, class: "mdl-navigation__link")  %>  
+              <%= link_to('Dashboard', dashboard_path, class: "mdl-navigation__link")  %>  
               <%= link_to('Publish', publish_path, class: "mdl-navigation__link")  %>  
               <%= link_to(current_user.username, edit_user_registration_path, class: "mdl-navigation__link")  %>  
             <% else %>
