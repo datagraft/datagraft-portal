@@ -1,5 +1,4 @@
 - title @transformation.name
-p.notice = notice
 
 h3 = @transformation.name
 h4 = @transformation.stars_count
@@ -9,6 +8,9 @@ p.author Created by #{@transformation.user.name}
   #- if !@transformation.file.blank?
   # == image_tag attachment_url(@transformation, :file, :fill, 300, 300, format: "jpg")
 
+
 == link_to 'Edit', thing_edit_path(@transformation)
 span  | 
 == link_to 'Back', transformations_path
+span  | 
+== link_to 'Star', thing_star_path(@transformation), :method => 'post'

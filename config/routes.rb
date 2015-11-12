@@ -1,15 +1,10 @@
 Rails.application.routes.draw do
   resources :api_keys
 
-  resources :stars
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
   }
-
-  #get ':kind/:username/:id' => 'transformations#show'
-  #delete ':kind/:username/:id' => 'transformations#destroy'
-  #get ':kind/:username/:id/edit' => 'transformations#edit'
 
   get 'data_distributions/new' => 'data_distributions#new'
   post 'data_distributions' => 'data_distributions#create'
@@ -19,15 +14,19 @@ Rails.application.routes.draw do
   put ':username/data_distributions/:id' => 'data_distributions#update'
   patch ':username/data_distributions/:id' => 'data_distributions#update'
   get ':username/data_distributions/:id/edit' => 'data_distributions#edit'
+  post ':username/data_distributions/:id/star' => 'data_distributions#star'
+  post ':username/data_distributions/:id/unstar' => 'data_distributions#star'
   
-  get ':kind/new' => 'transformations#new'
-  post ':kind' => 'transformations#create'
-  get ':username/:kind' => 'transformations#index'
-  get ':username/:kind/:id' => 'transformations#show'
-  delete ':username/:kind/:id' => 'transformations#destroy'
-  put ':username/:kind/:id' => 'transformations#update'
-  patch ':username/:kind/:id' => 'transformations#update'
-  get ':username/:kind/:id/edit' => 'transformations#edit'
+  get 'transformations/new' => 'transformations#new'
+  post 'transformations' => 'transformations#create'
+  get ':username/transformations' => 'transformations#index'
+  get ':username/transformations/:id' => 'transformations#show'
+  delete ':username/transformations/:id' => 'transformations#destroy'
+  put ':username/transformations/:id' => 'transformations#update'
+  patch ':username/transformations/:id' => 'transformations#update'
+  get ':username/transformations/:id/edit' => 'transformations#edit'
+  post ':username/transformations/:id/star' => 'transformations#star'
+  post ':username/transformations/:id/unstar' => 'transformations#star'
 
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
@@ -35,8 +34,11 @@ Rails.application.routes.draw do
   get 'dashboard' => 'dashboard#index'
 
   get ':username' => 'public_portal#user'
+
+
   
   # resources :transformations
+  # resources :stars
 
   root to: 'public_portal#explore'
   # The priority is based upon order of creation: first created -> highest priority.

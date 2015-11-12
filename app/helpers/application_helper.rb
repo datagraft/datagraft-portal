@@ -1,25 +1,19 @@
 module ApplicationHelper
   def thing_path(thing, parameters = {})
-    classname = thing.class.name
-    if thing.user.nil?
-      return "/#{classname.underscore.pluralize}#{ "?#{parameters.to_query}" if parameters.present? }"
-    end
-
-    #"/#{classname.underscore.pluralize}/#{thing.user.username}/#{thing.slug}#{ "?#{parameters.to_query}" if parameters.present? }"
-    "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{ "?#{parameters.to_query}" if parameters.present? }"
+    thing_generic_path(thing, '', parameters)
   end
 
   def thing_edit_path(thing, parameters = {})
-    classname = thing.class.name
-
-    if thing.user.nil?
-      return ""
-    end
-    
-    #"/#{classname.underscore.pluralize}/#{thing.user.username}/#{thing.slug}#{ "?#{parameters.to_query}" if parameters.present? }"
-    "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}/edit#{ "?#{parameters.to_query}" if parameters.present? }"
+    thing_generic_path(thing, '/edit', parameters)
   end
 
+  def thing_star_path(thing, parameters = {})
+    thing_generic_path(thing, '/star', parameters)
+  end
+
+  def thing_unstar_path(thing, parameters = {})
+    thing_generic_path(thing, '/unstar', parameters)
+  end
   
   def transformations_path
     return "/explore" unless user_signed_in?
@@ -50,5 +44,15 @@ module ApplicationHelper
 
   def hasOption(option)
     !@options.nil? && @options[option]
+  end
+
+  private
+
+  def thing_generic_path(thing, method, parameters = {})
+    classname = thing.class.name
+
+    return "" if thing.user.nil?
+    
+    "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
   end
 end

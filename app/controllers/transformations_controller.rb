@@ -2,7 +2,8 @@ class TransformationsController < ApplicationController
   include ApplicationHelper
 
   #before_action :set_transformation, only: [:show, :edit, :update, :destroy]
-  before_filter :set_transformation, only: [:show, :edit, :update, :destroy]
+  # before_filter :authenticate_user!, only: [:edit, :udate, :destroy, :star, :unstar]
+  before_filter :set_transformation, only: [:show, :edit, :update, :destroy, :star, :unstar]
   load_and_authorize_resource
 
   # GET /transformations
@@ -95,6 +96,18 @@ class TransformationsController < ApplicationController
       format.html { redirect_to transformations_path, notice: 'Transformation was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def star
+    current_user.star(@transformation)
+    respond_to do |format|
+      format.html { redirect_to thing_path(@transformation), notice: 'Thank you so much <3' }
+      format.json { head :no_content }
+    end
+  end
+
+  def unstar
+
   end
 
   private
