@@ -5,6 +5,8 @@ class Ability
     can :read, Thing, :public => true
     if user
         can :manage, :all, :user_id => user.id
+        can :star, Thing
+        can :unstar, Thing
     end
     # Define abilities for the passed in user here. For example:
     #

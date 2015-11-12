@@ -12,6 +12,17 @@ class Thing < ActiveRecord::Base
 
   has_paper_trail
 
+  def self.public_search(search)
+    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    Thing.where(:public => true)
+         .fuzzy_search(name: search)
+         .order(created_at: :desc).includes(:user)
+  end
+
+  def self.public_list
+    Thing.where(:public => true)
+         .order(created_at: :desc).includes(:user)
+  end
 end
 
 class Query < Thing; end

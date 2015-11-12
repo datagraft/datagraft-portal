@@ -14,9 +14,9 @@
     <% @data_distributions.each do |data_distribution| %>
       <tr>
         <td><%= data_distribution.slug %></td>
-        <td><%= link_to 'Show', data_distribution %></td>
-        <td><%= link_to 'Edit', edit_data_distribution_path(data_distribution) %></td>
-        <td><%= link_to 'Destroy', data_distribution, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', thing_path(data_distribution) %></td>
+        <td><%= link_to 'Edit', thing_edit_path(data_distribution) %></td>
+        <td><%= link_to 'Destroy', thing_path(data_distribution), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

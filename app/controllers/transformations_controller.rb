@@ -2,7 +2,8 @@ class TransformationsController < ApplicationController
   include ApplicationHelper
 
   #before_action :set_transformation, only: [:show, :edit, :update, :destroy]
-  before_filter :set_transformation, only: [:show, :edit, :update, :destroy]
+  # before_filter :authenticate_user!, only: [:edit, :udate, :destroy, :star, :unstar]
+  before_filter :set_transformation, only: [:show, :edit, :update, :destroy, :star, :unstar]
   load_and_authorize_resource
 
   # GET /transformations
@@ -31,7 +32,7 @@ class TransformationsController < ApplicationController
     user = User.find_by_username(params[:username]) or not_found
     @things = user.transformations.where(public: true).paginate(:page => params[:page], :per_page=>30)
     respond_to do |format|
-      format.html { render 'public_portal/explore', layout: 'explore'}
+      format.html { render 'public_portal/explore' } #, layout: 'explore'}
       format.json { render :index }
     end
   end
@@ -95,6 +96,18 @@ class TransformationsController < ApplicationController
       format.html { redirect_to transformations_path, notice: 'Transformation was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def star
+    current_user.star(@transformation)
+    respond_to do |format|
+      format.html { redirect_to thing_path(@transformation), notice: 'Thank you so much <3' }
+      format.json { head :no_content }
+    end
+  end
+
+  def unstar
+
   end
 
   private

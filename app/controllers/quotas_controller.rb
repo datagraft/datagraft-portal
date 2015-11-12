@@ -1,11 +1,12 @@
 class QuotasController < ApplicationController
+  before_filter :authenticate_user!
 
   # GET /quota
   # GET /quota.json
   def index
-    unless signed_in?
-      raise CanCan::AccessDenied.new("Not authorized!", :read)
-    end
+    #unless signed_in?
+    #  raise CanCan::AccessDenied.new("Not authorized!", :read)
+    #end
 
     @nbDataDistributions = current_user.data_distributions.sum(:file_size)
     @maxDataDistributions = 1024*1024*1024*4

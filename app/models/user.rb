@@ -32,6 +32,17 @@ class User < ActiveRecord::Base
     self.username 
   end
 
+  def star(thing)
+    star = Star.new
+    star.user = self
+    star.thing = thing
+    star.save 
+  end
+
+  def unstar(thing)
+    Star.where(user: self, thing: thing).destroy
+  end
+
   #def self.find_for_oauth(auth)
 #
  # end

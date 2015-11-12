@@ -1,4 +1,6 @@
 class DataDistributionsController < ApplicationController
+  include ApplicationHelper
+  
   before_action :set_data_distribution, only: [:show, :edit, :update, :destroy]
   # skip_before_action :verify_authenticity_token
   # protect_from_forgery :except => [:create]
@@ -41,7 +43,7 @@ class DataDistributionsController < ApplicationController
     respond_to do |format|
       if @data_distribution.save
         format.html { redirect_to @data_distribution, notice: 'Data distribution was successfully created.' }
-        format.json { render :show, status: :created, location: @data_distribution }
+        format.json { render :show, status: :created, location: thing_path(@data_distribution) }
       else
         format.html { render :new }
         format.json { render json: @data_distribution.errors, status: :unprocessable_entity }
@@ -78,10 +80,10 @@ class DataDistributionsController < ApplicationController
     def set_data_distribution
       if params[:username]
         user = User.find_by_username(params[:username]) or not_found
-        @data_distribution = user.distributions.friendly.find(params[:id])
+        @data_distribution = user.data_distributions.friendly.find(params[:id])
       else
-        #@data_distribution = DataDistribution.find(params[:id])
-        @data_distribution = DataDistribution.friendly.find(params[:id])
+        @data_distribution = DataDistribution.find(params[:id])
+        # @data_distribution = DataDistribution.friendly.find(params[:id])
       end
     end
 

@@ -1,4 +1,4 @@
 - title "Publish"
 - setOption :flexPage
 
-== form_for(@data_distribution, html: {class: "dropzone sin-dropzone", id: "dataDistributionDropZone"}) do 
+== form_for(@data_distribution, html: {class: "dropzone sin-dropzone", id: "dataDistributionDropZone"}, url: data_distributions_path(true)) do 
