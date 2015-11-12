@@ -28,11 +28,29 @@
             </div>
           </form>
         </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn"> <i class="material-icons">more_vert</i>
-        </button>
-        <%= current_user.username if current_user %>
-        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+        <div id="something">
+          <nav class="mdl-navigation">
+            <%= link_to('Explore', explore_path, class: "mdl-navigation__link")  %>  
+            <% if user_signed_in? %>
+              <%= link_to('Dashboard', publish_path, class: "mdl-navigation__link")  %>  
+              <%= link_to('Publish', publish_path, class: "mdl-navigation__link")  %>  
+              <%= link_to(current_user.username, edit_user_registration_path, class: "mdl-navigation__link")  %>  
+            <% else %>
+              <%= link_to('Login', new_user_session_path, class: "mdl-navigation__link")  %>  
+            <% end %>
+          </nav>
+        </div>
+        <button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
+            <i class="material-icons">more_vert</i>
+          </button>
+        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="more-button">
           <li class="mdl-menu__item">About</li>
+          <!-- <li class="mdl-menu__item"> --><li>
+            <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "mdl-menu__item") %>
+            <!-- </li> --></li>
+          <!-- <li class="mdl-menu__item"> --><li>
+          <%= link_to('Quotas', quotas_path, class: "mdl-menu__item") %></li>
+          <!-- </li> -->
           <li class="mdl-menu__item">Contact</li>
           <li class="mdl-menu__item">Legal information</li>
         </ul>

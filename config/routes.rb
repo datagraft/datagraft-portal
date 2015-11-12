@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :api_keys
-  resources :data_distributions
 
   resources :stars
   devise_for :users, controllers: {
@@ -13,6 +12,13 @@ Rails.application.routes.draw do
   #get ':kind/:username/:id/edit' => 'transformations#edit'
 
   get 'data_distributions/new' => 'data_distributions#new'
+  post 'data_distributions' => 'data_distributions#create'
+  get ':username/data_distributions' => 'data_distributions#index'
+  get ':username/data_distributions/:id' => 'data_distributions#show'
+  delete ':username/data_distributions/:id' => 'data_distributions#destroy'
+  put ':username/data_distributions/:id' => 'data_distributions#update'
+  patch ':username/data_distributions/:id' => 'data_distributions#update'
+  get ':username/data_distributions/:id/edit' => 'data_distributions#edit'
   
   get ':kind/new' => 'transformations#new'
   post ':kind' => 'transformations#create'
@@ -29,7 +35,9 @@ Rails.application.routes.draw do
 
   get ':username' => 'public_portal#user'
   
-  resources :transformations
+  # resources :transformations
+
+  root to: 'public_portal#explore'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -22,7 +22,7 @@ class PublicPortalController < ApplicationController
 
     @things = query.order(created_at: :desc).includes(:user).paginate(:page => params[:page], :per_page=>30)
 
-    render layout: "explore"
+    # render layout: "explore"
   end
 
   private

@@ -31,7 +31,7 @@ class TransformationsController < ApplicationController
     user = User.find_by_username(params[:username]) or not_found
     @things = user.transformations.where(public: true).paginate(:page => params[:page], :per_page=>30)
     respond_to do |format|
-      format.html { render 'public_portal/explore', layout: 'explore'}
+      format.html { render 'public_portal/explore' } #, layout: 'explore'}
       format.json { render :index }
     end
   end

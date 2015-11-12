@@ -22,11 +22,16 @@ module ApplicationHelper
 
   
   def transformations_path
-    if user_signed_in?
-      return "/#{current_user.username}/transformations"
-    end
+    return "/explore" unless user_signed_in?
+    
+    return "/#{current_user.username}/transformations"
+  end
 
-    "/explore"
+  def data_distributions_path(post=false)
+    return "/data_distributions" if post
+    return "/explore" unless user_signed_in?
+    
+    return "/#{current_user.username}/data_distributions"
   end
 
   def title(page_title)
