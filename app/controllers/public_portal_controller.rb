@@ -10,18 +10,14 @@ class PublicPortalController < ApplicationController
   end
 
   def explore
-    query = Thing.where(:public => true)
 
     if params[:search]
-      #query = query.where('name LIKE ?', params[:search]) 
-      # query = query.basic_search(params[:search])
-      query = query.fuzzy_search(name: params[:search])
+      query = Thing.public_search(params[:search])
+    else
+      query = Thing.public_list
     end
 
-    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-
-    @things = query.order(created_at: :desc).includes(:user).paginate(:page => params[:page], :per_page=>30)
-
+    @things = query.paginate(:page => params[:page], :per_page=>30)
     # render layout: "explore"
   end
 
