@@ -48,6 +48,9 @@ end
 # Use unicornkaosj
 gem 'unicorn'
 gem 'unicorn-rails'
+
+gem 'rack-cors', :require => 'rack/cors'
+
 gem 'rack-handlers'
 
 # Devise is the user-management dependency
