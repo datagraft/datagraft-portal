@@ -107,7 +107,11 @@ class TransformationsController < ApplicationController
   end
 
   def unstar
-
+    current_user.unstar(@transformation)
+    respond_to do |format|
+      format.html { redirect_to thing_path(@transformation), notice: 'No regrets' }
+      format.json { head :no_content }
+    end
   end
 
   private

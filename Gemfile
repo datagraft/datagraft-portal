@@ -78,6 +78,9 @@ gem 'material_icons'
 # We sell our data to satan
 gem 'omniauth-facebook'
 
+# Twitter
+gem 'omniauth-twitter'
+
 # And GitHub as well
 gem 'omniauth-github'
 
@@ -96,6 +99,15 @@ gem "refile-mini_magick"
 
 # Generate funny names by default
 gem 'bazaar'
+
+# They say HTTP is fun
+#gem 'httparty'
+
+# It seems to be an ok http client
+gem 'faraday'
+
+# It doesn't manage cookies by default though
+gem 'faraday-cookie_jar'
 
 # JavaScript file upload by drag&drop
 gem 'dropzonejs-rails'

@@ -1,3 +1,25 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.sin-small-name {
+  max-width: 28vw;
+  text-overflow: ellipsis;
+  overflow-y:hidden;
+}
+
+.mdl-data-table.sin-projects-table {
+  border:none;
+  width:100%;
+}
+
+.sin-projects-title {
+  margin:0;
+  padding:0.66em;
+}
+
+.sin-projects {
+  .pagination {
+    text-align: center;
+    padding:0.33em;
+  }
+}

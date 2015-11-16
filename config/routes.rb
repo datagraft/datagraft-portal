@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   patch ':username/transformations/:id' => 'transformations#update'
   get ':username/transformations/:id/edit' => 'transformations#edit'
   post ':username/transformations/:id/star' => 'transformations#star'
-  post ':username/transformations/:id/unstar' => 'transformations#star'
+  post ':username/transformations/:id/unstar' => 'transformations#unstar'
 
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'

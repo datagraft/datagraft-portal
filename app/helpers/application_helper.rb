@@ -32,6 +32,10 @@ module ApplicationHelper
     return "/dashboard"
   end
 
+  def user_path(user)
+    "/"+user.username
+  end
+
   def title(page_title)
     content_for :title, page_title.to_s
   end

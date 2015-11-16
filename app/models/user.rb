@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include OntotextUser
+
   has_many :stars
   has_many :transformations
   has_many :data_distributions
@@ -40,9 +42,22 @@ class User < ActiveRecord::Base
   end
 
   def unstar(thing)
-    Star.where(user: self, thing: thing).destroy
+    Star.where(user: self, thing: thing).destroy_all
   end
 
+  def has_star(thing)
+    Star.where(user: self, thing: thing).exists?
+  end
+
+  def dashboard_things
+    Thing.where(user: self).order(stars_count: :desc, created_at: :desc)
+  end
+
+  def search_dashboard_things(search)
+    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    dashboard_things
+      .fuzzy_search(name: search)
+  end
   #def self.find_for_oauth(auth)
 #
  # end

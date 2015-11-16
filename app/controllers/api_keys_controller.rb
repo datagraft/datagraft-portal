@@ -34,7 +34,7 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     @api_key.name = Bazaar.object if @api_key.name.blank?
     @api_key.user = current_user
-    @api_key.key = Devise.friendly_token(32)
+    @api_key.key = @api_key.new_ontotext_api_key(current_user)
 
     respond_to do |format|
       if @api_key.save
@@ -52,6 +52,7 @@ class ApiKeysController < ApplicationController
   def update
     respond_to do |format|
       if @api_key.update(api_key_params)
+        @api_key.update_in_ontotext(current_user)
         format.html { redirect_to api_keys_path, notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: @api_key }
       else
@@ -64,6 +65,7 @@ class ApiKeysController < ApplicationController
   # DELETE /api_keys/1
   # DELETE /api_keys/1.json
   def destroy
+    @api_key.delete_from_ontotext(current_user)
     @api_key.destroy
     respond_to do |format|
       format.html { redirect_to api_keys_url, notice: 'Api key was successfully destroyed.' }

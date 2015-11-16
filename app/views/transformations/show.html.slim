@@ -12,5 +12,9 @@ p.author Created by #{@transformation.user.name}
 == link_to 'Edit', thing_edit_path(@transformation)
 span  | 
 == link_to 'Back', transformations_path
-span  | 
-== link_to 'Star', thing_star_path(@transformation), :method => 'post'
+- if user_signed_in?
+  span  | 
+  -if current_user.has_star(@transformation)
+    == link_to 'Unstar', thing_unstar_path(@transformation), :method => 'post'
+  -else
+    == link_to 'Star', thing_star_path(@transformation), :method => 'post'

@@ -28,5 +28,11 @@ div.sin-horizontal-scroll
           td.sin-action-table
            == link_to api_key, method: :delete, data: { confirm: 'Are you sure?' } do
             i.material-icons delete
+    - if @api_keys.empty?
+      tfoot 
+        tr
+          td.mdl-data-table__cell--non-numeric[colspan=3]
+            em No API keys yet
 
-== link_to 'New Api key', new_api_key_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+div.mdl-grid
+  == link_to 'New Api key', new_api_key_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-color--white mdl-cell--1"

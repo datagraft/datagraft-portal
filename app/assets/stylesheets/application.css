@@ -190,3 +190,19 @@ main .mdl-button.mdl-js-ripple-effect {
   display:flex;
   flex-grow: 1;
 }
+
+.sin-section-simple-margin {
+  margin:0px;
+}
+
+/* Liberation lol */
+*::selection {
+  background-color: #E91845 !important;
+  color: #FFF !important;
+  text-shadow: none;
+}
+*::-moz-selection {
+  background-color: #E91845 !important;
+  color: #FFF !important;
+  text-shadow: none;
+}

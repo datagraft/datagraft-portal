@@ -1,3 +1,22 @@
 - title "Dashboard"
+- setOption :simpleMargin
+- setOption :dashboardSearch
 
-h1 Dashboard
+div.mdl-grid
+  div.mdl-cell.mdl-cell--7-col
+  div.mdl-cell.mdl-cell--5-col
+    div.mdl-shadow--2dp.mdl-color--white.sin-projects
+      h3.sin-projects-title Your projects
+      table.mdl-data-table.mdl-js-data-table.sin-projects-table
+        tbody
+          - @things.each do |thing|
+            tr
+              td.sin-small-name.mdl-data-table__cell--non-numeric = thing.name
+              td.sin-stars-count
+                span
+                  = thing.stars_count 
+                  ' 
+                  i.material-icons star
+      == will_paginate @things, :param_name => :projects_page
+
+

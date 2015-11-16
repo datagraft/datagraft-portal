@@ -19,7 +19,7 @@
         <span class="mdl-layout-title">Datagraft</span>
         <div class="mdl-layout-spacer"></div>
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-          <form action="/explore" method="get" accept-charset="utf-8">
+          <form action="<%= hasOption(:dashboardSearch) ? '/dashboard' : '/explore' %>" method="get" accept-charset="utf-8">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search"> <i class="material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
@@ -34,7 +34,7 @@
             <% if user_signed_in? %>
               <%= link_to('Dashboard', dashboard_path, class: "mdl-navigation__link")  %>  
               <%= link_to('Publish', publish_path, class: "mdl-navigation__link")  %>  
-              <%= link_to(current_user.username, edit_user_registration_path, class: "mdl-navigation__link")  %>  
+              <%= link_to(current_user.username, current_user, class: "mdl-navigation__link")  %>  
             <% else %>
               <%= link_to('Login', new_user_session_path, class: "mdl-navigation__link")  %>  
             <% end %>
@@ -44,13 +44,14 @@
             <i class="material-icons">more_vert</i>
           </button>
         <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="more-button">
-          <li class="mdl-menu__item">About</li>
           <!-- <li class="mdl-menu__item"> --><li>
             <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "mdl-menu__item") %>
             <!-- </li> --></li>
           <!-- <li class="mdl-menu__item"> --><li>
           <%= link_to('Quotas', quotas_path, class: "mdl-menu__item") %></li>
+          <%= link_to('API keys', api_keys_path, class: "mdl-menu__item") %></li>
           <!-- </li> -->
+          <li class="mdl-menu__item">About</li>
           <li class="mdl-menu__item">Contact</li>
           <li class="mdl-menu__item">Legal information</li>
         </ul>
@@ -64,6 +65,8 @@
 <section class="section--center sin-padding">
 <% elsif hasOption :flexPage %>
 <section class="sin-section-flex">
+<% elsif hasOption :simpleMargin %>
+<section class="sin-section-simple-margin">
 <% else %>
 <section class="section--center mdl-shadow--2dp mdl-color--white sin-padding">
 <% end %>
