@@ -22,10 +22,19 @@ module Datagraft
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
-
+    config.action_controller.allow_forgery_protection = false
+    
     Gravatarify.options[:default] = 'monsterid' # beautiful monsters by default
     Gravatarify.options[:rating] = 'x' # allows x classified avatars
     Gravatarify.options[:secure] = true # security is our primary concern
     Gravatarify.options[:filetype] = :png # png > jpeg for small avatars
+    
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :options, :patch, :put]
+      end
+    end
+    
   end
 end
