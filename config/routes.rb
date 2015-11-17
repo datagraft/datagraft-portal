@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get 'publish' => 'data_distributions#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
+  get 'transform' => 'transformations#transform'
 
   get ':username' => 'public_portal#user'
 

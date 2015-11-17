@@ -24,6 +24,7 @@ html, body.mdl-base {
 section.section--center {
   margin:1.5em auto;
   max-width: 860px;
+  min-width: 66vw;
 }
 
 .sin-padding {
@@ -191,6 +192,15 @@ main .mdl-button.mdl-js-ripple-effect {
   flex-grow: 1;
 }
 
+.mdl-layout__content.sin-main-layout {
+  display:flex;
+  flex-direction: column;
+}
+
+.sin-main-layout > section {
+  flex-grow: 1;
+}
+
 .sin-section-simple-margin {
   margin:0px;
 }
@@ -205,4 +215,13 @@ main .mdl-button.mdl-js-ripple-effect {
   background-color: #E91845 !important;
   color: #FFF !important;
   text-shadow: none;
+}
+
+footer {
+  font-size:0.8em;
+}
+
+iframe.grafterizer {
+border: none;
+width: 100%;
 }
