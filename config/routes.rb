@@ -1,32 +1,30 @@
 Rails.application.routes.draw do
-  resources :api_keys
 
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  get ':username/data_distributions/new' => 'data_distributions#new'
-  post ':username/data_distributions' => 'data_distributions#create'
-  get ':username/data_distributions' => 'data_distributions#index'
-  get ':username/data_distributions/:id' => 'data_distributions#show'
-  delete ':username/data_distributions/:id' => 'data_distributions#destroy'
-  put ':username/data_distributions/:id' => 'data_distributions#update'
-  patch ':username/data_distributions/:id' => 'data_distributions#update'
-  get ':username/data_distributions/:id/edit' => 'data_distributions#edit'
-  post ':username/data_distributions/:id/star' => 'data_distributions#star'
-  post ':username/data_distributions/:id/unstar' => 'data_distributions#star'
-  
-  get ':username/transformations/new' => 'transformations#new'
-  post ':username/transformations' => 'transformations#create'
-  get ':username/transformations' => 'transformations#index'
-  get ':username/transformations/:id' => 'transformations#show'
-  delete ':username/transformations/:id' => 'transformations#destroy'
-  put ':username/transformations/:id' => 'transformations#update'
-  patch ':username/transformations/:id' => 'transformations#update'
-  get ':username/transformations/:id/edit' => 'transformations#edit'
-  post ':username/transformations/:id/star' => 'transformations#star'
-  post ':username/transformations/:id/unstar' => 'transformations#unstar'
+  def datagraft_resource(resource_sym)
+    resource = resource_sym.to_s
+    context = ':username/'+resource
+    context_id = context + '/:id'
+
+    get    context + '/new' =>       resource + '#new'
+    post   context =>                resource + '#create'
+    get    context =>                resource + '#index'
+    get    context_id =>             resource + '#show'
+    delete context_id =>             resource + '#destroy'
+    put    context_id =>             resource + '#update'
+    patch  context_id =>             resource + '#update'
+    get    context_id + '/edit' =>   resource + '#edit'
+    post   context_id + '/star' =>   resource + '#star'
+    post   context_id + '/unstar' => resource + '#star'
+  end
+
+  datagraft_resource :data_distributions
+  datagraft_resource :transformations
+  resources :api_keys
 
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
@@ -36,8 +34,6 @@ Rails.application.routes.draw do
 
   get ':username' => 'public_portal#user'
 
-
-  
   # resources :transformations
   # resources :stars
 
