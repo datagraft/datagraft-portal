@@ -16,5 +16,10 @@ class QuotasController < ApplicationController
 
     @nbTransformations = current_user.transformations.count
     @maxTransformations = 1000
+    
+    respond_to do |format|
+      format.html
+      format.json { render template: 'quotas/index' }
+    end
   end
 end

@@ -6,8 +6,8 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  get 'data_distributions/new' => 'data_distributions#new'
-  post 'data_distributions' => 'data_distributions#create'
+  get ':username/data_distributions/new' => 'data_distributions#new'
+  post ':username/data_distributions' => 'data_distributions#create'
   get ':username/data_distributions' => 'data_distributions#index'
   get ':username/data_distributions/:id' => 'data_distributions#show'
   delete ':username/data_distributions/:id' => 'data_distributions#destroy'
@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   post ':username/data_distributions/:id/star' => 'data_distributions#star'
   post ':username/data_distributions/:id/unstar' => 'data_distributions#star'
   
-  get 'transformations/new' => 'transformations#new'
-  post 'transformations' => 'transformations#create'
+  get ':username/transformations/new' => 'transformations#new'
+  post ':username/transformations' => 'transformations#create'
   get ':username/transformations' => 'transformations#index'
   get ':username/transformations/:id' => 'transformations#show'
   delete ':username/transformations/:id' => 'transformations#destroy'

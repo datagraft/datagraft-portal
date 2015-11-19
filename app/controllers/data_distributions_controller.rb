@@ -15,6 +15,11 @@ class DataDistributionsController < ApplicationController
   # GET /data_distributions.json
   def index
     @data_distributions = DataDistribution.all
+    respond_to do |format|
+      format.html
+      #TODO: the jbuilder is never used!
+      format.json { render json: @data_distributions}
+    end
   end
 
   # GET /data_distributions/1
@@ -42,7 +47,7 @@ class DataDistributionsController < ApplicationController
 
     respond_to do |format|
       if @data_distribution.save
-        format.html { redirect_to @data_distribution, notice: 'Data distribution was successfully created.' }
+        format.html { redirect_to (thing_path(@data_distribution)), notice: 'Data distribution was successfully created.' }
         format.json { render :show, status: :created, location: thing_path(@data_distribution) }
       else
         format.html { render :new }
@@ -76,19 +81,19 @@ class DataDistributionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_data_distribution
-      if params[:username]
-        user = User.find_by_username(params[:username]) or not_found
-        @data_distribution = user.data_distributions.friendly.find(params[:id])
-      else
-        @data_distribution = DataDistribution.find(params[:id])
-        # @data_distribution = DataDistribution.friendly.find(params[:id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_data_distribution
+    if params[:username]
+      user = User.find_by_username(params[:username]) or not_found
+      @data_distribution = user.data_distributions.friendly.find(params[:id])
+    else
+      @data_distribution = DataDistribution.find(params[:id])
+      # @data_distribution = DataDistribution.friendly.find(params[:id])
     end
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def data_distribution_params
-      params.permit(:public, :name, :code, :file)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def data_distribution_params
+    params.require(:data_distribution).permit([:public, :name, :code, :file])
+  end
 end
