@@ -16,8 +16,12 @@ class PublicPortalController < ApplicationController
     else
       query = Thing.public_list
     end
-
+    
     @things = query.paginate(:page => params[:page], :per_page=>30)
+    respond_to do |format|
+      format.html
+      format.json { render template: 'public_portal/explore' }
+    end
     # render layout: "explore"
   end
 

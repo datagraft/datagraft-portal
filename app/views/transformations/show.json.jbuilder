@@ -1,1 +1,1 @@
-json.extract! @transformation, :id, :created_at, :updated_at
+json.extract! @transformation, :id, :name, :code, :public
