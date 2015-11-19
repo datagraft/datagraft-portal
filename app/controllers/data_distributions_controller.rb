@@ -1,5 +1,6 @@
 class DataDistributionsController < ApplicationController
   include ApplicationHelper
+  include ThingHelper
   
   before_action :set_data_distribution, only: [:show, :edit, :update, :destroy]
   # skip_before_action :verify_authenticity_token
