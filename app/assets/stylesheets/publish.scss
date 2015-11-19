@@ -2,17 +2,58 @@
  *= require dropzone/dropzone
  */
 
- .sin-dropzone {
-  border:none;
-  width:100%;
+ .sin-card-dropzone {
+  .sin-dropzone {
+    border:none;
+    width:100%;
 
-  // mdl-shadow--2dp
-  .dz-preview {
-    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-    .dz-image {
-      border-radius: 0 !important;
-    } 
+    // mdl-shadow--2dp
+    .dz-preview {
+      box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+      .dz-image {
+        border-radius: 0 !important;
+        background: #cdcdcd image-url("grey.png");
+      } 
+      .dz-details {
+        .dz-size span, .dz-filename span {
+          border-radius: 2px;
+        }
+      }
+    }
   }
- }
 
+  h2.mdl-card__title-text {
+    // padding: 25px 16px 0px 16px;
+    padding-top: 25px;
+  }
 
+  &.mdl-card .mdl-button.mdl-js-ripple-effect {
+    min-width:8em;
+    // display:none;
+  }
+
+  .mdl-card__supporting-text {
+    padding:0;
+    width:100%;
+  }
+  .mdl-card--expand {
+    padding-bottom:0;
+  }
+}
+
+.mdl-card.sin-publish-card {
+  background: image-url("symphony.png");
+  &.sin-bg-alt-1 {
+    background: image-url("small_steps.png");
+  }
+  &.sin-bg-alt-2 {
+    background: image-url("squairy_light.png");
+  }
+  .mdl-card__actions {
+    background: rgba(255,255,255,0.6);
+  }
+}
+
+.mdl-button.sin-button--danger:hover {
+  color: #e51c23;// red md
+}

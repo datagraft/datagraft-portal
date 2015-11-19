@@ -16,6 +16,11 @@
   margin:0;
   padding:0.66em;
 }
+.sin-projects-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .sin-projects {
   .pagination {

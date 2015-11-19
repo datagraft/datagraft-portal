@@ -11,7 +11,10 @@ module OntotextUser
     def register_ontotext_account
       return if has_ontotext_account
 
-      account_token = rand(1..1000000).to_i
+      # We generate a random token so the process
+      # should still work after a failure or if two
+      # concurrents registration happen
+      account_token = rand(1..100000000).to_i
 
       conn = new_api_connexion
       resp = conn.post do |req|
@@ -42,11 +45,9 @@ module OntotextUser
 
     def ontotext_connexion
 
-      if has_ontotext_account
-        conn = new_api_connexion
-      else
-        conn = register_ontotext_account
-      end
+      return register_ontotext_account unless has_ontotext_account
+
+      conn = new_api_connexion
 
       resp = conn.put do |req|
         req.url '/dapaas-management-services/api/accounts/login'

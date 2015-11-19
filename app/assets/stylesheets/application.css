@@ -183,6 +183,10 @@ main .mdl-button.mdl-js-ripple-effect {
   min-width: 220px;
 }
 
+.mdl-card .mdl-button.mdl-js-ripple-effect {
+  min-width:initial;
+}
+
 .mdl-layout__content.sin-layout-flex {
   display: flex;
 }
@@ -225,3 +229,5 @@ iframe.grafterizer {
 border: none;
 width: 100%;
 }
+
+
