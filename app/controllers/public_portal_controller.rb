@@ -4,9 +4,15 @@ class PublicPortalController < ApplicationController
   # GET /:username
   # GET /:username.json
   def user
-    if @user.username
-      p @user.username
+    @things = Thing.public_list
+      .where(user: @user)
+      .paginate(:page => params[:page], :per_page => 30)
+
+    if user_signed_in? && @user == current_user
+      @things = @things.unscope(where: :public)
+      @ownAccount = true
     end
+
   end
 
   def explore

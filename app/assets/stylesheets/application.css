@@ -136,15 +136,6 @@ body .mdl-layout__header-row {
   width:100%;
 }
 
-.sin-stars-count {
-  text-align: right;
-}
-.sin-stars-count i.material-icons {
-  font-size:16px;
-  line-height: 13px;
-  position:relative;
-  top:2px;
-}
 
 .sin-table-fill {
   /*width:90%;*/
@@ -183,7 +174,8 @@ main .mdl-button.mdl-js-ripple-effect {
   min-width: 220px;
 }
 
-.mdl-card .mdl-button.mdl-js-ripple-effect {
+.mdl-card .mdl-button.mdl-js-ripple-effect,
+.sin-user-box .mdl-button.mdl-js-ripple-effect {
   min-width:initial;
 }
 

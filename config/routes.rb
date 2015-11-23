@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  def datagraft_resource(resource_sym)
+  def datagraft_resources(resource_sym)
     resource = resource_sym.to_s
     context = ':username/'+resource
     context_id = context + '/:id'
@@ -19,11 +19,13 @@ Rails.application.routes.draw do
     patch  context_id =>             resource + '#update'
     get    context_id + '/edit' =>   resource + '#edit'
     post   context_id + '/star' =>   resource + '#star'
-    post   context_id + '/unstar' => resource + '#star'
+    post   context_id + '/unstar' => resource + '#unstar'
+    get    context_id + '/versions' => resource + '#versions'
   end
 
-  datagraft_resource :data_distributions
-  datagraft_resource :transformations
+  datagraft_resources :data_distributions
+  datagraft_resources :transformations
+  datagraft_resources :queriable_data_stores
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'

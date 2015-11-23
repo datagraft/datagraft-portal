@@ -11,7 +11,7 @@
   </thead>
 
   <tbody>
-    <% @data_distributions.each do |data_distribution| %>
+    <% @things.each do |data_distribution| %>
       <tr>
         <td><%= data_distribution.slug %></td>
         <td><%= link_to 'Show', thing_path(data_distribution) %></td>

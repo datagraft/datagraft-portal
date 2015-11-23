@@ -1,6 +1,38 @@
-== gravatar_tag @user.email
-h1 = @user.name
+- title @user.name || @user.username
+- setOption :noShadow
 
-p.roger je suis vraiment super intéressant
+div.mdl-grid
 
-a href=edit_user_registration_path Edit my profile
+  div.mdl-cell.mdl-cell--4-col.sin-user-box.mdl-color--white.mdl-shadow--2dp
+    == gravatar_tag @user.email
+    h4 = @user.name || @user.username
+    - if not @ownAccount
+      == link_to api_keys_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-button--raised" do
+          i.material-icons person_add
+          '&nbsp;Follow
+    - else
+      == link_to edit_user_registration_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-button--raised" do
+          i.material-icons edit
+          '&nbsp;Edit my profile
+  div.mdl-cell.mdl-cell--8-col
+
+div.mdl-grid
+  - @things.each do |thing|
+    a class=["mdl-card", "mdl-cell", "mdl-cell--4-col", "mdl-shadow--2dp",
+          "sin-small-card", "sin-card-#{thing.class.name.downcase}"] href=thing_path(thing)
+      div.mdl-card__title
+        h3.mdl-card__title-text = thing.class.name
+      div.mdl-card__supporting-text.sin-card-center = thing.name
+      div.mdl-card__supporting-text.mdl-grid
+        div.mdl-cell.mdl-cell--6-col.sin-private-indicator
+          - if not thing.public
+            i.material-icons lock
+        div.mdl-cell--3-col
+        div.mdl-cell.sin-stars-count.mdl-cell--3-col
+          span
+            = thing.stars_count
+            ' 
+            i.material-icons star
+
+div.sin-pagination
+  == will_paginate @things

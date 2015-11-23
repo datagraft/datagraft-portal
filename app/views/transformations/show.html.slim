@@ -3,6 +3,10 @@
 h3 = @transformation.name
 h4 = @transformation.stars_count
 
+h3
+  'Number of versioooons
+  = @transformation.versions.count
+
 p.author Created by #{@transformation.user.name}
 
   #- if !@transformation.file.blank?

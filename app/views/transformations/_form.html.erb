@@ -1,10 +1,10 @@
-<%= form_for(@transformation, url: thing_path(@transformation)) do |f| %>
-  <% if @transformation.errors.any? %>
+<%= form_for(@thing, url: thing_path(@thing)) do |f| %>
+  <% if @thing.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@transformation.errors.count, "error") %> prohibited this transformation from being saved:</h2>
+      <h2><%= pluralize(@thing.errors.count, "error") %> prohibited this transformation from being saved:</h2>
 
       <ul>
-      <% @transformation.errors.full_messages.each do |message| %>
+      <% @thing.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>

@@ -41,7 +41,7 @@
   }
 }
 
-.mdl-card.sin-publish-card {
+.mdl-card.sin-publish-card, .mdl-card.sin-datastore-card {
   background: image-url("symphony.png");
   &.sin-bg-alt-1 {
     background: image-url("small_steps.png");
@@ -52,7 +52,22 @@
   .mdl-card__actions {
     background: rgba(255,255,255,0.6);
   }
+
+  &.sin-card-disabled {
+    background:#eee;
+     * {
+      color: #bbb;
+     }
+    // opacity:0.3;
+  }
 }
+
+// .mdl-card.sin-datastore-card {
+//   background: #cdcdcd; 
+//   .mdl-card__actions {
+//     background: rgba(255,255,255,0.6);
+//   }
+// }
 
 .mdl-button.sin-button--danger:hover {
   color: #e51c23;// red md

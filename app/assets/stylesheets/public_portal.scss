@@ -1,0 +1,17 @@
+.sin-user-box {
+  text-align: center;
+
+  padding:1.3em; 
+}
+
+.sin-stars-count {
+  text-align: right;
+}
+.sin-stars-count, .sin-private-indicator {
+    i.material-icons {
+    font-size:16px;
+    line-height: 13px;
+    position:relative;
+    top:2px;
+  }
+}

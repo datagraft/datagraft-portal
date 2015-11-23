@@ -1,0 +1,6 @@
+<p id="notice"><%= notice %></p>
+
+<%= image_tag attachment_url(@data_distribution, :file, :fill, 300, 300, format: "jpg") %>
+
+<%= link_to 'Edit', thing_edit_path(@data_distribution) %> |
+<%= link_to 'Back', data_distributions_path %>

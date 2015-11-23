@@ -18,14 +18,18 @@ module ThingHelper
   def thing_unstar_path(thing, parameters = {})
     thing_generic_path(thing, '/unstar', parameters)
   end
+
+  def things_path(thing, parameters = {})
+    classname = thing.class.name
+    return "" if thing.user.nil?
+    "/#{thing.user.username}/#{classname.underscore.pluralize}#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
   
   private
-  
-  def thing_generic_path(thing, method, parameters = {})
-    classname = thing.class.name
 
-    return "" if thing.user.nil?
-
-    "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
-  end
+    def thing_generic_path(thing, method, parameters = {})
+      classname = thing.class.name
+      return "" if thing.user.nil?
+      "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+    end
 end

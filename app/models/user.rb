@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :stars
   has_many :transformations
   has_many :data_distributions
+  has_many :queriable_data_stores
   has_many :data_pages
   has_many :api_keys
   

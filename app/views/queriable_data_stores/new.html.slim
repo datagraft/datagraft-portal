@@ -1,0 +1,35 @@
+- title "Create a new queriable data store"
+- setOption :noShadow
+
+h1 Create a new queriable data store
+
+div.mdl-grid
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-datastore-card
+    div.mdl-card__title.mdl-card--expand
+      h2.mdl-card__title-text S4
+    div.mdl-card__supporting-text
+      | Ontotext S4. In memory LinkedData SPARQL querying.
+    div.mdl-card__actions
+      == link_to 'Create', new_queriable_data_store_path(:hosting => 'ontotext'),
+           :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
+
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-datastore-card
+    div.mdl-card__title.mdl-card--expand
+      h2.mdl-card__title-text Dandelion
+    div.mdl-card__supporting-text
+      | SpazioDati Dandelion. Managed database with great visualizations.
+    div.mdl-card__actions
+      == link_to 'Create', new_queriable_data_store_path(:hosting => 'spaziodati'),
+           :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
+
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-datastore-card.sin-card-disabled
+    div.mdl-card__title.mdl-card--expand
+      h2.mdl-card__title-text HP Vertica
+    div.mdl-card__supporting-text
+      br
+      | When big data comes to your door.
+    div.mdl-card__actions
+      == link_to 'Create', new_queriable_data_store_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect", disabled: true
+
+/ div.mdl-grid
+/   == link_to 'Back', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
