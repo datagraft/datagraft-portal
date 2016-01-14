@@ -1,0 +1,25 @@
+- title "Your catalogues"
+- setOption :noShadow
+
+- unless @catalogues.empty?
+  h1 Your catalogues
+  table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
+    thead
+      tr
+        th.mdl-data-table__cell--non-numeric Name
+        th [colspan=2] 
+    tbody
+    - @catalogues.each do |catalogue|
+      tr
+        td.mdl-data-table__cell--non-numeric = catalogue.name
+        td.sin-action-table
+          == link_to catalogue_edit_path(catalogue) do
+            i.material-icons edit
+        td.sin-action-table
+          == link_to catalogue, method: :delete, data: { confirm: 'Are you sure you want to delete this catalogue?' } do
+            i.material-icons delete
+- else 
+  p No public content found.
+  
+div.mdl-grid
+  == link_to 'New Catalogue', new_catalogue_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-color--white mdl-cell--1"

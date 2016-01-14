@@ -6,6 +6,7 @@ class Thing < ActiveRecord::Base
   friendly_id :name, :use => :history
 
   has_many :stars
+  has_many :catalogues, :through => :catalogue_records
   belongs_to :user
 
   validates :name, presence: true

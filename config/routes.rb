@@ -22,6 +22,18 @@ Rails.application.routes.draw do
     post   context_id + '/unstar' => resource + '#unstar'
     get    context_id + '/versions' => resource + '#versions'
   end
+  
+  get ':username/catalogues/new' => 'catalogues#new'
+  post ':username/catalogues' => 'catalogues#create'
+  get ':username/catalogues' => 'catalogues#index'
+  get ':username/catalogues/:id' => 'catalogues#show'
+  delete ':username/catalogues/:id' => 'catalogues#destroy'
+  patch ':username/catalogues/:id' => 'catalogues#update'
+  put ':username/catalogues/:id' => 'catalogues#update'
+  get ':username/catalogues/:id/edit' => 'catalogues#edit'
+  post ':username/catalogues/:id/star' => 'catalogues#star_catalogue'
+  post ':username/catalogues/:id/unstar' => 'catalogues#unstar_catalogue'
+  get ':username/catalogues/:id/versions' => 'catalogues#versions'
 
   datagraft_resources :data_distributions
   datagraft_resources :transformations

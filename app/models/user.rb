@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :queriable_data_stores
   has_many :data_pages
   has_many :api_keys
+  has_many :catalogues
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -41,13 +42,28 @@ class User < ActiveRecord::Base
     star.thing = thing
     star.save 
   end
+  
+  def star_catalogue(catalogue)
+    catalogue_star = CatalogueStar.new
+    catalogue_star.user = self
+    catalogue_star.catalogue = catalogue
+    catalogue_star.save
+  end
 
   def unstar(thing)
     Star.where(user: self, thing: thing).destroy_all
   end
+  
+  def unstar_catalogue(catalogue)
+    CatalogueStar.where(user: self, catalogue: catalogue).destroy_all
+  end
 
   def has_star(thing)
     Star.where(user: self, thing: thing).exists?
+  end
+  
+  def has_catalogue_star(catalogue)
+    CatalogueStar.where(user: self, catalogue: catalogue).exists?
   end
 
   def dashboard_things
