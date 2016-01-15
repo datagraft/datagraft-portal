@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160114123812) do
+ActiveRecord::Schema.define(version: 20160115091735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,10 +48,10 @@ ActiveRecord::Schema.define(version: 20160114123812) do
     t.integer  "user_id"
     t.string   "name"
     t.boolean  "public"
-    t.integer  "stars_count"
+    t.integer  "stars_count", default: 0
     t.string   "slug"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "catalogues", ["slug"], name: "index_catalogues_on_slug", using: :btree

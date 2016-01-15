@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include OntotextUser
 
   has_many :stars
+  has_many :catalogue_stars
   has_many :transformations
   has_many :data_distributions
   has_many :queriable_data_stores
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
   validates :username, uniqueness: true, case_sensitive: false
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
-    in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions),
+    in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions catalogue catalogues),
     message: "\"%{value}\" is reserved."
   }
 
@@ -70,20 +71,26 @@ class User < ActiveRecord::Base
     Thing.where(user: self).order(stars_count: :desc, created_at: :desc)
   end
 
+  def dashboard_catalogues
+    Catalogue.where(user: self).order(stars_count: :desc, created_at: :desc)
+  end
+    
   def search_dashboard_things(search)
     ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-    dashboard_things
-      .fuzzy_search(name: search)
+    dashboard_things.fuzzy_search(name: search)
   end
-  #def self.find_for_oauth(auth)
-#
- # end
+  
+  def search_dashboard_catalogues(search)
+    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    dashboard_catalogues.fuzzy_search(name: search)
+  end
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       puts auth.info
       p auth.info
       puts "J?AIME LES PONEYS AND VIVE LES RATS"
+      puts "аз обичам мач и боза"
       user.terms_of_service = true
       user.username = auth.info.name.parameterize
       user.email = auth.info.email

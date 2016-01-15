@@ -3,6 +3,7 @@ class Ability
 
   def initialize(user)
     can :read, Thing, :public => true
+    can :read, Catalogue, :public => true
     if user
         can :manage, :all, :user_id => user.id
         can :star, Thing
