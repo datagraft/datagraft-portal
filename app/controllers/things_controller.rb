@@ -8,16 +8,16 @@ class ThingsController < ApplicationController
   def index
     # If the user lists her own resources
     if user_signed_in? && current_user.username == params[:username]
-      @things = current_user.send(virtualResourcesName)
-    # If she is just browsing other people's pages
+      @things = current_user.send(virtual_resources_name)
+      # If she is just browsing other people's pages
     else
       user = User.find_by_username(params[:username]) or not_found
-      @things = user.send(virtualResourcesName).where(public: true)
+      @things = user.send(virtual_resources_name).where(public: true)
     end
-  
+
     @things = @things.paginate(:page => params[:page], :per_page => 30)
 
-    instance_variable_set("@"+virtualResourcesName, @things)
+    instance_variable_set("@"+virtual_resources_name, @things)
   end
 
   # GET /:username/:resource/:id
@@ -32,27 +32,27 @@ class ThingsController < ApplicationController
 
   # GET /:username/:resource/new
   def new
-    resource = virtualResource
+    resource = virtual_resource
     authorize! :create, resource
     @thing = resource.new
     @thing.user = current_user
-    instance_variable_set("@"+virtualResourceName(true), @thing)
+    instance_variable_set("@"+virtual_resource_name(true), @thing)
   end
 
   # POST /:username/:resource/:id
   def create
-    resource = virtualResource
+    resource = virtual_resource
     authorize! :create, resource
-    @thing = resource.new(self.send(virtualResourceName(true)+"_params"))
+    @thing = resource.new(self.send(virtual_resource_name(true)+"_params"))
     @thing.user = current_user
 
-    create_fill
+    fill_name_if_empty
 
-    instance_variable_set("@"+virtualResourceName(true), @thing)
+    instance_variable_set("@"+virtual_resource_name(true), @thing)
 
     respond_to do |format|
       if @thing.save
-        format.html { redirect_to thing_path(@thing), notice: createNotice }
+        format.html { redirect_to thing_path(@thing), notice: create_notice }
         format.json { render :show, status: :created, location: thing_path(@thing) }
       else
         format.html { render :new }
@@ -65,11 +65,11 @@ class ThingsController < ApplicationController
   def update
     authorize! :update, @thing
 
-    instance_variable_set("@"+virtualResourceName(true), @thing)
+    instance_variable_set("@"+virtual_resource_name(true), @thing)
 
     respond_to do |format|
-      if @thing.update(self.send(virtualResourceName(true)+"_params"))
-        format.html { redirect_to thing_path(@thing), notice: updateNotice }
+      if @thing.update(self.send(virtual_resource_name(true)+"_params"))
+        format.html { redirect_to thing_path(@thing), notice: update_notice }
         format.json { render :show, status: :ok, location: thing_path(@thing) }
       else
         format.html { render :edit }
@@ -84,18 +84,18 @@ class ThingsController < ApplicationController
     @thing.destroy
 
     respond_to do |format|
-      format.html { redirect_to things_path(@thing), notice: destroyNotice }
+      format.html { redirect_to things_path(@thing), notice: destroy_notice }
       format.json { head :no_content }
     end
   end
- 
+
   # POST /:username/:resource/:id/star
   def star
     authenticate_user!
     authorize! :read, @thing
     current_user.star(@thing)
     respond_to do |format|
-      format.html { redirect_to thing_path(@thing), notice: 'Thank you so much <3' }
+      format.html { redirect_to thing_path(@thing), notice: star_notice }
       format.json { head :no_content }
     end
   end
@@ -106,7 +106,7 @@ class ThingsController < ApplicationController
     authorize! :read, @thing
     current_user.unstar(@thing)
     respond_to do |format|
-      format.html { redirect_to thing_path(@thing), notice: 'No regrets' }
+      format.html { redirect_to thing_path(@thing), notice: unstar_notice }
       format.json { head :no_content }
     end
   end
@@ -118,48 +118,56 @@ class ThingsController < ApplicationController
   end
 
   protected
-    # These two methods are magic and it's probably faster to override them
-    # in the child classes
+  # These two methods are magic and it's probably faster to override them
+  # in the child classes
 
-    def virtualResourceName(underscore = false)
-      name = /^(.+)sController$/.match(self.class.name)[1]
-      underscore ? name.underscore : name 
-    end
+  def virtual_resource_name(underscore = false)
+    name = /^(.+)sController$/.match(self.class.name)[1]
+    underscore ? name.underscore : name 
+  end
 
-    def virtualResourcesName
-      /^(.+)_controller$/.match(self.class.name.underscore)[1]
-    end
+  def virtual_resources_name
+    /^(.+)_controller$/.match(self.class.name.underscore)[1]
+  end
 
-    def virtualResource
-      Object.const_get(virtualResourceName)
-    end
+  def virtual_resource
+    Object.const_get(virtual_resource_name)
+  end
 
-    def createNotice
-      'Thing was successfully created'
-    end
+  def create_notice
+    'Asset has been successfully created!'
+  end
 
-    def updateNotice
-      'Thing was successfully updated'
-    end
+  def update_notice
+    'Asset has been successfully updated!'
+  end
 
-    def destroyNotice
-      'Thing was successfully destroyed'
-    end
+  def destroy_notice
+    'Asset has been successfully destroyed!'
+  end
 
-    def not_found
-      raise ActionController::RoutingError.new('Not Found')
-    end
-    
-    def create_fill
-      # deal with it
-      @thing.name = Bazaar.object if @thing.name.blank?
-    end
+  def star_notice
+    'Successfully starred asset!'
+  end
+  
+  def unstar_notice
+    'Successfully un-starred asset!'
+  end
+  
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
+  def fill_name_if_empty
+    # deal with it
+    @thing.name = Bazaar.object if @thing.name.blank?
+  end
 
   private
-    def set_thing
-      throw "A username parameter is required" if not params[:username]
-      user = User.find_by_username(params[:username]) or not_found
-      @thing = user.send(virtualResourcesName).friendly.find(params[:id])
-      instance_variable_set("@"+virtualResourceName(true), @thing)
-    end
+  def set_thing
+    throw "A username parameter is required" if not params[:username]
+    user = User.find_by_username(params[:username]) or not_found
+    @thing = user.send(virtual_resources_name).friendly.find(params[:id])
+    instance_variable_set("@"+virtual_resource_name(true), @thing)
+  end
 end

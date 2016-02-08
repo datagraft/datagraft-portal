@@ -1,4 +1,4 @@
-- title "Listing Api Keys"
+- title "Browse public assets"
 - setOption :noShadow
 
 - unless @things.empty?
@@ -10,7 +10,7 @@
           h3.mdl-card__title-text = thing.class.name
         div.mdl-card__supporting-text.sin-card-center = thing.name
         div.mdl-card__supporting-text.mdl-grid
-          div.mdl-cell.mdl-cell--6-col By #{thing.user.name}
+          div.mdl-cell.mdl-cell--6-col By #{thing.user.name || thing.user.username}
           div.mdl-cell--3-col
           div.mdl-cell.sin-stars-count.mdl-cell--3-col
             span

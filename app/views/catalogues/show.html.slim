@@ -1,0 +1,20 @@
+- title @catalogue.name
+
+h3 = @catalogue.name
+h4 = @catalogue.stars_count
+
+h3
+  'Number of registered versions
+  = @catalogue.versions.count
+
+p.author Created by #{@catalogue.user.name}
+
+== link_to 'Edit', catalogue_edit_path(@catalogue)
+span  | 
+== link_to 'Back', catalogues_path
+- if user_signed_in?
+  span  | 
+  -if current_user.has_catalogue_star(@catalogue)
+    == link_to 'Unstar', catalogue_unstar_path(@catalogue), :method => 'post'
+  -else
+    == link_to 'Star', catalogue_star_path(@catalogue), :method => 'post'

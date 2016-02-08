@@ -1,0 +1,7 @@
+h1 "#{@catalogue.name}"
+
+ul
+  - @versions.each do |version|
+    li 
+      strong #{time_ago_in_words version[:created_at]} ago -
+      em = version.created_at
