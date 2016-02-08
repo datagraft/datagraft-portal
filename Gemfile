@@ -99,6 +99,7 @@ gem 'pg'
 # file upload with streaming io
 gem "refile", require: "refile/rails"
 gem "refile-mini_magick"
+gem "refile-s3"
 
 # Generate funny names by default
 gem 'bazaar'
@@ -114,3 +115,6 @@ gem 'faraday-cookie_jar'
 
 # JavaScript file upload by drag&drop
 gem 'dropzonejs-rails'
+
+# Diplomat is a Consul.io client
+gem 'diplomat'

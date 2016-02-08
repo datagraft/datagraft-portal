@@ -22,7 +22,7 @@ div.mdl-grid
   div.mdl-cell.mdl-cell--5-col.mdl-cell--10-col-tablet
     div.mdl-shadow--2dp.mdl-color--white.sin-projects
       div.mdl-grid
-        h3.sin-projects-title.mdl-cell.mdl-cell--8-col Your assets
+        h3.sin-projects-title.mdl-cell.mdl-cell--8-col My assets
         div.mdl-cell.mdl-cell--4-col.sin-projects-button-container
           / a.mdl-button New
           = link_to('Publish', publish_path, class: "mdl-button")
@@ -38,7 +38,12 @@ div.mdl-grid
               tbody
                 - @things[type].each do |thing|
                   tr
-                    td.sin-small-name.mdl-data-table__cell--non-numeric = thing.name
+                    td.sin-small-name.mdl-data-table__cell--non-numeric
+                      = link_to thing.name, thing_path(thing)
+                      / - if thing.respond_to? :file
+                      /   = link_to thing.name, attachment_url(thing, :file)
+                      / - else
+                      /   = thing.name
                     td.sin-stars-count
                       span
                         = thing.stars_count 

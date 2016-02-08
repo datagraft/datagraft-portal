@@ -54,6 +54,10 @@ section.section--center {
   margin: 0;
   /*padding: 0;*/
 }
+.sin-form-group {
+  background: white
+}
+
 .sin-margin-checkbox.mdl-checkbox {
   margin-bottom: 21px;
   margin-top: 10px;
