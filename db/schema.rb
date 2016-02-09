@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115091735) do
+ActiveRecord::Schema.define(version: 20160209080501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,7 +95,6 @@ ActiveRecord::Schema.define(version: 20160115091735) do
     t.boolean  "public"
     t.integer  "stars_count",       default: 0
     t.string   "name"
-    t.text     "code"
     t.string   "type"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -103,9 +102,11 @@ ActiveRecord::Schema.define(version: 20160115091735) do
     t.string   "file_id"
     t.integer  "file_size"
     t.string   "file_content_type"
+    t.json     "metadata"
+    t.json     "configuration"
   end
 
-  add_index "things", ["slug", "user_id"], name: "index_things_on_slug_and_user_id", unique: true, using: :btree
+  add_index "things", ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
   add_index "things", ["type"], name: "index_things_on_type", using: :btree
   add_index "things", ["user_id"], name: "index_things_on_user_id", using: :btree
 
@@ -122,11 +123,11 @@ ActiveRecord::Schema.define(version: 20160115091735) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.string   "username"
     t.string   "website"
     t.string   "name"
     t.string   "organization"
     t.string   "place"
+    t.string   "username"
     t.string   "provider"
     t.string   "uid"
     t.string   "image"
