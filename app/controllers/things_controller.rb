@@ -15,6 +15,12 @@ class ThingsController < ApplicationController
       @things = user.send(virtual_resources_name).where(public: true)
     end
 
+    if params[:search]
+      # TODO execute this automatically
+      ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+      @things = @things.fuzzy_search(params[:search])
+    end
+
     @things = @things.paginate(:page => params[:page], :per_page => 30)
 
     instance_variable_set("@"+virtual_resources_name, @things)
