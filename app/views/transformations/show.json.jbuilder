@@ -1,1 +1,1 @@
-json.extract! @transformation, :id, :name, :code, :public
+json.extract! @transformation, :id, :name, :public, :metadata, :configuration

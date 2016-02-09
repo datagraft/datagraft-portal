@@ -2,7 +2,9 @@ class ThingsController < ApplicationController
   include ApplicationHelper
   include ThingHelper
 
-  before_action :set_thing, only: [:show, :edit, :update, :destroy, :star, :unstar, :versions]
+  before_action :set_thing, only: [
+    :show, :edit, :update, :destroy, :star, :unstar, :versions,
+    :show_metadata, :create_metadata]
 
   # GET /:username/:resource
   def index
@@ -123,6 +125,49 @@ class ThingsController < ApplicationController
     @versions = @thing.versions.reverse
   end
 
+  # GET /:username/:resource/:id/metadata
+  # GET /:username/:resource/:id/metadata/:key
+  def show_metadata
+    authorize! :read, @thing
+    @metadata = @thing.metadata
+    if params["key"]
+      @metadata = @metadata[params["key"]]
+      not_found if not @metadata
+    end
+  end
+
+  # POST /:username/:resource/:id/metadata
+  # POST /:username/:resource/:id/metadata/:key
+  def create_metadata
+    authorize! :create, @thing
+    @metadata = request.POST
+
+    # Somehow the resource is set as an empty object in the request.POST by default
+    virtualname = virtual_resource_name(true) 
+    if @metadata[virtualname].blank?
+      @metadata.delete virtualname
+    end
+
+    if params[:key] 
+      @metadata = params[:key]
+      p params[:key]
+    else
+      @thing.metadata = @metadata
+    end
+
+
+    respond_to do |format|
+      if @thing.save
+        format.html { redirect_to thing_metadata_path(@thing), notice: create_notice }
+        format.json { render :show_metadata, status: :created, location: thing_path(@thing) }
+      else
+        format.html { render :new }
+        format.html { redirect_to thing_metadata_path(@thing), notice: cannot_save_metadata_notice }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   protected
   # These two methods are magic and it's probably faster to override them
   # in the child classes
@@ -158,6 +203,10 @@ class ThingsController < ApplicationController
   
   def unstar_notice
     'Successfully un-starred asset!'
+  end
+
+  def cannot_save_metadata_notice
+    'Unable to save the metadata'
   end
   
   def not_found

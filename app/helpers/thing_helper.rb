@@ -19,6 +19,10 @@ module ThingHelper
     thing_generic_path(thing, '/unstar', parameters)
   end
 
+  def thing_metadata_path(thing, parameters = {})
+    thing_generic_path(thing, '/metadata', parameters)
+  end
+
   def things_path(thing, parameters = {})
     classname = thing.class.name
     return "" if thing.user.nil?

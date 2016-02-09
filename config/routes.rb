@@ -21,6 +21,18 @@ Rails.application.routes.draw do
     post   context_id + '/star' =>   resource + '#star'
     post   context_id + '/unstar' => resource + '#unstar'
     get    context_id + '/versions' => resource + '#versions'
+
+    get    context_id + '/metadata' =>      resource + '#show_metadata'
+    post   context_id + '/metadata' =>      resource + '#create_metadata'
+    get    context_id + '/metadata/*key' => resource + '#show_metadata'
+    post   context_id + '/metadata/*key' => resource + '#create_metadata'
+
+    delete context_id + '/metadata/:key' => resource + '#versions'
+    put    context_id + '/metadata/:key' => resource + '#versions'
+    patch  context_id + '/metadata/:key' => resource + '#versions'
+
+    get    context_id + '/configuration' => resource + '#versions'
+    post   context_id + '/configuration' => resource + '#versions'
   end
   
   get ':username/catalogues/new' => 'catalogues#new'
