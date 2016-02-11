@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   datagraft_resources :data_distributions
   datagraft_resources :transformations
   datagraft_resources :queriable_data_stores
+  datagraft_resources :utility_functions
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'
