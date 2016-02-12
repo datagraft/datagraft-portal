@@ -6,8 +6,8 @@ class UtilityFunctionsController < ThingsController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def utilityfunction_params
-      params.require(:utilityfunction).permit(:public, :name, :code)
+    def utility_function_params
+        params.require(:utility_function).permit(:public, :name, :metadata, :configuration)
     end
 
 end

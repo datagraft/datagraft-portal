@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :data_distributions
   has_many :queriable_data_stores
   has_many :data_pages
+  has_many :utility_functions
   has_many :api_keys
   has_many :catalogues
   
