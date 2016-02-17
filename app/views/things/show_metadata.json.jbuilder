@@ -1,1 +1,1 @@
-json.metadata @metadata
+json.merge! @metadata
