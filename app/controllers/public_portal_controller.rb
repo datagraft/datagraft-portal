@@ -1,5 +1,8 @@
 class PublicPortalController < ApplicationController
   before_filter :set_user, only: [:user]
+  skip_authorize_resource only: [:user, :explore]
+  skip_authorization_check
+
 
   # GET /:username
   # GET /:username.json

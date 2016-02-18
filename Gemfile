@@ -118,3 +118,6 @@ gem 'dropzonejs-rails'
 
 # Diplomat is a Consul.io client
 gem 'diplomat'
+
+# Doorkeeper to support Oauth2 as an authentication provider
+gem 'doorkeeper'

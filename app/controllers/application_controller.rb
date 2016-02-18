@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::Base
+  include CanCan::ControllerAdditions
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
-  before_filter :authenticate_user_from_token!
+  before_filter :authenticate_user_from_token_or_doorkeeper!
+  after_filter :store_location!
+
+  #check_authorization :unless => :do_not_check_authorization?
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
@@ -14,6 +19,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
+    # def authenticate_user!
+      # return if current_user
+
+      # render json: { errors: ['User is not authenticated!'] }, status: :unauthorized
+    # end
+
     def users_return_to
       return "je suis un poney"
       # current_user.name
@@ -22,13 +33,56 @@ class ApplicationController < ActionController::Base
     def after_sign_in_path_for(resource)
       # TODO
       # p session
-      stored_location_for(resource) || "/explore"
+      # p resource
+      # throw  current_user_path
+      # throw stored_location_for(resource)
+
+
+      r = request.env['omniauth.origin'] || stored_location_for(resource) || "/explore"
+      # store_location_for(:user, request.fullpath)
+      session.delete(stored_location_key_for(resource))
+      # stored_location_for(resource) || "/explore"
       # return "/explore"
+      # prevent redirect loop
+      return "/explore" if r == request.referer
+      return r
+    end
+
+    # def after_sign_in_path_for(resource)
+    #   stored_location_for(:user) || root_path
+    # end
+
+    def store_location!
+      return if current_user
+      return unless request.get?
+      return if request.path =~ /^\/users\// 
+      store_location_for(:user, request.fullpath)
     end
 
   private
+    def doorkeeper_unauthorized_render_options(error: nil)
+      { json: { error: "Not authorized connard" } }
+    end
 
-    def authenticate_user_from_token!
+    def do_not_check_authorization?
+      respond_to?(:devise_controller?)
+    end
+
+    def authenticate_user_from_token_or_doorkeeper!(*scopes)
+      # OAuth2 first
+      # throw "auinetaunst"
+      @_doorkeeper_scopes = scopes.presence || Doorkeeper.configuration.default_scopes
+      if valid_doorkeeper_token?
+        user = User.find(doorkeeper_token.resource_owner_id)
+        # throw user
+        if user
+          request.env['devise.skip_trackable'] = true
+          sign_in user, store: false
+          request.env.delete('devise.skip_trackable')
+          return
+        end
+      end
+
       # Get the values from the headers
       if token = params[:user_token].blank? &&
           request.headers['X-user-token']
