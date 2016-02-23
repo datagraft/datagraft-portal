@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   validates :username, uniqueness: true, case_sensitive: false
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
-    in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions catalogue catalogues myassets),
+    in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions catalogue catalogues myassets oauth),
     message: "\"%{value}\" is reserved."
   }
 

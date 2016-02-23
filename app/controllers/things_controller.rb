@@ -131,9 +131,10 @@ class ThingsController < ApplicationController
     authorize! :read, @thing
     @metadata = @thing.metadata
     if params["key"]
-      @metadata = @metadata[params["key"]]
+      @metadata = Rodash.get(@metadata, params["key"])
       not_found if not @metadata
     end
+    render formats: :json
   end
 
   # POST /:username/:resource/:id/metadata

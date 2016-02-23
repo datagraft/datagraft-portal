@@ -121,3 +121,6 @@ gem 'diplomat'
 
 # Doorkeeper to support Oauth2 as an authentication provider
 gem 'doorkeeper'
+
+# _.get and _.set for Ruby
+gem 'rodash'
