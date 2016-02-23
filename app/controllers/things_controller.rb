@@ -9,7 +9,7 @@ class ThingsController < ApplicationController
   # GET /:username/:resource
   def index
     # If the user lists her own resources
-    if user_signed_in? && current_user.username == params[:username]
+    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
       @things = current_user.send(virtual_resources_name)
       # If she is just browsing other people's pages
     else
@@ -221,7 +221,11 @@ class ThingsController < ApplicationController
   private
   def set_thing
     throw "A username parameter is required" if not params[:username]
-    user = User.find_by_username(params[:username]) or not_found
+    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+      user = current_user
+    else
+      user = User.find_by_username(params[:username]) or not_found
+    end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
     instance_variable_set("@"+virtual_resource_name(true), @thing)
   end
