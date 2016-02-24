@@ -4,7 +4,9 @@ class ThingsController < ApplicationController
 
   before_action :set_thing, only: [
     :show, :edit, :update, :destroy, :star, :unstar, :versions,
-    :show_metadata, :edit_metadata, :delete_metadata]
+    :show_metadata, :edit_metadata, :delete_metadata,
+    :show_configuration, :edit_configuration, :delete_configuration
+  ]
 
   # GET /:username/:resource
   def index
@@ -130,42 +132,34 @@ class ThingsController < ApplicationController
   # GET /:username/:resource/:id/metadata/:key
   def show_metadata
     authorize! :read, @thing
-    @metadata = @thing.metadata
-    if params["key"]
-      @metadata = Rodash.get(@metadata, params["key"])
-      not_found if not @metadata
-    end
-    # render formats: :json
-    render :json => @metadata
+    show_json @thing.metadata
   end
 
-  # POST /:username/:resource/:id/metadata
-  # POST /:username/:resource/:id/metadata/:key
+  # GET /:username/:resource/:id/configuration
+  # GET /:username/:resource/:id/configuration/:key
+  def show_configuration
+    authorize! :read, @thing
+    show_json @thing.configuration
+  end
+
+  # POST  /:username/:resource/:id/metadata
+  # PUT   /:username/:resource/:id/metadata
+  # POST  /:username/:resource/:id/metadata/:key
   # PATCH /:username/:resource/:id/metadata/:key
-  # PUT /:username/:resource/:id/metadata/:key
+  # PUT   /:username/:resource/:id/metadata/:key
   def edit_metadata
     authorize! :create, @thing
-    @metadata = request.POST
 
-    # Somehow the resource is set as an empty object in the request.POST by default
-    virtualname = virtual_resource_name(true) 
-    if @metadata[virtualname].blank?
-      @metadata.delete virtualname
+    edit_json(@thing.metadata) do |new_data|
+      @thing.metadata = new_data
     end
+  end
 
-    if params[:key] 
-      Rodash.set(@thing.metadata, params[:key], @metadata)
-      @metadata = Rodash.get(@thing.metadata, params[:key])
-    else
-      @thing.metadata = @metadata
-    end
+  def edit_configuration
+    authorize! :create, @thing
 
-
-    if @thing.save
-      # render :json => @metadata, status: :created#, location: thing_path(@thing)
-      head :created
-    else
-      render json: @thing.errors, status: :unprocessable_entity
+    edit_json(@thing.configuration) do |new_data|
+      @thing.configuration = new_data
     end
   end
 
@@ -174,16 +168,16 @@ class ThingsController < ApplicationController
   def delete_metadata
     authorize! :delete, @thing
 
-    if params[:key] 
-      Rodash.unset(@thing.metadata, params[:key])
-    else
-      @thing.metadata = nil
+    delete_json(@thing.metadata) do |new_data|
+      @thing.metadata = new_data
     end
+  end
 
-    if @thing.save
-      head :ok
-    else
-      render json: @thing.errors, status: :unprocessable_entity
+  def delete_configuration
+    authorize! :delete, @thing
+
+    delete_json(@thing.configuration) do |new_data|
+      @thing.configuration = new_data
     end
   end
 
@@ -248,5 +242,53 @@ class ThingsController < ApplicationController
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
     instance_variable_set("@"+virtual_resource_name(true), @thing)
+  end
+
+  def show_json(data)
+    if params["key"]
+      data = Rodash.get(data, params["key"])
+      not_found if not data
+    end
+
+    render :json => data
+  end
+
+  def edit_json(full_data)
+
+    data = request.POST
+
+    # Somehow the resource is set as an empty object in the request.POST by default
+    virtualname = virtual_resource_name(true)
+    if data[virtualname].blank?
+      data.delete virtualname
+    end
+
+    if params[:key]
+      Rodash.set(full_data, params[:key], data)
+      yield full_data
+    else
+      yield data
+    end
+
+    if @thing.save
+      head :created
+    else
+      render json: @thing.errors, status: :unprocessable_entity
+    end
+  end
+
+  def delete_json(full_data)
+    if params[:key]
+      Rodash.unset(full_data, params[:key])
+      yield full_data
+    else
+      yield nil
+    end
+
+    if @thing.save
+      head :ok
+    else
+      render json: @thing.errors, status: :unprocessable_entity
+    end
   end
 end

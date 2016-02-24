@@ -24,15 +24,23 @@ Rails.application.routes.draw do
     post   context_id + '/unstar' => resource + '#unstar'
     get    context_id + '/versions' => resource + '#versions'
 
-    get    context_id + '/metadata' =>      resource + '#show_metadata'
-    post   context_id + '/metadata' =>      resource + '#edit_metadata'
-    delete context_id + '/metadata' =>      resource + '#delete_metadata'
-    
-    get    context_id + '/metadata/*key', to: resource + '#show_metadata', format: false
-    post   context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
-    put    context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
-    patch  context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
-    delete context_id + '/metadata/*key', to: resource + '#delete_metadata', format: false
+    ['metadata', 'configuration'].each do |type|
+      full_context = context_id + '/' + type
+      context_with_key = full_context + '/*key'
+      resource_show = resource + '#show_' + type
+      resource_edit = resource + '#edit_' + type
+      resource_delete = resource + '#delete_' + type
+
+      get    full_context => resource_show
+      post   full_context => resource_edit
+      put    full_context => resource_edit
+      delete full_context => resource_delete
+
+      get    context_with_key, to: resource_show, format: false
+      post   context_with_key, to: resource_edit, format: false
+      put    context_with_key, to: resource_edit, format: false
+      delete context_with_key, to: resource_delete, format: false
+    end
 
     get    context_id + '/configuration' => resource + '#versions'
     post   context_id + '/configuration' => resource + '#versions'
