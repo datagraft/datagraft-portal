@@ -25,13 +25,14 @@ Rails.application.routes.draw do
     get    context_id + '/versions' => resource + '#versions'
 
     get    context_id + '/metadata' =>      resource + '#show_metadata'
-    post   context_id + '/metadata' =>      resource + '#create_metadata'
+    post   context_id + '/metadata' =>      resource + '#edit_metadata'
+    delete context_id + '/metadata' =>      resource + '#delete_metadata'
+    
     get    context_id + '/metadata/*key', to: resource + '#show_metadata', format: false
-    post   context_id + '/metadata/*key', to: resource + '#create_metadata', format: false
-
-    delete context_id + '/metadata/:key' => resource + '#versions'
-    put    context_id + '/metadata/:key' => resource + '#versions'
-    patch  context_id + '/metadata/:key' => resource + '#versions'
+    post   context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
+    put    context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
+    patch  context_id + '/metadata/*key', to: resource + '#edit_metadata', format: false
+    delete context_id + '/metadata/*key', to: resource + '#delete_metadata', format: false
 
     get    context_id + '/configuration' => resource + '#versions'
     post   context_id + '/configuration' => resource + '#versions'

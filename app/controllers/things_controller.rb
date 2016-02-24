@@ -4,7 +4,7 @@ class ThingsController < ApplicationController
 
   before_action :set_thing, only: [
     :show, :edit, :update, :destroy, :star, :unstar, :versions,
-    :show_metadata, :create_metadata]
+    :show_metadata, :edit_metadata, :delete_metadata]
 
   # GET /:username/:resource
   def index
@@ -13,6 +13,7 @@ class ThingsController < ApplicationController
       @things = current_user.send(virtual_resources_name)
       # If she is just browsing other people's pages
     else
+      raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
       @things = user.send(virtual_resources_name).where(public: true)
     end
@@ -134,12 +135,15 @@ class ThingsController < ApplicationController
       @metadata = Rodash.get(@metadata, params["key"])
       not_found if not @metadata
     end
-    render formats: :json
+    # render formats: :json
+    render :json => @metadata
   end
 
   # POST /:username/:resource/:id/metadata
   # POST /:username/:resource/:id/metadata/:key
-  def create_metadata
+  # PATCH /:username/:resource/:id/metadata/:key
+  # PUT /:username/:resource/:id/metadata/:key
+  def edit_metadata
     authorize! :create, @thing
     @metadata = request.POST
 
@@ -150,22 +154,36 @@ class ThingsController < ApplicationController
     end
 
     if params[:key] 
-      @metadata = params[:key]
-      p params[:key]
+      Rodash.set(@thing.metadata, params[:key], @metadata)
+      @metadata = Rodash.get(@thing.metadata, params[:key])
     else
       @thing.metadata = @metadata
     end
 
 
-    respond_to do |format|
-      if @thing.save
-        format.html { redirect_to thing_metadata_path(@thing), notice: create_notice }
-        format.json { render :show_metadata, status: :created, location: thing_path(@thing) }
-      else
-        format.html { render :new }
-        format.html { redirect_to thing_metadata_path(@thing), notice: cannot_save_metadata_notice }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
-      end
+    if @thing.save
+      # render :json => @metadata, status: :created#, location: thing_path(@thing)
+      head :created
+    else
+      render json: @thing.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /:username/:resource/:id/metadata
+  # DELETE /:username/:resource/:id/metadata/:key
+  def delete_metadata
+    authorize! :delete, @thing
+
+    if params[:key] 
+      Rodash.unset(@thing.metadata, params[:key])
+    else
+      @thing.metadata = nil
+    end
+
+    if @thing.save
+      head :ok
+    else
+      render json: @thing.errors, status: :unprocessable_entity
     end
   end
 
@@ -225,6 +243,7 @@ class ThingsController < ApplicationController
     if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
       user = current_user
     else
+      raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
