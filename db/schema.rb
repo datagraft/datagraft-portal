@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217144825) do
+ActiveRecord::Schema.define(version: 20160224133427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 20160217144825) do
     t.string   "file_id"
     t.integer  "file_size"
     t.string   "file_content_type"
-    t.json     "metadata"
-    t.json     "configuration"
+    t.jsonb    "metadata"
+    t.jsonb    "configuration"
   end
 
   add_index "things", ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
