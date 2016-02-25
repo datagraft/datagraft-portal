@@ -30,7 +30,7 @@ Doorkeeper.configure do
   #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
     # rand > 0.5
     # redirect_to "/"
-    true
+    user_signed_in? && current_user.isadmin || redirect_to(root_path, notice: 'You are not authorized to manage these applications')
   end
 
   # Authorization Code expiration time (default 10 minutes).
