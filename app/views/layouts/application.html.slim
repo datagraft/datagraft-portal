@@ -35,7 +35,7 @@ html
                 - if user_signed_in?
                   = link_to('Dashboard', dashboard_path, class: "mdl-navigation__link")
                   = link_to('Publish', publish_path, class: "mdl-navigation__link")
-                  = link_to((current_user.name.blank? ? current_user.username : current_user.name), current_user, class: "mdl-navigation__link")
+                  = link_to((current_user.name.blank? ? current_user.username : current_user.name), current_user, class: "mdl-navigation__link #{current_user.isadmin ? 'sin-admin-user': ''}")
                 - else
                   = link_to('Login', new_user_session_path, class: "mdl-navigation__link")
             button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect

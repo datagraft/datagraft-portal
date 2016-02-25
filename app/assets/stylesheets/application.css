@@ -227,3 +227,9 @@ width: 100%;
 }
 
 
+.sin-admin-user {
+  color: #F50057 !important;
+}
+.sin-admin-user::after {
+  content: " (administrator)";
+}
