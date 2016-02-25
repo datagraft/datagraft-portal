@@ -124,3 +124,6 @@ gem 'doorkeeper'
 
 # _.get, _.set, and _.unset for Ruby
 gem 'rodash', '~> 2.0.0'
+
+# Convert markdown to html
+gem 'redcarpet'

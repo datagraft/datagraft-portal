@@ -5,8 +5,12 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
   div.mdl-card__title.mdl-color-text--grey-50
     h3 = @transformation.name
     - unless @transformation.public
+      |&nbsp; 
       i.material-icons lock_outline
   div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
+    - if @transformation.has_metadata? "description"
+      = render_markdown(@transformation.get_metadata("description"))
+
     h4 = @transformation.stars_count
 
     p.author Created by #{@transformation.user.name || @transformation.user.username}
@@ -14,8 +18,7 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
     - if not @transformation.live?
       h3  OLD VERSION
 
-    pre
-      code = @transformation.metadata
+    code = @transformation.metadata
 
   div.mdl-card__actions
     == link_to 'Back', transformations_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

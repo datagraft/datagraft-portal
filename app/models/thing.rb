@@ -25,6 +25,13 @@ class Thing < ActiveRecord::Base
          .fuzzy_search(name: search)
   end
 
+  def has_metadata?(key)
+    !get_metadata(key).nil?
+  end
+
+  def get_metadata(key)
+    Rodash.get(metadata, key)
+  end
 end
 
 class Query < Thing; end

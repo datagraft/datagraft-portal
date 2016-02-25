@@ -12,6 +12,20 @@ module ApplicationHelper
     !@options.nil? && @options[option]
   end
 
+  def render_markdown(markdown)
+    if @markdown.nil?
+      @markdown = Redcarpet::Markdown.new(
+        Redcarpet::Render::HTML.new({
+          safe_links_only: true
+        }),
+        autolink: true,
+        tables: true,
+        footnotes: true)
+    end
+
+    @markdown.render(markdown).html_safe
+  end
+
   private
 
 end
