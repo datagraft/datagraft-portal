@@ -152,6 +152,7 @@ class ThingsController < ApplicationController
 
     edit_json(@thing.metadata) do |new_data|
       @thing.metadata = new_data
+      @thing.paper_trail_event = 'edit metadata'
     end
   end
 
@@ -160,6 +161,7 @@ class ThingsController < ApplicationController
 
     edit_json(@thing.configuration) do |new_data|
       @thing.configuration = new_data
+      @thing.paper_trail_event = 'edit configuration'
     end
   end
 
@@ -170,6 +172,7 @@ class ThingsController < ApplicationController
 
     delete_json(@thing.metadata) do |new_data|
       @thing.metadata = new_data
+      @thing.paper_trail_event = 'delete metadata'
     end
   end
 
@@ -178,6 +181,7 @@ class ThingsController < ApplicationController
 
     delete_json(@thing.configuration) do |new_data|
       @thing.configuration = new_data
+      @thing.paper_trail_event = 'delete configuration'
     end
   end
 
@@ -241,6 +245,11 @@ class ThingsController < ApplicationController
       user = User.find_by_username(params[:username]) or not_found
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
+
+    if params[:version_at]
+      @thing = @thing.version_at(params[:version_at])
+    end
+
     instance_variable_set("@"+virtual_resource_name(true), @thing)
   end
 

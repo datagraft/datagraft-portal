@@ -12,7 +12,11 @@ p.author Created by #{@transformation.user.name}
   #- if !@transformation.file.blank?
   # == image_tag attachment_url(@transformation, :file, :fill, 300, 300, format: "jpg")
 
+pre
+  code = @transformation.metadata
 
+== link_to 'Versions', thing_versions_path(@transformation)
+span  | 
 == link_to 'Edit', thing_edit_path(@transformation)
 span  | 
 == link_to 'Back', transformations_path

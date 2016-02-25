@@ -23,6 +23,10 @@ module ThingHelper
     thing_generic_path(thing, '/metadata', parameters)
   end
 
+  def thing_versions_path(thing, parameters = {})
+    thing_generic_path(thing, '/versions', parameters)
+  end
+
   def things_path(thing, parameters = {})
     classname = thing.class.name
     return "" if thing.user.nil?

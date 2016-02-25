@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_paper_trail_whodunnit
+
   protected
 
     # def authenticate_user!
@@ -25,10 +27,10 @@ class ApplicationController < ActionController::Base
       # render json: { errors: ['User is not authenticated!'] }, status: :unauthorized
     # end
 
-    def users_return_to
-      return "je suis un poney"
+    # def users_return_to
+      # return "je suis un poney"
       # current_user.name
-    end
+    # end
 
     def after_sign_in_path_for(resource)
       # TODO
@@ -57,6 +59,10 @@ class ApplicationController < ActionController::Base
       return unless request.get?
       return if request.path =~ /^\/users\// 
       store_location_for(:user, request.fullpath)
+    end
+
+    def user_for_paper_trail
+      user_signed_in? ? current_user.username : 'anonymous'
     end
 
   private
