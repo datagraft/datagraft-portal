@@ -18,4 +18,8 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill
         td.mdl-data-table__cell--non-numeric
           a href="/#{version.whodunnit}" = version.whodunnit
         td.mdl-data-table__cell--non-numeric
-          a href=thing_path(@thing, { version_at: version[:created_at]}) Show
+          a href=thing_path(@thing, { version_at: version[:created_at]+1}) Show
+
+p
+  br
+  == link_to 'Back', thing_path(@thing)
