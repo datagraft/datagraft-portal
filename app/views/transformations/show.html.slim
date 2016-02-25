@@ -1,21 +1,28 @@
 - title @transformation.name
+- setOption :mdlCard
 
-h3 = @transformation.name
-h4 = @transformation.stars_count
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = @transformation.name
+    - unless @transformation.public
+      i.material-icons lock_outline
+  div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
+    h4 = @transformation.stars_count
 
-p.author Created by #{@transformation.user.name || @transformation.user.username}
+    p.author Created by #{@transformation.user.name || @transformation.user.username}
 
-pre
-  code = @transformation.metadata
+    - if not @transformation.live?
+      h3  OLD VERSION
 
-== link_to "Versions (#{@transformation.versions.count})", thing_versions_path(@transformation)
-span  | 
-== link_to 'Edit', thing_edit_path(@transformation)
-span  | 
-== link_to 'Back', transformations_path
-- if user_signed_in?
-  span  | 
-  -if current_user.has_star(@transformation)
-    == link_to 'Unstar', thing_unstar_path(@transformation), :method => 'post'
-  -else
-    == link_to 'Star', thing_star_path(@transformation), :method => 'post'
+    pre
+      code = @transformation.metadata
+
+  div.mdl-card__actions
+    == link_to 'Back', transformations_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to 'Edit', thing_edit_path(@transformation), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to "Versions (#{@transformation.versions.count})", thing_versions_path(@transformation), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    - if user_signed_in?
+      -if current_user.has_star(@transformation)
+        == link_to 'Unstar', thing_unstar_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      -else
+        == link_to 'Star', thing_star_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

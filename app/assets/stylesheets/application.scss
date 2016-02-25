@@ -21,10 +21,30 @@ html, body.mdl-base {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
-section.section--center {
-  margin:1.5em auto;
-  max-width: 860px;
-  min-width: 66vw;
+
+@media (min-width: 840px) {
+  section.section--center {
+    margin:1.5em auto;
+    width: 66vw;
+    width: calc(66vw + 6em);
+  }
+}
+
+.datagraft-main-title {
+    background: transparent image-url("logo.svg") no-repeat left center;
+    background-size: 52px auto;
+
+    &.mdl-navigation__link {
+        padding-left: 65px !important;
+    }
+
+    &:after {
+        content: " alpha";
+        color: white;
+        position: relative;
+        bottom: 9px;
+        font-size: 12px;
+    }
 }
 
 .sin-padding {
@@ -217,8 +237,9 @@ main .mdl-button.mdl-js-ripple-effect {
   text-shadow: none;
 }
 
-footer {
+main > footer {
   font-size:0.8em;
+  margin-bottom: 1.5em;
 }
 
 iframe.grafterizer {
@@ -233,3 +254,4 @@ width: 100%;
 .sin-admin-user::after {
   content: " (administrator)";
 }
+

@@ -17,7 +17,7 @@ html
       .mdl-layout.mdl-js-layout.mdl-layout--fixed-header[style="position:absolute;"]
         header.mdl-layout__header.mdl-color--primary.mdl-color-text--white
           .mdl-layout__header-row
-            span.mdl-layout-title
+            a.mdl-navigation__link.mdl-layout-title.datagraft-main-title href="/"
               | DataGraft
             .mdl-layout-spacer
             .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
@@ -70,6 +70,9 @@ html
 
           - elsif hasOption :simpleMargin
             section.sin-section-simple-margin
+              = yield
+          - elsif hasOption :mdlCard
+            section.section--center.mdl-shadow--2dp.mdl-color--white.mdl-grid.mdl-grid--no-spacing.sin-card-layout
               = yield
 
           - else

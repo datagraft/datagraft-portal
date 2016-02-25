@@ -1,3 +1,35 @@
 // Place all the styles related to the Things controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.sin-main-layout > section.sin-card-layout {
+  flex-grow: 0;
+}
+
+@media (max-width: 839px) {
+  .sin-card-layout .mdl-card {
+    border-radius:0;
+  }
+}
+
+.sin-card-layout {
+  .mdl-card__title {
+    // background: #424242;
+    background: #424242 image-url("use_your_illusion.png");
+    padding:24px;
+    align-items: flex-end;
+    min-height: 10em;
+
+    h3 {
+      margin:0;
+    }
+  }
+  .mdl-card__supporting-text.mdl-grid {
+    margin:40px;
+    width: calc(100% - 80px);
+  }
+
+  .mdl-card__actions {
+    padding-left: 40px;
+    border-top: 1px solid #cdcdcd;
+  }
+} 
