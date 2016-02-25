@@ -14,7 +14,8 @@ class Catalogue < ActiveRecord::Base
   end
 
   def self.public_search(search)
-    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-    self.public_list.fuzzy_search(name: search)
+    # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    # self.public_list.fuzzy_search(name: search)
+    self.public_list.basic_search(name: search)
   end
 end

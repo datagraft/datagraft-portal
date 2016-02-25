@@ -76,13 +76,17 @@ class User < ActiveRecord::Base
   end
     
   def search_dashboard_things(search)
-    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-    dashboard_things.fuzzy_search(name: search)
+    # ActiveRecord::Base.connection.execute("SELECT set_limit(0);")
+    # dashboard_things.fuzzy_search(metadata: search)
+    # dashboard_things.basic_search("cast(metadata as text)" => search)
+    dashboard_things.basic_search({"metadata" => search, "name" => search}, false)#.fuzzy_search({name: search}, false)
+    # dashboard_things.fuzzy_search("metadata->>a" => search)
+    # dashboard_things.fuzzy_search("metadata" => search)
   end
   
   def search_dashboard_catalogues(search)
-    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-    dashboard_catalogues.fuzzy_search(name: search)
+    # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    dashboard_catalogues.basic_search(name: search)
   end
 
   def self.from_omniauth(auth)

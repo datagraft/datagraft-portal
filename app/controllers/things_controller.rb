@@ -22,8 +22,9 @@ class ThingsController < ApplicationController
 
     if params[:search]
       # TODO execute this automatically
-      ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-      @things = @things.fuzzy_search(params[:search])
+      # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+      # @things = @things.fuzzy_search(params[:search])
+      @things = @things.basic_search({metadata: params[:search], name: params[:search]}, false)
     end
 
     @things = @things.paginate(:page => params[:page], :per_page => 30)
