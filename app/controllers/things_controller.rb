@@ -27,7 +27,10 @@ class ThingsController < ApplicationController
       @things = @things.basic_search({metadata: params[:search], name: params[:search]}, false)
     end
 
+    @things = @things.includes(:user)
+
     @things = @things.paginate(:page => params[:page], :per_page => 30)
+
 
     instance_variable_set("@"+virtual_resources_name, @things)
   end
