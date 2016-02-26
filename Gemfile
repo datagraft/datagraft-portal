@@ -127,3 +127,6 @@ gem 'rodash', '~> 2.0.0'
 
 # Convert markdown to html
 gem 'redcarpet'
+
+# It's supposed to be faster
+gem 'yajl-ruby', require: 'yajl'

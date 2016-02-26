@@ -40,6 +40,9 @@ module Datagraft
         Doorkeeper::ApplicationsController.layout "application" 
         Doorkeeper::AuthorizationsController.layout "application" 
         Doorkeeper::AuthorizedApplicationsController.layout "application" 
+
+        require 'multi_json'
+        MultiJson.use :yajl
     end
   end
 end
