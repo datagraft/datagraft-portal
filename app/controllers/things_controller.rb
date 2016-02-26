@@ -15,7 +15,8 @@ class ThingsController < ApplicationController
       @things = current_user.send(virtual_resources_name)
       # If she is just browsing other people's pages
     else
-      raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
+      raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+      # raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
       @things = user.send(virtual_resources_name).where(public: true)
     end
@@ -245,7 +246,7 @@ class ThingsController < ApplicationController
     if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
       user = current_user
     else
-      raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
+      raise CanCan::AccessDenied.new("Not authorized!", :read, user.send(virtual_resource_name)) if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
