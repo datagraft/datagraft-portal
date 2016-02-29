@@ -1,4 +1,4 @@
-class Thing < ActiveRecord::Base
+class Thing < ApplicationRecord
   extend FriendlyId
   # friendly_id :name, :use => [:slugged, :simple_i18n, :history]
   # friendly_id :name, use: => [:slugged, :simple_i18n, :history, :scoped], :scope => :user

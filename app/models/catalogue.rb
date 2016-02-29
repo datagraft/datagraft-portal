@@ -1,4 +1,4 @@
-class Catalogue < ActiveRecord::Base
+class Catalogue < ApplicationRecord
   extend FriendlyId
   friendly_id :name, :use => :history
   belongs_to :user
