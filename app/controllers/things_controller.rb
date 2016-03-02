@@ -277,6 +277,23 @@ class ThingsController < ApplicationController
       data.delete virtualname
     end
 
+    # Allow non-json data to be sent
+    if data.blank? && !request.raw_post.blank?
+      data = request.raw_post
+
+      # Automatically convert few json types
+      if data == 'true'
+        data = true
+      elsif data == 'false'
+        data = false
+      elsif data =~ /\./
+        data = Float(data) rescue data
+      else
+        data = Integer(data) rescue data
+      end
+    end
+
+
     if params[:key]
       Rodash.set(full_data, params[:key], data)
       yield full_data
