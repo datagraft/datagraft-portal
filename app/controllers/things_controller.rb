@@ -269,18 +269,12 @@ class ThingsController < ApplicationController
 
   def edit_json(full_data)
 
-    data = request.POST
+    # Use raw_post because it doesn't contain magic variables
+    data = request.raw_post
 
-    # Somehow the resource is set as an empty object in the request.POST by default
-    virtualname = virtual_resource_name(true)
-    if data[virtualname].blank?
-      data.delete virtualname
-    end
-
-    # Allow non-json data to be sent
-    if data.blank? && !request.raw_post.blank?
-      data = request.raw_post
-
+    begin
+      data = JSON.parse(data)    
+    rescue JSON::ParserError => e
       # Automatically convert few json types
       if data == 'true'
         data = true
@@ -292,7 +286,6 @@ class ThingsController < ApplicationController
         data = Integer(data) rescue data
       end
     end
-
 
     if params[:key]
       Rodash.set(full_data, params[:key], data)
