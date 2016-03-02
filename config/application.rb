@@ -35,6 +35,14 @@ module Datagraft
         resource '*', :headers => :any, :methods => [:get, :post, :options, :patch, :put, :delete]
       end
     end
-    
+
+    config.to_prepare do
+        Doorkeeper::ApplicationsController.layout "application" 
+        Doorkeeper::AuthorizationsController.layout "application" 
+        Doorkeeper::AuthorizedApplicationsController.layout "application" 
+
+        require 'multi_json'
+        MultiJson.use :yajl
+    end
   end
 end

@@ -17,7 +17,7 @@ html
       .mdl-layout.mdl-js-layout.mdl-layout--fixed-header[style="position:absolute;"]
         header.mdl-layout__header.mdl-color--primary.mdl-color-text--white
           .mdl-layout__header-row
-            span.mdl-layout-title
+            a.mdl-navigation__link.mdl-layout-title.datagraft-main-title href="/"
               | DataGraft
             .mdl-layout-spacer
             .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
@@ -35,7 +35,7 @@ html
                 - if user_signed_in?
                   = link_to('Dashboard', dashboard_path, class: "mdl-navigation__link")
                   = link_to('Publish', publish_path, class: "mdl-navigation__link")
-                  = link_to((current_user.name.blank? ? current_user.username : current_user.name), current_user, class: "mdl-navigation__link")
+                  = link_to((current_user.name.blank? ? current_user.username : current_user.name), current_user, class: "mdl-navigation__link #{current_user.isadmin ? 'sin-admin-user': ''}")
                 - else
                   = link_to('Login', new_user_session_path, class: "mdl-navigation__link")
             button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
@@ -70,6 +70,9 @@ html
 
           - elsif hasOption :simpleMargin
             section.sin-section-simple-margin
+              = yield
+          - elsif hasOption :mdlCard
+            section.section--center.mdl-shadow--2dp.mdl-color--white.mdl-grid.mdl-grid--no-spacing.sin-card-layout
               = yield
 
           - else

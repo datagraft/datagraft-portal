@@ -1,4 +1,4 @@
-class CatalogueStar < ActiveRecord::Base
+class CatalogueStar < ApplicationRecord
   belongs_to :user
   belongs_to :catalogue, counter_cache: :stars_count
   

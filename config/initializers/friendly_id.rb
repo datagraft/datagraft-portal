@@ -19,7 +19,7 @@ FriendlyId.defaults do |config|
   config.reserved_words = %w(new edit index session login logout users admin
     stylesheets assets javascripts images versions metadata star unstar
     configuration explore publish quotas dashboard transform data_distributions
-    transformations queriable_data_stores api_keys)
+    transformations queriable_data_stores api_keys myassets)
 
   #  ## Friendly Finders
   #

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160209080501) do
+ActiveRecord::Schema.define(version: 20160226135438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,11 +19,11 @@ ActiveRecord::Schema.define(version: 20160209080501) do
 
   create_table "api_keys", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "enabled"
+    t.boolean  "enabled",    default: false, null: false
     t.string   "name"
     t.string   "key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "api_keys", ["key"], name: "index_api_keys_on_key", using: :btree
@@ -47,11 +47,11 @@ ActiveRecord::Schema.define(version: 20160209080501) do
   create_table "catalogues", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name"
-    t.boolean  "public"
+    t.boolean  "public",      default: false, null: false
     t.integer  "stars_count", default: 0
     t.string   "slug"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "catalogues", ["slug"], name: "index_catalogues_on_slug", using: :btree
@@ -70,15 +70,45 @@ ActiveRecord::Schema.define(version: 20160209080501) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "metadata", force: :cascade do |t|
-    t.text     "metadata"
-    t.integer  "thing_id"
-    t.string   "thing_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.integer  "resource_owner_id", null: false
+    t.integer  "application_id",    null: false
+    t.string   "token",             null: false
+    t.integer  "expires_in",        null: false
+    t.text     "redirect_uri",      null: false
+    t.datetime "created_at",        null: false
+    t.datetime "revoked_at"
+    t.string   "scopes"
   end
 
-  add_index "metadata", ["thing_type", "thing_id"], name: "index_metadata_on_thing_type_and_thing_id", using: :btree
+  add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer  "resource_owner_id"
+    t.integer  "application_id"
+    t.string   "token",             null: false
+    t.string   "refresh_token"
+    t.integer  "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at",        null: false
+    t.string   "scopes"
+  end
+
+  add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
+  add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
+  add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string   "name",                      null: false
+    t.string   "uid",                       null: false
+    t.string   "secret",                    null: false
+    t.text     "redirect_uri",              null: false
+    t.string   "scopes",       default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
   create_table "stars", force: :cascade do |t|
     t.integer  "user_id"
@@ -92,18 +122,18 @@ ActiveRecord::Schema.define(version: 20160209080501) do
 
   create_table "things", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "public"
+    t.boolean  "public",            default: false, null: false
     t.integer  "stars_count",       default: 0
     t.string   "name"
     t.string   "type"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "slug"
     t.string   "file_id"
     t.integer  "file_size"
     t.string   "file_content_type"
-    t.json     "metadata"
-    t.json     "configuration"
+    t.jsonb    "metadata"
+    t.jsonb    "configuration"
   end
 
   add_index "things", ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
@@ -111,27 +141,28 @@ ActiveRecord::Schema.define(version: 20160209080501) do
   add_index "things", ["user_id"], name: "index_things_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "website"
     t.string   "name"
     t.string   "organization"
     t.string   "place"
-    t.string   "username"
     t.string   "provider"
     t.string   "uid"
     t.string   "image"
+    t.string   "username"
     t.integer  "ontotext_account",       default: 0
+    t.boolean  "isadmin",                default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

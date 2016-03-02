@@ -54,9 +54,10 @@ class DashboardController < ApplicationController
     # добър вечер, драги приятелю
     publicThings = Thing.where(user: current_user, public: true).order(updated_at: :desc).limit(10)
     publicCatalogues = Catalogue.where(user: current_user, public: true).order(updated_at: :desc).limit(10)
-
     @activityFeed = (stars | publicThings | catalogue_stars | publicCatalogues).sort do |a,b|
       b[:updated_at] <=> a[:updated_at]
     end
+
+    authorize! :read, @things
   end
 end

@@ -5,7 +5,11 @@ class Ability
     can :read, Thing, :public => true
     can :read, Catalogue, :public => true
     if user
-        can :manage, :all, :user_id => user.id
+        if user.isadmin
+            can :manage, :all
+        else
+            can :manage, :all, :user_id => user.id
+        end
         can :star, Thing
         can :unstar, Thing
     end

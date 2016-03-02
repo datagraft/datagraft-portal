@@ -1,7 +1,25 @@
-h1 "#{@thing.name}"
+h1 Versions of #{@thing.name}
 
-ul
-  - @versions.each do |version|
-    li 
-      strong #{time_ago_in_words version[:created_at]} ago -
-      em = version.created_at
+
+table.mdl-data-table.mdl-js-data-table.sin-table-fill
+  thead
+    th.mdl-data-table__cell--non-numeric Date
+    th.mdl-data-table__cell--non-numeric Event
+    th.mdl-data-table__cell--non-numeric Author
+    th.mdl-data-table__cell--non-numeric
+  tbody
+    - @versions.each do |version|
+      tr 
+        td.mdl-data-table__cell--non-numeric
+          strong #{time_ago_in_words version[:created_at]} ago
+          |&nbsp;-&nbsp;
+          em = version.created_at
+        td.mdl-data-table__cell--non-numeric = version.event
+        td.mdl-data-table__cell--non-numeric
+          a href="/#{version.whodunnit}" = version.whodunnit
+        td.mdl-data-table__cell--non-numeric
+          a href=thing_path(@thing, { version_at: version[:created_at]+1}) Show
+
+p
+  br
+  == link_to 'Back', thing_path(@thing)

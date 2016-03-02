@@ -1,4 +1,4 @@
-class Thing < ActiveRecord::Base
+class Thing < ApplicationRecord
   extend FriendlyId
   # friendly_id :name, :use => [:slugged, :simple_i18n, :history]
   # friendly_id :name, use: => [:slugged, :simple_i18n, :history, :scoped], :scope => :user
@@ -20,11 +20,19 @@ class Thing < ActiveRecord::Base
   end
 
   def self.public_search(search)
-    ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+    # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
     self.public_list
-         .fuzzy_search(name: search)
+         .basic_search({name: search, metadata: search}, false)
+         # .fuzzy_search(name: search)
   end
 
+  def has_metadata?(key)
+    !get_metadata(key).nil?
+  end
+
+  def get_metadata(key)
+    Rodash.get(metadata, key)
+  end
 end
 
 class Query < Thing; end

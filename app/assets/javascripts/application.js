@@ -19,6 +19,6 @@
 //= require material
 
 
-document.addEventListener('page:change', function() {
+document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();
 });

@@ -4,26 +4,34 @@ class ThingsController < ApplicationController
 
   before_action :set_thing, only: [
     :show, :edit, :update, :destroy, :star, :unstar, :versions,
-    :show_metadata, :create_metadata]
+    :show_metadata, :edit_metadata, :delete_metadata,
+    :show_configuration, :edit_configuration, :delete_configuration
+  ]
 
   # GET /:username/:resource
   def index
     # If the user lists her own resources
-    if user_signed_in? && current_user.username == params[:username]
+    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
       @things = current_user.send(virtual_resources_name)
       # If she is just browsing other people's pages
     else
+      raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+      # raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
       @things = user.send(virtual_resources_name).where(public: true)
     end
 
     if params[:search]
       # TODO execute this automatically
-      ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-      @things = @things.fuzzy_search(params[:search])
+      # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+      # @things = @things.fuzzy_search(params[:search])
+      @things = @things.basic_search({metadata: params[:search], name: params[:search]}, false)
     end
 
+    @things = @things.includes(:user)
+
     @things = @things.paginate(:page => params[:page], :per_page => 30)
+
 
     instance_variable_set("@"+virtual_resources_name, @things)
   end
@@ -129,42 +137,56 @@ class ThingsController < ApplicationController
   # GET /:username/:resource/:id/metadata/:key
   def show_metadata
     authorize! :read, @thing
-    @metadata = @thing.metadata
-    if params["key"]
-      @metadata = @metadata[params["key"]]
-      not_found if not @metadata
+    show_json @thing.metadata
+  end
+
+  # GET /:username/:resource/:id/configuration
+  # GET /:username/:resource/:id/configuration/:key
+  def show_configuration
+    authorize! :read, @thing
+    show_json @thing.configuration
+  end
+
+  # POST  /:username/:resource/:id/metadata
+  # PUT   /:username/:resource/:id/metadata
+  # POST  /:username/:resource/:id/metadata/:key
+  # PATCH /:username/:resource/:id/metadata/:key
+  # PUT   /:username/:resource/:id/metadata/:key
+  def edit_metadata
+    authorize! :create, @thing
+
+    edit_json(@thing.metadata) do |new_data|
+      @thing.metadata = new_data
+      @thing.paper_trail_event = 'edit metadata'
     end
   end
 
-  # POST /:username/:resource/:id/metadata
-  # POST /:username/:resource/:id/metadata/:key
-  def create_metadata
+  def edit_configuration
     authorize! :create, @thing
-    @metadata = request.POST
 
-    # Somehow the resource is set as an empty object in the request.POST by default
-    virtualname = virtual_resource_name(true) 
-    if @metadata[virtualname].blank?
-      @metadata.delete virtualname
+    edit_json(@thing.configuration) do |new_data|
+      @thing.configuration = new_data
+      @thing.paper_trail_event = 'edit configuration'
     end
+  end
 
-    if params[:key] 
-      @metadata = params[:key]
-      p params[:key]
-    else
-      @thing.metadata = @metadata
+  # DELETE /:username/:resource/:id/metadata
+  # DELETE /:username/:resource/:id/metadata/:key
+  def delete_metadata
+    authorize! :delete, @thing
+
+    delete_json(@thing.metadata) do |new_data|
+      @thing.metadata = new_data
+      @thing.paper_trail_event = 'delete metadata'
     end
+  end
 
+  def delete_configuration
+    authorize! :delete, @thing
 
-    respond_to do |format|
-      if @thing.save
-        format.html { redirect_to thing_metadata_path(@thing), notice: create_notice }
-        format.json { render :show_metadata, status: :created, location: thing_path(@thing) }
-      else
-        format.html { render :new }
-        format.html { redirect_to thing_metadata_path(@thing), notice: cannot_save_metadata_notice }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
-      end
+    delete_json(@thing.configuration) do |new_data|
+      @thing.configuration = new_data
+      @thing.paper_trail_event = 'delete configuration'
     end
   end
 
@@ -221,8 +243,66 @@ class ThingsController < ApplicationController
   private
   def set_thing
     throw "A username parameter is required" if not params[:username]
-    user = User.find_by_username(params[:username]) or not_found
+    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+      user = current_user
+    else
+      raise CanCan::AccessDenied.new("Not authorized!", :read, user.send(virtual_resource_name)) if params[:username] == 'myassets'
+      user = User.find_by_username(params[:username]) or not_found
+    end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
+
+    if params[:version_at]
+      @thing = @thing.version_at(params[:version_at]) or not_found
+    end
+
     instance_variable_set("@"+virtual_resource_name(true), @thing)
+  end
+
+  def show_json(data)
+    if params["key"]
+      data = Rodash.get(data, params["key"])
+      not_found if not data
+    end
+
+    render :json => data
+  end
+
+  def edit_json(full_data)
+
+    data = request.POST
+
+    # Somehow the resource is set as an empty object in the request.POST by default
+    virtualname = virtual_resource_name(true)
+    if data[virtualname].blank?
+      data.delete virtualname
+    end
+
+    if params[:key]
+      Rodash.set(full_data, params[:key], data)
+      yield full_data
+    else
+      yield data
+    end
+
+    if @thing.save
+      head :created
+    else
+      render json: @thing.errors, status: :unprocessable_entity
+    end
+  end
+
+  def delete_json(full_data)
+    if params[:key]
+      Rodash.unset(full_data, params[:key])
+      yield full_data
+    else
+      yield nil
+    end
+
+    if @thing.save
+      head :ok
+    else
+      render json: @thing.errors, status: :unprocessable_entity
+    end
   end
 end

@@ -1,4 +1,4 @@
-class ApiKey < ActiveRecord::Base
+class ApiKey < ApplicationRecord
   belongs_to :user
 
   def new_ontotext_api_key(user)

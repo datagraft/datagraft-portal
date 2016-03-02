@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  use_doorkeeper
+  
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
@@ -22,14 +24,23 @@ Rails.application.routes.draw do
     post   context_id + '/unstar' => resource + '#unstar'
     get    context_id + '/versions' => resource + '#versions'
 
-    get    context_id + '/metadata' =>      resource + '#show_metadata'
-    post   context_id + '/metadata' =>      resource + '#create_metadata'
-    get    context_id + '/metadata/*key' => resource + '#show_metadata'
-    post   context_id + '/metadata/*key' => resource + '#create_metadata'
+    ['metadata', 'configuration'].each do |type|
+      full_context = context_id + '/' + type
+      context_with_key = full_context + '/*key'
+      resource_show = resource + '#show_' + type
+      resource_edit = resource + '#edit_' + type
+      resource_delete = resource + '#delete_' + type
 
-    delete context_id + '/metadata/:key' => resource + '#versions'
-    put    context_id + '/metadata/:key' => resource + '#versions'
-    patch  context_id + '/metadata/:key' => resource + '#versions'
+      get    full_context => resource_show
+      post   full_context => resource_edit
+      put    full_context => resource_edit
+      delete full_context => resource_delete
+
+      get    context_with_key, to: resource_show, format: false
+      post   context_with_key, to: resource_edit, format: false
+      put    context_with_key, to: resource_edit, format: false
+      delete context_with_key, to: resource_delete, format: false
+    end
 
     get    context_id + '/configuration' => resource + '#versions'
     post   context_id + '/configuration' => resource + '#versions'
