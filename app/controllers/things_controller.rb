@@ -246,7 +246,7 @@ class ThingsController < ApplicationController
     if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
       user = current_user
     else
-      raise CanCan::AccessDenied.new("Not authorized!", :read, user.send(virtual_resource_name)) if params[:username] == 'myassets'
+      raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
       user = User.find_by_username(params[:username]) or not_found
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
@@ -269,12 +269,22 @@ class ThingsController < ApplicationController
 
   def edit_json(full_data)
 
-    data = request.POST
+    # Use raw_post because it doesn't contain magic variables
+    data = request.raw_post
 
-    # Somehow the resource is set as an empty object in the request.POST by default
-    virtualname = virtual_resource_name(true)
-    if data[virtualname].blank?
-      data.delete virtualname
+    begin
+      data = JSON.parse(data)    
+    rescue JSON::ParserError => e
+      # Automatically convert few json types
+      if data == 'true'
+        data = true
+      elsif data == 'false'
+        data = false
+      elsif data =~ /\./
+        data = Float(data) rescue data
+      else
+        data = Integer(data) rescue data
+      end
     end
 
     if params[:key]
