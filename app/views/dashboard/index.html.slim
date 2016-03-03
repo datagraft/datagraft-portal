@@ -1,13 +1,16 @@
 - title "Dashboard"
-- setOption :simpleMargin
+- setOption :flexPage
 - setOption :dashboardSearch
 
-div.mdl-grid
-  div.mdl-cell.mdl-cell--7-col.mdl-cell--6-col-tablet
+div.mdl-grid.sin-dashboard
+  div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed.mdl-shadow--2dp
     h3 Activity feed
     ul
       - @activityFeed.each do |activity|
         li
+          p.sin-activity-date
+            = time_ago_in_words activity[:updated_at]
+            '&nbsp;ago
           - if activity.kind_of? Star
             'You starred 
             == link_to activity.thing.name, thing_path(activity.thing)
@@ -21,12 +24,8 @@ div.mdl-grid
           - elsif activity.kind_of? Catalogue
             'You made
             == link_to activity.name, catalogue_path(activity)
-          p
-            em
-              = time_ago_in_words activity[:updated_at]
-              '&nbsp;ago
-  div.mdl-cell.mdl-cell--5-col.mdl-cell--10-col-tablet
-    div.mdl-shadow--2dp.mdl-color--white.sin-projects
+  div.mdl-cell.mdl-cell--7-col.mdl-cell--12-col-tablet.mdl-shadow--2dp.mdl-color--white
+    div.sin-projects
       div.mdl-grid
         h3.sin-projects-title.mdl-cell.mdl-cell--8-col My assets
         div.mdl-cell.mdl-cell--4-col.sin-projects-button-container
