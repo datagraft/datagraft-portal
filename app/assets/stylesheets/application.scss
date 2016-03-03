@@ -19,6 +19,10 @@
 
 html, body.mdl-base {
   font-family: Roboto, Helvetica, Arial, sans-serif;
+
+  h1, h2, h3, h4, h5, h6, .mdl-button, .mdl-layouti__header {
+    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  }
 }
 
 
@@ -30,9 +34,15 @@ html, body.mdl-base {
   }
 }
 
-.datagraft-main-title {
+.mdl-layout__header {
+  font-weight: normal;
+}
+
+.datagraft-main-title.mdl-layout-title {
     background: transparent image-url("logo.svg") no-repeat left center;
     background-size: 52px auto;
+    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400;
 
     &.mdl-navigation__link {
         padding-left: 65px !important;
@@ -40,7 +50,8 @@ html, body.mdl-base {
 
     &:after {
         content: " alpha";
-        color: white;
+        color: #FF609A;
+        font-weight: 400;
         position: relative;
         bottom: 9px;
         font-size: 12px;
@@ -121,7 +132,8 @@ a.sin-small-card:hover {
 }*/
 
 body .mdl-color--primary {
-    background-color: rgb(66,66,66) !important;
+    //background-color: rgb(66,66,66) !important;
+    background-color: #5264AE !important;
 }
 
 body .mdl-color--accent {
