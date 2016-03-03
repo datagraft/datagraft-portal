@@ -21,4 +21,8 @@
 
 document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();
+
+  window.setTimeout(function() {
+    $('.alert.alert-notice').hide();
+  }, 4200);
 });

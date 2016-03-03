@@ -17,6 +17,9 @@
  aa = require material-design-lite
  */
 
+$primary-color: #5264AE;
+$accent-color: #FF609A;
+
 html, body.mdl-base {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 
@@ -51,7 +54,7 @@ html, body.mdl-base {
 
     &:after {
         content: " alpha";
-        color: #FF609A;
+        color: $accent-color;
         font-weight: 400;
         position: relative;
         bottom: 9px;
@@ -70,9 +73,13 @@ html, body.mdl-base {
 }
 
 .alert {
-    background: dimgrey;
-    color: white;
-    padding: 1.2em 1em 1.2em 2em;
+  // Change this property if your eyes burn too much
+  background: $accent-color;
+  // background: #384475;
+  color: white;
+  padding: 1.2em 1em 1.2em 2em;
+  box-shadow: 0px -6px 3px -5px rgba(0, 0, 0, 0.35) inset
+  // box-shadow: 0px -6px 8px -5px rgba(0, 0, 0, 0.35) inset;
 }
 
 .sin-condensed-form {
@@ -132,8 +139,6 @@ a.sin-small-card:hover {
   background: #F9FFE5;
 }*/
 
-$primary-color: #5264AE;
-
 body .mdl-color--primary {
     //background-color: rgb(66,66,66) !important;
     background-color: $primary-color !important;
@@ -144,7 +149,7 @@ body .mdl-color--primary {
 }
 
 body .mdl-color--accent {
-    background-color: red !important;
+    background-color: $accent-color !important;
 }
 
 body .mdl-layout__header-row {
