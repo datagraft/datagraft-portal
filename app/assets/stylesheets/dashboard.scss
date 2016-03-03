@@ -40,6 +40,16 @@ $primary-color: #5264AE;
   color: $primary-color;
 }
 
+.sin-dashboard.mdl-grid {
+  width:100%;
+  padding:0;
+
+  & > div {
+    margin:0;
+    flex-grow: 1;
+  }
+}
+
 .sin-dashboard-activity-feed {
   color:white;
   background: $primary-color image-url("background_blue_vertical.jpg");
