@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  def datagraft_resources(resource_sym)
+  def datagraft_resources(resource_sym, configuration_or_code = 'configuration')
     resource = resource_sym.to_s
     context = ':username/'+resource
     context_id = context + '/:id'
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     post   context_id + '/unstar' => resource + '#unstar'
     get    context_id + '/versions' => resource + '#versions'
 
-    ['metadata', 'configuration'].each do |type|
+    ['metadata', configuration_or_code].each do |type|
       full_context = context_id + '/' + type
       context_with_key = full_context + '/*key'
       resource_show = resource + '#show_' + type
@@ -59,9 +59,10 @@ Rails.application.routes.draw do
   get ':username/catalogues/:id/versions' => 'catalogues#versions'
 
   datagraft_resources :data_distributions
-  datagraft_resources :transformations
   datagraft_resources :queriable_data_stores
-  datagraft_resources :utility_functions
+  datagraft_resources :data_pages
+  datagraft_resources :transformations, 'code'
+  datagraft_resources :utility_functions, 'code'
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'
