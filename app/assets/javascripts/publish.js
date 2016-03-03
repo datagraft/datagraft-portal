@@ -2,7 +2,7 @@
 
 Dropzone.autoDiscover = false;
 
-document.addEventListener('page:change', Dropzone.discover);
+document.addEventListener('turbolinks:load', Dropzone.discover);
 
 Dropzone.options.dataDistributionDropZone = {
   paramName: "data_distribution[file]",
