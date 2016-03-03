@@ -70,6 +70,9 @@ html
           - elsif hasOption :simpleMargin
             section.sin-section-simple-margin
               = yield
+          - elsif hasOption :colourFull
+            section.sin-colourfull.mdl-grid
+              = yield
           - elsif hasOption :mdlCard
             section.section--center.mdl-shadow--2dp.mdl-color--white.mdl-grid.mdl-grid--no-spacing.sin-card-layout
               = yield
