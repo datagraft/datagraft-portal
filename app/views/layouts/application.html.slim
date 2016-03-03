@@ -39,22 +39,20 @@ html
                   = link_to((current_user.name.blank? ? current_user.username : current_user.name), current_user, class: "mdl-navigation__link #{current_user.isadmin ? 'sin-admin-user': ''}")
                 - else
                   = link_to('Login', new_user_session_path, class: "mdl-navigation__link")
-            button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
-              i.material-icons
-                | more_vert
-            ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right[for="more-button"]
-              li
-                = link_to('Logout', destroy_user_session_path, :method => :delete, class: "mdl-menu__item")
-              li
-                = link_to('Quotas', quotas_path, class: "mdl-menu__item")
-              = link_to('API keys', api_keys_path, class: "mdl-menu__item")
-              li.mdl-menu__item
-                | About
-              li.mdl-menu__item
-                | Contact
-              li.mdl-menu__item
-                | Legal information
-        
+            - if user_signed_in?
+              button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
+                i.material-icons
+                  | more_vert
+              ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right[for="more-button"]
+                li
+                  = link_to('Logout', destroy_user_session_path, :method => :delete, class: "mdl-menu__item")
+                li
+                  = link_to('Quotas', quotas_path, class: "mdl-menu__item")
+                li
+                  = link_to('API keys', api_keys_path, class: "mdl-menu__item")
+                li
+                  = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
+          
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
         
           - flash.each do |key, value|
