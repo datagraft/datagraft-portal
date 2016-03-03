@@ -43,6 +43,7 @@ html, body.mdl-base {
     background-size: 52px auto;
     font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
     font-weight: 400;
+    opacity: 0.95;
 
     &.mdl-navigation__link {
         padding-left: 65px !important;
@@ -131,9 +132,15 @@ a.sin-small-card:hover {
   background: #F9FFE5;
 }*/
 
+$primary-color: #5264AE;
+
 body .mdl-color--primary {
     //background-color: rgb(66,66,66) !important;
-    background-color: #5264AE !important;
+    background-color: $primary-color !important;
+}
+
+.sin-color--primary {
+  color: $primary-color;
 }
 
 body .mdl-color--accent {
@@ -267,3 +274,7 @@ width: 100%;
   content: " (administrator)";
 }
 
+.sin-no-padding-top {
+  margin-top:0;
+  padding-top:0;
+}

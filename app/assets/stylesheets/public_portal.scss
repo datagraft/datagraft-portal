@@ -15,3 +15,37 @@
     top:2px;
   }
 }
+
+.sin-search-hero.mdl-grid {
+  background: #5264AE image-url("background_blue_explore_page.jpg") no-repeat;
+  background-size: cover;
+  background-position: right;
+  // flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 8em;
+
+  form {
+        background: rgba(82, 100, 174, 0.53);
+    padding: 0.3em 5em 1em 5em;
+    /* box-shadow: 1px 1px 1px black inset; */
+    border-radius: 4px;
+    display:flex;
+    align-items:center;
+
+    i.material-icons {
+      color: rgba(255,255,255,0.87);
+      font-size: 3em;
+      margin-right: 0.4em;
+      margin-top: 0.2em;
+    }
+  }
+  .mdl-textfield__input {
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255, 0.12);
+  }
+  .mdl-textfield__label {
+    color: white;
+    opacity: 0.87;
+  }
+}

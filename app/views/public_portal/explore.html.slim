@@ -1,24 +1,38 @@
-- title "Browse public assets"
-- setOption :noShadow
+- title "Explore public assets"
+- setOption :simpleMargin
 
-- unless @things.empty?
-  div.mdl-grid
-    - @things.each do |thing|
-      a class=["mdl-card", "mdl-cell", "mdl-cell--4-col", "mdl-shadow--2dp",
-            "sin-small-card", "sin-card-#{thing.class.name.downcase}"] href=thing_path(thing)
-        div.mdl-card__title
-          h3.mdl-card__title-text = thing.class.name
-        div.mdl-card__supporting-text.sin-card-center = thing.name
-        div.mdl-card__supporting-text.mdl-grid
-          div.mdl-cell.mdl-cell--6-col By #{thing.user.name || thing.user.username}
-          div.mdl-cell--3-col
-          div.mdl-cell.sin-stars-count.mdl-cell--3-col
-            span
-              = thing.stars_count
-              ' 
-              i.material-icons star
-- else 
-  p No public content found.
+div.mdl-grid.sin-search-hero
+  form method="get" action="/explore"
+    i.material-icons search
+    div.mdl-textfield.mdl-js-textfield
+      input.mdl-textfield__input[type="text" name="search" id="search-hero" value=params[:search]]
+      label.mdl-textfield__label for="search-hero" Search
 
-div.sin-pagination
-  == will_paginate @things
+
+section.section--center.sin-padding
+  - unless @things.empty?
+    - if params[:search].blank?
+      h3.sin-no-padding-top.sin-color--primary Featured data pages and transformations
+    - else
+      h3.sin-no-padding-top.sin-color--primary Search results
+
+    div.mdl-grid
+      - @things.each do |thing|
+        a class=["mdl-card", "mdl-cell", "mdl-cell--4-col", "mdl-shadow--2dp",
+              "sin-small-card", "sin-card-#{thing.class.name.downcase}"] href=thing_path(thing)
+          div.mdl-card__title
+            h3.mdl-card__title-text = thing.class.name
+          div.mdl-card__supporting-text.sin-card-center = thing.name
+          div.mdl-card__supporting-text.mdl-grid
+            div.mdl-cell.mdl-cell--6-col By #{thing.user.name || thing.user.username}
+            div.mdl-cell--3-col
+            div.mdl-cell.sin-stars-count.mdl-cell--3-col
+              span
+                = thing.stars_count
+                ' 
+                i.material-icons star
+  - else 
+    p No content found.
+
+  div.sin-pagination
+    == will_paginate @things
