@@ -1,0 +1,30 @@
+- title @data_page.name
+- setOption :mdlCard
+
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = @data_page.name
+    - unless @data_page.public
+      |&nbsp; 
+      i.material-icons lock_outline
+  div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
+    = render_markdown(@data_page.description)
+
+    h4 = @data_page.stars_count
+
+    p.author Created by #{@data_page.user.name || @data_page.user.username}
+
+    - if not @data_page.live?
+      h3  OLD VERSION
+
+    code = @data_page.metadata
+
+  div.mdl-card__actions
+    == link_to 'Back', data_pages_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to 'Edit', thing_edit_path(@data_page), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to "Versions (#{@data_page.versions.count})", thing_versions_path(@data_page), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    - if user_signed_in?
+      -if current_user.has_star(@data_page)
+        == link_to 'Unstar', thing_unstar_path(@data_page), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      -else
+        == link_to 'Star', thing_star_path(@data_page), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

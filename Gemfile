@@ -130,3 +130,6 @@ gem 'redcarpet'
 
 # It's supposed to be faster
 gem 'yajl-ruby', require: 'yajl'
+
+# simple_form should save some time
+gem 'simple_form'

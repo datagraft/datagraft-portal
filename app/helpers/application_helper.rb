@@ -23,6 +23,8 @@ module ApplicationHelper
         footnotes: true)
     end
 
+    return '' if markdown.nil?
+
     @markdown.render(markdown).html_safe
   end
 

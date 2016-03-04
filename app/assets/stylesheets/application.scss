@@ -11,9 +11,9 @@
  * file per style scope.
  *
  *= require_tree .
- *= require_self
  *= require material
  *= require material_icons
+ *= require_self
  aa = require material-design-lite
  */
 
@@ -323,4 +323,16 @@ width: 100%;
     /* align-items: center; */
     padding: 1em 4em;  
   }
+}
+
+.sin-invisible-form-separator {
+  border:none;
+}
+
+.sin-textfield__select {
+  margin-top:-1.85em;
+}
+
+.simple_form .mdl-switch {
+  left: 10px;
 }

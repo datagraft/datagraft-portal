@@ -37,8 +37,10 @@ module ThingHelper
 
     def thing_generic_path(thing, method, parameters = {})
       classname = thing.class.name
+
+      # TODO DO NOT USE THING.SLUG IF THE THING DOESN?T EXIST YET
       #TODO error??
-      return "" if thing.user.nil?
+      return "" if thing.nil? or thing.user.nil?
       "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
     end
 end

@@ -1,0 +1,11 @@
+= simple_form_for @thing, url: thing_path(@thing) do |f|
+  .mdl-grid
+    = f.input :name
+    = f.input :description, as: :text
+    = f.input :public, wrapper: :switch
+  .mdl-grid
+    = f.input :uri, as: :url
+    = f.input :hosting_provider, collection: QueriableDataStore.allowed_hosting_providers, wrapper: :select, include_blank: false
+  hr.sin-invisible-form-separator
+  .mdl-grid
+    = f.button :submit

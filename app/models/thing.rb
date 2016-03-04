@@ -31,8 +31,23 @@ class Thing < ApplicationRecord
   end
 
   def get_metadata(key)
+    # throw metadata
     Rodash.get(metadata, key)
   end
+
+  def description
+    metadata["description"] if metadata
+  end
+
+  def description=(val)
+    touch_metadata!
+    metadata["description"] = val
+  end
+
+  protected
+    def touch_metadata!
+      self.metadata = {} if not metadata
+    end 
 end
 
 class Query < Thing; end
