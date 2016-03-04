@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304083348) do
+ActiveRecord::Schema.define(version: 20160304084153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,16 @@ ActiveRecord::Schema.define(version: 20160304083348) do
 
   add_index "catalogues", ["slug"], name: "index_catalogues_on_slug", using: :btree
   add_index "catalogues", ["user_id"], name: "index_catalogues_on_user_id", using: :btree
+
+  create_table "data_page_queriable_data_stores", force: :cascade do |t|
+    t.integer  "data_page_id"
+    t.integer  "queriable_data_store_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "data_page_queriable_data_stores", ["data_page_id"], name: "index_data_page_queriable_data_stores_on_data_page_id", using: :btree
+  add_index "data_page_queriable_data_stores", ["queriable_data_store_id"], name: "index_datapages_queriable_data_stores", using: :btree
 
   create_table "data_page_widgets", force: :cascade do |t|
     t.integer  "data_page_id"
