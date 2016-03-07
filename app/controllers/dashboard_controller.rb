@@ -12,6 +12,9 @@ class DashboardController < ApplicationController
       query_catalogues = current_user.dashboard_catalogues
     end
 
+    query_things = query_things.includes(:user)
+    query_catalogues = query_catalogues.includes(:user)
+
     @things = {
       'all' => query_things,
       'catalogues' => query_catalogues,
@@ -52,8 +55,8 @@ class DashboardController < ApplicationController
 
     # bonsoir bonsoir 
     # добър вечер, драги приятелю
-    publicThings = Thing.where(user: current_user, public: true).order(updated_at: :desc).limit(10)
-    publicCatalogues = Catalogue.where(user: current_user, public: true).order(updated_at: :desc).limit(10)
+    publicThings = Thing.where(user: current_user, public: true).order(updated_at: :desc).includes(:user).limit(10)
+    publicCatalogues = Catalogue.where(user: current_user, public: true).order(updated_at: :desc).includes(:user).limit(10)
     @activityFeed = (stars | publicThings | catalogue_stars | publicCatalogues).sort do |a,b|
       b[:updated_at] <=> a[:updated_at]
     end

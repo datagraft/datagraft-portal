@@ -48,6 +48,10 @@ class Thing < ApplicationRecord
     metadata["description"] = val
   end
 
+  def has_children?
+    return !self.children.empty?
+  end
+
   protected
     def touch_metadata!
       self.metadata = {} if not metadata

@@ -1,7 +1,17 @@
-h1 "#{@catalogue.name}"
+h1 Versions #{@catalogue.name}
 
-ul
-  - @versions.each do |version|
-    li 
-      strong #{time_ago_in_words version[:created_at]} ago -
-      em = version.created_at
+
+table.mdl-data-table.mdl-js-data-table.sin-table-fill
+  thead
+    th.mdl-data-table__cell--non-numeric Date
+    th.mdl-data-table__cell--non-numeric Event
+    th.mdl-data-table__cell--non-numeric Whodunnit
+  tbody
+    - @versions.each do |version|
+      tr 
+        td.mdl-data-table__cell--non-numeric = 
+          strong #{time_ago_in_words version[:created_at]} ago
+          - 
+          em = version.created_at
+        td.mdl-data-table__cell--non-numeric = version.event
+        td.mdl-data-table__cell--non-numeric = version.whodunnit

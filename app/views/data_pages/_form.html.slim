@@ -2,7 +2,7 @@
   .mdl-grid
     h4.mdl-cell--12-col Properties
     = f.input :name, wrapper: :default
-    = f.input :description, as: :text
+    = f.input :description, as: :text, input_html: { rows: 5 }
   .mdl-grid
       = f.input :license, collection: get_common_licenses, wrapper: :select
   .mdl-grid
@@ -14,6 +14,8 @@
     .links.sin-nested-links
       = link_to_add_association f, :widgets, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
         i.material-icons add
+  .mdl-grid
+    h4.mdl-cell--12-col Layout
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit

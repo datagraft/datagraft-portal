@@ -24,8 +24,16 @@ document.addEventListener('turbolinks:load', function() {
   window.setTimeout(function() {
     $('.alert.alert-notice').hide();
   }, 4200);
+
+  $('body').on('cocoon:after-insert', function(e, insert) {
+    componentHandler.upgradeDom();
+    console.log("jaach")
+  });
 });
 
-$(document.body).on('cocoon:after-insert', function() {
+/*console.log("wat")
+$('body').on('cocoon:after-insert', function() {
+console.log("meh")
   componentHandler.upgradeDom();
 });
+*/
