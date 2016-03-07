@@ -13,9 +13,10 @@
  *= require_tree .
  *= require material
  *= require material_icons
+ *= require jquery.gridster.css
  *= require_self
- aa = require material-design-lite
  */
+
 
 $primary-color: #5264AE;
 $accent-color: #FF609A;
@@ -351,4 +352,11 @@ width: 100%;
   // position: relative;
   // top: 4em;
   padding-top: 1em;
+}
+
+.gridster > ul {
+  list-style: none;
+  li {
+    background: $primary-color;
+  }
 }

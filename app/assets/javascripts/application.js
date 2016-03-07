@@ -16,6 +16,7 @@
 //= require_tree .
 //= require cocoon
 //= require material
+//= require jquery.gridster.js
 
 
 document.addEventListener('turbolinks:load', function() {
@@ -28,6 +29,12 @@ document.addEventListener('turbolinks:load', function() {
   $('body').on('cocoon:after-insert', function(e, insert) {
     componentHandler.upgradeDom();
     console.log("jaach")
+  });
+
+
+  window.supercanard = $(".gridster ul").gridster({
+      widget_margins: [10, 10],
+      widget_base_dimensions: [140, 140]
   });
 });
 

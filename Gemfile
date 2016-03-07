@@ -142,3 +142,6 @@ gem 'diffy'
 
 # Dynamic nested forms
 gem 'cocoon'
+
+# Fancy javascript layouts
+gem 'gridster-rails'
