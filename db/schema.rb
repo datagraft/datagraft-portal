@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304084153) do
+ActiveRecord::Schema.define(version: 20160307080542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,15 @@ ActiveRecord::Schema.define(version: 20160304084153) do
   add_index "stars", ["user_id", "thing_id"], name: "index_stars_on_user_id_and_thing_id", unique: true, using: :btree
   add_index "stars", ["user_id"], name: "index_stars_on_user_id", using: :btree
 
+  create_table "thing_hierarchies", id: false, force: :cascade do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+  end
+
+  add_index "thing_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "thing_anc_desc_idx", unique: true, using: :btree
+  add_index "thing_hierarchies", ["descendant_id"], name: "thing_desc_idx", using: :btree
+
   create_table "things", force: :cascade do |t|
     t.integer  "user_id"
     t.boolean  "public",            default: false, null: false
@@ -154,6 +163,7 @@ ActiveRecord::Schema.define(version: 20160304084153) do
     t.string   "file_content_type"
     t.jsonb    "metadata"
     t.jsonb    "configuration"
+    t.integer  "parent_id"
   end
 
   add_index "things", ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree

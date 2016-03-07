@@ -3,7 +3,7 @@ class ThingsController < ApplicationController
   include ThingHelper
 
   before_action :set_thing, only: [
-    :show, :edit, :update, :destroy, :star, :unstar, :versions,
+    :show, :edit, :update, :destroy, :star, :unstar, :fork, :versions,
     :show_metadata, :edit_metadata, :delete_metadata,
     :show_configuration, :edit_configuration, :delete_configuration
   ]
@@ -126,6 +126,18 @@ class ThingsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  # POST /:username/:resource/:id/fork
+  def fork
+    authenticate_user!
+    authorize! :read, @thing
+    @thing = current_user.fork(@thing)
+    respond_to do |format|
+      format.html { redirect_to thing_path(@thing), notice: unstar_notice }
+      format.json { head :no_content }
+    end
+  end
+
 
   # GET /:username/:resource/:id/versions
   def versions

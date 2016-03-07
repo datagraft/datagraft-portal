@@ -1,6 +1,5 @@
 h1 Versions of #{@thing.name}
 
-
 table.mdl-data-table.mdl-js-data-table.sin-table-fill
   thead
     th.mdl-data-table__cell--non-numeric Date
@@ -19,6 +18,30 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill
           a href="/#{version.whodunnit}" = version.whodunnit
         td.mdl-data-table__cell--non-numeric
           a href=thing_path(@thing, { version_at: version[:created_at]+1}) Show
+
+h1 Forks
+
+- if @thing.child?
+  h4 Forked from
+  == link_to @thing.parent.name, thing_versions_path(@thing.parent)
+
+- unless @thing.children.empty?
+  table.mdl-data-table.mdl-js-data-table.sin-table-fill
+    thead
+      th.mdl-data-table__cell--non-numeric Date
+      th.mdl-data-table__cell--non-numeric Author
+      th.mdl-data-table__cell--non-numeric
+    tbody
+      - @thing.children.select {|child| can?(:read, child) }.each do |child|
+        tr
+          td.mdl-data-table__cell--non-numeric
+            strong #{time_ago_in_words child[:created_at]} ago
+            |&nbsp;-&nbsp;
+            em = child.created_at
+          td.mdl-data-table__cell--non-numeric
+            a href="/#{child.user.username}" = child.user.username
+          td.mdl-data-table__cell--non-numeric
+            a href=thing_path(child) Show
 
 p
   br

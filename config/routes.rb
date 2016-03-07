@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     get    context_id + '/edit' =>   resource + '#edit'
     post   context_id + '/star' =>   resource + '#star'
     post   context_id + '/unstar' => resource + '#unstar'
+    post   context_id + '/fork' =>   resource + '#fork'
     get    context_id + '/versions' => resource + '#versions'
 
     ['metadata', configuration_or_code].each do |type|

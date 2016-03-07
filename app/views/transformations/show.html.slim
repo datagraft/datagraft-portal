@@ -7,6 +7,11 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
     - unless @transformation.public
       |&nbsp; 
       i.material-icons lock_outline
+    - if @transformation.child?
+      h4 Forked from
+      == link_to @transformation.parent.name, thing_path(@transformation.parent)
+      / # == link_to @transformation.root.name, thing_path(@transformation.root)
+      
   div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
     - if @transformation.has_metadata? "description"
       = render_markdown(@transformation.get_metadata("description"))
@@ -29,3 +34,4 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
         == link_to 'Unstar', thing_unstar_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
       -else
         == link_to 'Star', thing_star_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      == link_to 'Fork', thing_fork_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

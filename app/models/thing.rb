@@ -11,6 +11,10 @@ class Thing < ApplicationRecord
 
   validates :name, presence: true
 
+  # As parents and children (forking stuff)
+  has_closure_tree
+
+  # Versionning
   has_paper_trail
 
 

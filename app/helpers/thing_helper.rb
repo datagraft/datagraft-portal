@@ -27,6 +27,10 @@ module ThingHelper
     thing_generic_path(thing, '/versions', parameters)
   end
 
+  def thing_fork_path(thing, parameters = {})
+    thing_generic_path(thing, '/fork', parameters)
+  end
+
   def things_path(thing, parameters = {})
     classname = thing.class.name
     return "" if thing.user.nil?

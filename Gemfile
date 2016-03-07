@@ -133,3 +133,6 @@ gem 'yajl-ruby', require: 'yajl'
 
 # simple_form should save some time
 gem 'simple_form'
+
+# closure_tree adds support for tree data structure in ActiveRecord models
+gem 'closure_tree'
