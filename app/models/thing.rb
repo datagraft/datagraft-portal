@@ -55,5 +55,5 @@ class Thing < ApplicationRecord
 end
 
 class Query < Thing; end
-class Widget < Thing; end
+# class Widget < Thing; end
 # class UtilityFunction < Thing;

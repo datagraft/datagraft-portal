@@ -264,6 +264,7 @@ class ThingsController < ApplicationController
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
 
     if params[:version_at]
+      @latest_thing = @thing
       @thing = @thing.version_at(params[:version_at]) or not_found
     end
 

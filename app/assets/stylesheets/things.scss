@@ -11,8 +11,8 @@
   }
 }
 
-.sin-card-layout {
-  .mdl-card__title {
+.sin-card-layout > .mdl-card {
+  & > .mdl-card__title {
     // background: #424242;
     background: #424242 image-url("use_your_illusion.png");
     padding:24px;
@@ -23,13 +23,19 @@
       margin:0;
     }
   }
-  .mdl-card__supporting-text.mdl-grid {
+  & > .mdl-card__supporting-text.mdl-grid {
     margin:40px;
     width: calc(100% - 80px);
   }
 
-  .mdl-card__actions {
+  & > .mdl-card__actions {
     padding-left: 40px;
     border-top: 1px solid #cdcdcd;
   }
-} 
+}
+
+
+.mdl-card__actions {
+  border-top: 1px solid #cdcdcd;
+}
+

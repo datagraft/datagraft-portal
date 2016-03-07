@@ -28,6 +28,11 @@ module ApplicationHelper
     @markdown.render(markdown).html_safe
   end
 
+  COMMON_LICENSES = %w(CC0 CC-BY CC-BY-SA CC-BY-ND CC-BY-NC CC-BY-NC-SA CC-BY-NC-ND WTFPL MIT)
+  def get_common_licenses
+    return COMMON_LICENSES
+  end
+
   private
 
 end

@@ -11,7 +11,7 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
       h4 Forked from
       == link_to @transformation.parent.name, thing_path(@transformation.parent)
       / # == link_to @transformation.root.name, thing_path(@transformation.root)
-      
+
   div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
     - if @transformation.has_metadata? "description"
       = render_markdown(@transformation.get_metadata("description"))
@@ -20,10 +20,13 @@ div.mdl-card.mdl-cell.mdl-cell--12-col
 
     p.author Created by #{@transformation.user.name || @transformation.user.username}
 
+  div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
     - if not @transformation.live?
-      h3  OLD VERSION
+      h3  Diff
+      div
+        == Diffy::Diff.new(@latest_thing.metadata["description"], @thing.metadata["description"]).to_s(:html)
 
-    code = @transformation.metadata
+    / code = @transformation.metadata
 
   div.mdl-card__actions
     == link_to 'Back', transformations_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

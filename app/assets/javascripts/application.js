@@ -14,8 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
-//aaa/=require material-design-lite
-
+//= require cocoon
 //= require material
 
 
@@ -25,4 +24,8 @@ document.addEventListener('turbolinks:load', function() {
   window.setTimeout(function() {
     $('.alert.alert-notice').hide();
   }, 4200);
+});
+
+$(document.body).on('cocoon:after-insert', function() {
+  componentHandler.upgradeDom();
 });

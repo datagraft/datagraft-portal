@@ -1,0 +1,9 @@
+= simple_form_for @thing, url: thing_path(@thing) do |f|
+  .mdl-grid
+    = f.input :name, wrapper: :default
+    = f.input :description, as: :text
+    = f.input :public, wrapper: :switch
+  hr.sin-invisible-form-separator
+  .mdl-grid
+    = f.button :submit
+

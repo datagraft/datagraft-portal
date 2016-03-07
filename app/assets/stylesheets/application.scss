@@ -336,3 +336,19 @@ width: 100%;
 .simple_form .mdl-switch {
   left: 10px;
 }
+
+.sin-nested-form {
+  .mdl-card__title {
+    background: $primary-color; 
+  }
+
+}
+
+.sin-nested-links {
+  align-self: flex-end;
+  flex-grow: 1;
+  text-align: right;
+  // position: relative;
+  // top: 4em;
+  padding-top: 1em;
+}

@@ -1,6 +1,11 @@
-h1
-  | Editing data page
-= render 'form'
-= link_to 'Show', @transformation
-|  | 
-= link_to 'Back', transformations_path
+- title "Editing data page"
+- setOption :mdlCard
+
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 Editing data page
+  div.mdl-card__supporting-text
+    = render 'form'
+  div.mdl-card__actions
+    = link_to 'Back', thing_path(@data_page), :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 
+    = link_to 'Destroy', thing_path(@data_page), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-js-ripple-effect sin-button--danger"

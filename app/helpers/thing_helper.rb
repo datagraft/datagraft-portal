@@ -40,11 +40,14 @@ module ThingHelper
   private
 
     def thing_generic_path(thing, method, parameters = {})
+
+      user = thing.nil? ? current_user : thing.user
+      return "" if user.nil?
+
       classname = thing.class.name
 
-      # TODO DO NOT USE THING.SLUG IF THE THING DOESN?T EXIST YET
-      #TODO error??
-      return "" if thing.nil? or thing.user.nil?
-      "/#{thing.user.username}/#{classname.underscore.pluralize}/#{thing.slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+      slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+
+      "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
     end
 end

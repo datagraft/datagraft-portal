@@ -1,4 +1,10 @@
-h1
-  | Publish a new data page
-= render 'form'
-= link_to 'Back', transformations_path
+- title "Publish a new datapage"
+- setOption :mdlCard
+
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 Publish a new data page
+  div.mdl-card__supporting-text
+    = render 'form'
+  div.mdl-card__actions
+    = link_to 'Back', data_pages_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 

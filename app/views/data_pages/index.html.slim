@@ -1,7 +1,7 @@
 p#notice
   = notice
 h1
-  | Listing Transformations
+  | Listing Data pages
 table
   thead
     tr
@@ -9,15 +9,15 @@ table
         | ID
       th[colspan="3"]
   tbody
-    - @transformations.each do |transformation|
+    - @data_pages.each do |data_page|
       tr
         td
-          = transformation.slug
+          = data_page.slug
         td
-          = link_to 'Show', thing_path(transformation)
+          = link_to 'Show', thing_path(data_page)
         td
-          = link_to 'Edit', thing_edit_path(transformation)
+          = link_to 'Edit', thing_edit_path(data_page)
         td
-          = link_to 'Destroy', thing_path(transformation), method: :delete, data: { confirm: 'Are you sure?' }
+          = link_to 'Destroy', thing_path(data_page), method: :delete, data: { confirm: 'Are you sure?' }
 br
-= link_to 'New Transformation', new_transformation_path
+= link_to 'New data page', new_data_page_path

@@ -136,3 +136,9 @@ gem 'simple_form'
 
 # closure_tree adds support for tree data structure in ActiveRecord models
 gem 'closure_tree'
+
+# To display wonderful HTML diffs
+gem 'diffy'
+
+# Dynamic nested forms
+gem 'cocoon'
