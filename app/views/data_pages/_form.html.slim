@@ -7,7 +7,7 @@
       = f.input :license, collection: get_common_licenses, wrapper: :select
   .mdl-grid
     = f.input :public, wrapper: :switch
-  .mdl-grid
+  .mdl-grid.sin-widgets-form
     h4.mdl-cell--12-col Widgets
     = f.simple_fields_for :widgets do |p|
       = render 'widget_fields', f: p
@@ -16,25 +16,10 @@
         i.material-icons add
   .mdl-grid
     h4.mdl-cell--12-col Layout
-    div.mdl-cell--12-col
+    = f.input :layout, as: :hidden, input_html: { id: "datapage-layout-metadata" }
+    div.mdl-cell.sin-gridster-workarea.mdl-shadow--4dp
       div.gridster
         ul
-          li data-row="1" data-col="1" data-sizex="1" data-sizey="1"
-          li data-row="2" data-col="1" data-sizex="1" data-sizey="1"
-          li data-row="3" data-col="1" data-sizex="1" data-sizey="1"
-
-          li data-row="1" data-col="2" data-sizex="2" data-sizey="1"
-          li data-row="2" data-col="2" data-sizex="2" data-sizey="2"
-
-          li data-row="1" data-col="4" data-sizex="1" data-sizey="1"
-          li data-row="2" data-col="4" data-sizex="2" data-sizey="1"
-          li data-row="3" data-col="4" data-sizex="1" data-sizey="1"
-
-          li data-row="1" data-col="5" data-sizex="1" data-sizey="1"
-          li data-row="3" data-col="5" data-sizex="1" data-sizey="1"
-
-          li data-row="1" data-col="6" data-sizex="1" data-sizey="1"
-          li data-row="2" data-col="6" data-sizex="1" data-sizey="2"
 
   hr.sin-invisible-form-separator
   .mdl-grid
