@@ -47,3 +47,25 @@ $accent-color: #FF609A;
     }
   }
 }
+
+.sin-datapage-widgets {
+  width: 100%;
+
+  .mdl-cell {
+    // background: #F5F5F5;
+    .mdl-card {
+      margin:1em;
+      width: calc(100% - 2em);
+      height: calc(100% - 2em);
+      padding: 0;
+      margin: 1em;
+    }
+  }
+}
+
+// Only for tablets and more
+@media (min-width: 481px) {
+  .sin-fucking-layout-row--250 {
+    height: 250px;
+  }
+}

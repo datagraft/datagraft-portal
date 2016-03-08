@@ -24,8 +24,16 @@ class DataPage < Thing
     metadata["license"] = val
   end
 
-  def layout
-    JSON.generate(metadata["datagraft-layout"]) if metadata
+  def layout(as_json=true)
+
+    if not metadata
+      return nil
+    elsif as_json
+      return JSON.generate(metadata["datagraft-layout"])
+    else
+      return metadata["datagraft-layout"]
+    end
+
   end
 
   def layout=(val)
