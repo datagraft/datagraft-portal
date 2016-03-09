@@ -15,6 +15,10 @@ class DataPage < Thing
   # TODO check allow_destroy and cancancan
   accepts_nested_attributes_for :widgets, reject_if: :all_blank, :allow_destroy => true
 
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
+
   def license
     metadata["license"] if metadata
   end
@@ -29,7 +33,7 @@ class DataPage < Thing
     if not metadata
       return nil
     elsif as_json
-      return JSON.generate(metadata["datagraft-layout"])
+      return JSON.generate(metadata["datagraft-layout"]) rescue nil
     else
       return metadata["datagraft-layout"]
     end

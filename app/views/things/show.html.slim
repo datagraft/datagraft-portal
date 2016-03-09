@@ -1,0 +1,31 @@
+- title @thing.name
+- setOption :mdlCard
+
+
+div[class="mdl-card mdl-cell mdl-cell--12-col #{@thing.live? ? '' : 'sin-old-version'}"]
+  div.mdl-card__title.mdl-color-text--grey-50
+    = render 'thing_header' 
+  div.sin-date-infos
+    - if @thing.live?
+      em
+        | Last modification #{time_ago_in_words @thing.updated_at} ago
+        | &nbsp;-&nbsp; #{@thing.updated_at}
+    - else
+      strong This is not the latest version.
+      em 
+        | &nbsp;#{time_ago_in_words @thing.updated_at} ago
+        | &nbsp;-&nbsp; #{@thing.updated_at}
+      == link_to "See latest version", thing_path(@thing), :class=> "mdl-button mdl-js-button mdl-js-ripple-effect"
+  div.mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
+    = render 'show_content'
+
+  div.mdl-card__actions
+    == link_to 'Back', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    - if user_signed_in?
+      -if current_user.has_star(@thing)
+        == link_to "Unstar (#{@thing.stars_count})", thing_unstar_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      -else
+        == link_to "Star (#{@thing.stars_count})", thing_star_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      == link_to 'Copy', thing_fork_path(@transformation), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

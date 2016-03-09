@@ -13,7 +13,7 @@ html
     = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Montserrat:400,700|Roboto', media: 'all'
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
-  body.mdl-base.mdl-color--grey-100.mdl-color-text--grey-700.superlol
+  body[class="mdl-base mdl-color--grey-100 mdl-color-text--grey-700 sin-controller--#{controller.controller_name} sin-action--#{controller.action_name}"]
     .mdl-layout__container
       .mdl-layout.mdl-js-layout.mdl-layout--fixed-header[style="position:absolute;"]
         header.mdl-layout__header.mdl-color--primary.mdl-color-text--white

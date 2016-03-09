@@ -33,8 +33,8 @@ module ThingHelper
 
   def things_path(thing, parameters = {})
     classname = thing.class.name
-    return "" if thing.user.nil?
-    "/#{thing.user.username}/#{classname.underscore.pluralize}#{ "?#{parameters.to_query}" if parameters.present? }"
+    username = thing.user.nil? ? 'myassets' : thing.user.username
+    "/#{username}/#{classname.underscore.pluralize}#{ "?#{parameters.to_query}" if parameters.present? }"
   end
   
   private

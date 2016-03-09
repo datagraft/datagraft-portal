@@ -1,50 +1,53 @@
-h1 = @thing.name
+- setOption :mdlCard
+- title "#{@thing.name} versions and copies"
 
-h2 Versions
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    = render 'thing_header'
+  div.mdl-card__supporting-text.sin-padding
+    h3 Versions
 
-table.mdl-data-table.mdl-js-data-table.sin-table-fill
-  thead
-    th.mdl-data-table__cell--non-numeric Date
-    th.mdl-data-table__cell--non-numeric Event
-    th.mdl-data-table__cell--non-numeric Author
-    th.mdl-data-table__cell--non-numeric
-  tbody
-    - @versions.each do |version|
-      tr 
-        td.mdl-data-table__cell--non-numeric
-          strong #{time_ago_in_words version[:created_at]} ago
-          |&nbsp;-&nbsp;
-          em = version.created_at
-        td.mdl-data-table__cell--non-numeric = version.event
-        td.mdl-data-table__cell--non-numeric
-          a href="/#{version.whodunnit}" = version.whodunnit
-        td.mdl-data-table__cell--non-numeric
-          a href=thing_path(@thing, { version_at: version[:created_at]+1}) Show
+    table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
+      thead
+        th.mdl-data-table__cell--non-numeric Date
+        th.mdl-data-table__cell--non-numeric Event
+        th.mdl-data-table__cell--non-numeric Author
+        th.mdl-data-table__cell--non-numeric
+      tbody
+        - @versions.each do |version|
+          tr 
+            td.mdl-data-table__cell--non-numeric
+              strong #{time_ago_in_words version[:created_at]} ago
+              |&nbsp;-&nbsp;
+              em = version.created_at
+            td.mdl-data-table__cell--non-numeric = version.event
+            td.mdl-data-table__cell--non-numeric
+              a href="/#{version.whodunnit}" = version.whodunnit
+            td.mdl-data-table__cell--non-numeric
+              a href=thing_path(@thing, { version_at: version[:created_at]+1}) Show
 
-h2 Forks
 
-- if @thing.child?
-  h4 Forked from
-  == link_to @thing.parent.name, thing_versions_path(@thing.parent)
+    - if @thing.child?
+      h4 Forked from
+      == link_to @thing.parent.name, thing_versions_path(@thing.parent)
 
-- if @thing.has_children?
-  table.mdl-data-table.mdl-js-data-table.sin-table-fill
-    thead
-      th.mdl-data-table__cell--non-numeric Date
-      th.mdl-data-table__cell--non-numeric Author
-      th.mdl-data-table__cell--non-numeric
-    tbody
-      - @thing.children.includes(:user).select {|child| can?(:read, child) }.each do |child|
-        tr
-          td.mdl-data-table__cell--non-numeric
-            strong #{time_ago_in_words child[:created_at]} ago
-            |&nbsp;-&nbsp;
-            em = child.created_at
-          td.mdl-data-table__cell--non-numeric
-            a href="/#{child.user.username}" = child.user.username
-          td.mdl-data-table__cell--non-numeric
-            a href=thing_path(child) Show
-
-p
-  br
-  == link_to 'Back', thing_path(@thing)
+    - if @thing.has_children?
+      h3 Copies
+      table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
+        thead
+          th.mdl-data-table__cell--non-numeric Date
+          th.mdl-data-table__cell--non-numeric Author
+          th.mdl-data-table__cell--non-numeric
+        tbody
+          - @thing.children.includes(:user).select {|child| can?(:read, child) }.each do |child|
+            tr
+              td.mdl-data-table__cell--non-numeric
+                strong #{time_ago_in_words child[:created_at]} ago
+                |&nbsp;-&nbsp;
+                em = child.created_at
+              td.mdl-data-table__cell--non-numeric
+                a href="/#{child.user.username}" = child.user.username
+              td.mdl-data-table__cell--non-numeric
+                a href=thing_path(child) Show
+  div.mdl-card__actions
+    == link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

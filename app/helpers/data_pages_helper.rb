@@ -9,7 +9,8 @@ module DataPagesHelper
 
 
   def show_the_fucking_layout(layout, ratioGrid = 1, unitHeight = 50, gridClasses = '', cellClasses = '', &block)
-   
+    return if layout.nil?
+
     # Sort layout by column
     layout = layout.sort_by do |box|
       box["col"]
@@ -39,7 +40,13 @@ module DataPagesHelper
   private
 
   def fuck_you_row(boxes, ratioGrid, unitHeight, gridClasses, cellClasses, block)
-    content_tag(:div, class: "mdl-grid #{gridClasses} sin-fucking-layout-row--#{unitHeight}") do
+    maxBox = boxes.max_by do |box|
+      box["size_y"]
+    end
+
+    maxRowHeight = maxBox["size_y"] * unitHeight
+
+    content_tag(:div, class: "mdl-grid #{gridClasses} sin-fucking-layout-row--#{maxRowHeight}") do
       [nil, *boxes].each_cons(2) do |immediateLeftBox,box|
         offset = 0
 

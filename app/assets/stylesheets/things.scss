@@ -1,6 +1,10 @@
 // Place all the styles related to the Things controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$primary-color: #5264AE;
+$accent-color: #FF609A;
+
 .sin-main-layout > section.sin-card-layout {
   flex-grow: 0;
 }
@@ -13,14 +17,70 @@
 
 .sin-card-layout > .mdl-card {
   & > .mdl-card__title {
-    // background: #424242;
-    background: #424242 image-url("use_your_illusion.png");
+    background: #424242;
+    // background: #424242 image-url("use_your_illusion.png");
+    background-image: image-url("background_blue_explore_page.jpg");
+    background-image: 
+      linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
+      image-url("background_blue_explore_page.jpg");
+    background-size: cover;
     padding:24px;
     align-items: flex-end;
     min-height: 10em;
+    justify-content: space-between;
 
-    h3 {
+    h3, h4 {
       margin:0;
+    }
+
+    h3:before {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+    }
+
+    h4 {
+      font-size: large;
+      text-align: right;
+      a {
+        color: white;
+        text-decoration: none;
+        &:not(.sin-stars):hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .sin-lock {
+      position:absolute;
+      top: 1em;
+      right: 1em;
+      i.material-icons {
+        font-size: 3em;
+      }
+    }
+
+    .sin-stars {
+      display: inline-block;
+      margin-left: 1em;
+      background: $primary-color;
+      border-radius: 5px;
+      padding: 0px 1em 2px 1em;
+      line-height: 26px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
+      &:hover {
+        background: darken($primary-color, 10%);
+      }
+      i.material-icons {
+        font-size: 16px;
+        position: relative;
+        top: 2px;
+        right: 6px;
+      }
+
+      &.sin-stared i.material-icons {
+        color: $accent-color; 
+      }
     }
   }
   & > .mdl-card__supporting-text.mdl-grid {
@@ -40,3 +100,32 @@
 }
 
 
+.sin-controller--data_pages .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
+  content: image-url("60b_page.png");
+}
+.sin-controller--transformations .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
+  content: image-url("60b_data.png");
+}
+.sin-controller--queriable_data_stores .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
+  content: image-url("60b_datastore.png");
+}
+
+.sin-date-infos {
+  font-size: small;
+  color: #ABABAB;
+  text-align: right;
+  padding-top: 0.5em;
+  padding-right: 1em;
+}
+
+.sin-old-version {
+  .sin-date-infos {
+    padding-top: 5px;
+    color: black;
+    background: $accent-color;
+    .mdl-button {
+      margin-top: -6px;
+      margin-left: 5px;
+    }
+  }
+}

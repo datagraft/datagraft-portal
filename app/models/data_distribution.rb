@@ -4,4 +4,8 @@ class DataDistribution < Thing
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
   attachment :file
+
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
 end

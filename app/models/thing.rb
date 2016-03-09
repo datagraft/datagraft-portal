@@ -55,9 +55,13 @@ class Thing < ApplicationRecord
   protected
     def touch_metadata!
       self.metadata = {} if not metadata
+    end
+
+    def touch_configuration!
+      self.configuration = {} if not configuration
     end 
 end
 
-class Query < Thing; end
+# class Query < Thing; end
 # class Widget < Thing; end
 # class UtilityFunction < Thing;

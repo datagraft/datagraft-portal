@@ -1,0 +1,7 @@
+- if @transformation.has_metadata? "description"
+  = render_markdown(@transformation.get_metadata("description"))
+
+- if not @transformation.live?
+  h3  Diff
+  div
+    == Diffy::Diff.new(@latest_thing.metadata["description"], @thing.metadata["description"]).to_s(:html)

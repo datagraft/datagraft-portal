@@ -2,9 +2,10 @@ class QueriableDataStoresController < ThingsController
   def new
     super
     # @queriable_data_store.name = 'lol' if @queriable_data_store.name.blank?
-    # if params[:hosting] == 'ontotext'
-      # render 'new_ontotext'
-    # end
+    @queriable_data_store.hosting_provider = params[:hosting_provider] if params[:hosting_provider]
+  end
+
+  def publish
   end
 
   private
