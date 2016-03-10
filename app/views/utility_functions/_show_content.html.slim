@@ -1,0 +1,11 @@
+hr
+dl
+  - unless @thing.license.blank?
+    dt License
+    dd = @thing.license
+  - unless @thing.language.blank?
+    dt Language
+    dd = @thing.language
+  dt Code
+  dd
+    code = @thing.code

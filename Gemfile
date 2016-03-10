@@ -145,3 +145,6 @@ gem 'cocoon'
 
 # Fancy javascript layouts
 gem 'gridster-rails'
+
+# Most important gem of the project
+gem 'indefinite_article'
