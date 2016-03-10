@@ -4,6 +4,8 @@
     = f.input :name, wrapper: :default
     = f.input :description, as: :text, input_html: { rows: 5 }
   .mdl-grid
+    = f.input :public, wrapper: :switch
+  .mdl-grid
     = f.input :file, as: :file, wrapper: :select
   hr.sin-invisible-form-separator
   .mdl-grid

@@ -107,25 +107,6 @@ html, body.mdl-base {
   margin:0.5em 1em 1em 2em;
 }
 
-.sin-small-card.mdl-card {
-  min-height:160px;
-  /*height:150px;*/
-  overflow: hidden;
-  display:flex;
-}
-
-a.sin-small-card {
-  text-decoration: none;
-}  
-a.sin-small-card:hover {
-  background-color: #ddd;
-  color: black;
-}
-.sin-card-center.mdl-card__supporting-text {
-  flex-grow: 1;
-  padding-top: 0 !important;
-  font-size: 1.2em !important;
-}
 
 /* Ugly colors */
 /*.mdl-card.sin-card-transformation {
@@ -353,6 +334,6 @@ width: 100%;
   padding-top: 1em;
 }
 
-.mdl-card__supporting-text.sin-padding {
-  padding-top: 1em;
-}
+// .mdl-card__supporting-text.sin-padding {
+//   padding-top: 1em;
+// }

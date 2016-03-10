@@ -12,13 +12,16 @@ div.mdl-grid.sin-dashboard
             = time_ago_in_words activity[:updated_at]
             '&nbsp;ago
           - if activity.kind_of? Star
+            img src=image_url("60_star.png")
             'You starred 
             == link_to activity.thing.name, thing_path(activity.thing)
           - elsif activity.kind_of? Thing
+            img src=image_url("60_service.png")
             'You made
             == link_to activity.name, thing_path(activity)
             '&nbsp;public
           - elsif activity.kind_of? CatalogueStar
+            img src=image_url("60_star.png")
             'You starred 
             == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
           - elsif activity.kind_of? Catalogue

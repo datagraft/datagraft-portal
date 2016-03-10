@@ -19,7 +19,7 @@ class Thing < ApplicationRecord
 
 
   def self.public_list
-    Thing.where(:public => true, :type => ['DataPage', 'Transformation'])
+    Thing.where(:public => true, :type => ['DataPage', 'Transformation', 'DataDistribution'])
          .order(stars_count: :desc, created_at: :desc).includes(:user)
   end
 

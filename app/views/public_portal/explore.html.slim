@@ -5,7 +5,7 @@ div.mdl-grid.sin-search-hero
   form method="get" action="/explore"
     i.material-icons search
     div.mdl-textfield.mdl-js-textfield
-      input.mdl-textfield__input[type="text" name="search" id="search-hero" value=params[:search]]
+      input.mdl-textfield__input[type="text" name="search" id="search-hero" value=params[:search] tabindex="1"]
       label.mdl-textfield__label for="search-hero" Search
 
 
@@ -19,9 +19,9 @@ section.section--center.sin-padding
     div.mdl-grid
       - @things.each do |thing|
         a class=["mdl-card", "mdl-cell", "mdl-cell--4-col", "mdl-shadow--2dp",
-              "sin-small-card", "sin-card-#{thing.class.name.downcase}"] href=thing_path(thing)
+              "sin-small-card", "sin-card--#{thing.class.name.downcase}"] href=thing_path(thing)
           div.mdl-card__title
-            h3.mdl-card__title-text = thing.class.name
+            h3.mdl-card__title-text = thing.class.name.titleize
           div.mdl-card__supporting-text.sin-card-center = thing.name
           div.mdl-card__supporting-text.mdl-grid
             div.mdl-cell.mdl-cell--6-col By #{thing.user.name || thing.user.username}

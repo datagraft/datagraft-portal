@@ -75,6 +75,17 @@ $primary-color: #5264AE;
     a {
       font-weight: bold;
     }
+
+    position:relative;
+    padding-left: 68px;
+
+    img {
+      position: absolute;
+      left: 18px;
+      top: 10px;
+      width: 32px;
+      height: 32px;
+    }
   }
 
   p.sin-activity-date {

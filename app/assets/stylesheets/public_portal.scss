@@ -49,3 +49,60 @@
     opacity: 0.87;
   }
 }
+
+.sin-small-card.mdl-card {
+  min-height:160px;
+  /*height:150px;*/
+  overflow: hidden;
+  display:flex;
+}
+
+a.sin-small-card {
+  text-decoration: none;
+}  
+a.sin-small-card:hover {
+  background-color: #ddd;
+  color: black;
+}
+.sin-card-center.mdl-card__supporting-text {
+  flex-grow: 1;
+  padding-top: 0.3em !important;
+  min-height: 2em;
+  font-size: 1.2em !important;
+}
+
+
+.sin-controller--public_portal.sin-action--explore {
+  .sin-small-card {
+    .mdl-card__title {
+      // background: #424242;
+      // background-size: cover;
+      padding-left: 60px;
+      // color: white;
+      // background-repeat: no-repeat, no-repeat;
+      // background-size: 32px 32px, cover;
+      // background-position: 13px center, left;
+      background-repeat: no-repeat;
+      background-size: 32px 32px;
+      background-position: 13px center;
+    } 
+  }
+
+  .sin-card--transformation .mdl-card__title {
+    background-image:
+      image-url("60_utility.png");
+      // image-url("background_blue_explore_page.jpg");
+  }
+
+  .sin-card--datapage .mdl-card__title {
+    background-image:
+      image-url("60_page.png");
+      // image-url("background_blue_explore_page.jpg");
+  }
+
+  .sin-card--datadistribution .mdl-card__title {
+    background-image:
+      image-url("60_file.png");
+      // image-url("background_blue_explore_page.jpg");
+  }
+}
