@@ -12,13 +12,14 @@ class ThingsController < ApplicationController
   def index
     # If the user lists her own resources
     if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
-      @things = current_user.send(virtual_resources_name)
+      @user = current_user
+      @things = @user.send(virtual_resources_name)
       # If she is just browsing other people's pages
     else
       raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
       # raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
-      user = User.find_by_username(params[:username]) or not_found
-      @things = user.send(virtual_resources_name).where(public: true)
+      @user = User.find_by_username(params[:username]) or not_found
+      @things = @user.send(virtual_resources_name).where(public: true)
     end
 
     if params[:search]
@@ -28,7 +29,7 @@ class ThingsController < ApplicationController
       @things = @things.basic_search({metadata: params[:search], name: params[:search]}, false)
     end
 
-    @things = @things.includes(:user)
+    @things = @things.includes(:user).order(stars_count: :desc, created_at: :desc)
 
     @things = @things.paginate(:page => params[:page], :per_page => 30)
 

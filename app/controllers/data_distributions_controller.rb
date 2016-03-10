@@ -27,6 +27,6 @@ class DataDistributionsController < ThingsController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_distribution_params
-      params.require(:data_distribution).permit([:public, :name, :code, :file])
+      params.require(:data_distribution).permit([:public, :name, :description, :file])
     end
 end

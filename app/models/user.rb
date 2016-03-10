@@ -58,6 +58,7 @@ class User < ApplicationRecord
 
   def fork(thing)
     new_thing = thing.dup
+    new_thing.stars_count = 0
     new_thing.user = self
     new_thing.save
     

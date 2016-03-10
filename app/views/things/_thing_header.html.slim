@@ -1,4 +1,7 @@
 h3 = @thing.name
+- unless @thing.public
+  .sin-lock
+    i.material-icons lock_outline
 h4
   | By&nbsp;
   = link_to (@thing.user.name || @thing.user.username), user_path(@thing.user)
@@ -8,8 +11,5 @@ h4
     = pluralize(@thing.stars_count, 'star')
   - if @thing.child?
     br
-    | Forked from&nbsp;
+    | Copied from&nbsp;
     == link_to @thing.parent.name, thing_path(@thing.parent)
-- unless @thing.public
-  .sin-lock
-    i.material-icons lock_outline

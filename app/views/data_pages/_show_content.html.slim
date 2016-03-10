@@ -1,9 +1,3 @@
-div.sin-description.mdl-cell.mdl-cell--12-col
-  = render_markdown(@data_page.description)
-
-h4 = @data_page.stars_count
-
-//p.author Created by #{@data_page.user.name || @data_page.user.username}
 
 div.sin-datapage-widgets
   == show_the_fucking_layout(@data_page.layout(false), 4, 250, 'mdl-grid--no-spacing') do |box|

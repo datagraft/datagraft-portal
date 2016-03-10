@@ -31,6 +31,17 @@ $accent-color: #FF609A;
 
     h3, h4 {
       margin:0;
+      a {
+        color: white;
+        text-decoration: none;
+        &:not(.sin-stars):hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    h3 {
+      margin-top: 2em;
     }
 
     h3:before {
@@ -42,13 +53,6 @@ $accent-color: #FF609A;
     h4 {
       font-size: large;
       text-align: right;
-      a {
-        color: white;
-        text-decoration: none;
-        &:not(.sin-stars):hover {
-          text-decoration: underline;
-        }
-      }
     }
 
     .sin-lock {
@@ -108,6 +112,9 @@ $accent-color: #FF609A;
 }
 .sin-controller--queriable_data_stores .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
   content: image-url("60b_datastore.png");
+}
+.sin-controller--data_distributions .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
+  content: image-url("60b_file.png");
 }
 
 .sin-date-infos {

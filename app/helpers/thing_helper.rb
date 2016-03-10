@@ -36,6 +36,12 @@ module ThingHelper
     username = thing.user.nil? ? 'myassets' : thing.user.username
     "/#{username}/#{classname.underscore.pluralize}#{ "?#{parameters.to_query}" if parameters.present? }"
   end
+
+  def new_generic_thing_path
+    return if not user_signed_in?
+    username = current_user.username
+    "/#{username}/#{params[:controller]}/new"
+  end
   
   private
 

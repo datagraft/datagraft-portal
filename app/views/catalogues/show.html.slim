@@ -11,7 +11,7 @@ p.author Created by #{@catalogue.user.name}
 
 == link_to 'Edit', catalogue_edit_path(@catalogue)
 span  | 
-== link_to 'Back', catalogues_path
+== link_to 'List', catalogues_path
 - if user_signed_in?
   span  | 
   -if current_user.has_catalogue_star(@catalogue)
