@@ -1,4 +1,5 @@
-hr
+- unless @thing.description.blank?
+  hr
 dl
   dt Size
   dd = number_to_human_size @thing.file_size
@@ -10,5 +11,9 @@ dl
       br
       = link_to attachment_url(@thing, :file) do
         = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
-hr
-= link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+br
+
+.mdl-grid
+  = link_to "Transform", 'perdu.com', class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-cell mdl-cell--3-col"
+
+  = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"
