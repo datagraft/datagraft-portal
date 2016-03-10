@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   datagraft_resources :data_pages
   datagraft_resources :transformations, 'code'
   datagraft_resources :utility_functions, 'code'
+  datagraft_resources :queries
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'

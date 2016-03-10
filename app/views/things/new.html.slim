@@ -1,0 +1,10 @@
+- title "Register a new #{params[:controller].singularize.humanize.downcase}"
+- setOption :mdlCard
+
+div.mdl-card.mdl-cell.mdl-cell--12-col
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 Register a new #{params[:controller].singularize.humanize.downcase}
+  div.mdl-card__supporting-text
+    = render 'form'
+  div.mdl-card__actions
+    = link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 

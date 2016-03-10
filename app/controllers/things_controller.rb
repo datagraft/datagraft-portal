@@ -208,7 +208,7 @@ class ThingsController < ApplicationController
   # in the child classes
 
   def virtual_resource_name(underscore = false)
-    name = /^(.+)sController$/.match(self.class.name)[1]
+    name = /^(.+)Controller$/.match(self.class.name)[1].singularize
     underscore ? name.underscore : name 
   end
 

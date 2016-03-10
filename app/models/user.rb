@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :queriable_data_stores
   has_many :data_pages
   has_many :utility_functions
+  has_many :queries
   has_many :api_keys
   has_many :catalogues
   
