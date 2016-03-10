@@ -2,5 +2,7 @@
 div.sin-datapage-widgets
   == show_the_fucking_layout(@data_page.layout(false), 4, 250, 'mdl-grid--no-spacing') do |box|
     div.mdl-card.mdl-shadow--4dp
-      div.mdl-card__title.mdl-color-text--grey-50
-        h3 Canard
+      - widget = @widgets[box["index"]]
+      div.mdl-card__title = widget.name
+      - unless widget.url.blank?
+        iframe.sin-widget-iframe [src=widget.url]

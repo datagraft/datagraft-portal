@@ -11,6 +11,10 @@ module DataPagesHelper
   def show_the_fucking_layout(layout, ratioGrid = 1, unitHeight = 50, gridClasses = '', cellClasses = '', &block)
     return if layout.nil?
 
+    layout = layout.each_with_index do |box,index|
+      box["index"] = index
+    end
+
     # Sort layout by column
     layout = layout.sort_by do |box|
       box["col"]
@@ -72,7 +76,7 @@ module DataPagesHelper
     style = "min-height:" + (height * unitHeight).to_s + "px"
 
     content_tag(:div, class: className, style: style) do
-      block.call
+      block.call(box)
     end
   end
 end

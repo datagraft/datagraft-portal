@@ -1,5 +1,10 @@
 class DataPagesController < ThingsController
 
+  def show
+    super
+    @widgets = @data_page.widgets
+  end
+
   private
     def data_page_params
       params.require(:data_page).permit(
