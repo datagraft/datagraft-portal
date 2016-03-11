@@ -9,6 +9,10 @@ class Widget < Thing
   validates :widget_class, presence: true, inclusion: {in: @@allowed_widget_classes}
   validates :url, url: {allow_blank: true}
 
+  default_scope do 
+    order created_at: :asc, id: :asc
+  end
+
   def url
     metadata["url"] if metadata
   end
