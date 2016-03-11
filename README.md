@@ -9,8 +9,12 @@ This is a Ruby On Rails implementation of DataGraft.
 ## How to deploy
 
 ```sh
-# First you need to start the PostGreSQL database container
+# Create the data volume for the database
+docker volume create --name datagraft-data
+
+# Start the PostGreSQL database container
 docker run --name datagraft-postgres \
+  -v datagraft-data:/var/lib/postgresql/data \
   -e POSTGRES_PASSWORD=apassword \
   -e POSTGRES_DB=datagraft-prod \
   -d postgres
