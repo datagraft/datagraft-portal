@@ -12,7 +12,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = ENV["DEVISE_MAILER_SENDER"] or 'postmaster@datagraft.net'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -262,7 +262,6 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  config.omniauth :facebook, "1699728000272024", "f7f4c5ba70726c5474e768e38fbf0f52"
-  # config.omniauth :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: ''
-  config.omniauth :github, "79e623396207a48b301b", "66994d76f1f65bf5d91493c1e44a909b9558d520", scope: "user"
+  config.omniauth :facebook, ENV["OMNIAUTH_FACEBOOK_KEY"], ENV["OMNIAUTH_FACEBOOK_SECRET"]
+  config.omniauth :github,   ENV["OMNIAUTH_GITHUB_KEY"],   ENV["OMNIAUTH_GITHUB_SECRET"], scope: "user"
 end
