@@ -1,6 +1,6 @@
 class QueriableDataStore < Thing
   extend FriendlyId
-  friendly_id :name, :use => [:history, :scoped], :scope => :user
+  friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
   @@allowed_hosting_providers = %w(ontotext dandelion)
   cattr_accessor :allowed_hosting_providers

@@ -3,7 +3,7 @@ class Thing < ApplicationRecord
   # friendly_id :name, :use => [:slugged, :simple_i18n, :history]
   # friendly_id :name, use: => [:slugged, :simple_i18n, :history, :scoped], :scope => :user
   # friendly_id :name, :use => [:history, :scoped], :scope => :user
-  friendly_id :name, :use => :history
+  # friendly_id :name, :use => :history
 
   has_many :stars
   has_many :catalogues, :through => :catalogue_records
