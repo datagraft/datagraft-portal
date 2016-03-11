@@ -1,0 +1,33 @@
+## Datagraft return
+
+This is a Ruby On Rails implementation of DataGraft.
+
+## How to build
+
+`docker build . -t datagraft`
+
+## How to deploy
+
+```sh
+# First you need to start the PostGreSQL database container
+docker run --name datagraft-postgres -e POSTGRES_PASSWORD=apassword -d postgres
+
+# Create the database
+docker exec datagraft-postgres psql --user=postgres --command="CREATE DATABASE \"datagraft-prod\";"
+
+# Start the rails container
+# The secret_key_base should obviously be changed
+docker run --name datagraft-rails \
+  -p 3000:3000 \
+  --link datagraft-postgres:postgres \
+  -e DATABASE_URL=postgresql://postgres:apassword@postgres \
+  -e RAILS_ENV=production \
+  -e SECRET_KEY_BASE=750184ddf9d54ca16fee171034f7e4fd7df4b8398efa30c6d36966b24f1d3460209566919a6cf05415017f2b8af7dd65e9b17e423ab95ec783773d8d36421281 \
+  -d yellowiscool/datagraftreturn
+
+# Run the database migration
+docker exec datagraft-rails rake db:migrate
+
+# (Optional) Pre-compile the assets for better performances
+docker exec datagraft-rails rake assets:precompile
+```
