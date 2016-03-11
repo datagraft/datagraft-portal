@@ -1,6 +1,3 @@
-- if @transformation.has_metadata? "description"
-  = render_markdown(@transformation.get_metadata("description"))
-
 - if not @transformation.live?
   h3  Diff
   div
