@@ -5,8 +5,8 @@
 $primary-color: #5264AE;
 $accent-color: #FF609A;
 
-.sin-main-layout > section.sin-card-layout {
-  flex-grow: 0;
+.sin-main-layout > section.sin-card-layout > .mdl-card {
+  width: 100%;
 }
 
 @media (max-width: 839px) {
