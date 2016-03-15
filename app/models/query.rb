@@ -35,4 +35,24 @@ class Query < Thing
     configuration["language"] = val
   end
 
+  def execute(queriable_data_store)
+    # HERE IS UGLY CODE LOL
+    if language == 'SPARQL' && queriable_data_store.hosting_provider = 'ontotext'
+      conn = Faraday.new(queriable_data_store.uri) do |c|
+        # c.response :json
+        c.request :url_encoded
+        c.adapter Faraday.default_adapter
+      end
+
+      result = conn.get do |req|
+        req.params['query'] = query
+      end
+
+      return result.body
+      # throw result
+    else 
+      throw "pas cool"
+    end
+  end
+
 end

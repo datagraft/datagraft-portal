@@ -1,4 +1,25 @@
 class QueriesController < ThingsController
+
+  def execute
+    set_thing
+
+    authorize! :read, @thing
+
+    if user_signed_in? && (current_user.username == params[:qds_username] || params[:qds_username] == 'myassets')
+      qds_user = current_user
+    else
+      raise CanCan::AccessDenied.new("Not authorized!") if params[:qds_username] == 'myassets'
+      qds_user = User.find_by_username(params[:qds_username]) or not_found
+    end
+
+    @queriable_data_store = qds_user.queriable_data_stores.friendly.find(params[:qds_id])
+
+    authorize! :read, @queriable_data_store
+
+    # HERE IS THE FUN PART
+    @query_result = @thing.execute(@queriable_data_store)
+  end
+
   private
     def destroyNotice
       "The query was successfully destroyed"

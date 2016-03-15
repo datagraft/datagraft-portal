@@ -19,4 +19,4 @@ code = @thing.query
             td.mdl-data-table__cell--non-numeric
               = link_to (qds.user.name || qds.user.username), "/#{qds.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
             td.mdl-data-table__cell--non-numeric
-              = link_to 'Execute', thing_path(@thing), class: 'mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary'
+              = link_to 'Execute', query_execute_path(@thing, qds), method: :post, class: 'mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary'
