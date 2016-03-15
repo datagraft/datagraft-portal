@@ -10,6 +10,15 @@ class QueriableDataStoresController < ThingsController
 
   private
     def queriable_data_store_params
-      params.require(:queriable_data_store).permit(:public, :name, :description, :uri, :hosting_provider)
+      params.require(:queriable_data_store).permit(:public, :name, :description, :uri, :hosting_provider,
+          queries_attributes: [:id, :name, :query, :description, :language, :_destroy])
+    end
+
+    def queriable_data_store_set_relations(qds)
+      return if qds.queries.blank?
+      qds.queries.each do |query|
+        query.public = qds.public
+        query.user = qds.user
+      end 
     end
 end

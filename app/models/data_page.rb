@@ -10,6 +10,9 @@ class DataPage < Thing
   has_many :data_page_queriable_data_stores
   has_many :queriable_data_stores, :through => :data_page_queriable_data_stores
 
+  has_many :data_page_queries
+  has_many :queries, :through => :data_page_queries
+
   # store :metadata, accessors: [:description], coder: JSON
 
   # TODO check allow_destroy and cancancan

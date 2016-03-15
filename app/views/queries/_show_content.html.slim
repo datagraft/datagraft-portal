@@ -1,2 +1,22 @@
 h3 #{@thing.language} query
 code = @thing.query
+
+- unless @thing.queriable_data_stores.blank?
+  h3 Linked queriable data stores
+  table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
+    thead
+      th.mdl-data-table__cell--non-numeric Name
+      th.mdl-data-table__cell--non-numeric Endpoint
+      th.mdl-data-table__cell--non-numeric Author
+      th.mdl-data-table__cell--non-numeric
+    tbody
+      - @thing.queriable_data_stores.includes(:user).each do |qds|
+        - if can? :read, qds
+          tr 
+            td.mdl-data-table__cell--non-numeric
+              = link_to qds.name, thing_path(qds), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+            td.mdl-data-table__cell--non-numeric = qds.uri
+            td.mdl-data-table__cell--non-numeric
+              = link_to (qds.user.name || qds.user.username), "/#{qds.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+            td.mdl-data-table__cell--non-numeric
+              = link_to 'Execute', thing_path(@thing), class: 'mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary'

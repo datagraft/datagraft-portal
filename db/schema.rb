@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307080542) do
+ActiveRecord::Schema.define(version: 20160315084305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,16 @@ ActiveRecord::Schema.define(version: 20160307080542) do
   end
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
+
+  create_table "queriable_data_store_queries", force: :cascade do |t|
+    t.integer  "queriable_data_store_id"
+    t.integer  "query_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "queriable_data_store_queries", ["queriable_data_store_id"], name: "index_queriable_data_store_queries_on_queriable_data_store_id", using: :btree
+  add_index "queriable_data_store_queries", ["query_id"], name: "index_queriable_data_store_queries_on_query_id", using: :btree
 
   create_table "stars", force: :cascade do |t|
     t.integer  "user_id"

@@ -1,0 +1,10 @@
+div.mdl-cell.mdl-cell--6-col.mdl-shadow--4dp.nested-fields.mdl-card.sin-nested-form.sin-form-widget
+  div.mdl-card__title.mdl-color-text--grey-50
+    = Query
+  div.mdl-card__supporting-text
+    = f.input :name
+    = f.input :description, as: :text
+    = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false
+    = f.input :query, as: :text, input_html: { rows: 5 }
+  div.mdl-card__actions
+    = link_to_remove_association "Remove", f, :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 

@@ -8,7 +8,13 @@ class Transformation < Thing
     name_changed? || super
   end
 
-  #def to_param
-  #  "#{self.user_id}/#{self.id}"
-  #end
+  def code
+    configuration["code"] unless configuration.blank?
+  end
+
+  def code=(val)
+    touch_configuration!
+    configuration["code"] = val
+  end
+
 end

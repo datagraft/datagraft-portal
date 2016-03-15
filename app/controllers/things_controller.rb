@@ -60,8 +60,14 @@ class ThingsController < ApplicationController
   def create
     resource = virtual_resource
     authorize! :create, resource
-    @thing = resource.new(self.send(virtual_resource_name(true)+"_params"))
+    method_prefix = virtual_resource_name(true)
+    @thing = resource.new(self.send("#{method_prefix}_params"))
     @thing.user = current_user
+
+    set_relation = "#{method_prefix}_set_relations".to_sym
+    if self.respond_to?(set_relation, :include_private)
+      self.send(set_relation, @thing)
+    end
 
     fill_name_if_empty
 
@@ -82,10 +88,18 @@ class ThingsController < ApplicationController
   def update
     authorize! :update, @thing
 
-    instance_variable_set("@"+virtual_resource_name(true), @thing)
+    method_prefix = virtual_resource_name(true)
+    instance_variable_set("@"+method_prefix, @thing)
+
+    @thing.assign_attributes(self.send(virtual_resource_name(true)+"_params"))
+
+    set_relation = "#{method_prefix}_set_relations".to_sym
+    if self.respond_to?(set_relation, :include_private)
+      self.send(set_relation, @thing)
+    end
 
     respond_to do |format|
-      if @thing.update(self.send(virtual_resource_name(true)+"_params"))
+      if @thing.save
         format.html { redirect_to thing_path(@thing), notice: update_notice }
         format.json { render :show, status: :ok, location: thing_path(@thing) }
       else
@@ -278,7 +292,11 @@ class ThingsController < ApplicationController
       not_found if not data
     end
 
-    render :json => data
+    if data.kind_of? String
+      render :text => data
+    else
+      render :json => data
+    end
   end
 
   def edit_json(full_data)

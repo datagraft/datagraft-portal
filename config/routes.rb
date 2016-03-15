@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  def datagraft_resources(resource_sym, configuration_or_code = 'configuration')
+  def datagraft_resources(resource_sym)
     resource = resource_sym.to_s
     context = ':username/'+resource
     context_id = context + '/:id'
@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     post   context_id + '/fork' =>   resource + '#fork'
     get    context_id + '/versions' => resource + '#versions'
 
-    ['metadata', configuration_or_code].each do |type|
+    ['metadata', 'configuration'].each do |type|
       full_context = context_id + '/' + type
       context_with_key = full_context + '/*key'
       resource_show = resource + '#show_' + type
@@ -43,8 +43,6 @@ Rails.application.routes.draw do
       delete context_with_key, to: resource_delete, format: false
     end
 
-    get    context_id + '/configuration' => resource + '#versions'
-    post   context_id + '/configuration' => resource + '#versions'
   end
   
   get ':username/catalogues/new' => 'catalogues#new'
@@ -62,8 +60,8 @@ Rails.application.routes.draw do
   datagraft_resources :data_distributions
   datagraft_resources :queriable_data_stores
   datagraft_resources :data_pages
-  datagraft_resources :transformations, 'code'
-  datagraft_resources :utility_functions, 'code'
+  datagraft_resources :transformations
+  datagraft_resources :utility_functions
   datagraft_resources :queries
   resources :api_keys
 

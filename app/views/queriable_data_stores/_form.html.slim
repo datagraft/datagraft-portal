@@ -8,6 +8,13 @@
     h4.mdl-cell--12-col Configuration
     = f.input :hosting_provider, collection: QueriableDataStore.allowed_hosting_providers, wrapper: :select, include_blank: false
     = f.input :uri, as: :url
+  .mdl-grid
+    h4.mdl-cell--12-col Queries
+    = f.simple_fields_for :queries do |p|
+      = render 'query_fields', f: p
+    .links.sin-nested-links
+      = link_to_add_association f, :queries, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
+        i.material-icons add
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit

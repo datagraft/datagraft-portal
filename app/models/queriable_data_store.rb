@@ -8,7 +8,11 @@ class QueriableDataStore < Thing
   validates :hosting_provider, presence: true, inclusion: {in: @@allowed_hosting_providers}
   validates :uri, url: {allow_blank: false}, presence: true
 
+  has_many :queriable_data_store_queries
+  has_many :queries, :through => :queriable_data_store_queries
   # validates :uri, presence: true, inclusion: {in: %w(canard lapin) }
+
+  accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
   
   def should_generate_new_friendly_id?
     name_changed? || super

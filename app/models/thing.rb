@@ -10,6 +10,7 @@ class Thing < ApplicationRecord
   belongs_to :user
 
   validates :name, presence: true
+  validates :user, presence: true
 
   # As parents and children (forking stuff)
   has_closure_tree

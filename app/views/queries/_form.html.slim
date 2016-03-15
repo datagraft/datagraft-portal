@@ -8,6 +8,9 @@
     h4.mdl-cell--12-col The query
     = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false
     = f.input :query, as: :text, input_html: { rows: 5 }
+  .mdl-grid
+    h4.mdl-cell--12-col Linked queriable data stores
+    = f.association :queriable_data_stores, collection: current_user.queriable_data_stores, wrapper: :select
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit

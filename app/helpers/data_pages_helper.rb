@@ -9,7 +9,7 @@ module DataPagesHelper
 
 
   def show_the_fucking_layout(layout, ratioGrid = 1, unitHeight = 50, gridClasses = '', cellClasses = '', &block)
-    return if layout.nil?
+    return if layout.blank?
 
     layout = layout.each_with_index do |box,index|
       box["index"] = index
