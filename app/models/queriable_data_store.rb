@@ -10,9 +10,12 @@ class QueriableDataStore < Thing
 
   has_many :queriable_data_store_queries
   has_many :queries, :through => :queriable_data_store_queries
-  # validates :uri, presence: true, inclusion: {in: %w(canard lapin) }
+
+  has_many :data_page_queriable_data_stores
+  has_many :data_pages, :through => :data_page_queriable_data_stores 
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :data_pages
   
   def should_generate_new_friendly_id?
     name_changed? || super

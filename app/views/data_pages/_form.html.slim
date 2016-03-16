@@ -20,6 +20,9 @@
     div.mdl-cell.sin-gridster-workarea.mdl-shadow--4dp
       div.gridster
         ul
+  .mdl-grid
+    h4.mdl-cell--12-col Linked queriable data stores
+    = f.association :queriable_data_stores, collection: current_user.queriable_data_stores.order(stars_count: :desc, created_at: :desc), wrapper: :select
 
   hr.sin-invisible-form-separator
   .mdl-grid

@@ -15,6 +15,9 @@
     .links.sin-nested-links
       = link_to_add_association f, :queries, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
         i.material-icons add
+  .mdl-grid
+    h4.mdl-cell--12-col Linked data pages
+    = f.association :data_pages, collection: current_user.data_pages, wrapper: :select
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit

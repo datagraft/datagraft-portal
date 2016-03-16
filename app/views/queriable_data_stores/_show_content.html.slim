@@ -1,8 +1,9 @@
 - unless @thing.description.blank?
   hr
 dl
-  dt Hosting provider
-  dd = @thing.hosting_provider.capitalize
+  - unless qds.hosting_provider.blank?
+    dt Hosting provider
+    dd = @thing.hosting_provider.capitalize
   dt URI endpoint
   dd 
     code = @thing.uri
@@ -11,18 +12,51 @@ dl
   h3 Linked queries
   table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
     thead
-      th.mdl-data-table__cell--non-numeric Name
-      th.mdl-data-table__cell--non-numeric Query
-      th.mdl-data-table__cell--non-numeric Author
-      th.mdl-data-table__cell--non-numeric
+      tr
+        th.mdl-data-table__cell--non-numeric Name
+        th Stars
+        th.mdl-data-table__cell--non-numeric Query
+        th.mdl-data-table__cell--non-numeric Author
+        th.mdl-data-table__cell--non-numeric
     tbody
-      - @thing.queries.each do |query|
-        tr 
+      - @thing.queries.order(stars_count: :desc, created_at: :desc).each do |query|
+        - if can? :read, query
+          tr 
+            td.mdl-data-table__cell--non-numeric
+              = link_to query.name, thing_path(query), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+            td = query.stars_count
+            td.mdl-data-table__cell--non-numeric
+              code = truncate(query.query)
+            td.mdl-data-table__cell--non-numeric
+              = link_to (query.user.name || query.user.username), "/#{query.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+            td.mdl-data-table__cell--non-numeric
+              = link_to 'Execute', query_execute_path(query, @thing), class: 'mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary'
+
+- unless @thing.data_pages.empty?
+  h3 Linked data pages
+  table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
+    thead
+      tr
+        th.mdl-data-table__cell--non-numeric Name
+        th.mdl-data-table__cell--numeric Stars
+        th.mdl-data-table__cell--numeric Created
+        th.mdl-data-table__cell--non-numeric Author
+        - if user_signed_in? && @user == current_user
+          th.mdl-data-table__cell--non-numeric Private
+    tbody
+    - @thing.data_pages.order(stars_count: :desc, created_at: :desc).each do |datapage|
+      - if can? :read, datapage
+        tr
           td.mdl-data-table__cell--non-numeric
-            = link_to query.name, thing_path(query), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+            = link_to datapage.name, thing_path(datapage), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+          td.mdl-table__cell
+            = datapage.stars_count
+          td.mdl-table__cell
+            = time_ago_in_words datapage.created_at
+            | ago
           td.mdl-data-table__cell--non-numeric
-            code = truncate(query.query)
-          td.mdl-data-table__cell--non-numeric
-            = link_to (query.user.name || query.user.username), "/#{query.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
-          td.mdl-data-table__cell--non-numeric
-            = link_to 'Execute', thing_path(query), class: 'mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--primary'
+            = link_to (datapage.user.name || datapage.user.username), "/#{datapage.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
+
+          - if user_signed_in? && @user == current_user
+            td.mdl-data-table__cell--non-numeric
+              i.material-icons = datapage.public ? 'lock_open' : 'lock'

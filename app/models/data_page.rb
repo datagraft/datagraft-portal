@@ -17,6 +17,7 @@ class DataPage < Thing
 
   # TODO check allow_destroy and cancancan
   accepts_nested_attributes_for :widgets, reject_if: :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :queriable_data_stores
 
   def should_generate_new_friendly_id?
     name_changed? || super

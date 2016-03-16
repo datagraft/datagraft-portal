@@ -1,5 +1,6 @@
 h3 #{@thing.language} query
-code = @thing.query
+pre
+  code = @thing.query
 
 - unless @thing.queriable_data_stores.blank?
   h3 Linked queriable data stores
