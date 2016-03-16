@@ -49,6 +49,10 @@ class Query < Thing
         req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
       end
 
+      if result.status != 200
+        raise result.body
+      end
+
       parsed = JSON.parse(result.body)
 
       return {

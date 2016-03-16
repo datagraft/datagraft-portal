@@ -22,25 +22,17 @@
       div.mdl-card__title
         h2.mdl-card__title-text Data store
       div.mdl-card__supporting-text
-        dl
-          dt Name
-          dd = link_to @queriable_data_store.name, thing_url(@queriable_data_store)
-          dt URI
-          dd = @queriable_data_store.uri
-          dt Hosting Provider
-          dd = @queriable_data_store.hosting_provider
-          = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false, selected: @queriable_data_store.id
-        / - if true
-        /   h4 Change datastore
-        /   ul.mdl-list.sin-qds-list
-        /     - current_user.queriable_data_stores.each do |qds|
-        /       li.mdl-list__item
-        /         span.mdl-list__item-primary-content
-        /           i.mdl-list__item-icon
-        /           / # = link_to qds.name, thing_url(qds)
-        /           = qds.name
-        /         = link_to query_execute_path(@query, qds), method: :post, class: 'mdl-list__item-secondary-action' do
-        /           i.material-icons play_arrow
+          - if not @queriable_data_store.nil?
+            dl
+              dt Name
+              dd = link_to @queriable_data_store.name, thing_url(@queriable_data_store)
+              dt URI
+              dd = @queriable_data_store.uri
+              dt Hosting Provider
+              dd = @queriable_data_store.hosting_provider
+            = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false, selected: @queriable_data_store.id
+          - else
+            = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false
 
 - unless @results_list.empty?
   .mdl-grid
@@ -62,4 +54,5 @@
         tr
           th.mdl-data-table__cell--non-numeric.sin-td-wrap colspan=@query_result[:headers].count
             = will_paginate @results_list
-
+- else
+  em No rows returned

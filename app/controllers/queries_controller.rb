@@ -15,30 +15,39 @@ class QueriesController < ThingsController
 
       @queriable_data_store = qds_user.queriable_data_stores.friendly.find(params[:qds_id])
     else
+      querying = params["querying"] || {}
       @query = @thing = Query.new
       @query.name = 'Unsaved query'
-      @query.query = params["querying"]["query"]
-      @query.language = params["querying"]["language"]
+      @query.query = querying["query"]
+      @query.language = querying["language"]
       @unsaved_query = true
 
-      @queriable_data_store = QueriableDataStore.friendly.find(params["querying"]["queriable_data_store"])
-
+      unless querying["queriable_data_store"].blank?
+        @queriable_data_store = QueriableDataStore.friendly.find(querying["queriable_data_store"])
+      end
     end
 
 
-    authorize! :read, @queriable_data_store
-
-    # HERE IS THE FUN PART
-    begin
-      @query_result = @query.execute(@queriable_data_store)
-    rescue => error
-      flash[:error] = error.message
-      # redirect_to thing_path(@query)
-      # @results_list = []
+    if @queriable_data_store.nil?
       @query_result = {
         headers: [],
         results: []
       }
+    else
+      authorize! :read, @queriable_data_store
+
+      # HERE IS THE FUN PART
+      begin
+        @query_result = @query.execute(@queriable_data_store)
+      rescue => error
+        flash[:error] = error.message
+        # redirect_to thing_path(@query)
+        # @results_list = []
+        @query_result = {
+          headers: [],
+          results: []
+        }
+      end
     end
 
     if @query_result.blank?
