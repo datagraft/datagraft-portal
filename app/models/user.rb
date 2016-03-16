@@ -22,7 +22,21 @@ class User < ApplicationRecord
   validates :username, uniqueness: true, case_sensitive: false
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
-    in: %w(datagraft user users distribution distributions transformation transformations datapage datapages query queries widget widgets function functions catalogue catalogues myassets oauth),
+    in: %w(
+      datagraft
+      data_distribution data_distributions
+      queriable_data_store queriable_data_stores
+      data_page data_pages
+      transformation transformations
+      utility_function utility_functions
+      query queries
+      api_key api_keys
+      explore publish dashboard transform publish_queriable_data_store querying execute
+      new edit index star unstar fork copy versions
+      session logout login user users admin oauth
+      stylesheets assets javascripts images
+      configuration metadata
+      myasset myassets)
     message: "\"%{value}\" is reserved."
   }
 

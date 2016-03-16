@@ -16,10 +16,21 @@ FriendlyId.defaults do |config|
   # undesirable to allow as slugs. Edit this list as needed for your app.
   config.use :reserved
 
-  config.reserved_words = %w(new edit index session login logout users admin
-    stylesheets assets javascripts images versions metadata star unstar
-    configuration explore publish quotas dashboard transform data_distributions
-    transformations queriable_data_stores api_keys myassets)
+  config.reserved_words = %w(
+    datagraft
+    data_distribution data_distributions
+    queriable_data_store queriable_data_stores
+    data_page data_pages
+    transformation transformations
+    utility_function utility_functions
+    query queries
+    api_key api_keys
+    explore publish dashboard transform publish_queriable_data_store querying execute
+    new edit index star unstar fork copy versions
+    session logout login user users admin oauth
+    stylesheets assets javascripts images
+    configuration metadata
+    myasset myassets)
 
   #  ## Friendly Finders
   #
