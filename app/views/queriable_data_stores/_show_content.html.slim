@@ -1,7 +1,7 @@
 - unless @thing.description.blank?
   hr
 dl
-  - unless qds.hosting_provider.blank?
+  - unless @thing.hosting_provider.blank?
     dt Hosting provider
     dd = @thing.hosting_provider.capitalize
   dt URI endpoint
