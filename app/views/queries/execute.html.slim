@@ -17,5 +17,18 @@ dl
   dt Hosting Provider
   dd = @queriable_data_store.hosting_provider
 
-div
-  code = @query_result
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp
+  thead
+    tr
+      - @query_result[:headers].each do |header|
+        th.mdl-data-table__cell--non-numeric.sin-td-wrap = header
+  tbody
+    - @results_list.each do |result|
+      tr
+        - @query_result[:headers].each do |header|
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+  tfoot
+    tr
+      th.mdl-data-table__cell--non-numeric.sin-td-wrap colspan=@query_result[:headers].count
+        = will_paginate @results_list
+

@@ -15,7 +15,7 @@ code = @thing.query
           tr 
             td.mdl-data-table__cell--non-numeric
               = link_to qds.name, thing_path(qds), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
-            td.mdl-data-table__cell--non-numeric = qds.uri
+            td.mdl-data-table__cell--non-numeric.sin-td-wrap = qds.uri
             td.mdl-data-table__cell--non-numeric
               = link_to (qds.user.name || qds.user.username), "/#{qds.user.username}", class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
             td.mdl-data-table__cell--non-numeric

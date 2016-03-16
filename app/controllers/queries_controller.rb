@@ -17,7 +17,15 @@ class QueriesController < ThingsController
     authorize! :read, @queriable_data_store
 
     # HERE IS THE FUN PART
-    @query_result = @thing.execute(@queriable_data_store)
+    begin
+      @query_result = @thing.execute(@queriable_data_store)
+    rescue => error
+      flash[:error] = error.message
+      redirect_to thing_path(@query)
+    end
+
+    @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 10)
+    # throw @query_result
   end
 
   private

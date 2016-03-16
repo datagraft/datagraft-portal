@@ -46,12 +46,19 @@ class Query < Thing
 
       result = conn.get do |req|
         req.params['query'] = query
+        req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
       end
 
-      return result.body
+      parsed = JSON.parse(result.body)
+
+      return {
+        headers: parsed["head"]["vars"],
+        results: parsed["results"]["bindings"]
+      }
+      # return result.body
       # throw result
     else 
-      throw "pas cool"
+      raise "Only SPARQL on Ontotext backend querying is supported"
     end
   end
 
