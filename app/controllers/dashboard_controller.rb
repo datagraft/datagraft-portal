@@ -20,7 +20,8 @@ class DashboardController < ApplicationController
       'catalogues' => query_catalogues,
       'datapages' => query_things.where(type: 'DataPage'),
       'transformations' => query_things.where(type: 'Transformation'),
-      'other' => query_things.where.not(type: ['DataPage', 'Transformation'])
+      'queriable_data_stores' => query_things.where(type: 'QueriableDataStore'),
+      'other' => query_things.where.not(type: ['DataPage', 'Transformation', 'QueriableDataStore'])
       }
 
     # get active tab

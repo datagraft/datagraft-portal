@@ -40,8 +40,9 @@ div.mdl-grid.sin-dashboard
           a class=['mdl-tabs__tab', @activeTab == 'catalogues' ? 'is-active' : ''] href="#sin-projects-catalogues" Catalogues
           a class=['mdl-tabs__tab', @activeTab == 'datapages' ? 'is-active' : ''] href="#sin-projects-datapages" Data pages
           a class=['mdl-tabs__tab', @activeTab == 'transformations' ? 'is-active' : ''] href="#sin-projects-transformations" Transformations
+          a class=['mdl-tabs__tab', @activeTab == 'queriable_data_stores' ? 'is-active' : ''] href="#sin-projects-queriable_data_stores" Queriable Data Stores
           a class=['mdl-tabs__tab', @activeTab == 'other' ? 'is-active' : ''] href="#sin-projects-other" Other
-        - ['all', 'catalogues', 'datapages', 'transformations', 'other'].each do |type|
+        - ['all', 'catalogues', 'datapages', 'transformations', 'queriable_data_stores', 'other'].each do |type|
           div class=["mdl-tabs__panel", type == @activeTab ? "is-active" : ''] id="sin-projects-#{type}"
             table.mdl-data-table.mdl-js-data-table.sin-projects-table
               tbody

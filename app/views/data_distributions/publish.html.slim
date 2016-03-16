@@ -10,7 +10,7 @@ div.mdl-grid
     div.mdl-card__supporting-text
       | Some stuff where you can store an query data
     div.mdl-card__actions
-      == link_to 'New', publish_queriable_data_store_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
+      == link_to 'Publish', publish_queriable_data_store_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
 
   div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-publish-card.sin-bg-alt-1
     div.mdl-card__title.mdl-card--expand
@@ -37,5 +37,9 @@ div.mdl-grid
       == form_for(@data_distribution, html: {class: "dropzone sin-dropzone", id: "dataDistributionDropZone"}, url: data_distributions_path(true)) do 
     div.mdl-card__actions
       == link_to 'Transform', transform_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true
-      == link_to 'Host', api_keys_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true
+      == link_to 'Host', data_distributions_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true
       == link_to 'Cancel', publish_path, :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true, :id => "sin-cancel-upload"
+
+div.mdl-grid
+  == link_to 'New Query', new_query_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-cell mdl-cell--4-col"
+  == link_to 'New utility function', new_utility_function_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-cell mdl-cell--4-col"
