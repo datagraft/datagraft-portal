@@ -120,6 +120,16 @@ $accent-color: #FF609A;
   content: image-url("60b_query.png");
 }
 
+.sin-qds-list {
+  max-height: 120px;
+  overflow: scroll;
+  
+  li .mdl-list__item-icon {
+    background: transparent image-url("60_datastore.png") no-repeat left;
+    background-size: contain;
+  }
+}
+
 .sin-date-infos {
   font-size: small;
   color: #ABABAB;
@@ -148,3 +158,4 @@ $accent-color: #FF609A;
 .sin-description p {
   text-align: justify;
 }
+

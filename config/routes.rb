@@ -75,6 +75,10 @@ Rails.application.routes.draw do
   get ':username' => 'public_portal#user'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
+  post 'querying' => 'queries#execute'
+  
+  # TODO REMOVE THIS LATER ?
+  get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
 
   # resources :transformations
   # resources :stars

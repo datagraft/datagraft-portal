@@ -36,7 +36,7 @@ class User < ApplicationRecord
       session logout login user users admin oauth
       stylesheets assets javascripts images
       configuration metadata
-      myasset myassets)
+      myasset myassets),
     message: "\"%{value}\" is reserved."
   }
 
