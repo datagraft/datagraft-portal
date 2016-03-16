@@ -20,7 +20,7 @@ class DataDistributionsController < ThingsController
       'data_distributions'
     end
 
-    def create_fill
+    def fill_name_if_empty
       @thing.name = data_distribution_params[:file].original_filename if @thing.name.blank?
     end
  
