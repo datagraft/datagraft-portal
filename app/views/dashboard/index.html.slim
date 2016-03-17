@@ -13,11 +13,19 @@ div.mdl-grid.sin-dashboard
             '&nbsp;ago
           - if activity.kind_of? Star
             img src=image_url("60_star.png")
-            'You starred 
+            - if activity.user == current_user
+              | You
+            - else
+              = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+            '  starred 
             == link_to activity.thing.name, thing_path(activity.thing)
           - elsif activity.kind_of? Thing
             img src=image_url("60_service.png")
-            'You made
+            - if activity.user == current_user
+              | You
+            - else
+              = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+            '  made 
             == link_to activity.name, thing_path(activity)
             '&nbsp;public
           - elsif activity.kind_of? CatalogueStar
