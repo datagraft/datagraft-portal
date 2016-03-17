@@ -55,9 +55,9 @@
           tr
             - @query_result[:headers].each do |header|
               - if result[header]["value"].is_a? Numeric
-                th = result[header]["value"]
+                td = result[header]["value"]
               - else
-                th.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+                td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
 
       tfoot
         tr

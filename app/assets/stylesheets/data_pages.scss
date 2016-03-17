@@ -53,12 +53,20 @@ $accent-color: #FF609A;
 
   .mdl-cell {
     // background: #F5F5F5;
+    position: relative;
+
     .mdl-card {
       margin:1em;
       width: calc(100% - 2em);
       height: calc(100% - 2em);
       padding: 0;
-      margin: 1em;
+
+      // TODO this is a bugfix for Chrome…
+      position: absolute;
+      top:0;
+      right:0;
+      left:0;
+      bottom:0;
     }
   }
 }
