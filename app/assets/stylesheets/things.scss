@@ -160,7 +160,8 @@ $accent-color: #FF609A;
 }
 
 
-.sin-datapage-qds table td {
+.sin-datapage-qds table td,
+.mdl-card table td {
   white-space: normal;
   .mdl-button {
     height: auto;
