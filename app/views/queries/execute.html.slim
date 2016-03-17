@@ -49,7 +49,7 @@
       thead
         tr
           - @query_result[:headers].each do |header|
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = header
+            th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
       tbody
         - @results_list.each do |result|
           tr
