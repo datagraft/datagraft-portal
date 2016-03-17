@@ -146,7 +146,8 @@ class ThingsController < ApplicationController
   def fork
     authenticate_user!
     authorize! :read, @thing
-    @thing = current_user.fork(@thing)
+    @thing = @thing.fork(current_user)
+    @thing.save
     respond_to do |format|
       format.html { redirect_to thing_path(@thing), notice: unstar_notice }
       format.json { head :no_content }

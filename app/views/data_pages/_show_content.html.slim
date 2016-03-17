@@ -3,9 +3,10 @@ div.sin-datapage-widgets
   == show_the_fucking_layout(@data_page.layout(false), 4, 250, 'mdl-grid--no-spacing') do |box|
     div.mdl-card.mdl-shadow--4dp
       - widget = @widgets[box["index"]]
-      div.mdl-card__title = widget.name
-      - unless widget.url.blank?
-        iframe.sin-widget-iframe [src=widget.url]
+      - unless widget.nil?
+        div.mdl-card__title = widget.name
+        - unless widget.url.blank?
+          iframe.sin-widget-iframe [src=widget.url]
 
 - unless @queriable_data_stores.empty?
   h3 Queriable data stores
@@ -13,6 +14,8 @@ div.sin-datapage-widgets
     - @queriable_data_stores.each do |qds|
       - if can? :read, qds
         h4 = qds.name
+        / TODO Ugly…
+        = link_to "Go to queriable data store", thing_path(qds), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
         dl
           - unless qds.hosting_provider.blank?
             dt Hosting provider

@@ -71,17 +71,19 @@ class User < ApplicationRecord
     Star.where(user: self, thing: thing).destroy_all
   end
 
-  def fork(thing)
-    new_thing = thing.dup
-    new_thing.stars_count = 0
-    new_thing.user = self
-    new_thing.save
+  # def fork(thing)
+  #   new_thing = thing.dup
+  #   new_thing.stars_count = 0
+  #   new_thing.user = self
+  #   # false by default
+  #   new_thing.public = false
+  #   new_thing.save
     
-    thing.add_child(new_thing)
-    # new_thing.parent = thing
-    # new_thing.save && thing.save
-    return new_thing
-  end
+  #   thing.add_child(new_thing)
+  #   # new_thing.parent = thing
+  #   # new_thing.save && thing.save
+  #   return new_thing
+  # end
   
   def unstar_catalogue(catalogue)
     CatalogueStar.where(user: self, catalogue: catalogue).destroy_all

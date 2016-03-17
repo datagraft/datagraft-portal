@@ -148,3 +148,6 @@ gem 'gridster-rails'
 
 # Most important gem of the project
 gem 'indefinite_article'
+
+# Deep clonning
+gem 'deep_cloneable', '~> 2.2.0'

@@ -23,6 +23,23 @@ class DataPage < Thing
     name_changed? || super
   end
 
+  def fork(newuser)
+    self.deep_clone include: {data_page_widgets: :widget, data_page_queriable_data_stores: {queriable_data_store: {queriable_data_store_queries: :query}}} do |original, copy|
+      if copy.instance_of?(DataPage) || copy.instance_of?(QueriableDataStore) || copy.instance_of?(Widget) || copy.instance_of?(::Query)
+        copy.user = newuser
+        copy.stars_count = 0
+        copy.public = false
+        original.add_child copy
+      # elsif copy.instance_of? DataPageQueriableDataStore
+      # elsif copy.instance_of? QueriableDataStoreQuery
+      # elsif copy.instance_of? DataPageWidget
+      # else
+      #  throw ::Query
+      #  throw copy.instance_of?(Query).to_s
+      end
+    end
+  end
+
   def license
     metadata["license"] if metadata
   end

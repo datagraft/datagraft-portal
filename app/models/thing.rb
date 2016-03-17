@@ -19,6 +19,7 @@ class Thing < ApplicationRecord
   has_paper_trail
 
 
+
   def self.public_list
     Thing.where(:public => true, :type => ['DataPage', 'Transformation', 'DataDistribution'])
          .order(stars_count: :desc, created_at: :desc).includes(:user)
@@ -29,6 +30,15 @@ class Thing < ApplicationRecord
     self.public_list
          .basic_search({name: search, metadata: search}, false)
          # .fuzzy_search(name: search)
+  end
+
+  def fork(newuser)
+    self.deep_clone do |original, copy|
+      copy.user = newuser
+      copy.stars_count = 0
+      copy.public = false
+      original.add_child copy
+    end
   end
 
   def has_metadata?(key)

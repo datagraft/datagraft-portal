@@ -16,7 +16,19 @@ class QueriableDataStore < Thing
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :data_pages
-  
+ 
+
+  def fork(newuser)
+    self.deep_clone include: {queriable_data_store_queries: :query} do |original, copy|
+      if copy.instance_of?(QueriableDataStore) || copy.instance_of?(::Query)
+        copy.user = newuser
+        copy.stars_count = 0
+        copy.public = false
+        original.add_child copy
+      end
+    end
+  end
+
   def should_generate_new_friendly_id?
     name_changed? || super
   end
