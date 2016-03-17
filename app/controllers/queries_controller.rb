@@ -14,7 +14,8 @@ class QueriesController < ThingsController
       end
 
       @queriable_data_store = qds_user.queriable_data_stores.friendly.find(params[:qds_id])
-    else
+      # throw @queriable_data_store
+    elsif user_signed_in?
       querying = params["querying"] || {}
       @query = @thing = Query.new
       @query.name = 'Unsaved query'
@@ -25,6 +26,8 @@ class QueriesController < ThingsController
       unless querying["queriable_data_store"].blank?
         @queriable_data_store = QueriableDataStore.friendly.find(querying["queriable_data_store"])
       end
+    else
+      raise CanCan::AccessDenied.new("Not authorized!")
     end
 
 

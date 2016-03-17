@@ -12,11 +12,19 @@
           - unless @unsaved_query
             dt Name
             dd = link_to @query.name, thing_url(@query)
-          / dd = @query.query
-          = f.input :query, as: :text, input_html: {value: @query.query, rows: 5}
-          = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false, selected: @query.language
-          / # = f.input :query2, collection: current_user.queries, wrapper: :select
-          = f.button :submit, "Execute"
+          - if user_signed_in?
+            / dd = @query.query
+            = f.input :query, as: :text, input_html: {value: @query.query, rows: 5}
+            = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false, selected: @query.language
+            / # = f.input :query2, collection: current_user.queries, wrapper: :select
+            = f.button :submit, "Execute"
+          - else
+            dt Query
+            dd
+              pre
+                code = @query.query
+            dt Language
+            dd = @query.language
 
     div.mdl-card.mdl-shadow--2dp.mdl-cell--6-col.mdl-cell
       div.mdl-card__title
@@ -30,8 +38,9 @@
               dd = @queriable_data_store.uri
               dt Hosting Provider
               dd = @queriable_data_store.hosting_provider
-            = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false, selected: @queriable_data_store.id
-          - else
+            - if user_signed_in?
+              = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false, selected: @queriable_data_store.id
+          - elsif user_signed_in?
             = f.input :queriable_data_store, collection: current_user.queriable_data_stores, wrapper: :select, include_blank: false
 
 - unless @results_list.empty?

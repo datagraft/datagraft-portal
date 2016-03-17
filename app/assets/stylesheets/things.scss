@@ -159,3 +159,10 @@ $accent-color: #FF609A;
   text-align: justify;
 }
 
+
+.sin-datapage-qds table td {
+  white-space: normal;
+  .mdl-button {
+    height: auto;
+  }
+}

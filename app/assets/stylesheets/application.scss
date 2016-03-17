@@ -345,3 +345,8 @@ width: 100%;
   word-wrap: break-word;
   white-space: normal;
 }
+
+// TODO this might be too much
+.mdl-card pre {
+  white-space: pre-line;
+}
