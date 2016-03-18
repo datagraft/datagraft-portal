@@ -25,16 +25,15 @@ json.set! "@context" do
 end
 
 json.set! 'dcat:record' do
-  json.array!(@transformations) do |transformation|
-    # json.set! 'foaf:primaryTopic', thing_url(transformation, format: :json)
-    json.id transformation.slug
-    json.type 'transformation'
-    json.set! 'dct:title', transformation.name
-    json.set! 'foaf:primaryTopic', thing_url(transformation)
+  json.array!(@things) do |thing|
+    json.id thing.slug
+    json.type thing.class.name
+    json.set! 'dct:title', thing.name
+    json.set! 'foaf:primaryTopic', thing_url(thing)
     json.set! '@type', 'dcat:catalogRecord'
-    json.set! 'dcat:public', transformation.public
-    json.set! 'foaf:publisher', transformation.user.username
-    json.set! 'dct:modified', transformation.updated_at
-    json.set! 'dct:issued', transformation.created_at
+    json.set! 'dcat:public', thing.public
+    json.set! 'foaf:publisher', thing.user.username
+    json.set! 'dct:modified', thing.updated_at
+    json.set! 'dct:issued', thing.created_at
   end
 end
