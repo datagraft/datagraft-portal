@@ -6,6 +6,12 @@ class DataDistributionsController < ThingsController
     @data_distribution = DataDistribution.new
   end
 
+  # GET ':username/data_distributions/:id/attachment'
+  def attachment
+    set_thing
+    redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
+  end
+
   protected
     # these two are useless but it's maybe faster with than without
     def virtualResource

@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   get 'transform' => 'transformations#transform'
   get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
+  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
