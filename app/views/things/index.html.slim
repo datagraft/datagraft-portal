@@ -3,7 +3,10 @@
 div.mdl-card
   div.mdl-card__title.mdl-color-text--grey-50
     h3
-      = link_to (@user.name || @user.username), user_path(@user)
+      - if @user.nil?
+        | Public assets
+      - else
+        = link_to (@user.name || @user.username), user_path(@user)
       | &nbsp;- Listing 
       = params[:controller].humanize.titleize
   div.mdl-card__supporting-text.sin-padding
@@ -14,8 +17,10 @@ div.mdl-card
           th.mdl-data-table__cell--numeric Created
           th.mdl-data-table__cell--numeric Updated
           th.mdl-data-table__cell--numeric Stars
-          - if user_signed_in? && @user == current_user
+          - if !@user.nil? && user_signed_in? && @user == current_user
             th.mdl-data-table__cell--non-numeric Private
+          - if @user.nil?
+            th.mdl-data-table__cell--non-numeric User
           th.mdl-data-table__cell--numeric Copy
       tbody
         - @things.each do |thing|
@@ -30,13 +35,16 @@ div.mdl-card
               | ago
             td.mdl-table__cell
               = thing.stars_count
-            - if user_signed_in? && @user == current_user
+            - if !@user.nil? && user_signed_in? && @user == current_user
               td.mdl-data-table__cell--non-numeric
                 i.material-icons = thing.public ? 'lock_open' : 'lock'
+            - if @user.nil?
+              td.mdl-data-table__cell--non-numeric
+                a href="/#{thing.user.username}" = thing.user.username
             td.mdl-table__cell
               - if thing.child?
                 i.material-icons content_copy
 
-  - if user_signed_in? && @user == current_user
+  - if !@user.nil? && user_signed_in? && @user == current_user
     div.mdl-card__actions
       == link_to "New #{params[:controller].singularize.humanize}", new_generic_thing_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

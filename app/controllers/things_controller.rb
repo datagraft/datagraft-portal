@@ -17,9 +17,14 @@ class ThingsController < ApplicationController
       # If she is just browsing other people's pages
     else
       raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+      if params[:username] == 'public_assets'
+        @user = nil
+        @things = Object.const_get(virtual_resource_name).where(public: true)
+      else
+        @user = User.find_by_username(params[:username]) or not_found
+        @things = @user.send(virtual_resources_name).where(public: true)
+      end
       # raise ActionController::RoutingError.new('Forbidden') if params[:username] == 'myassets'
-      @user = User.find_by_username(params[:username]) or not_found
-      @things = @user.send(virtual_resources_name).where(public: true)
     end
 
     if params[:search]
@@ -69,7 +74,7 @@ class ThingsController < ApplicationController
       self.send(set_relation, @thing)
     end
 
-    fill_name_if_empty
+    fill_default_values_if_empty
 
     instance_variable_set("@"+virtual_resource_name(true), @thing)
 
@@ -147,10 +152,15 @@ class ThingsController < ApplicationController
     authenticate_user!
     authorize! :read, @thing
     @thing = @thing.fork(current_user)
-    @thing.save
+    
     respond_to do |format|
-      format.html { redirect_to thing_path(@thing), notice: unstar_notice }
-      format.json { head :no_content }
+      if @thing.save
+        format.html { redirect_to thing_path(@thing), notice: unstar_notice }
+        format.json { render :show, status: :ok, location: thing_path(@thing) }
+      else
+        format.html { render :edit }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -261,6 +271,10 @@ class ThingsController < ApplicationController
   
   def not_found
     raise ActionController::RoutingError.new('Not Found')
+  end
+
+  def fill_default_values_if_empty
+    fill_name_if_empty
   end
 
   def fill_name_if_empty
