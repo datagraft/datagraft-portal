@@ -10,7 +10,10 @@ class QueriableDataStoresController < ThingsController
 
   def destroy
     super
-    
+
+    # Do not delete backend datastores that exist in other queriable data stores
+    return if QueriableDataStore.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
+
     if @thing.hosting_provider == 'ontotext' and not @thing.uri.blank?
       current_user.delete_ontotext_repository(@thing)
     end

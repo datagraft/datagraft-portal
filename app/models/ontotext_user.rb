@@ -66,6 +66,9 @@ module OntotextUser
           key.user = self
           key.key = key.new_ontotext_api_key(self)
           key.save
+
+          # TODO : Check if this definitely removes the bad credentials bug…
+          sleep 3
         end
 
         basicToken = Base64.strict_encode64(key.key)
@@ -196,6 +199,7 @@ module OntotextUser
         req.headers['Content-Type'] = 'application/ld+json'
         req.headers['distrib-id'] = json_distribution['@id']
         req.headers['repository-id'] = json_distribution['@id'].match(/[^\/]*$/)[0]
+        req.options.timeout = 720
       end
 
       throw ("Unable to create the Ontotext Repository - " + resp_repository.body) unless resp_repository.status.between?(200, 299)
