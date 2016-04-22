@@ -56,20 +56,7 @@ module OntotextUser
       conn = new_api_connexion
 
       if use_api_key
-        key = api_keys.where(enabled: true).first
-
-        # Create a key if one doesn't exist yet
-        if key.nil?
-          key = ApiKey.new
-          key.enabled = true
-          key.name = 'Default Ontotext API Key'
-          key.user = self
-          key.key = key.new_ontotext_api_key(self)
-          key.save
-
-          # TODO : Check if this definitely removes the bad credentials bug…
-          sleep 3
-        end
+        key = ApiKey.first_or_create(self)
 
         basicToken = Base64.strict_encode64(key.key)
 
@@ -182,7 +169,7 @@ module OntotextUser
           meta: Faraday::UploadIO.new(StringIO.new({
             '@context' => ontotext_declaration,
             '@type' => 'dcat:Distribution',
-            'dct:title' => qds[:name].parameterize + ' distribution',
+            'dct:title' => qds[:name].parameterize + '-distribution',
             'dct:description' => 'temporary empty file',
             'dcat:fileName' => 'empty.csv',
             'dcat:mediaType' => 'text/csv'
@@ -194,11 +181,14 @@ module OntotextUser
 
       json_distribution = JSON.parse(resp_distribution.body)
 
+      # Compute a repository ID from the distribution ID
+      repository_id = json_distribution['@id'].match(/[^\/]*$/)[0].sub(/(.*)-distribution/, "\\1")
+
       resp_repository = connect.put do |req|
         req.url '/catalog/distributions/repository'
         req.headers['Content-Type'] = 'application/ld+json'
         req.headers['distrib-id'] = json_distribution['@id']
-        req.headers['repository-id'] = json_distribution['@id'].match(/[^\/]*$/)[0]
+        req.headers['repository-id'] = repository_id
         req.options.timeout = 720
       end
 

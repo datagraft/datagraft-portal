@@ -32,6 +32,25 @@ class ApiKey < ApplicationRecord
     end
   end
 
+  def self.first_or_create(user)
+    key = user.api_keys.where(enabled: true).first
+
+    # Create a key if one doesn't exist yet
+    if key.nil?
+      key = ApiKey.new
+      key.enabled = true
+      key.name = 'Automatically generated Ontotext API Key'
+      key.user = user
+      key.key = key.new_ontotext_api_key(user)
+      key.save
+
+      # TODO : Check if this definitely removes the bad credentials bug…
+      sleep 3
+    end
+
+    key
+  end
+
   private
     def get_key_without_secret
       r = /^(.+):/.match(key)
