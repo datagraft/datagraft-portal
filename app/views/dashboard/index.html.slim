@@ -4,37 +4,38 @@
 
 div.mdl-grid.sin-dashboard
   div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
-    h3 Activity feed
-    ul
-      - @activityFeed.each do |activity|
-        li
-          p.sin-activity-date
-            = time_ago_in_words activity[:updated_at]
-            '&nbsp;ago
-          - if activity.kind_of? Star
-            img src=image_url("60_star.png")
-            - if activity.user == current_user
-              | You
-            - else
-              = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-            '  starred 
-            == link_to activity.thing.name, thing_path(activity.thing)
-          - elsif activity.kind_of? Thing
-            img src=image_url("60_service.png")
-            - if activity.user == current_user
-              | You
-            - else
-              = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-            '  made 
-            == link_to activity.name, thing_path(activity)
-            '&nbsp;public
-          - elsif activity.kind_of? CatalogueStar
-            img src=image_url("60_star.png")
-            'You starred 
-            == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
-          - elsif activity.kind_of? Catalogue
-            'You made
-            == link_to activity.name, catalogue_path(activity)
+    - if feature? :activity_feed
+        h3 Activity feed
+        ul
+          - @activityFeed.each do |activity|
+            li
+              p.sin-activity-date
+                = time_ago_in_words activity[:updated_at]
+                '&nbsp;ago
+              - if activity.kind_of? Star
+                img src=image_url("60_star.png")
+                - if activity.user == current_user
+                  | You
+                - else
+                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+                '  starred 
+                == link_to activity.thing.name, thing_path(activity.thing)
+              - elsif activity.kind_of? Thing
+                img src=image_url("60_service.png")
+                - if activity.user == current_user
+                  | You
+                - else
+                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+                '  made 
+                == link_to activity.name, thing_path(activity)
+                '&nbsp;public
+              - elsif activity.kind_of? CatalogueStar
+                img src=image_url("60_star.png")
+                'You starred 
+                == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
+              - elsif activity.kind_of? Catalogue
+                'You made
+                == link_to activity.name, catalogue_path(activity)
   div.mdl-cell.mdl-cell--7-col.mdl-cell--12-col-tablet.mdl-shadow--2dp.mdl-color--white
     div.sin-projects
       div.mdl-grid
@@ -45,7 +46,8 @@ div.mdl-grid.sin-dashboard
       div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
         div.mdl-tabs__tab-bar
           a class=['mdl-tabs__tab', @activeTab == 'all' ? 'is-active' : ''] href="#sin-projects-all" All
-          a class=['mdl-tabs__tab', @activeTab == 'catalogues' ? 'is-active' : ''] href="#sin-projects-catalogues" Catalogues
+          - if feature? :catalogues
+            a class=['mdl-tabs__tab', @activeTab == 'catalogues' ? 'is-active' : ''] href="#sin-projects-catalogues" Catalogues
           a class=['mdl-tabs__tab', @activeTab == 'datapages' ? 'is-active' : ''] href="#sin-projects-datapages" Data pages
           a class=['mdl-tabs__tab', @activeTab == 'transformations' ? 'is-active' : ''] href="#sin-projects-transformations" Transformations
           a class=['mdl-tabs__tab', @activeTab == 'queriable_data_stores' ? 'is-active' : ''] href="#sin-projects-queriable_data_stores" Queriable Data Stores

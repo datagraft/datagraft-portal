@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160315084305) do
+ActiveRecord::Schema.define(version: 20160406084210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,13 @@ ActiveRecord::Schema.define(version: 20160315084305) do
 
   add_index "data_page_widgets", ["data_page_id"], name: "index_data_page_widgets_on_data_page_id", using: :btree
   add_index "data_page_widgets", ["widget_id"], name: "index_data_page_widgets_on_widget_id", using: :btree
+
+  create_table "features", force: :cascade do |t|
+    t.string   "key",                        null: false
+    t.boolean  "enabled",    default: false, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false

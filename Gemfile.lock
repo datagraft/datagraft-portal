@@ -90,6 +90,9 @@ GEM
     faraday-cookie_jar (0.0.6)
       faraday (>= 0.7.4)
       http-cookie (~> 1.0.0)
+    flip (1.0.1)
+      activesupport (>= 3.0, < 5)
+      i18n
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
     globalid (0.3.6)
@@ -304,6 +307,7 @@ DEPENDENCIES
   dropzonejs-rails
   faraday
   faraday-cookie_jar
+  flip
   friendly_id (~> 5.1.0)
   gravatarify (~> 3.0.0)
   gridster-rails

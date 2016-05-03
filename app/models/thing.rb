@@ -21,15 +21,18 @@ class Thing < ApplicationRecord
 
 
   def self.public_list
-    Thing.where(:public => true, :type => ['DataPage', 'Transformation', 'DataDistribution'])
-         .order(stars_count: :desc, created_at: :desc).includes(:user)
+    Thing.where(
+      :public => true, 
+      :type => ['DataPage', 'Transformation', 'DataDistribution', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+      )
+    .order(stars_count: :desc, created_at: :desc).includes(:user)
   end
 
   def self.public_search(search)
     # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
     self.public_list
-         .basic_search({name: search, metadata: search}, false)
-         # .fuzzy_search(name: search)
+    .basic_search({name: search, metadata: search}, false)
+    # .fuzzy_search(name: search)
   end
 
   def fork(newuser)
@@ -64,13 +67,13 @@ class Thing < ApplicationRecord
   end
 
   protected
-    def touch_metadata!
-      self.metadata = {} if not metadata
-    end
+  def touch_metadata!
+    self.metadata = {} if not metadata
+  end
 
-    def touch_configuration!
-      self.configuration = {} if not configuration
-    end 
+  def touch_configuration!
+    self.configuration = {} if not configuration
+  end 
 end
 
 # class Query < Thing; end

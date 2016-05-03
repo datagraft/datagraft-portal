@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
 
+
+  resources :features, only: [ :index ] do
+    resources :strategies, only: [ :update, :destroy ]
+  end
+  mount Flip::Engine => "/features"
+
   use_doorkeeper
-  
+
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
-  }
+    }
 
   def datagraft_resources(resource_sym)
     resource = resource_sym.to_s
@@ -44,24 +50,33 @@ Rails.application.routes.draw do
     end
 
   end
-  
-  get ':username/catalogues/new' => 'catalogues#new'
-  post ':username/catalogues' => 'catalogues#create'
-  get ':username/catalogues' => 'catalogues#index'
-  get ':username/catalogues/:id' => 'catalogues#show'
-  delete ':username/catalogues/:id' => 'catalogues#destroy'
-  patch ':username/catalogues/:id' => 'catalogues#update'
-  put ':username/catalogues/:id' => 'catalogues#update'
-  get ':username/catalogues/:id/edit' => 'catalogues#edit'
-  post ':username/catalogues/:id/star' => 'catalogues#star_catalogue'
-  post ':username/catalogues/:id/unstar' => 'catalogues#unstar_catalogue'
-  get ':username/catalogues/:id/versions' => 'catalogues#versions'
+
+  if Flip.on? :catalogues
+    get ':username/catalogues/new' => 'catalogues#new'
+    post ':username/catalogues' => 'catalogues#create'
+    get ':username/catalogues' => 'catalogues#index'
+    get ':username/catalogues/:id' => 'catalogues#show'
+    delete ':username/catalogues/:id' => 'catalogues#destroy'
+    patch ':username/catalogues/:id' => 'catalogues#update'
+    put ':username/catalogues/:id' => 'catalogues#update'
+    get ':username/catalogues/:id/edit' => 'catalogues#edit'
+    post ':username/catalogues/:id/star' => 'catalogues#star_catalogue'
+    post ':username/catalogues/:id/unstar' => 'catalogues#unstar_catalogue'
+    get ':username/catalogues/:id/versions' => 'catalogues#versions'
+  end
 
   datagraft_resources :data_distributions
-  datagraft_resources :queriable_data_stores
+
+  if Flip.on? :queriable_data_stores
+    datagraft_resources :queriable_data_stores
+  end
+
   datagraft_resources :data_pages
   datagraft_resources :transformations
-  datagraft_resources :utility_functions
+  
+  if Flip.on? :utility_functions
+    datagraft_resources :utility_functions
+  end
   datagraft_resources :queries
   resources :api_keys
 
@@ -77,7 +92,7 @@ Rails.application.routes.draw do
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
   post 'querying' => 'queries#execute'
-  
+
   # TODO REMOVE THIS LATER ?
   get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
 

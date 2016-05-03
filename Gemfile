@@ -151,3 +151,6 @@ gem 'indefinite_article'
 
 # Deep clonning
 gem 'deep_cloneable', '~> 2.2.0'
+
+# Feature flippin'
+gem 'flip'

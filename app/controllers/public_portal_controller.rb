@@ -26,25 +26,31 @@ class PublicPortalController < ApplicationController
 
     @things = WillPaginate::Collection.
       create(current_page, per_page, things_and_catalogues.length) do |pager|
-        
-      start = start = (current_page-1)*per_page
-      pager.replace(things_and_catalogues[start, per_page])
-        
-    end
+
+        start = start = (current_page-1)*per_page
+        pager.replace(things_and_catalogues[start, per_page])
+
+      end
   end
 
   def explore
     if params[:search]
       query_things = Thing.public_search(params[:search])
-      query_catalogues = Catalogue.public_search(params[:search])
+      things_and_catalogues = query_things
+      if Flip.on? :catalogues
+        query_catalogues = Catalogue.public_search(params[:search])
+        things_and_catalogues += query_catalogues
+      end
     else
       query_things = Thing.public_list
-      query_catalogues = Catalogue.public_list
+      things_and_catalogues = query_things
+      if Flip.on? :catalogues
+        query_catalogues = Catalogue.public_list
+        things_and_catalogues += query_catalogues
+      end
     end
-    things_and_catalogues = query_catalogues + query_things
-
     # TODO: make this into a helper function
-    things_and_catalogues.sort_by! do |thing_or_catalogue|
+    things_and_catalogues.to_a.sort_by! do |thing_or_catalogue|
       -thing_or_catalogue.stars_count
     end
 
@@ -54,11 +60,11 @@ class PublicPortalController < ApplicationController
 
     @things = WillPaginate::Collection.
       create(current_page, per_page, things_and_catalogues.length) do |pager|
-        
-      start = start = (current_page-1)*per_page
-      pager.replace(things_and_catalogues[start, per_page])
-        
-    end
+
+        start = start = (current_page-1)*per_page
+        pager.replace(things_and_catalogues[start, per_page])
+
+      end
 
     respond_to do |format|
       format.html
