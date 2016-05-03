@@ -73,6 +73,12 @@ class ApiKeysController < ApplicationController
     end
   end
 
+  # Return the first enabled API key
+  def first
+    key = ApiKey.first_or_create(current_user)
+    render :text => key.key
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_api_key

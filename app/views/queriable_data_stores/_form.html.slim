@@ -4,10 +4,11 @@
     = f.input :name
     = f.input :description, as: :text, input_html: { rows: 5 }
     = f.input :public, wrapper: :switch
-  .mdl-grid
-    h4.mdl-cell--12-col Configuration
-    = f.input :hosting_provider, collection: QueriableDataStore.allowed_hosting_providers, wrapper: :select, include_blank: false
-    = f.input :uri, as: :url
+  - if @thing.new_record?
+    .mdl-grid
+      h4.mdl-cell--12-col Configuration
+      = f.input :hosting_provider, collection: QueriableDataStore.allowed_hosting_providers, wrapper: :select, include_blank: false
+      = f.input :uri, as: :url, label: "URI (leave empty to create a new repository)"
   .mdl-grid
     h4.mdl-cell--12-col Queries
     = f.simple_fields_for :queries do |p|

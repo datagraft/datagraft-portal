@@ -78,8 +78,10 @@ Rails.application.routes.draw do
     datagraft_resources :utility_functions
   end
   datagraft_resources :queries
-  resources :api_keys
 
+  get 'api_keys/first' => 'api_keys#first'
+  resources :api_keys
+  
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
   get 'quotas' => 'quotas#index'
@@ -95,6 +97,7 @@ Rails.application.routes.draw do
 
   # TODO REMOVE THIS LATER ?
   get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
+
 
   get ':username' => 'public_portal#user'
   # resources :transformations

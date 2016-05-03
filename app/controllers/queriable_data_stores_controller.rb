@@ -8,7 +8,26 @@ class QueriableDataStoresController < ThingsController
   def publish
   end
 
+  def destroy
+    super
+
+    # Do not delete backend datastores that exist in other queriable data stores
+    return if QueriableDataStore.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
+
+    if @thing.hosting_provider == 'ontotext' and not @thing.uri.blank?
+      current_user.delete_ontotext_repository(@thing)
+    end
+  end
+
   private
+    def fill_default_values_if_empty
+      fill_name_if_empty
+
+      if @thing.uri.blank? and @thing.hosting_provider == 'ontotext'
+        @thing.uri = current_user.new_ontotext_repository(@thing)
+      end
+    end
+
     def queriable_data_store_params
       params.require(:queriable_data_store).permit(:public, :name, :description, :uri, :hosting_provider,
           queries_attributes: [:id, :name, :query, :description, :language, :_destroy],

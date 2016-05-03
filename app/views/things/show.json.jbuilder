@@ -13,4 +13,4 @@ json.set! 'dct:description', @thing.description
 json.set! 'dct:issued', @thing.created_at
 json.set! 'dct:modified', @thing.updated_at
 
-
+json.set! 'dcat:keyword', @thing.get_metadata('dcat:keyword')
