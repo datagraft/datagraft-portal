@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :features, only: [ :index ] do
     resources :strategies, only: [ :update, :destroy ]
   end
-  mount Flip::Engine => "/features"
+  mount Flip::Engine => "/features" rescue "no flip"
 
   use_doorkeeper
 
@@ -51,33 +51,39 @@ Rails.application.routes.draw do
 
   end
 
-  if Flip.on? :catalogues
-    get ':username/catalogues/new' => 'catalogues#new'
-    post ':username/catalogues' => 'catalogues#create'
-    get ':username/catalogues' => 'catalogues#index'
-    get ':username/catalogues/:id' => 'catalogues#show'
-    delete ':username/catalogues/:id' => 'catalogues#destroy'
-    patch ':username/catalogues/:id' => 'catalogues#update'
-    put ':username/catalogues/:id' => 'catalogues#update'
-    get ':username/catalogues/:id/edit' => 'catalogues#edit'
-    post ':username/catalogues/:id/star' => 'catalogues#star_catalogue'
-    post ':username/catalogues/:id/unstar' => 'catalogues#unstar_catalogue'
-    get ':username/catalogues/:id/versions' => 'catalogues#versions'
-  end
-
   datagraft_resources :data_distributions
-
-  if Flip.on? :queriable_data_stores
-    datagraft_resources :queriable_data_stores
-  end
-
   datagraft_resources :data_pages
   datagraft_resources :transformations
-  
-  if Flip.on? :utility_functions
-    datagraft_resources :utility_functions
-  end
   datagraft_resources :queries
+
+  # TODO fix me : Flip crashes on migration
+  begin
+    if Flip.on? :catalogues
+      get ':username/catalogues/new' => 'catalogues#new'
+      post ':username/catalogues' => 'catalogues#create'
+      get ':username/catalogues' => 'catalogues#index'
+      get ':username/catalogues/:id' => 'catalogues#show'
+      delete ':username/catalogues/:id' => 'catalogues#destroy'
+      patch ':username/catalogues/:id' => 'catalogues#update'
+      put ':username/catalogues/:id' => 'catalogues#update'
+      get ':username/catalogues/:id/edit' => 'catalogues#edit'
+      post ':username/catalogues/:id/star' => 'catalogues#star_catalogue'
+      post ':username/catalogues/:id/unstar' => 'catalogues#unstar_catalogue'
+      get ':username/catalogues/:id/versions' => 'catalogues#versions'
+    end
+
+
+    if Flip.on? :queriable_data_stores
+      datagraft_resources :queriable_data_stores
+    end
+
+    
+    if Flip.on? :utility_functions
+      datagraft_resources :utility_functions
+    end
+  rescue
+    puts "No Flip"
+  end
 
   get 'api_keys/first' => 'api_keys#first'
   resources :api_keys
