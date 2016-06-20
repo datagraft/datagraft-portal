@@ -1,6 +1,7 @@
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (needs plugins)
   orm :active_record
+  enable_application_owner :confirmation => false
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
@@ -24,14 +25,14 @@ Doorkeeper.configure do
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
-  admin_authenticator do
-  #   # Put your admin authentication logic here.
-  #   # Example implementation:
-  #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
-    # rand > 0.5
-    # redirect_to "/"
-    user_signed_in? && current_user.isadmin || redirect_to(root_path, notice: 'You are not authorized to manage these applications')
-  end
+  #  admin_authenticator do
+  #    #   # Put your admin authentication logic here.
+  #    #   # Example implementation:
+  #    #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
+  #    # rand > 0.5
+  #    # redirect_to "/"
+  #    user_signed_in? && current_user.isadmin || redirect_to(root_path, notice: 'You are not authorized to manage these applications')
+  #  end
 
   # Authorization Code expiration time (default 10 minutes).
   # authorization_code_expires_in 10.minutes
@@ -117,9 +118,10 @@ Doorkeeper.configure do
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
-  # skip_authorization do |resource_owner, client|
-  #   client.superapp? or resource_owner.admin?
-  # end
+#  skip_authorization do |resource_owner, client|
+#    puts ENV['GRAFTERIZER_UID']
+#    client.uid == ENV['GRAFTERIZER_UID']
+#  end
 
   # WWW-Authenticate Realm (default "Doorkeeper").
   # realm "Doorkeeper"

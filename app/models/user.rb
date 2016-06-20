@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   include OntotextUser
-
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
   has_many :stars
   has_many :catalogue_stars
   has_many :transformations

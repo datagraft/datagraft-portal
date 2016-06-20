@@ -52,9 +52,8 @@ html
                   = link_to('API keys', api_keys_path, class: "mdl-menu__item")
                 li
                   = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
-                - if current_user.isadmin
-                  li
-                    = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
+                li
+                  = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
           
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
         
