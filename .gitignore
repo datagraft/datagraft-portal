@@ -53,3 +53,4 @@ bower.json
 sftp-config.json
 
 db/database.yml
+Gemfile.lock
