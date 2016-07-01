@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   datagraft_resources :data_pages
   datagraft_resources :transformations
   datagraft_resources :queries
+  datagraft_resources :filestores
 
   # TODO fix me : Flip crashes on migration
   begin
@@ -90,12 +91,14 @@ Rails.application.routes.draw do
   
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
+  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
   get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
   get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
+  get ':username/filestores/:id/attachment' => 'filestores#attachment'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'

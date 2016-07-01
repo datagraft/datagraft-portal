@@ -116,6 +116,9 @@ $accent-color: #FF609A;
 .sin-controller--data_distributions .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
   content: image-url("60b_file.png");
 }
+.sin-controller--filestores .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
+  content: image-url("60b_file.png");
+}
 .sin-controller--queries .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
   content: image-url("60b_query.png");
 }

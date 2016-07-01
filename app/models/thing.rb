@@ -23,7 +23,7 @@ class Thing < ApplicationRecord
   def self.public_list
     Thing.where(
       :public => true, 
-      :type => ['DataPage', 'Transformation', 'DataDistribution', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+      :type => ['DataPage', 'Transformation', 'DataDistribution', 'Filestore', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
       )
     .order(stars_count: :desc, created_at: :desc).includes(:user)
   end

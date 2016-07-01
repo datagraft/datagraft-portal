@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :catalogue_stars
   has_many :transformations
   has_many :data_distributions
+  has_many :filestores
   has_many :queriable_data_stores
   has_many :data_pages
   has_many :utility_functions
@@ -25,6 +26,7 @@ class User < ApplicationRecord
     in: %w(
       datagraft
       data_distribution data_distributions
+      filestore filestores
       queriable_data_store queriable_data_stores
       data_page data_pages
       transformation transformations

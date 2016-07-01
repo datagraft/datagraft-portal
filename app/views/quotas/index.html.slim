@@ -8,6 +8,12 @@ div.sin-quotas-bar
   div.sin-quotas-bar-fill style="width:#{((@nbDataDistributions.to_f/@maxDataDistributions.to_f)*100.0).round}%"
   div.sin-quotas-text = "#{number_to_human_size(@nbDataDistributions)}/#{number_to_human_size(@maxDataDistributions)}"
 
+h4 Filestores
+
+div.sin-quotas-bar
+  div.sin-quotas-bar-fill style="width:#{((@nbFilestores.to_f/@maxFilestores.to_f)*100.0).round}%"
+  div.sin-quotas-text = "#{number_to_human_size(@nbFilestores)}/#{number_to_human_size(@maxFilestores)}"
+
 h4 Data Pages
 
 div.sin-quotas-bar

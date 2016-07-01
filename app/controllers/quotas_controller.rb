@@ -11,6 +11,9 @@ class QuotasController < ApplicationController
     @nbDataDistributions = current_user.data_distributions.sum(:file_size)
     @maxDataDistributions = 1024*1024*1024*4
 
+    @nbFilestores = current_user.filestores.sum(:file_size)
+    @maxFilestores = 1024*1024*1024*4
+
     @nbDataPages = current_user.data_pages.count
     @maxDataPages = 100
 
