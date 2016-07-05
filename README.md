@@ -4,7 +4,7 @@ This is a Ruby On Rails implementation of DataGraft.
 
 ## How to build
 
-`docker build -t datagraft` . 
+`docker build -t datagraft . `
 
 ## How to deploy
 
