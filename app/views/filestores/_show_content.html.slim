@@ -1,8 +1,10 @@
 - unless @thing.description.blank?
   hr
 dl
-  dt Size
+  dt Size (filestores)
   dd = number_to_human_size @thing.file_size
+  dt Availabilty
+  dd = file_available
   dt Content-type
   dd = @thing.file_content_type
   - if @thing.file_content_type.start_with? 'image/'

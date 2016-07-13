@@ -154,3 +154,8 @@ gem 'deep_cloneable', '~> 2.2.0'
 
 # Feature flippin'
 gem 'flip'
+
+# Read Excel files
+gem 'roo', '~> 2.4.0'
+gem 'roo-xls'
+gem 'roo-google'
