@@ -45,8 +45,6 @@ class ThingsController < ApplicationController
   # GET /:username/:resource/:id
   def show
     authorize! :read, @thing
-    byebug
-    open_spreadsheet(@thing.name, @thing.file)
   end
 
   # GET /:username/:resource/:id/edit
@@ -230,15 +228,6 @@ class ThingsController < ApplicationController
     end
   end
 
-  def file_available
-    if @thing.file.exists?
-      "This file is available"
-    else
-      "This file is NOT available"
-    end
-  end
-  helper_method :file_available      
-  
   protected
   # These two methods are magic and it's probably faster to override them
   # in the child classes
@@ -374,20 +363,5 @@ class ThingsController < ApplicationController
     end
   end
   
-  require 'roo'
-  
-  def open_spreadsheet(file_name_with_ext, file)
-    if file.exists? 
-      file_path = file.download.path
-      case File.extname(file_name_with_ext)
-      when '.csv' then res = Roo::Csv.new(file_path, file_warning: :ignore)
-      when '.xls' then res = Roo::Excel.new(file_path, file_warning: :ignore)
-      when '.xlsx' then res = Roo::Excelx.new(file_path, file_warning: :ignore)
-      ##when '.xlsx' then Roo::Spreadsheet.new(slug)
-      else res = "Unknown file type: #{file_name_with_ext}"
-      end
-      byebug
-    end
-  end  
   
 end
