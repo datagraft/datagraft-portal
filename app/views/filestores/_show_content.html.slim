@@ -3,11 +3,16 @@
 dl
   dt Size (filestores)
   dd = number_to_human_size @thing.file_size
+  dt Keywords 
+  dd 
+    = @thing.keywords
+    - if @thing.keywords.blank?
+      = 'No keywords'
   dt Tabular data preview
   dd 
     = @preview_text
     - unless @preview_tab_obj == nil
-    table
+    table.mdl-data-table.mdl-js-data-table style="width:100%;" 
       - to = @preview_tab_obj
       - rows = to.last_row
       - rows = 10 if rows > 10

@@ -3,6 +3,7 @@
     h4.mdl-cell--12-col Properties
     = f.input :name, wrapper: :default
     = f.input :description, as: :text, input_html: { rows: 5 }
+    <input id="keywords" name="keywords[]" type="text" value=keywords/>
   .mdl-grid
     = f.input :public, wrapper: :switch
   .mdl-grid

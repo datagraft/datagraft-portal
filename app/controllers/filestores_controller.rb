@@ -14,6 +14,7 @@ class FilestoresController < ThingsController
 
   def show
     super
+    byebug
     @preview_tab_obj = nil
     if @thing.file.exists?
       @preview_text = "This file is available"
@@ -44,7 +45,7 @@ class FilestoresController < ThingsController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :file])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :file])
     end
 
     def open_spreadsheet(file_name_with_ext, file)

@@ -8,4 +8,18 @@ class Filestore < Thing
   def should_generate_new_friendly_id?
     name_changed? || super
   end
+  
+  def keywords
+    if metadata.blank? 
+      ret = Array.new
+    else
+      ret = metadata['keyword'] 
+    end
+  end
+
+  def keywords=(keyw_array)
+    touch_metadata!
+    metadata['keyword'] = keyw_array
+  end
+  
 end
