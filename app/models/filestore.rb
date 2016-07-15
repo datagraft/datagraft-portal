@@ -22,4 +22,21 @@ class Filestore < Thing
     metadata['keyword'] = keyw_array
   end
   
+  def separator
+    if metadata.blank? 
+      ret = Array.new
+    else
+      ret = metadata['csv_separator'] 
+      if ret.blank?
+        ret = "COMMA"
+      end
+    end
+    ret # Assure that ret is returned
+  end
+
+  def separator=(sep_char)
+    touch_metadata!
+    metadata['csv_separator'] = sep_char
+  end
+  
 end

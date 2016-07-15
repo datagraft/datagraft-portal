@@ -14,7 +14,6 @@ class FilestoresController < ThingsController
 
   def show
     super
-    byebug
     @preview_tab_obj = nil
     if @thing.file.exists?
       @preview_text = "This file is available"
@@ -45,15 +44,26 @@ class FilestoresController < ThingsController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :keywords, :file])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :file])
     end
 
     def open_spreadsheet(file_name_with_ext, file)
       file_path = file.download.path
       case File.extname(file_name_with_ext)
       when '.csv' then 
+        case @thing.separator
+        when "COMMA" then
+          sep = ","
+        when "SEMI" then
+          sep = ";"
+        when "TAB" then
+          sep = "\t"
+        else
+          sep = ","
+        end
         @preview_text = "Decoded"
-        @preview_tab_obj = Roo::CSV.new(file_path, file_warning: :ignore)
+        @preview_tab_obj = Roo::CSV.new(file_path, { csv_options: {col_sep: sep}, file_warning: :ignore})
+        @preview_tab_obj
       when '.xls' then 
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::Excel.new(file_path, file_warning: :ignore)

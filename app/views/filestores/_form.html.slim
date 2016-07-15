@@ -3,7 +3,13 @@
     h4.mdl-cell--12-col Properties
     = f.input :name, wrapper: :default
     = f.input :description, as: :text, input_html: { rows: 5 }
-    <input id="keywords" name="keywords[]" type="text" value=keywords/>
+    = f.input :keywords, as: :text, input_html: { rows: 5 }
+    = 'CSV separator -- Commma:'
+    = f.radio_button :separator, "COMMA"
+    = 'Semicolon:'
+    = f.radio_button :separator,"SEMI"
+    = 'TAB:'
+    = f.radio_button :separator,"TAB"
   .mdl-grid
     = f.input :public, wrapper: :switch
   .mdl-grid
