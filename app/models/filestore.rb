@@ -19,6 +19,7 @@ class Filestore < Thing
 
   def keywords=(keyw_array)
     touch_metadata!
+    byebug
     metadata['keyword'] = keyw_array
   end
   
@@ -38,5 +39,15 @@ class Filestore < Thing
     touch_metadata!
     metadata['csv_separator'] = sep_char
   end
+  
+  def license
+    metadata["license"] if metadata
+  end
+
+  def license=(val)
+    touch_metadata!
+    metadata["license"] = val
+  end
+
   
 end

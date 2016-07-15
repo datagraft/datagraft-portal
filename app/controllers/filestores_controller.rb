@@ -44,7 +44,7 @@ class FilestoresController < ThingsController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :file])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file])
     end
 
     def open_spreadsheet(file_name_with_ext, file)

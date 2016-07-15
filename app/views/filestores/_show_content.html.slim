@@ -3,12 +3,23 @@
 dl
   dt Size (filestores)
   dd = number_to_human_size @thing.file_size
-  dt Keywords 
+  dt Keywords raw
   dd 
     - if @thing.keywords.blank?
       = 'No keywords'
     - else
       = @thing.keywords
+  dt Keywords buttons
+  dd 
+    - kwds = @thing.keywords
+    - byebug
+    - unless kwds.blank?
+      table.mdl-data-table.mdl-js-data-table style="width:100%;" 
+        tr
+          - kwds.each do |kwd|
+            th
+              button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+                = kwd
   dt Tabular data preview
   dd 
     - if @preview_tab_obj == nil
