@@ -15,12 +15,13 @@ class Filestore < Thing
     else
       ret = metadata['keyword'] 
     end
+    return ret
   end
 
   def keywords=(keyw_array)
     touch_metadata!
-    byebug
-    metadata['keyword'] = keyw_array
+    #When the array is returned from the form it comes in JSON format
+    metadata['keyword'] = JSON.parse keyw_array
   end
   
   def separator

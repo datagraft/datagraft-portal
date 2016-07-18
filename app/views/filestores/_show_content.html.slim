@@ -3,16 +3,25 @@
 dl
   dt Size (filestores)
   dd = number_to_human_size @thing.file_size
+  
   dt Keywords raw
   dd 
     - if @thing.keywords.blank?
       = 'No keywords'
     - else
       = @thing.keywords
-  dt Keywords buttons
+  dt Keywords buttons flexbox
   dd 
     - kwds = @thing.keywords
-    - byebug
+    - unless kwds.blank?
+      ul.keyw-array-container
+        - kwds.each do |kwd|
+          li.keyw-array-item 
+            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+              = kwd
+  dt Keywords buttons table
+  dd 
+    - kwds = @thing.keywords
     - unless kwds.blank?
       table.mdl-data-table.mdl-js-data-table style="width:100%;" 
         tr
