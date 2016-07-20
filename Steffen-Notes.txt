@@ -1,0 +1,69 @@
+[?28.?06.?2016 14:28] Nikolay Nikolov: 
+http://erb2slim.com/ 
+
+
+[?28.?06.?2016 14:45] Nikolay Nikolov: 
+Debugging: byebug https://github.com/deivid-rodriguez/byebug 
+
+
+https://github.com/turbolinks/turbolinks
+Makes faster pages by having multiple loaded pages that can fast swapping?
+
+
+********* Problems with Spring and Rails 4+ *******
+rake rails:update:bin 
+
+
+********** Add file details **********
+Script for å organisere tags.
+http://textextjs.com/manual/examples/tags-adding.html
+https://github.com/aehlke/tag-it
+https://sean.is/poppin/tags/
+
+Kjekk side for å teste Material Design Lite
+http://www.tutorialspark.com/Google_MaterialDesignLite_Tutorials/MDL_Small_Fab_Button.php
+
+http://www.htmlgoodies.com/beyond/javascript/article.php/3887346/Top-10-JavaScript-Snippets-for-Common-Tasks.htm
+
+***** Import CSV data
+https://www.sitepoint.com/guide-ruby-csv-library-part/
+http://ruby-doc.org/stdlib-1.9.3/libdoc/csv/rdoc/CSV.html#method-c-new
+https://www.sitepoint.com/guide-ruby-csv-library-part/
+http://technicalpickles.com/posts/parsing-csv-with-ruby/
+
+"config file:" require 'csv'
+
+customers = CSV.read('left_leg_mag.txt', { col_sep: "\t", headers: :first_row})
+
+csvindex = 0
+csvrows = [1]
+CSV.foreach('left_leg_mag.txt', {col_sep: "\t", converters: :numeric}) do |row|
+	csvrows[csvindex] = row
+	csvindex += 1
+    break row if csvindex == 10
+end
+
+puts csvrows.inspect
+
+uploaded_file = params[:upload][:csv].read
+    FasterCSV.parse(uploaded_file) do |row|
+      @rows[i] = row
+      i += 1
+      break row if i == 10
+    end
+
+
+***** Import Excel data
+"gem file:" 'roo'
+"config file:" require 'iconv'
+https://github.com/roo-rb/roo
+http://railscasts.com/episodes/396-importing-csv-and-excel?view=asciicast
+
+
+******* JSON decoded data as part of RAILS-Active record
+http://faxon.org/2015/02/03/edit-rails-activerecord-json-attributes-in-html-forms
+https://github.com/sfaxon/serialized_json
+
+
+******* GIT on linux
+http://askubuntu.com/questions/227554/what-are-some-gui-clients-for-git

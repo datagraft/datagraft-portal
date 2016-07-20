@@ -16,3 +16,20 @@
 .keyw-array-item {
   padding: 5px;
 }
+
+.container-scroll {
+  overflow-x: scroll;
+}
+
+table.table { width: 100%; }
+.table tr { 
+  display: flex; 
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0.5em 0;
+  border: 1px solid rgba(3,3,3,0.2);
+}
+.table td, th {
+  border: 0.5px solid rgba(3,3,3,0.2);
+}
+
