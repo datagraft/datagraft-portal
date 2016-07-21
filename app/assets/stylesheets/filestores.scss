@@ -13,6 +13,14 @@
   flex-wrap: wrap
 }
 
+.keyword-frame {
+  border: 1px solid rgba(3,3,3,0.2);
+}
+
+.keyword-debug {
+  border: 5px solid rgba(3,3,3,0.2);
+}
+
 .keyw-array-item {
   padding: 5px;
 }

@@ -4,6 +4,15 @@
     = f.input :name, wrapper: :default
     = f.input :description, as: :text, input_html: { rows: 5 }
     = f.input :keywords, as: :text, input_html: { rows: 5 }
+    #keyword-frame
+      - kwds = @thing.keywords
+      - unless kwds.blank?
+        ul.keyw-array-container
+          - kwds.each do |kwd|
+            li.keyw-array-item 
+              button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect type="button" onclick="keywordDeleteFunction(this)" 
+                = kwd
+                i.material-icons delete onclick="keywordDeleteFunction(this)" 
   .mdl-grid
     = f.input :separator, collection: get_separator_list, wrapper: :select
   .mdl-grid
@@ -15,3 +24,5 @@
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit
+#keyword-debug debug
+
