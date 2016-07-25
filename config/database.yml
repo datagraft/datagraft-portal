@@ -8,14 +8,14 @@ default: &default
   adapter: postgresql
   encoding: utf8
   username: postgres
-  password: <%= ENV["DATABASE_PASSWORD"] %>
-  host: datagraft_database
+  password: whatever
+  host: localhost
   pool: 5
   timeout: 5432
 
 development:
   <<: *default
-  database: datagraft-dev
+  database: datagraft-prod
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

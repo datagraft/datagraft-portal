@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+
   resources :features, only: [ :index ] do
     resources :strategies, only: [ :update, :destroy ]
   end
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
   datagraft_resources :transformations
   datagraft_resources :queries
   datagraft_resources :filestores
+  datagraft_resources :sparql_endpoints
 
   # TODO fix me : Flip crashes on migration
   begin
