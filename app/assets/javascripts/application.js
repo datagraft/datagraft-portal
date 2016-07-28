@@ -17,7 +17,7 @@
 //= require cocoon
 //= require material
 //= require jquery.gridster.js
-
+//= require dataTables/jquery.dataTables
 
 document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();
@@ -31,16 +31,9 @@ document.addEventListener('turbolinks:load', function() {
     console.log("jaach")
   });
 
-
+// TODO change to something more meaningful
   window.supercanard = $(".gridster ul").gridster({
       widget_margins: [10, 10],
       widget_base_dimensions: [140, 140]
   });
 });
-
-/*console.log("wat")
-$('body').on('cocoon:after-insert', function() {
-console.log("meh")
-  componentHandler.upgradeDom();
-});
-*/

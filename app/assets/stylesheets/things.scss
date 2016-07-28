@@ -91,18 +91,14 @@ $accent-color: #FF609A;
     margin:40px;
     width: calc(100% - 80px);
   }
-
   & > .mdl-card__actions {
     padding-left: 40px;
     border-top: 1px solid #cdcdcd;
   }
-  
   .mdl-card__actions {
     border-top: 1px solid #cdcdcd;
   }
-
 }
-
 
 .sin-controller--data_pages .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
   content: image-url("60b_page.png");

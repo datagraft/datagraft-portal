@@ -21,33 +21,20 @@ class DashboardController < ApplicationController
       'datapages' => query_things.where(type: 'DataPage'),
       'transformations' => query_things.where(type: 'Transformation'),
       'queriable_data_stores' => query_things.where(type: 'QueriableDataStore'),
+      'queries' => query_things.where(type: 'Query'),
       'other' => query_things.where.not(type: ['DataPage', 'Transformation', 'QueriableDataStore'])
       }
 
     # get active tab
     @activeTab = @things.has_key?(params[:projects_active_tab]) ? params[:projects_active_tab] : 'all'
 
-    # add pagination; TODO: This code is very slow because it always retrieves everything from the DB
     @things.each do |key, query|
       if key == 'all'
         things_and_catalogues = query_catalogues + query_things
-
-        # so this is how the magic happens...
-        things_and_catalogues.sort_by! do |thing|
-          -thing.stars_count
-        end
-
-        current_page = params['projects_page_'+key] ? Integer(params['projects_page_'+key]) : 1;
-        per_page = params['per_page'] ? Integer(params['per_page']) : 12;
-
-        @things[key] = WillPaginate::Collection.create(current_page, per_page, things_and_catalogues.length) do |pager|
-          start = start = (current_page-1)*per_page
-          pager.replace(things_and_catalogues[start, per_page])
-        end
+        @things[key] = things_and_catalogues
       else
-        @things[key] = query.paginate(:page => params['projects_page_'+key], :per_page => 12)
+        @things[key] = query
       end
-
     end
 
     # get user stars

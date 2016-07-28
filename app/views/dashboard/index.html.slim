@@ -1,80 +1,76 @@
 - title "Dashboard"
-- setOption :flexPage
+- setOption :dashboardLayout
 - setOption :dashboardSearch
+div.mdl-card.mdl-color--white.mdl-shadow--2dp
+  - if feature? :activity_feed
+    div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
+      h3 Activity feed
+      ul
+        - @activityFeed.each do |activity|
+          li
+            p.sin-activity-date
+              = time_ago_in_words activity[:updated_at]
+              '&nbsp;ago
+            - if activity.kind_of? Star
+              img src=image_url("60_star.png")
+              - if activity.user == current_user
+                | You
+              - else
+                = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+              '  starred 
+              == link_to activity.thing.name, thing_path(activity.thing)
+            - elsif activity.kind_of? Thing
+              img src=image_url("60_service.png")
+              - if activity.user == current_user
+                | You
+              - else
+                = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+              '  made 
+              == link_to activity.name, thing_path(activity)
+              '&nbsp;public
+            - elsif activity.kind_of? CatalogueStar
+              img src=image_url("60_star.png")
+              'You starred 
+              == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
+            - elsif activity.kind_of? Catalogue
+              'You made
+              == link_to activity.name, catalogue_path(activity)
+  table#dashboard-user-assets-table.mdl-data-table.cell-border
+    thead
+      tr
+        th Type
+        th Name
+        th Owner
+        th Last modified
+        th Created on
+        th Private/Public
+    tbody.dashboard-asset-table-body
+      - @things["all"].each do |thing|
+        tr
+          td.sin-small-name.mdl-data-table__cell--non-numeric 
+            div.dashboard-asset-table-type style=("display: none;") 
+              = thing.type
+            ' 
+            img src=image_url("50_query.png")
 
-div.mdl-grid.sin-dashboard
-  div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
-    - if feature? :activity_feed
-        h3 Activity feed
-        ul
-          - @activityFeed.each do |activity|
-            li
-              p.sin-activity-date
-                = time_ago_in_words activity[:updated_at]
-                '&nbsp;ago
-              - if activity.kind_of? Star
-                img src=image_url("60_star.png")
-                - if activity.user == current_user
-                  | You
-                - else
-                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  starred 
-                == link_to activity.thing.name, thing_path(activity.thing)
-              - elsif activity.kind_of? Thing
-                img src=image_url("60_service.png")
-                - if activity.user == current_user
-                  | You
-                - else
-                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  made 
-                == link_to activity.name, thing_path(activity)
-                '&nbsp;public
-              - elsif activity.kind_of? CatalogueStar
-                img src=image_url("60_star.png")
-                'You starred 
-                == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
-              - elsif activity.kind_of? Catalogue
-                'You made
-                == link_to activity.name, catalogue_path(activity)
-  div.mdl-cell.mdl-cell--7-col.mdl-cell--12-col-tablet.mdl-shadow--2dp.mdl-color--white
-    div.sin-projects
-      div.mdl-grid
-        h3.sin-projects-title.mdl-cell.mdl-cell--8-col My assets
-        div.mdl-cell.mdl-cell--4-col.sin-projects-button-container
-          / a.mdl-button New
-          = link_to('Publish', publish_path, class: "mdl-button")
-      div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
-        div.mdl-tabs__tab-bar
-          a class=['mdl-tabs__tab', @activeTab == 'all' ? 'is-active' : ''] href="#sin-projects-all" All
-          - if feature? :catalogues
-            a class=['mdl-tabs__tab', @activeTab == 'catalogues' ? 'is-active' : ''] href="#sin-projects-catalogues" Catalogues
-          a class=['mdl-tabs__tab', @activeTab == 'datapages' ? 'is-active' : ''] href="#sin-projects-datapages" Data pages
-          a class=['mdl-tabs__tab', @activeTab == 'transformations' ? 'is-active' : ''] href="#sin-projects-transformations" Transformations
-          a class=['mdl-tabs__tab', @activeTab == 'queriable_data_stores' ? 'is-active' : ''] href="#sin-projects-queriable_data_stores" Queriable Data Stores
-          a class=['mdl-tabs__tab', @activeTab == 'other' ? 'is-active' : ''] href="#sin-projects-other" Other
-        - ['all', 'catalogues', 'datapages', 'transformations', 'queriable_data_stores', 'other'].each do |type|
-          div class=["mdl-tabs__panel", type == @activeTab ? "is-active" : ''] id="sin-projects-#{type}"
-            table.mdl-data-table.mdl-js-data-table.sin-projects-table
-              tbody
-                - @things[type].each do |thing|
-                  tr
-                    td.sin-small-name.mdl-data-table__cell--non-numeric
-                      = link_to thing.name, thing_path(thing)
-                      / - if thing.respond_to? :file
-                      /   = link_to thing.name, attachment_url(thing, :file)
-                      / - else
-                      /   = thing.name
-                    td.sin-stars-count
-                      span
-                        = thing.stars_count 
-                        ' 
-                        i.material-icons star
-              - if @things[type].empty?
-                tfoot 
-                  tr
-                    td.mdl-data-table__cell--non-numeric[colspan=2]
-                      em Nothing published yet
-            == will_paginate @things[type], :param_name => 'projects_page_' + type, :params => { :projects_active_tab => type }
-        div.mdl-tabs__panel id="sin-projects-loading"
-          span loading
+          td.sin-small-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
+            = link_to thing.name, thing_path(thing)
 
+          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
+            = link_to thing.user.username, user_path(thing.user)  
+
+          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell
+            = thing.updated_at
+
+          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__created-on-cell
+            = thing.created_at
+
+          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
+            label for="switch1" 
+              input#switch1 type="checkbox"
+
+    - if @things.empty?
+      tfoot 
+        tr
+          td.mdl-data-table__cell--non-numeric[colspan=2]
+            em Nothing published yet

@@ -1,21 +1,22 @@
 /*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
- *
- *= require_tree .
- *= require material
- *= require material_icons
- *= require jquery.gridster.css
- *= require_self
- */
+* This is a manifest file that'll be compiled into application.css, which will include all the files
+* listed below.
+*
+* Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+* or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+*
+* You're free to add application-wide styles to this file and they'll appear at the bottom of the
+* compiled file so the styles you add here take precedence over styles defined in any styles
+* defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+* file per style scope.
+*
+*= require_tree .
+*= require material
+*= require material_icons
+*= require jquery.gridster.css
+*= require_self
+*= require dataTables/dataTables.material.min
+*/
 
 
 $primary-color: #5264AE;
@@ -33,7 +34,6 @@ html, body.mdl-base {
 @media (min-width: 840px) {
   section.section--center {
     margin:1.5em auto;
-    width: 66vw;
     width: calc(66vw + 6em);
   }
 }
@@ -43,24 +43,24 @@ html, body.mdl-base {
 }
 
 .datagraft-main-title.mdl-layout-title {
-    background: transparent image-url("logo.svg") no-repeat left center;
-    background-size: 52px auto;
-    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  background: transparent image-url("logo.svg") no-repeat left center;
+  background-size: 52px auto;
+  font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  opacity: 0.95;
+
+  &.mdl-navigation__link {
+    padding-left: 65px !important;
+  }
+
+  &:after {
+    content: " alpha";
+    color: $accent-color;
     font-weight: 400;
-    opacity: 0.95;
-
-    &.mdl-navigation__link {
-        padding-left: 65px !important;
-    }
-
-    &:after {
-        content: " alpha";
-        color: $accent-color;
-        font-weight: 400;
-        position: relative;
-        bottom: 9px;
-        font-size: 12px;
-    }
+    position: relative;
+    bottom: 9px;
+    font-size: 12px;
+  }
 }
 
 .sin-padding {
@@ -80,7 +80,7 @@ html, body.mdl-base {
   color: white;
   padding: 1.2em 1em 1.2em 2em;
   box-shadow: 0px -6px 3px -5px rgba(0, 0, 0, 0.25) inset
-  // box-shadow: 0px -6px 8px -5px rgba(0, 0, 0, 0.35) inset;
+    // box-shadow: 0px -6px 8px -5px rgba(0, 0, 0, 0.35) inset;
 
 }
 .alert.alert-error {
@@ -113,20 +113,20 @@ html, body.mdl-base {
 
 /* Ugly colors */
 /*.mdl-card.sin-card-transformation {
-  background: #F8F6FF;
+background: #F8F6FF;
 }
 
 .mdl-card.sin-card-datadistribution {
-  background: #E7F7FF;
+background: #E7F7FF;
 }
 
 .mdl-card.sin-card-datapage {
-  background: #F9FFE5;
+background: #F9FFE5;
 }*/
 
 body .mdl-color--primary {
-    //background-color: rgb(66,66,66) !important;
-    background-color: $primary-color !important;
+  //background-color: rgb(66,66,66) !important;
+  background-color: $primary-color !important;
 }
 
 .sin-color--primary {
@@ -134,7 +134,7 @@ body .mdl-color--primary {
 }
 
 body .mdl-color--accent {
-    background-color: $accent-color !important;
+  background-color: $accent-color !important;
 }
 
 body .mdl-layout__header-row {
@@ -217,7 +217,7 @@ main .mdl-button.mdl-js-ripple-effect {
 }
 
 .sin-section-flex {
-  display:flex;
+  display: flex;
   flex-grow: 1;
 }
 
@@ -252,8 +252,8 @@ main > footer {
 }
 
 iframe.grafterizer {
-border: none;
-width: 100%;
+  border: none;
+  width: 100%;
 }
 
 
@@ -352,5 +352,4 @@ width: 100%;
 }
 
 .sin-controller--dashboard.sin-action--index .sin-section-flex {
-  display: block;
 }

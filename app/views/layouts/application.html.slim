@@ -78,6 +78,9 @@ html
           - elsif hasOption :mdlCard
             section.section--center.mdl-shadow--2dp.mdl-color--white.sin-card-layout
               = yield
+          - elsif hasOption :dashboardLayout
+            section.section--center.mdl-shadow--2dp.mdl-color--white.sin-dashboard-layout
+              = yield
 
           - else
             section.section--center.mdl-shadow--2dp.mdl-color--white.sin-padding

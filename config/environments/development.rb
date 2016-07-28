@@ -42,7 +42,10 @@ Rails.application.configure do
   config.action_mailer.default
 
   # URL in emails
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3003 }
 
-  config.web_console.whitelisted_ips = ENV['WEB_CONSOLE_WHITELISTED_IPS'] or '10.0.0.0/8'
+  #  config.web_console.whitelisted_ips = ENV['WEB_CONSOLE_WHITELISTED_IPS'] or '10.0.0.0/8'
+  # Config for debugging messages with Web Console when running with Rails server; whiny_requests turns off console error messages altogether
+  config.web_console.whitelisted_ips = '10.0.2.2'
+  config.web_console.whiny_requests = false
 end
