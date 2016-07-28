@@ -1,4 +1,4 @@
-docker exec -i datagraft-db psql --user=postgres --dbname=datagraft-prod << EOF
+docker exec -i datagraft-db psql --user=postgres --dbname=datagraft-dev << EOF
 
 INSERT INTO users VALUES (1, 'jenkins@datagraft.net', '\$2a\$10\$t5e06Ja9ge3JLpmOKUG6IOGH/Qsvdh.TWnSuQ9MdHlbWchVGj4rnW', null, null, null, 1, '2016-05-09 12:19:41.745909', '2016-05-09 12:19:41.745909', '10.0.2.2', '10.0.2.2', '2016-05-09 12:19:41.740838', '2016-05-09 12:19:41.747083', null, null, null, null, null, null, null, 'jenkins', 0, true);
 

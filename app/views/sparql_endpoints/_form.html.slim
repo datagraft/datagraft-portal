@@ -1,0 +1,13 @@
+= simple_form_for @thing, url: thing_path(@thing) do |f|
+  .mdl-grid
+    h4.mdl-cell--12-col Properties
+    = f.input :name, wrapper: :default
+    = f.input :description, as: :text, input_html: { rows: 3 }
+    = f.input :public, wrapper: :switch
+  .mdl-grid
+    = f.input :keywords, as: :text, input_html: { rows: 3 }
+  .mdl-grid
+      = f.input :license, collection: get_common_licenses, wrapper: :select
+  hr.sin-invisible-form-separator
+//  .mdl-grid
+//    = f.button :submit

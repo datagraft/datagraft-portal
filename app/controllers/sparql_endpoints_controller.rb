@@ -1,4 +1,7 @@
-class SparqlEndpointsController < ApplicationController
+class SparqlEndpointsController < ThingsController
+
   def new
+    super
   end
+
 end
