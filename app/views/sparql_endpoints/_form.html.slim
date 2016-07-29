@@ -6,8 +6,19 @@
     = f.input :public, wrapper: :switch
   .mdl-grid
     = f.input :keywords, as: :text, input_html: { rows: 3 }
+    #keyword-frame
+      - kwds = @thing.keywords
+      - unless kwds.blank?
+        ul.keyw-array-container
+          - kwds.each do |kwd|
+            li.keyw-array-item 
+              button.mdl-button.mdl-js-button.mdl-button--raised type="button" onclick="keywordDeleteFunction(this)" 
+                = kwd
+                i.material-icons delete onclick="keywordDeleteFunction(this)"  
   .mdl-grid
-      = f.input :license, collection: get_common_licenses, wrapper: :select
+    = f.input :license, collection: get_common_licenses, wrapper: :select
   hr.sin-invisible-form-separator
+//.mdl-grid
+//  = f.input :keywords, as: :text, input_html: { rows: 3 }
 //  .mdl-grid
 //    = f.button :submit
