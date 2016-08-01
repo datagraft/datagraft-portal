@@ -9,7 +9,7 @@ default: &default
   encoding: utf8
   username: postgres
   password: <%= ENV["DATABASE_PASSWORD"] %>
-  host: datagraft_database
+  host: datagraft_db
   pool: 5
   timeout: 5432
 
