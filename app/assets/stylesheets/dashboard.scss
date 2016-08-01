@@ -3,11 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $primary-color: #5264AE;
-.sin-small-name {
-  max-width: 28vw;
-  text-overflow: ellipsis;
-  overflow-y:hidden;
-}
+
 
 .mdl-data-table.sin-projects-table {
   border:none;
@@ -17,7 +13,7 @@ $primary-color: #5264AE;
     border-top:none;
   }
 }
-
+// Section styles
 .sin-projects-title {
   margin:0;
   padding:0 0.66em;
@@ -27,7 +23,6 @@ $primary-color: #5264AE;
   flex-direction: column;
   justify-content: center;
 }
-
 .sin-projects {
   padding-top: 6px;
   .pagination {
@@ -36,6 +31,7 @@ $primary-color: #5264AE;
   }
 }
 
+// Pagination
 #dashboard-user-assets-table_paginate {
   margin: auto;
   text-align: center;
@@ -60,33 +56,27 @@ $primary-color: #5264AE;
     }
   }
 }
-
 ul.pagination-dashboard-assets-table li {
   display: inline-block;
   padding: 0;
   margin: 8px 0;
 }
-
-
 ul.pagination-dashboard-assets-table li a {
   border: none;
   padding: 8px 16px;
   float: left;
   text-decoration: none;
 }
-
 ul.pagination-dashboard-assets-table li.active a {
   border: none;
   background-color: #5264AE;
   color: white;
-
 }
-
-
 ul.pagination-dashboard-assets-table li:hover:not(.active) a {
   background-color: #ddd;
 }
 
+// Activity feed
 .sin-dashboard-activity-feed {
   color:white;
   background: $primary-color image-url("background_blue_vertical.jpg");
@@ -132,20 +122,52 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
   }
 }
 
+// User assets table
 #dashboard-user-assets-table {
   height: 70vh;
-}
 
+  .sin-short-name {
+    max-width: 28vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap !important;
+  }
+}
 .sin-dashboard-layout > .mdl-card {
   width: 100%;
   align-items: stretch;
   & .dataTables_wrapper {
     background-color: rgb(255,255,255) !important;
     align-items: stretch;
+    th {
+      font-size: 16px !important;
+    }
+    td {
+      font-size: 14px !important;
+    }
     & .mdl-card__actions {
       align-items: flex-end;
       border-top: 1px solid #cdcdcd;
+      font-size: 18px !important;
     }
   }
 
+}
+.sin-icon__data_page {
+  background: transparent image-url("icon--data_page.svg") no-repeat center;
+  background-size: auto 90%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.sin-icon__query {
+  background: transparent image-url("icon--query.svg") no-repeat center;
+  background-size: auto 90%;
+}
+.sin-icon__transformation {
+  background: transparent image-url("icon--transformation.svg") no-repeat center;
+  background-size: auto 90%;
+}
+.sin-icon__queriable_data_store {
+  background: transparent image-url("icon--queriable_data_store.svg") no-repeat center;
+  background-size: auto 85%;
 }

@@ -38,32 +38,32 @@ div.mdl-card.mdl-color--white.mdl-shadow--2dp
   table#dashboard-user-assets-table.mdl-data-table.cell-border
     thead
       tr
-        th Type
-        th Name
-        th Owner
-        th Last modified
-        th Created on
-        th Private/Public
+        th.mdl-data-table__cell--non-numeric Type
+        th.mdl-data-table__cell--non-numeric Name
+        th.mdl-data-table__cell--non-numeric Owner
+        th.mdl-data-table__cell--non-numeric Last modified
+        th.mdl-data-table__cell--non-numeric Created on
+        th.mdl-data-table__cell--non-numeric Private/Public
     tbody.dashboard-asset-table-body
       - @things["all"].each do |thing|
         tr
-          td.sin-small-name.mdl-data-table__cell--non-numeric 
-            div.dashboard-asset-table-type style=("display: none;") 
-              = thing.type
-            ' 
-            img src=image_url("50_query.png")
+          td class=("mdl-data-table__cell--non-numeric sin-icon__#{thing.class.model_name.param_key}") id=("icon-#{thing.id}")
+            div.mdl-tooltip for=("icon-#{thing.id}")
+              = thing.class.model_name.human.titleize
 
-          td.sin-small-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
+          td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
             = link_to thing.name, thing_path(thing)
 
           td.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
             = link_to thing.user.username, user_path(thing.user)  
 
           td.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell
-            = thing.updated_at
+            = time_ago_in_words thing.updated_at
+            '&nbsp;ago
 
           td.mdl-data-table__cell--non-numeric.dashboard-user-assets__created-on-cell
-            = thing.created_at
+            = time_ago_in_words thing.created_at
+            '&nbsp;ago
 
           td.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
             label for="switch1" 
