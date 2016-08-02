@@ -3,33 +3,78 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $primary-color: #5264AE;
+$dirty-white: #E9ECF6;
+$accent-color: #FF609A;
 
-
-.mdl-data-table.sin-projects-table {
-  border:none;
-  width:100%;
-
-  td {
-    border-top:none;
-  }
-}
 // Section styles
-.sin-projects-title {
-  margin:0;
-  padding:0 0.66em;
+.sin-dashboard-layout > .mdl-grid {
+  padding: 0px;
+  & > .sin-dashboard-title {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
+    background-size: cover;
+    //  background-position: left;
+    // flex-direction: column;
+    align-items: center;
+    min-height: 8em;
+    h2, h3, h4 {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      display: block;
+      margin: 0;
+      color: $dirty-white;
+      align-self: center;
+    }
+    & > .mdl-tabs__tab-bar {
+      align-self: stretch;
+
+      a {
+        width: 33%;
+        font-size: 18px !important;
+        color: $dirty-white;
+        &.is-active {
+          background: rgba(0,0,0,0.25);
+        }
+      }
+    }
+    & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
+      background: $dirty-white;
+    }
+    & .mdl-tabs__tab.is-active:after {
+      background: $primary-color !important;
+      height: 6px !important;
+    }
+  }
+
 }
-.sin-projects-button-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.sin-projects {
-  padding-top: 6px;
-  .pagination {
-    text-align: center;
-    padding:0.33em;
+@media (min-width: 840px) {
+  .sin-dashboard-layout .sin-centered {
+    margin: 0px auto;
+    width: calc(66vw + 6em);
   }
 }
+.sin-dashboard-layout .mdl-card {
+  width: 100%;
+  & > .mdl-card__title {
+    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
+      image-url("background_blue_grafterizer.jpg");
+    background-size: cover;
+    padding: 24px;
+    align-items: flex-start;
+    min-height: 10em;
+    align-items: center;
+    justify-content: center;
+  }
+  h2, h3, h4 {
+    margin: 0;
+    color: $dirty-white;
+
+  }
+}
+
 
 // Pagination
 #dashboard-user-assets-table_paginate {
@@ -124,7 +169,7 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
 
 // User assets table
 #dashboard-user-assets-table {
-  height: 70vh;
+  height: 57vh;
 
   .sin-short-name {
     max-width: 28vw;
@@ -133,7 +178,7 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     white-space: nowrap !important;
   }
 }
-.sin-dashboard-layout > .mdl-card {
+.sin-dashboard-layout .mdl-card {
   width: 100%;
   align-items: stretch;
   & .dataTables_wrapper {
@@ -148,7 +193,7 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     & .mdl-card__actions {
       align-items: flex-end;
       border-top: 1px solid #cdcdcd;
-      font-size: 18px !important;
+      font-size: 16px !important;
     }
   }
 

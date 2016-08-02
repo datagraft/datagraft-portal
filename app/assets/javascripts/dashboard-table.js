@@ -46,7 +46,7 @@ document.addEventListener('turbolinks:load', function() {
     dom: 'lfrti<"mdl-card__actions mdl-card--border"p>',
     scroller: true,
     scrollCollapse: true,
-    scrollY: "70vh",
+    scrollY: "57vh",
     "drawCallback": function(oSettings) {
       var numcolumns = this.oApi._fnVisbleColumns(oSettings);
       generateEmptyRows($table, 10);

@@ -1,76 +1,90 @@
 - title "Dashboard"
 - setOption :dashboardLayout
 - setOption :dashboardSearch
-div.mdl-card.mdl-color--white.mdl-shadow--2dp
-  - if feature? :activity_feed
-    div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
-      h3 Activity feed
-      ul
-        - @activityFeed.each do |activity|
-          li
-            p.sin-activity-date
-              = time_ago_in_words activity[:updated_at]
-              '&nbsp;ago
-            - if activity.kind_of? Star
-              img src=image_url("icon--star.svg")
-              - if activity.user == current_user
-                | You
-              - else
-                = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-              '  starred 
-              == link_to activity.thing.name, thing_path(activity.thing)
-            - elsif activity.kind_of? Thing
-              img src=image_url("icon--service.svg")
-              - if activity.user == current_user
-                | You
-              - else
-                = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-              '  made 
-              == link_to activity.name, thing_path(activity)
-              '&nbsp;public
-            - elsif activity.kind_of? CatalogueStar
-              img src=image_url("icon--star.svg")
-              'You starred 
-              == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
-            - elsif activity.kind_of? Catalogue
-              'You made
-              == link_to activity.name, catalogue_path(activity)
-  table#dashboard-user-assets-table.mdl-data-table.cell-border
-    thead
-      tr
-        th.mdl-data-table__cell--non-numeric Type
-        th.mdl-data-table__cell--non-numeric Name
-        th.mdl-data-table__cell--non-numeric Owner
-        th.mdl-data-table__cell--non-numeric Last modified
-        th.mdl-data-table__cell--non-numeric Created on
-        th.mdl-data-table__cell--non-numeric Public
-    tbody.dashboard-asset-table-body
-      - @things["all"].each do |thing|
-        tr
-          td class=("mdl-data-table__cell--non-numeric sin-icon__#{thing.class.model_name.param_key}") id=("icon-#{thing.id}")
-            div.mdl-tooltip for=("icon-#{thing.id}")
-              = thing.class.model_name.human.titleize
 
-          td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
-            = link_to thing.name, thing_path(thing)
+.mdl-grid.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+  .sin-dashboard-title
+    h2 DataGraft Home
+    .mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#browse-assets" Browse assets
+      a.mdl-tabs__tab href="#create-assets" Create assets
+      a.mdl-tabs__tab href="#query-assets" Query assets
+  #create-assets.sin-centered.mdl-tabs__panel
+    h3 SUP
+  #browse-assets.sin-centered.mdl-tabs__panel.is-active
+    - if feature? :activity_feed
+      .mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
+        h3 Activity feed
+        ul
+          - @activityFeed.each do |activity|
+            li
+              p.sin-activity-date
+                = time_ago_in_words activity[:updated_at]
+                '&nbsp;ago
+              - if activity.kind_of? Star
+                img src=image_url("icon--star.svg")
+                - if activity.user == current_user
+                  | You
+                - else
+                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+                '  starred 
+                == link_to activity.thing.name, thing_path(activity.thing)
+              - elsif activity.kind_of? Thing
+                img src=image_url("icon--service.svg")
+                - if activity.user == current_user
+                  | You
+                - else
+                  = link_to (activity.user.name || activity.user.username), user_path(activity.user)
+                '  made 
+                == link_to activity.name, thing_path(activity)
+                '&nbsp;public
+              - elsif activity.kind_of? CatalogueStar
+                img src=image_url("icon--star.svg")
+                'You starred 
+                == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
+              - elsif activity.kind_of? Catalogue
+                'You made
+                == link_to activity.name, catalogue_path(activity)
+    .mdl-card.mdl-color--white
+      table#dashboard-user-assets-table.mdl-data-table.cell-border
+        thead
+          tr
+            th.mdl-data-table__cell--non-numeric Type
+            th.mdl-data-table__cell--non-numeric Name
+            th.mdl-data-table__cell--non-numeric Owner
+            th.mdl-data-table__cell--non-numeric Last modified
+            th.mdl-data-table__cell--non-numeric Created on
+            th.mdl-data-table__cell--non-numeric Public
+        tbody.dashboard-asset-table-body
+          - @things["all"].each do |thing|
+            tr
+              td class=("mdl-data-table__cell--non-numeric sin-icon__#{thing.class.model_name.param_key}") id=("icon-#{thing.id}")
+                .mdl-tooltip for=("icon-#{thing.id}")
+                  = thing.class.model_name.human.titleize
 
-          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
-            = link_to thing.user.username, user_path(thing.user)  
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
+                = link_to thing.name, thing_path(thing)
 
-          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell
-            = time_ago_in_words thing.updated_at
-            '&nbsp;ago
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
+                = link_to thing.user.username, user_path(thing.user)  
 
-          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__created-on-cell
-            = time_ago_in_words thing.created_at
-            '&nbsp;ago
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell id=("last-modified-#{thing.id}")
+                = time_ago_in_words thing.updated_at
+                '&nbsp;ago
+                .mdl-tooltip for=("last-modified-#{thing.id}")
+                  = thing.updated_at
 
-          td.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
-            label for="switch1" 
-              input#switch1 type="checkbox"
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__created-on-cell id=("created-at-#{thing.id}")
+                = time_ago_in_words thing.created_at
+                '&nbsp;ago
+                .mdl-tooltip for=("created-at-#{thing.id}")
+                  = thing.created_at
 
-    - if @things.empty?
-      tfoot 
-        tr
-          td.mdl-data-table__cell--non-numeric[colspan=2]
-            em Nothing published yet
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
+                label for="switch1" 
+                  input#switch1 type="checkbox"
+        - if @things.empty?
+          tfoot 
+            tr
+              td.mdl-data-table__cell--non-numeric[colspan=2]
+                em Nothing published yet  
