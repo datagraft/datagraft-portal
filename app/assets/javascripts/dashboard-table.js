@@ -43,7 +43,7 @@ document.addEventListener('turbolinks:load', function() {
   $table.dataTable({
     responsive: true,
     pagingType: 'full_numbers',
-    dom: 'lfrti<"mdl-card__actions mdl-card--border"p>',
+    dom: 'lrti<"mdl-card__actions mdl-card--border"p>',
     scroller: true,
     scrollCollapse: true,
     scrollY: "57vh",
@@ -60,6 +60,12 @@ document.addEventListener('turbolinks:load', function() {
       { "width": "15%", "targets": 4 },
       { "width": "10%", "targets": 5 }
     ]
+  });
+  
+  // Custom search box
+  var oTable = $('#dashboard-user-assets-table').DataTable();
+  $('#dashboard-assets-search').keyup( function() {
+    oTable.search($(this).val()).draw() ;
   });
 
 
