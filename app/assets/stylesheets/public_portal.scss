@@ -89,25 +89,17 @@ a.sin-small-card:hover {
   }
 
   .sin-card--transformation .mdl-card__title {
-    background-image:
-      image-url("60_utility.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--transformation.svg");
   }
 
   .sin-card--datapage .mdl-card__title {
-    background-image:
-      image-url("60_page.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--data_page.svg");
   }
 
   .sin-card--datadistribution .mdl-card__title {
-    background-image:
-      image-url("60_file.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--file.svg");
   }
   .sin-card--filestore .mdl-card__title {
-    background-image:
-      image-url("60_file.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--file.svg");
   }
 }

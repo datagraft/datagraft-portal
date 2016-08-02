@@ -12,7 +12,7 @@ div.mdl-card.mdl-color--white.mdl-shadow--2dp
               = time_ago_in_words activity[:updated_at]
               '&nbsp;ago
             - if activity.kind_of? Star
-              img src=image_url("60_star.png")
+              img src=image_url("icon--star.svg")
               - if activity.user == current_user
                 | You
               - else
@@ -20,7 +20,7 @@ div.mdl-card.mdl-color--white.mdl-shadow--2dp
               '  starred 
               == link_to activity.thing.name, thing_path(activity.thing)
             - elsif activity.kind_of? Thing
-              img src=image_url("60_service.png")
+              img src=image_url("icon--service.svg")
               - if activity.user == current_user
                 | You
               - else
@@ -29,7 +29,7 @@ div.mdl-card.mdl-color--white.mdl-shadow--2dp
               == link_to activity.name, thing_path(activity)
               '&nbsp;public
             - elsif activity.kind_of? CatalogueStar
-              img src=image_url("60_star.png")
+              img src=image_url("icon--star.svg")
               'You starred 
               == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
             - elsif activity.kind_of? Catalogue
@@ -43,7 +43,7 @@ div.mdl-card.mdl-color--white.mdl-shadow--2dp
         th.mdl-data-table__cell--non-numeric Owner
         th.mdl-data-table__cell--non-numeric Last modified
         th.mdl-data-table__cell--non-numeric Created on
-        th.mdl-data-table__cell--non-numeric Private/Public
+        th.mdl-data-table__cell--non-numeric Public
     tbody.dashboard-asset-table-body
       - @things["all"].each do |thing|
         tr

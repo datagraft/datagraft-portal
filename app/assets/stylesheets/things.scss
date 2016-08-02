@@ -18,7 +18,6 @@ $accent-color: #FF609A;
 .sin-card-layout > .mdl-card {
   & > .mdl-card__title {
     background: #424242;
-    // background: #424242 image-url("use_your_illusion.png");
     background-image: image-url("background_blue_explore_page.jpg");
     background-image: 
       linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
@@ -101,32 +100,22 @@ $accent-color: #FF609A;
 }
 
 .sin-controller--data_pages .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_page.png");
+  content: image-url("icon-white-raster-60--data-page.png");
 }
 .sin-controller--transformations .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_data.png");
+  content: image-url("icon-white-raster-60--transformation.png");
 }
 .sin-controller--queriable_data_stores .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_datastore.png");
+  content: image-url("icon-white-raster-60--queriable-data-store.png");
 }
 .sin-controller--data_distributions .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_file.png");
+  content: image-url("icon-white-raster-60--file-page.png");
 }
 .sin-controller--filestores .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_file.png");
+  content: image-url("icon-white-raster-60--file-page.png");
 }
 .sin-controller--queries .sin-card-layout > .mdl-card > .mdl-card__title > h3:before {
-  content: image-url("60b_query.png");
-}
-
-.sin-qds-list {
-  max-height: 120px;
-  overflow: scroll;
-  
-  li .mdl-list__item-icon {
-    background: transparent image-url("60_datastore.png") no-repeat left;
-    background-size: contain;
-  }
+  content: image-url("icon-white-raster-60--query.png");
 }
 
 .sin-date-infos {
