@@ -1,0 +1,16 @@
+= simple_form_for @thing, url: thing_path(@thing) do |f|
+  .mdl-grid
+    h4.mdl-cell--12-col Properties
+    = f.input :name, wrapper: :default
+    = f.input :description, as: :text, input_html: { rows: 5 }
+    = f.input :public, wrapper: :switch
+  .mdl-grid
+    = f.input :keyword_list, label: "Keywords", hint: "Add keywords separated by commas", as: :text, input_html: { rows: 5 }
+  .mdl-grid
+    = f.input :license, collection: get_common_licenses, wrapper: :select
+  hr.sin-invisible-form-separator
+  .mdl-grid
+    = link_to 'Back', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" 
+    .mdl-layout-spacer
+    = link_to 'Delete endpoint', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to delete SPARQL endpoint?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
+    = f.button :submit, "Save and show endpoint page", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

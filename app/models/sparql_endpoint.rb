@@ -2,25 +2,10 @@ class SparqlEndpoint < Thing
   extend FriendlyId
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  acts_as_taggable_on :tags
+  acts_as_taggable_on :keywords
   
   def should_generate_new_friendly_id?
     name_changed? || super
-  end
-
-  def keywords
-    if metadata.blank? 
-      ret = Array.new
-    else
-      ret = metadata['keyword'] 
-    end
-    return ret
-  end
-
-  def keywords=(keyw_array)
-    touch_metadata!
-    #When the array is returned from the form it comes in JSON format
-    metadata['keyword'] = JSON.parse keyw_array
   end
 
   def license
@@ -30,6 +15,16 @@ class SparqlEndpoint < Thing
   def license=(val)
     touch_metadata!
     metadata["license"] = val
+  end
+
+  def uri
+    metadata["uri"] if metadata
+  end
+
+  def uri=(val)
+    touch_metadata!
+    attribute_will_change!('uri') if uri != val
+    metadata["uri"] = val
   end
 
 end

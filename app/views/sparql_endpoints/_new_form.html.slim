@@ -9,6 +9,7 @@
   .mdl-grid
     = f.input :license, collection: get_common_licenses, wrapper: :select
   hr.sin-invisible-form-separator
-    .mdl-grid
-      = link_to 'Back', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" 
-      = f.button :submit
+  .mdl-grid
+    = link_to 'Back', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" 
+    .mdl-layout-spacer
+    = f.button :submit, "Save and show endpoint page", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
