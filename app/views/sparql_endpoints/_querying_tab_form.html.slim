@@ -1,9 +1,0 @@
-div.mdl-layout
-  h3 Query SPARQL endpoint
-  div.mdl-layout__drawer
-
-  dt SPARQL endpoint
-  dd
-  - unless @thing.uri.blank?
-    .sin-description
-    = render_markdown(@thing.uri)

@@ -1,0 +1,17 @@
+div.mdl-layout
+  h3 Query SPARQL endpoint
+  div.mdl-layout__drawer
+
+  dt SPARQL endpoint
+  dd
+  - unless @thing.uri.blank?
+    .sin-description
+    = render_markdown(@thing.uri)
+  
+  hr.sin-invisible-form-separator
+  div.mdl-card__actions
+    - if can? :edit, @thing
+      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

@@ -1,15 +1,44 @@
 = simple_form_for @thing, url: thing_path(@thing) do |f|
   .mdl-grid
     h4.mdl-cell--12-col Properties
-    = f.input :name, wrapper: :default
-    = f.input :description, as: :text, input_html: { rows: 5 }
-    = f.input :public, wrapper: :switch
-  .mdl-grid
-    = f.input :keyword_list, label: "Keywords", hint: "Add keywords separated by commas", as: :text, input_html: { rows: 5 }
-  .mdl-grid
-    = f.input :license, collection: get_common_licenses, wrapper: :select
+    table style="width:100%" 
+      colgroup
+        col span="1" style="width: 98%"
+        col span="1" style="width: 2%"
+      tr
+        td
+          = f.input :name, placeholder: "Enter a file page name", wrapper: :default
+        td
+          #tooltip-name.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the SPARQL endpoint, which will appear on the asset browsing table. File name/transformation name by default.
+      tr
+        td
+          = f.input :description, placeholder: "Enter a description for the file page", as: :text, input_html: { rows: 5 }      
+        td
+          #tooltip-description.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the content of the SPARQL endpoint, which will appear on the SPARQL endpoint page.
+      tr
+        td
+          = f.input :public, wrapper: :switch
+        td
+          #tooltip-public.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-public" Choose whether the SPARQL endpoint page will be visible to other users of DataGraft.
+      tr
+        td
+          = f.input :keyword_list, label: "Keywords", placeholder: "Enter keywords separated by commas", as: :text, input_html: { rows: 5 }
+        td
+          #tooltip-keywords.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords" Enter keywords separated by commas.
+      tr
+        td
+          = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
+        td
+          #tooltip-license.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-license" Choose a license for use of the data in the SPARQL endpoint. You can find more details about data licensing on the Creative Commons web page (link), or at Open Data Commons web page (link).
+          
   hr.sin-invisible-form-separator
-  .mdl-grid
+
+  div.mdl-card__actions
     = link_to 'Back', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" 
     .mdl-layout-spacer
     = f.button :submit, "Save and show endpoint page", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
