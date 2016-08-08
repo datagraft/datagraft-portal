@@ -1,1 +1,0 @@
-rake db:migrate RAILS_ENV=development SECRET_KEY_BASE=750184ddf9d54ca16fee171034f7e4fd7df4b8398efa30c6d36966b24f1d3460209566919a6cf05415017f2b8af7dd65e9b17e423ab95ec783773d8d36421281 DATABASE_HOST=localhost DATABASE_PASSWORD=whatever DATABASE_URL=postgresql://postgres:whatever@localhost
