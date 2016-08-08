@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :queries
   has_many :api_keys
   has_many :catalogues
+  has_many :sparql_endpoints
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

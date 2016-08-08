@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616131136) do
+ActiveRecord::Schema.define(version: 20160729105529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,6 +150,11 @@ ActiveRecord::Schema.define(version: 20160616131136) do
   add_index "queriable_data_store_queries", ["queriable_data_store_id"], name: "index_queriable_data_store_queries_on_queriable_data_store_id", using: :btree
   add_index "queriable_data_store_queries", ["query_id"], name: "index_queriable_data_store_queries_on_query_id", using: :btree
 
+  create_table "sparql_endpoints", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "stars", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "thing_id"
@@ -159,6 +164,26 @@ ActiveRecord::Schema.define(version: 20160616131136) do
 
   add_index "stars", ["user_id", "thing_id"], name: "index_stars_on_user_id_and_thing_id", unique: true, using: :btree
   add_index "stars", ["user_id"], name: "index_stars_on_user_id", using: :btree
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string  "name"
+    t.integer "taggings_count", default: 0
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "thing_hierarchies", id: false, force: :cascade do |t|
     t.integer "ancestor_id",   null: false

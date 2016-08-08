@@ -1,0 +1,35 @@
+div.mdl-layout
+  h3 Endpoint information
+  div.mdl-layout__drawer
+
+  dt Description
+  dd
+  - unless @thing.description.blank?
+    .sin-description
+    = render_markdown(@thing.description)
+
+  dt Keywords
+  dd
+    - kwds = @thing.keywords
+    - unless kwds.blank?
+      ul.keyw-array-container
+        - kwds.each do |kwd|
+          li.keyw-array-item 
+            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+              = kwd
+          
+  dt License
+  dd
+  - unless @thing.license.blank?
+    .sin-description
+    = render_markdown(@thing.license)
+  
+  dt SPARQL endpoint information
+  
+  hr.sin-invisible-form-separator
+  div.mdl-card__actions
+    - if can? :edit, @thing
+      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

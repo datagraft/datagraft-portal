@@ -1,0 +1,29 @@
+- title @thing.name
+- setOption :mdlCard
+
+/! MDL Card container
+div[class="mdl-card #{@thing.live? ? '' : 'sin-old-version'}"]
+  div.mdl-card__title.mdl-color-text--grey-50
+    = render 'thing_header' 
+
+  /! MDL Tabs container
+  div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    /! Tab bars
+    div.mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#endpoint-info-panel" Endpoint info
+      a.mdl-tabs__tab href="#endpoint-querying-panel"  Querying
+    /! MDL tab panels, is-active to denote currently active
+    #endpoint-info-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'show_info_tab'
+    /! MDL Tab panel 2
+    #endpoint-querying-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'show_querying_tab'
+
+//  div.mdl-card__actions
+//    - if can? :edit, @thing
+//      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+//    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+//    div.mdl-layout-spacer
+//    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
