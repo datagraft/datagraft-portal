@@ -241,7 +241,7 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
   background: transparent image-url("icon--transformation.svg") no-repeat center;
   background-size: auto 85%;
 }
-.sin-icon__queriable_data_store {
+.sin-icon__queriable_data_store, .sin-icon__sparql_endpoint {
   background: transparent image-url("icon--queriable_data_store.svg") no-repeat center;
   background-size: auto 85%;
 }
