@@ -32,6 +32,7 @@ $accent-color: #FF609A;
       align-self: stretch;
 
       a {
+        background: rgba(0, 0, 0, 0.07);
         width: 33%;
         font-size: 18px !important;
         color: $dirty-white;
@@ -167,6 +168,15 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
   }
 }
 
+// Search and filtering assets
+.sin-dashboard-layout .sin-dashboard-search {
+  display: flex;
+  align-items: center;
+  i.material-icons {
+    padding-right: 8px;
+  }
+}
+
 // User assets table
 #dashboard-user-assets-table {
   height: 57vh;
@@ -195,6 +205,25 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
       border-top: 1px solid #cdcdcd;
       font-size: 16px !important;
     }
+  }
+  & .sin-dashboard-search {
+    width: auto;
+    padding-bottom: 0;
+    padding-top: 0;
+//    margin-bottom: -25px;
+    margin-top: 15px;
+    & > .mdl-checkbox {
+      margin-left: 20px;
+    }
+  }
+  & .sin-dashboard-asset-filters {
+    display: flex;
+    padding-top: 0px;
+    padding-bottom: 0px;
+//    & > .mdl-list__item-primary-content {
+//      align-self: center;
+//      font-size: 16px;
+//    }
   }
 
 }

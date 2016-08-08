@@ -46,12 +46,38 @@
                 'You made
                 == link_to activity.name, catalogue_path(activity)
     .mdl-card.mdl-color--white
-      .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
-        label.mdl-button.mdl-js-button.mdl-button--icon for="dashboard-assets-search" 
-          i.material-icons search
-        .mdl-textfield__expandable-holder
+      .mdl-textfield.mdl-js-textfield.sin-dashboard-search
+        i.material-icons search
+        .mdl-textfield.mdl-js-textfield
           input#dashboard-assets-search.mdl-textfield__input type="text" /
           label.mdl-textfield__label for="dashboard-assets-search"  Search
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--public" 
+          input#dashboard-filter--public.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Include public assets
+      .sin-dashboard-asset-filters
+        .sin-dashboard-asset-filters-label
+          | Asset types: 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all" 
+          input#dashboard-filter--all.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | All
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--files" 
+          input#dashboard-filter--files.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Files
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--sparql" 
+          input#dashboard-filter--sparql.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | SPARQL endpoints
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--transformations" 
+          input#dashboard-filter--transformations.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Data Transformations
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--queries" 
+          input#dashboard-filter--queries.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Queries
       table#dashboard-user-assets-table.mdl-data-table.cell-border
         thead
           tr

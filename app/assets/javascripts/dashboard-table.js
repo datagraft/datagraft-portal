@@ -41,6 +41,7 @@ document.addEventListener('turbolinks:load', function() {
   // Initialise DataTables table
   var $table = $('#dashboard-user-assets-table');
   $table.dataTable({
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     responsive: true,
     pagingType: 'full_numbers',
     dom: 'lrti<"mdl-card__actions mdl-card--border"p>',
@@ -55,10 +56,10 @@ document.addEventListener('turbolinks:load', function() {
     "columnDefs": [
       { "width": "5%", "targets": 0 },
       { "width": "35%", "targets": 1 },
-      { "width": "15%", "targets": 2 },
-      { "width": "15%", "targets": 3 },
-      { "width": "15%", "targets": 4 },
-      { "width": "10%", "targets": 5 }
+      { "width": "15%", searchable: false, "targets": 2 },
+      { "width": "15%", searchable: false, "targets": 3 },
+      { "width": "15%", searchable: false, "targets": 4 },
+      { "width": "10%", searchable: false, "targets": 5 }
     ]
   });
   
