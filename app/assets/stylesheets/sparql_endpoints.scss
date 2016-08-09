@@ -2,6 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$primary-color: #5264AE;
+$dirty-white: #E9ECF6;
+
 .sin-card-layout .mdl-card__supporting-text {
   width: auto;
 }
@@ -44,4 +47,103 @@
  
 .container-scroll {
   overflow-x: scroll;
+}
+
+.sin-tab-layout > .mdl-grid {
+  & > .sin-tab-title {
+    align-content: center;
+    text-align: center;
+  }
+}
+
+.sin-tab-layout > .mdl-grid {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  
+  & > .mdl-grid {
+    width: 100%;
+    padding-left: 0px;
+    
+    & > .mdl-cell {
+      margin-left: 0px;
+      padding-left: 0px;
+    }
+  }
+}
+
+.sin-tab-title {
+  text-align: center; 
+}
+
+.sin-tab-label {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 2px;
+}
+
+.sin-tab-textfield__box {
+  border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+}
+
+.sin-tab-textfield__colorbox {
+  border: 1px solid rgba(3,3,3,0.3);
+  background-color: rgba(0,0,0, 0.1);
+  padding: 4px;
+  
+  & > .keyw-array-container > .keyw-array-item > .mdl-button {
+    background-color: rgba(0,0,0, 0.3);
+    color: rgba(0,0,0, 0.7);
+    box-shadow: none;
+  }
+}
+
+.sin-tab-textfield__scroll {
+  border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+  overflow-y: scroll;
+  height: 200px;
+}
+
+.sin-tabs { 
+  & > .mdl-tabs {
+//    display: flex;
+//    width: 100%;
+//    flex-direction: column;
+//    justify-content: space-between;
+//    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
+//    background-size: cover;
+    //  background-position: left;
+    // flex-direction: column;
+//    align-items: center;
+//    min-height: 8em;
+
+    & > .mdl-tabs__tab-bar {
+      padding-top: 10px;
+      align-self: stretch;
+      
+      a {
+        background: rgba(0, 0, 0, 0.07);
+        width: 50%;
+        font-size: 18px !important;
+//        color: $dirty-white;
+
+        &.is-active {
+          background: rgba(0,0,0,0.25);
+        }
+      }
+    }
+    
+    & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
+//      background: $dirty-white;
+    }
+    
+    & .mdl-tabs__tab.is-active:after {
+      background: $primary-color !important;
+      height: 6px !important;
+    }
+  }
 }

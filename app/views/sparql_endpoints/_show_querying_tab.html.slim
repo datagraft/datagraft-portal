@@ -1,12 +1,15 @@
-div.mdl-layout
-  h3 Query SPARQL endpoint
-  div.mdl-layout__drawer
+/! div.mdl-layout
+.sin-tab-layout
+  .mdl-grid
+    h3.sin-tab-title Query SPARQL endpoint
+    /! div.mdl-layout__drawer
 
-  dt SPARQL endpoint
-  dd
-  - unless @thing.uri.blank?
-    .sin-description
-    = render_markdown(@thing.uri)
+  .mdl-grid
+    dt SPARQL endpoint
+    dd
+      - unless @thing.uri.blank?
+        /! .sin-description
+        = render_markdown(@thing.uri)
   
   hr.sin-invisible-form-separator
   div.mdl-card__actions
