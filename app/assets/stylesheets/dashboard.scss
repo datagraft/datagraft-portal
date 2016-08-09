@@ -187,13 +187,27 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     overflow: hidden;
     white-space: nowrap !important;
   }
+
+  .dashboard-user-assets__is-public-cell {
+    overflow: visible;
+    & > .mdl-switch {
+      width: 85%;
+    }
+    button.mdl-button {
+      min-height: 20px;
+    }
+  }
 }
 .sin-dashboard-layout .mdl-card {
   width: 100%;
   align-items: stretch;
   & .dataTables_wrapper {
+    padding-top: 20px;
     background-color: rgb(255,255,255) !important;
     align-items: stretch;
+    & .dataTables_length {
+      padding-bottom: 8px;
+    }
     th {
       font-size: 16px !important;
     }
@@ -210,22 +224,27 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     width: auto;
     padding-bottom: 0;
     padding-top: 0;
-//    margin-bottom: -25px;
     margin-top: 15px;
+
     & > .mdl-checkbox {
       margin-left: 20px;
+      width: auto;
+      padding-left: 24px;
+      padding-right: 24px;
     }
   }
   & .sin-dashboard-asset-filters {
     display: flex;
     padding-top: 0px;
     padding-bottom: 0px;
-//    & > .mdl-list__item-primary-content {
-//      align-self: center;
-//      font-size: 16px;
-//    }
+    & > .mdl-checkbox {
+      width: auto;
+      padding-right: 24px;
+    }
   }
-
+}
+#current-user-name-hidden {
+  font-size: 0;
 }
 .sin-icon__data_page {
   background: transparent image-url("icon--data_page.svg") no-repeat center;

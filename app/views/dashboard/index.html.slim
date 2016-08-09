@@ -9,6 +9,8 @@
       a.mdl-tabs__tab.is-active href="#browse-assets" Browse assets
       a.mdl-tabs__tab href="#create-assets" Create assets
       a.mdl-tabs__tab href="#query-assets" Query assets
+  #current-user-name-hidden
+    = current_user.username
   #create-assets.sin-centered.mdl-tabs__panel
     h3 SUP
   #browse-assets.sin-centered.mdl-tabs__panel.is-active
@@ -56,8 +58,6 @@
           span.mdl-checkbox__label
           | Include public assets
       .sin-dashboard-asset-filters
-        .sin-dashboard-asset-filters-label
-          | Asset types: 
         label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all" 
           input#dashboard-filter--all.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
@@ -94,11 +94,11 @@
                 .mdl-tooltip for=("icon-#{thing.id}")
                   = thing.class.model_name.human.titleize
 
-              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell href=thing_path(thing)
                 = link_to thing.name, thing_path(thing)
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
-                = link_to thing.user.username, user_path(thing.user)  
+                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user)  
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell id=("last-modified-#{thing.id}")
                 = time_ago_in_words thing.updated_at
@@ -113,8 +113,17 @@
                   = thing.created_at
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
-                label for="switch1" 
-                  input#switch1 type="checkbox"
+                label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for=("switch-#{thing.id}")
+                  input.mdl-switch__input id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false)
+                  span.mdl-switch__label style="font-size: 0"
+                    = thing.public
+                button.mdl-button.mdl-js-button.mdl-button--icon id=("menu-#{thing.id}")
+                  i.material-icons more_vert
+                ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
+                  li.mdl-menu__item Copy
+                  li.mdl-menu__item Edit
+                  li.mdl-menu__item Delete
+
         - if @things.empty?
           tfoot 
             tr
