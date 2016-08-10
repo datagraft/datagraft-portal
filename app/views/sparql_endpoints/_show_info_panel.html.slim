@@ -23,10 +23,11 @@
     .mdl-cell--6-col
       .sin-tab-label License
       .sin-tab-text
-      - unless @thing.license.blank?
-        = @thing.name
-        | is licensed under 
-        = @thing.license
+        dd
+          - unless @thing.license.blank?
+            = @thing.name
+            | is licensed under 
+            = @thing.license
 
     .mdl-cell--6-col 
       .sin-tab-label SPARQL endpoint information

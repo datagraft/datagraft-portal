@@ -1,15 +1,19 @@
-/! div.mdl-layout
+/! Tab layout
 .sin-tab-layout
   .mdl-grid
-    h3.sin-tab-title Query SPARQL endpoint
-    /! div.mdl-layout__drawer
+    h3.sin-tab-title.mdl-cell--12-col Query SPARQL endpoint
 
-  .mdl-grid
-    dt SPARQL endpoint
-    dd
-      - unless @thing.uri.blank?
-        /! .sin-description
-        = render_markdown(@thing.uri)
+    .mdl-cell--12-col
+      .sin-tab-label SPARQL endpoint
+      .sin-tab-text
+        dd
+          - unless @thing.uri.blank?
+            = render_markdown(@thing.uri)
+    
+    hr.mdl-cell--12-col
+    
+    .mdl-cell--12-col
+      .sin-tab-textfield__scroll
   
   hr.sin-invisible-form-separator
   div.mdl-card__actions

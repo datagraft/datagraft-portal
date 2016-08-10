@@ -20,8 +20,8 @@ div[class="mdl-card #{@thing.live? ? '' : 'sin-old-version'}"]
       /! MDL tab panels, is-active to denote currently active
       #endpoint-info-panel.mdl-tabs__panel.is-active
         .mdl-card__supporting-text.sin-padding
-          = render 'show_info_tab'
+          = render 'show_info_panel'
       /! MDL Tab panel 2
       #endpoint-querying-panel.mdl-tabs__panel
         .mdl-card__supporting-text.sin-padding
-          = render 'show_querying_tab'
+          = render 'show_querying_panel'
