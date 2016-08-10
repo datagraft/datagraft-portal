@@ -50,26 +50,10 @@ $dirty-white: #E9ECF6;
 }
 
 .sin-tab-layout > .mdl-grid {
-  & > .sin-tab-title {
-    align-content: center;
-    text-align: center;
-  }
-}
-
-.sin-tab-layout > .mdl-grid {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-content: center;
-  
-  & > .mdl-grid {
-    width: 100%;
-    padding-left: 0px;
-    
-    & > .mdl-cell {
-      margin-left: 0px;
-      padding-left: 0px;
-    }
-  }
+  justify-content: space-around;
 }
 
 .sin-tab-title {
@@ -82,6 +66,10 @@ $dirty-white: #E9ECF6;
   text-align: left;
   padding-top: 8px;
   padding-bottom: 2px;
+}
+
+.sin-tab-text {
+  padding-top: 8px;
 }
 
 .sin-tab-textfield__box {

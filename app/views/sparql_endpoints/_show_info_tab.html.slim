@@ -1,57 +1,44 @@
 /! Tab layout
 .sin-tab-layout
-  /! Date infos
-  div.sin-date-infos
-    = render 'last_modified_div'
-  
-  /! Grid
   .mdl-grid
-    h3.sin-tab-title Endpoint information
+    h3.sin-tab-title.mdl-cell--12-col Endpoint information
+    
+    .mdl-cell--12-col
+      .sin-tab-label Description
+      .sin-tab-textfield__scroll
+        - unless @thing.description.blank?
+          = render_markdown(@thing.description)
 
-    .sin-tab-label Description
-    .sin-tab-textfield__scroll
-      - unless @thing.description.blank?
-        = render_markdown(@thing.description)
-
-    .sin-tab-label Keywords
-    .sin-tab-textfield__colorbox
-      - kwds = @thing.keywords
-      - unless kwds.blank?
-        ul.keyw-array-container
-          - kwds.each do |kwd|
-            li.keyw-array-item 
-              button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
-                = kwd
+    .mdl-cell--12-col
+      .sin-tab-label Keywords
+      .sin-tab-textfield__colorbox
+        - kwds = @thing.keywords
+        - unless kwds.blank?
+          ul.keyw-array-container
+            - kwds.each do |kwd|
+              li.keyw-array-item 
+                button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+                  = kwd
                 
-    .mdl-grid
-      .mdl-cell.mdl-cell--6-col
-        .sin-tab-label License
-        .sin-description
-          - unless @thing.license.blank?
-            = @thing.name
-            | is licensed under 
-            = @thing.license
-      .mdl-cell.mdl-cell--6-col
-        .sin-tab-label SPARQL endpoint information
-        .sin-tab-textfield__box
-          dt Provisioned on:
-          dd
-            = @thing.created_at
-          p
-          dt Size: 
-          dd
-            = @thing.updated_at
-          
-  .mdl-grid
-    .mdl-cell
-      dt License
-      dd
+    .mdl-cell--6-col
+      .sin-tab-label License
+      .sin-tab-text
       - unless @thing.license.blank?
-        .sin-description
-        = render_markdown(@thing.license)
-    .mdl-cell
-      dt SPARQL endpoint information
-  
+        = @thing.name
+        | is licensed under 
+        = @thing.license
+
+    .mdl-cell--6-col 
+      .sin-tab-label SPARQL endpoint information
+      .sin-tab-textfield__box
+        dt Provisioned on:
+        dd
+          = @thing.created_at
+        p
+        dt Size: 
+        dd
+          = @thing.updated_at
+    
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     - if can? :edit, @thing
