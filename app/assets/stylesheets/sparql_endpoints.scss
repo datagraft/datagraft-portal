@@ -25,6 +25,14 @@ $dirty-white: #E9ECF6;
   margin-right: 16px;
 }
 
+.sin-img-license > img {
+  align-self: center;
+  max-width: 100%; 
+  max-height: 100%;
+  margin: auto;
+  display: block;
+}
+
 .keyw-array-container {
   list-style:none;
   display: flex;

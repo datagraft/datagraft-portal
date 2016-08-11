@@ -20,13 +20,18 @@
                 button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
                   = kwd
                 
+    hr.mdl-cell--12-col
+    
     .mdl-cell--6-col
       .sin-tab-label License
+      .sin-img-license
+        - unless @thing.license.blank?
+          = render 'license_logo_div'
       .sin-tab-text
         dd
           - unless @thing.license.blank?
             = @thing.name
-            | is licensed under 
+            |  is licensed under 
             = @thing.license
 
     .mdl-cell--6-col 
