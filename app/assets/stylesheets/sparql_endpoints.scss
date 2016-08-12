@@ -4,6 +4,7 @@
 
 $primary-color: #5264AE;
 $dirty-white: #E9ECF6;
+$accent-color: #FF609A;
 
 .sin-card-layout .mdl-card__supporting-text {
   width: auto;
@@ -23,6 +24,104 @@ $dirty-white: #E9ECF6;
 .sin-card-layout .mdl-card__actions > .mdl-button--raised {
   margin-left: 0px;
   margin-right: 16px;
+}
+
+.sin-card-with-tabs-layout {
+  
+}
+
+.sin-card-with-tabs-title { 
+  background-image: 
+    linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
+    image-url("background_blue_explore_page.jpg");
+  
+  .mdl-card__title {
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  
+  h3, h4 {
+    margin:0;
+    a {
+      color: white;
+      text-decoration: none;
+      &:not(.sin-stars):hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  h3 {
+      margin-top: 2em;
+    }
+
+  h3:before {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+  }
+
+  h4 {
+      font-size: large;
+      text-align: right;
+    }
+  
+  .sin-lock {
+    position:absolute;
+    top: 1em;
+    right: 1em;
+    i.material-icons {
+      font-size: 3em;
+    }
+  }
+
+  .sin-stars {
+    display: inline-block;
+    margin-left: 1em;
+    background: $primary-color;
+    border-radius: 5px;
+    padding: 0px 1em 2px 1em;
+    line-height: 26px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+    i.material-icons {
+      font-size: 16px;
+      position: relative;
+      top: 2px;
+      right: 6px;
+    }
+
+    &.sin-stared i.material-icons {
+      color: $accent-color; 
+    }
+  }
+
+  & > .mdl-tabs__tab-bar {
+    padding-top: 10px;
+    align-self: stretch;
+        
+    a {
+      background: rgba(0, 0, 0, 0.07);
+      width: 50%;
+      font-size: 18px !important;
+      color: $dirty-white !important;
+
+      &.is-active {
+        background: rgba(0,0,0,0.25) !important;
+      }
+    }
+  }
+    
+  & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
+    background: $dirty-white;
+  }
+    
+  & .mdl-tabs__tab.is-active:after {
+    background: $primary-color !important;
+    height: 6px !important;
+  }
 }
 
 .sin-img-license > img {
