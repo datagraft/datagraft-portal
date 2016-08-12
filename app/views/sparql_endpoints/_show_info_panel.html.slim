@@ -27,12 +27,13 @@
       .sin-img-license
         - unless @thing.license.blank?
           = render 'license_logo_div'
-      .sin-tab-text
-        dd
-          - unless @thing.license.blank?
-            = @thing.name
-            |  is licensed under 
-            = @thing.license
+      .sin-tab-text.center
+        - unless @thing.license.blank?
+          = @thing.name
+          | &nbsp;
+          | is licensed under
+          | &nbsp;
+          = @thing.license
 
     .mdl-cell--6-col 
       .sin-tab-label SPARQL endpoint information
