@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
 
   # TODO: there is an intense amount of requests coming to this function - we might want to think to optimise it or throttle the requests
