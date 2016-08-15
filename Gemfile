@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.4'
+gem 'rails', '5.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
@@ -21,10 +21,10 @@ gem 'turbolinks', '~> 5.0.0.beta'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 0.4.1', group: :doc
 
 # Use ActAsTaggableOn for keywords. See https://github.com/mbleigh/acts-as-taggable-on
-gem 'acts-as-taggable-on', '~> 3.4'
+gem 'acts-as-taggable-on', '~> 4.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -91,18 +91,18 @@ gem 'omniauth-twitter'
 gem 'omniauth-github'
 
 # Pagination
-gem 'will_paginate', '~> 3.0.6'
+gem 'will_paginate', '~> 3.1.0'
 
 # Fulltext search
-gem 'textacular', '~> 3.0'
+gem 'textacular', '~> 4.0'
 
 # textacular requires postgresql
 gem 'pg'
 
 # file upload with streaming io
 gem "refile", require: "refile/rails"
-gem "refile-mini_magick"
-gem "refile-s3"
+#gem "refile-mini_magick"
+#gem "refile-s3"
 
 # Generate funny names by default
 gem 'bazaar'
