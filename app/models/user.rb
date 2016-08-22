@@ -25,7 +25,7 @@ class User < ApplicationRecord
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
     in: %w(
-      datagraft
+      datagraft test_user
       data_distribution data_distributions
       filestore filestores
       queriable_data_store queriable_data_stores
