@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_action :authenticate_user_from_token_or_doorkeeper!
-  after_filter :store_location!
+  after_action :store_location!
 
   #check_authorization :unless => :do_not_check_authorization?
 

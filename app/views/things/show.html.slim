@@ -2,11 +2,11 @@
 - setOption :mdlCard
 
 
-div[class="mdl-card #{@thing.live? ? '' : 'sin-old-version'}"]
+div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
   div.mdl-card__title.mdl-color-text--grey-50
     = render 'thing_header' 
   div.sin-date-infos
-    - if @thing.live?
+    - if @thing.paper_trail.live?
       em
         | Last modification #{time_ago_in_words @thing.updated_at} ago
         | &nbsp;-&nbsp; #{@thing.updated_at}
