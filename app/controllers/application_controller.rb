@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
-  before_filter :authenticate_user_from_token_or_doorkeeper!
-  after_filter :store_location!
+  before_action :authenticate_user_from_token_or_doorkeeper!
+  after_action :store_location!
 
   #check_authorization :unless => :do_not_check_authorization?
 
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  before_filter :set_paper_trail_whodunnit
+  before_action :set_paper_trail_whodunnit
 
   protected
 

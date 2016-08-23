@@ -1,0 +1,47 @@
+- unless @thing.description.blank?
+  hr
+dl
+  dt Size (filestores)
+  dd = number_to_human_size @thing.file_size
+  
+  /dt Keywords raw
+  /dd 
+  /  - if @thing.keywords.blank?
+  /    = 'No keywords'
+  /  - else
+  /    = @thing.keywords
+  dt Keywords
+  dd 
+    - kwds = @thing.keywords
+    - unless kwds.blank?
+      ul.keyw-array-container
+        - kwds.each do |kwd|
+          li.keyw-array-item 
+            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+              = kwd
+  /dt Keywords buttons table
+  /dd 
+  /  - kwds = @thing.keywords
+  /  - unless kwds.blank?
+  /    table.mdl-data-table.mdl-js-data-table style="width:100%;" 
+  /      tr
+  /        - kwds.each do |kwd|
+  /          th
+  /            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+  /              = kwd
+  dt Tabular data preview
+  dd 
+    - if @preview_tab_obj == nil
+      = @preview_text
+    - else
+      .container-scroll
+        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%" 
+          - to = @preview_tab_obj
+          - rows = to.last_row
+          - rows = 10 if rows > 10
+          - 1.upto(rows) do |i| 
+            tr
+              - 1.upto(to.last_column) do |j|
+                th = to.cell(i,j)
+
+  hr.sin-invisible-form-separator

@@ -1,0 +1,47 @@
+// Place all the styles related to the sparql_endpoints controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.sin-card-layout .mdl-card__supporting-text {
+  width: auto;
+}
+
+.sin-card-layout .mdl-card__suporting-text .mdl-grid .mdl-cell {
+  width: 90%;
+}
+
+.sin-card-layout .mdl-card__actions {
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.sin-card-layout .mdl-card__actions > .mdl-button--raised {
+  margin-left: 0px;
+  margin-right: 16px;
+}
+
+.keyw-array-container {
+  list-style:none;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
+  flex-wrap: wrap
+} 
+
+.keyword-frame {
+  border: 1px solid rgba(3,3,3,0.2);
+}
+
+.keyword-debug {
+  border: 5px solid rgba(3,3,3,0.2);
+}
+
+.keyw-array-item {
+  padding: 5px;
+}
+ 
+.container-scroll {
+  overflow-x: scroll;
+}

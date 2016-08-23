@@ -54,3 +54,5 @@ sftp-config.json
 
 db/database.yml
 Gemfile.lock
+*.sh
+.byebug_history

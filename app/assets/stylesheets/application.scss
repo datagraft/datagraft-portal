@@ -354,3 +354,49 @@ width: 100%;
 .sin-controller--dashboard.sin-action--index .sin-section-flex {
   display: block;
 }
+
+.sin-input-with-help-icon {
+  display: flex;
+  width: 100%;
+}
+
+.sin-input-with-help-icon .mdl-switch {
+  width: 100px;
+  margin-right: 30px;
+}
+
+.sin-help-icon-with-tooltip {
+  margin-left: -30px;
+  padding-top: 25px;
+  color: rgba(0,0,0,0.3);
+  z-index: 1;
+  cursor: default;
+}
+
+.sin-help-icon-with-tooltip:hover {
+  color: rgba(0,0,0,0.6);
+}
+
+.sin-help-icon-with-tooltip__select {
+  margin-left: -30px;
+  padding-top: 0px;
+  color: rgba(0,0,0,0.3);
+  z-index: 1;
+  cursor: default;
+}
+
+.sin-help-icon-with-tooltip__select:hover {
+  color: rgba(0,0,0,0.6);
+}
+
+.sin-help-icon-with-tooltip__switch {
+  margin-left: 0px;
+  padding-top: 0px;
+  color: rgba(0,0,0,0.3);
+  z-index: 1;
+  cursor: default;
+}
+
+.sin-help-icon-with-tooltip__switch:hover {
+  color: rgba(0,0,0,0.6);
+}

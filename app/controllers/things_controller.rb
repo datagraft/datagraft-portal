@@ -61,7 +61,7 @@ class ThingsController < ApplicationController
     instance_variable_set("@"+virtual_resource_name(true), @thing)
   end
 
-  # POST /:username/:resource/:id
+  # POST /:username/:resource/
   def create
     resource = virtual_resource
     authorize! :create, resource

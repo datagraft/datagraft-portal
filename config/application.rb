@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -26,7 +26,7 @@ module Datagraft
     # config.autoload_paths << Rails.root.join('lib')
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+#    config.active_record.raise_in_transactional_callbacks = true
     config.action_controller.allow_forgery_protection = false
     
     Gravatarify.options[:default] = 'monsterid' # beautiful monsters by default
@@ -34,13 +34,6 @@ module Datagraft
     Gravatarify.options[:secure] = true # security is our primary concern
     Gravatarify.options[:filetype] = :png # png > jpeg for small avatars
     
-    config.middleware.insert_before 0, "Rack::Cors" do
-      allow do
-        origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options, :patch, :put, :delete]
-      end
-    end
-
     config.to_prepare do
         Doorkeeper::ApplicationsController.layout "application" 
         Doorkeeper::AuthorizationsController.layout "application" 

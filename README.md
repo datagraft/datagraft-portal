@@ -1,6 +1,6 @@
-## Datagraft return
+## DataGraft portal
 
-This is a Ruby On Rails implementation of DataGraft.
+Ruby On Rails implementation of the DataGraft portal.
 
 ## How to build
 
