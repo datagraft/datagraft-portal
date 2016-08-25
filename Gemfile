@@ -10,7 +10,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2.1'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
@@ -42,7 +42,7 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 3.3'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
@@ -63,13 +63,13 @@ gem 'devise'
 gem 'cancancan', '~> 1.10'
 
 # ActiveRecord versioning module
-gem 'paper_trail', '~> 4.0.0'
+gem 'paper_trail', '~> 5.2.0'
 
 # Generates good looking URI safe IDs
 gem 'friendly_id', '~> 5.1.0'
 
 # Gravatar is evil
-gem 'gravatarify', '~> 3.0.0'
+gem 'gravatarify', '~> 3.1.1'
 
 # Iori said Slim is better than ERB
 gem 'slim'
@@ -158,5 +158,5 @@ gem 'deep_cloneable', '~> 2.2.0'
 # Feature flippin'
 gem 'flip'
 
-# This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
-gem 'jquery-datatables-rails', '~> 3.3.0'
+# brings back assigns to controller tests as well as assert_template to both controller and integration tests
+gem 'rails-controller-testing'

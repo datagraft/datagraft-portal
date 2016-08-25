@@ -1,4 +1,4 @@
-- if not @transformation.live?
+- if not @transformation.paper_trail.live?
   h3  Diff
   div
     == Diffy::Diff.new(@latest_thing.metadata["description"], @thing.metadata["description"]).to_s(:html)
