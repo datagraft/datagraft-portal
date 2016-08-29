@@ -1,5 +1,5 @@
 class FilestoresController < ThingsController
-  
+
   # GET /publish
   def publish
     authorize! :create, Filestore
@@ -40,17 +40,17 @@ class FilestoresController < ThingsController
     def fill_name_if_empty
       @thing.name = filestore_params[:file].original_filename if @thing.name.blank?
     end
- 
+
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
 
     def open_spreadsheet(file_name_with_ext, file)
       file_path = file.download.path
       case File.extname(file_name_with_ext)
-      when '.csv' then 
+      when '.csv' then
         case @thing.separator
         when "COMMA" then
           sep = ","
@@ -64,15 +64,15 @@ class FilestoresController < ThingsController
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::CSV.new(file_path, { csv_options: {col_sep: sep}, file_warning: :ignore})
         @preview_tab_obj
-      when '.xls' then 
+      when '.xls' then
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::Excel.new(file_path, file_warning: :ignore)
-      when '.xlsx' then 
+      when '.xlsx' then
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::Excelx.new(file_path, file_warning: :ignore)
-      else 
+      else
         @preview_text = "Unknown file type: #{file_name_with_ext}"
       end
-    end  
-  
+    end
+
 end

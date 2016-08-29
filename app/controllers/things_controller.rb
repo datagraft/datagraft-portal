@@ -137,7 +137,7 @@ class ThingsController < ApplicationController
   end
 
   # POST /:username/:resource/:id/unstar
-  def unstar 
+  def unstar
     authenticate_user!
     authorize! :read, @thing
     current_user.unstar(@thing)
@@ -152,7 +152,7 @@ class ThingsController < ApplicationController
     authenticate_user!
     authorize! :read, @thing
     @thing = @thing.fork(current_user)
-    
+
     respond_to do |format|
       if @thing.save
         format.html { redirect_to thing_path(@thing), notice: unstar_notice }
@@ -234,7 +234,7 @@ class ThingsController < ApplicationController
 
   def virtual_resource_name(underscore = false)
     name = /^(.+)Controller$/.match(self.class.name)[1].singularize
-    underscore ? name.underscore : name 
+    underscore ? name.underscore : name
   end
 
   def virtual_resources_name
@@ -260,7 +260,7 @@ class ThingsController < ApplicationController
   def star_notice
     'Successfully starred asset!'
   end
-  
+
   def unstar_notice
     'Successfully un-starred asset!'
   end
@@ -268,7 +268,7 @@ class ThingsController < ApplicationController
   def cannot_save_metadata_notice
     'Unable to save the metadata'
   end
-  
+
   def not_found
     raise ActionController::RoutingError.new('Not Found')
   end
@@ -320,7 +320,7 @@ class ThingsController < ApplicationController
     data = request.raw_post
 
     begin
-      data = JSON.parse(data)    
+      data = JSON.parse(data)
     rescue JSON::ParserError => e
       # Automatically convert few json types
       if data == 'true'
@@ -362,6 +362,6 @@ class ThingsController < ApplicationController
       render json: @thing.errors, status: :unprocessable_entity
     end
   end
-  
-  
+
+
 end
