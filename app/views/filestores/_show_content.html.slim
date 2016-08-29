@@ -1,59 +1,67 @@
 - unless @thing.description.blank?
   hr
 dl
-  dt Size (filestores)
-  dd = number_to_human_size @thing.file_size
-  
+
+  dt Tabular data preview
+  dd
+    - if @preview_tab_obj == nil
+      = @preview_text
+    - else
+      .container-scroll
+        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
+          - to = @preview_tab_obj
+          - rows = to.last_row
+          - rows = 10 if rows > 10
+          - 1.upto(rows) do |i|
+            tr
+              - 1.upto(to.last_column) do |j|
+                th = to.cell(i,j)
+  - unless @thing.file_content_type == nil
+    dt Content-type
+    dd = @thing.file_content_type
+    - if @thing.file_content_type.start_with? 'image/'
+      dt Preview
+      dd
+        br
+        = link_to attachment_url(@thing, :file) do
+          = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
+
   /dt Keywords raw
-  /dd 
+  /dd
   /  - if @thing.keywords.blank?
   /    = 'No keywords'
   /  - else
   /    = @thing.keywords
   dt Keywords
-  dd 
+  dd
     - kwds = @thing.keywords
     - unless kwds.blank?
       ul.keyw-array-container
         - kwds.each do |kwd|
-          li.keyw-array-item 
-            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+          li.keyw-array-item
+            button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
               = kwd
   /dt Keywords buttons table
-  /dd 
+  /dd
   /  - kwds = @thing.keywords
   /  - unless kwds.blank?
-  /    table.mdl-data-table.mdl-js-data-table style="width:100%;" 
+  /    table.mdl-data-table.mdl-js-data-table style="width:100%;"
   /      tr
   /        - kwds.each do |kwd|
   /          th
-  /            button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+  /            button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
   /              = kwd
-  dt Tabular data preview
-  dd 
-    - if @preview_tab_obj == nil
-      = @preview_text
-    - else
-      .container-scroll
-        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%" 
-          - to = @preview_tab_obj
-          - rows = to.last_row
-          - rows = 10 if rows > 10
-          - 1.upto(rows) do |i| 
-            tr
-              - 1.upto(to.last_column) do |j|
-                th = to.cell(i,j)
-  dt Content-type
-  dd = @thing.file_content_type
-  - if @thing.file_content_type.start_with? 'image/'
-    dt Preview
-    dd
-      br
-      = link_to attachment_url(@thing, :file) do
-        = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
+
+  - byebug
+  dt Download links
+  dd
+    = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"
+
+  dt Size (filestores)
+  dd = number_to_human_size @thing.file.size
+
+
 br
 
 .mdl-grid
   = link_to "Transform", 'perdu.com', class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-cell mdl-cell--3-col"
-
-  = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"
