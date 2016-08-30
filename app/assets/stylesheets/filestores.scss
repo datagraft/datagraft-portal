@@ -3,25 +3,25 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-.keyw-array-container {
+.filestore-array-container {
   list-style:none;
-  
+
   display: flex;
-  
+
   -webkit-flex-flow: row wrap;
   justify-content: flex-start;
   flex-wrap: wrap
 }
 
-.keyword-frame {
-  border: 1px solid rgba(3,3,3,0.2);
-}
+//.keyword-frame {
+//  border: 1px solid rgba(3,3,3,0.2);
+//}
 
-.keyword-debug {
-  border: 5px solid rgba(3,3,3,0.2);
-}
+//.keyword-debug {
+//  border: 5px solid rgba(3,3,3,0.2);
+//}
 
-.keyw-array-item {
+.filestore-array-item {
   padding: 5px;
 }
 
@@ -30,8 +30,8 @@
 }
 
 table.table { width: 100%; }
-.table tr { 
-  display: flex; 
+.table tr {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: 0.5em 0;
@@ -40,4 +40,3 @@ table.table { width: 100%; }
 .table td, th {
   border: 0.5px solid rgba(3,3,3,0.2);
 }
-

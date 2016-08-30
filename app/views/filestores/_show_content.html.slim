@@ -1,5 +1,15 @@
 - unless @thing.description.blank?
   hr
+
+- kwds = @thing.keywords
+- unless kwds.blank?
+  ul.filestore-array-container
+    - kwds.each do |kwd|
+      li.filestore-array-item
+        button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
+          = kwd
+  hr
+
 dl
 
   dt Tabular data preview
@@ -26,36 +36,15 @@ dl
         = link_to attachment_url(@thing, :file) do
           = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
 
-  /dt Keywords raw
-  /dd
-  /  - if @thing.keywords.blank?
-  /    = 'No keywords'
-  /  - else
-  /    = @thing.keywords
-  dt Keywords
-  dd
-    - kwds = @thing.keywords
-    - unless kwds.blank?
-      ul.keyw-array-container
-        - kwds.each do |kwd|
-          li.keyw-array-item
-            button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
-              = kwd
-  /dt Keywords buttons table
-  /dd
-  /  - kwds = @thing.keywords
-  /  - unless kwds.blank?
-  /    table.mdl-data-table.mdl-js-data-table style="width:100%;"
-  /      tr
-  /        - kwds.each do |kwd|
-  /          th
-  /            button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
-  /              = kwd
-
   dt Download links
   dd
-    = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"
-
+    .mdl-grid
+      .mdl-cell.mdl-cell--2-col
+        = 'Download link'
+      .mdl-cell.mdl-cell--6-col
+        = truncate(attachment_url(@thing, :file), length:40)
+      .mdl-cell.mdl-cell--2-col
+        = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
   dt Size (filestores)
   dd = number_to_human_size @thing.file.size
 

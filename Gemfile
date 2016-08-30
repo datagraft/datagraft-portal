@@ -165,3 +165,6 @@ gem 'roo-google'
 
 # brings back assigns to controller tests as well as assert_template to both controller and integration tests
 gem 'rails-controller-testing'
+
+#The ZeroClipboard library provides an easy way to copy text to the clipboard
+gem 'zeroclipboard-rails'

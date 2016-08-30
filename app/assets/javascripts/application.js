@@ -17,6 +17,7 @@
 //= require cocoon
 //= require material
 //= require jquery.gridster.js
+//= require zeroclipboard
 
 
 document.addEventListener('turbolinks:load', function() {
