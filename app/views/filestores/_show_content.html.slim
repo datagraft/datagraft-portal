@@ -42,9 +42,15 @@ dl
       .mdl-cell.mdl-cell--2-col
         = 'Download link'
       .mdl-cell.mdl-cell--6-col
-        = truncate(attachment_url(@thing, :file), length:40)
+        = truncate(attachment_url(@thing, :file), length:60)
+
       .mdl-cell.mdl-cell--2-col
-        = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
+        .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file)}"
+          i.material-icons content_copy
+
+      .mdl-cell.mdl-cell--2-col
+        = link_to attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
+          i.material-icons file_download
   dt Size (filestores)
   dd = number_to_human_size @thing.file.size
 
