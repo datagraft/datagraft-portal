@@ -28,8 +28,11 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   end
   
   # GET /:username/:resource/new
-  test "should get new" do
-    get :new, params: {username: @user.username, resource: 'sparql_endpoints' }
+  test "should get new sparql endpoint" do
+    get :new, params: {
+      username: @user.username, 
+      resource: 'sparql_endpoints' 
+    }
     assert_response :success
   end
   
@@ -48,7 +51,7 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
         }
       }
     end
-    assert_redirected_to sparql_endpoint_path(assigns(:sparql_endpoint))
+    assert_redirected_to thing_path(assigns(:sparql_endpoint))
   end
 =end
   
@@ -57,8 +60,48 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
     get :show, params: { 
       username: @user.username,
       resource: 'sparql_endpoints',
-      id: @se.id }
+      id: @se.id 
+    }
     assert_response :success
+  end
+  
+  # GET /:username/:resource/:id/edit
+  test "should get edit sparql endpoint" do
+    get :edit, params: {
+      username: @user.username,
+      resource: 'sparql_endpoints',
+      id: @se.id
+    }
+    assert_response :success
+  end
+
+  # PATH/PUT /:username/:resource/:id
+  test "should update sparql endpoint" do
+    patch :update, params: {
+      username: @user.username, 
+      resource: 'sparql_endpoints',
+      id: @se.id,
+      sparql_endpoint: {
+        public: @se_public, 
+        name: @se_name, 
+        description: @se_description, 
+        license: @se_license, 
+        keyword_list: @se_keyword_list
+      }
+    }
+    assert_redirected_to thing_path(assigns(:sparql_endpoint))
+  end
+
+  # DELETE /:username/:resource/:id
+  test "should delete sparql endpoint" do
+    assert_difference('SparqlEndpoint.count', -1) do
+      delete :destroy, params: { 
+        username: @user.username, 
+        resource: 'sparql_endpoints', 
+        id: @se.id 
+      }
+    end
+    assert_redirected_to things_path(@se)
   end
   
 end
