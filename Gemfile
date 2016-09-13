@@ -100,7 +100,7 @@ gem 'textacular', '~> 4.0'
 gem 'pg'
 
 # file upload with streaming io
-gem "refile", require: "refile/rails"
+gem "refile", '~> 0.6.2',require: "refile/rails", :git => 'https://github.com/manfe/refile.git'
 #gem "refile-mini_magick"
 #gem "refile-s3"
 
