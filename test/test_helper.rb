@@ -6,8 +6,8 @@ require 'rails/test_help'
 module SignInHelper
   # creates a new user for testing purposes
   def create_test_user_if_not_exists
-    if not user = User.find_by_username('test_user')
-      user = User.new({:username => "test_user", :name => "tester",:email => "test@test.testtest", :password => "test", :password_confirmation => "test", :terms_of_service => true}) unless user = User.find_by_username('test_user')
+    if not user = User.find_by_username('datagraft_test_user')
+      user = User.new({:username => "datagraft_test_user", :name => "tester",:email => "test@test.testtest", :password => "test1234", :password_confirmation => "test1234", :terms_of_service => true}) unless user = User.find_by_username('datagraft_test_user')
       user.save(:validate => false) 
     end
     
