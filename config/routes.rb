@@ -80,7 +80,7 @@ Rails.application.routes.draw do
       datagraft_resources :queriable_data_stores
     end
 
-    
+
     if Flip.on? :utility_functions
       datagraft_resources :utility_functions
     end
@@ -90,7 +90,7 @@ Rails.application.routes.draw do
 
   get 'api_keys/first' => 'api_keys#first'
   resources :api_keys
-  
+
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
   get 'publishfilestore' => 'filestores#publish'
@@ -109,6 +109,9 @@ Rails.application.routes.draw do
   # TODO REMOVE THIS LATER ?
   get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
 
+
+  # Public static resources
+  get 'terms-of-use' => 'public_portal#terms'
 
   get ':username' => 'public_portal#user'
   # resources :transformations

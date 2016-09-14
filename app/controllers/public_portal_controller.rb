@@ -1,8 +1,12 @@
 class PublicPortalController < ApplicationController
   before_action :set_user, only: [:user]
-  skip_authorize_resource only: [:user, :explore]
+  skip_authorize_resource only: [:user, :explore, :terms]
   skip_authorization_check
 
+  # GET /terms-of-use
+  def terms
+    render template: 'public_portal/terms_of_use'
+  end
 
   # GET /:username
   # GET /:username.json
@@ -72,6 +76,7 @@ class PublicPortalController < ApplicationController
     end
     # render layout: "explore"
   end
+
 
   private
 
