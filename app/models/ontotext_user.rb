@@ -11,12 +11,15 @@ module OntotextUser
       end
     end
 
+    # Register new ontotext account
     def register_ontotext_account
       return if has_ontotext_account
 
-      # We generate a random token so the process
-      # should still work after a failure or if two
-      # concurrents registration happen
+      # We generate a random token so the process should still work after a failure
+      # or if two concurrents registration happen.
+      # The Ontotext db requires both usernames and emails to be unique.
+      # Thus we need the random token to ensure uniqueness of these.
+      # We should ask Ontotext to remove the uniqeness requirement for emails.
       account_token = rand(1..100000000).to_i
 
       conn = new_api_connexion
@@ -29,7 +32,7 @@ module OntotextUser
           password: encrypted_password,
           name: name,
           role: 'rails wrapper',
-          # email: username+'_'+account_token.to_s+'@datagraft.net'
+          # email: self.email
           email: 'a.pultier+'+account_token.to_s+'@gmail.com'
           }.to_json
         puts req.body
@@ -46,8 +49,8 @@ module OntotextUser
       conn
     end
 
+    # Create an ontotext connection
     def ontotext_connexion(use_api_key = false)
-
       unless has_ontotext_account
         conn = register_ontotext_account
         return conn unless use_api_key
@@ -78,6 +81,7 @@ module OntotextUser
       conn
     end
 
+    # Ontotext declaration
     def ontotext_declaration
       {
         dcat:'http://www.w3.org/ns/dcat#',
@@ -157,7 +161,7 @@ module OntotextUser
         #throw req.body
       end
 
-      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body) unless resp_dataset.status.between?(200, 299)
+      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status) unless resp_dataset.status.between?(200, 299)
 
       json_dataset = JSON.parse(resp_dataset.body)
 
@@ -203,4 +207,39 @@ module OntotextUser
     connect = ontotext_connexion(true)
     connect.delete qds.uri
   end
+  
+  # Get the size of the repository
+  def get_ontotext_repository_size(uri)
+    connect = ontotext_connexion(true)
+    resp_size = connect.get do |req|
+      req.url uri+'/size'
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.options.timeout = 720
+    end  
+    
+    throw ("Unable to get size of the Ontotext Repository - " + resp_size.body + " - " + resp_size.status) unless 
+    resp_size.status.between?(200, 299)
+    
+    return resp_size.body
+  end
+  
+  # Get login status
+  def get_login_status
+    connect = ontotext_connexion(true)
+    resp_status = connect.get do |req|
+      req.url '/accounts/login_status'
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.options.timeout = 720
+    end
+    
+    throw ("Unable to get the login status - " + resp_status.body + " - " + resp_status.status) unless resp_status.status.between?(200, 299)
+    
+    return resp_status.body
+  end
+      
+  # Delete ontotext account
+  def delete_ontotext_account
+    
+  end
+  
 end
