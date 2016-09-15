@@ -26,5 +26,16 @@ class SparqlEndpoint < Thing
     attribute_will_change!('uri') if uri != val
     metadata["uri"] = val
   end
-
+  
+  def size
+    if self.user.nil?
+      0
+    else
+      1
+#    user = self.find(:user)
+#      user = self.user
+#      user.send(get_ontotext_repository_size(@thing.uri))
+    end
+  end
+  
 end

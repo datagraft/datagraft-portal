@@ -4,4 +4,8 @@ module SparqlEndpointsHelper
     return "/"+current_user.username+"/sparql_endpoints/new#{ "?#{parameters.to_query}" if parameters.present? }"
   end
 
+  def repository_size
+    current_user.get_ontotext_repository_size(@thing.uri)
+  end
+  
 end
