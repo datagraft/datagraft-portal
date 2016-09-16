@@ -34,7 +34,7 @@ module OntotextUser
           role: 'rails wrapper',
           # email: self.email
           email: 'a.pultier+'+account_token.to_s+'@gmail.com'
-          }.to_json
+        }.to_json
         puts req.body
       end
 
@@ -43,7 +43,43 @@ module OntotextUser
         save!
       else 
         puts resp.body
-        throw "Unable to register an Ontotext User"
+        throw "Unable to register an Ontotext user"
+      end
+
+      conn
+    end
+
+    # Register new ontotext test account (only used for testing)
+    def register_ontotext_test_account
+      return if has_ontotext_account
+
+      # The Ontotext db requires both usernames and emails to be unique.
+      # In the register ontotext account method we generate a random token 
+      # to ensure uniqueness of these. For the test user we set a fixed token.
+      account_token = 100000003
+
+      conn = new_api_connexion
+      resp = conn.post do |req|
+        req.options[:timeout] = 5 
+        req.url '/dapaas-management-services/api/accounts'
+        req.headers['Content-Type'] = 'application/json'
+        req.body = {
+          username: username+'_'+account_token.to_s,
+          password: password,
+          name: name,
+          role: 'rails wrapper',
+          # email: self.email
+          email: 'a.pultier+'+account_token.to_s+'@gmail.com'
+        }.to_json
+        puts req.body
+      end
+
+      if resp.status.between?(200, 299)
+        self.ontotext_account = account_token
+        save!
+      else 
+        puts resp.body
+        throw "Unable to register an Ontotext test user"
       end
 
       conn
@@ -71,7 +107,7 @@ module OntotextUser
           req.body = {
             username: username+'_'+self.ontotext_account.to_s,
             password: encrypted_password
-            }.to_json
+          }.to_json
         end
 
         # throw resp.headers
@@ -96,6 +132,7 @@ module OntotextUser
     end
 
   public
+    # Get ontotext api keys 
     def ontotext_api_keys
       lol = ontotext_connexion.get do |req|
         req.url '/dapaas-management-services/api/api_keys'
@@ -104,6 +141,7 @@ module OntotextUser
       # throw lol.status
     end
 
+    # Create new ontotext api key
     def new_ontotext_api_key(temporary=false)
       url = '/dapaas-management-services/api/api_keys'
       url += '/temporary' if temporary
@@ -118,12 +156,14 @@ module OntotextUser
       JSON.parse resp.body
     end
 
+    # Delete ontotext api key
     def delete_ontotext_api_key(key)
       resp = ontotext_connexion.delete do |req|
         req.url '/dapaas-management-services/api/api_keys/'+key
       end
     end
 
+    # Enable ontotext api key
     def enable_ontotext_api_key(key)
       resp = ontotext_connexion.put do |req|
         req.headers['Content-Type'] = 'application/json'
@@ -131,6 +171,7 @@ module OntotextUser
       end
     end
 
+    # Disable ontotext api key
     def disable_ontotext_api_key(key)
       resp = ontotext_connexion.put do |req|
         req.headers['Content-Type'] = 'application/json'
@@ -138,10 +179,12 @@ module OntotextUser
       end
     end
 
+    # Check if user has ontotext account
     def has_ontotext_account
       ontotext_account != 0
     end
 
+    # Create new ontotext repository
     def new_ontotext_repository(qds)
       pname = qds[:name].parameterize
       today = Time.now.to_s.slice(0,10)
@@ -203,6 +246,7 @@ module OntotextUser
       return json_repository['access-url']
   end
 
+  # Delete ontotext repository
   def delete_ontotext_repository(qds)
     connect = ontotext_connexion(true)
     connect.delete qds.uri
@@ -224,22 +268,66 @@ module OntotextUser
   end
   
   # Get login status
-  def get_login_status
-    connect = ontotext_connexion(true)
-    resp_status = connect.get do |req|
-      req.url '/accounts/login_status'
+  def get_login_status(connect)
+    resp = connect.get do |req|
+      req.url '/dapaas-management-services/api/accounts/login_status'
       req.headers['Content-Type'] = 'application/ld+json'
       req.options.timeout = 720
     end
     
-    throw ("Unable to get the login status - " + resp_status.body + " - " + resp_status.status) unless resp_status.status.between?(200, 299)
+    throw ("Unable to get the login status - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
     
-    return resp_status.body
+    return resp.body
   end
-      
+
+  # Ontotext login
+  def ontotext_login
+    connect = new_api_connexion
+
+    resp = connect.put do |req|
+      req.url '/dapaas-management-services/api/accounts/login'
+      req.headers['Content-Type'] = 'application/json'
+      req.body = {
+        username: username+'_'+self.ontotext_account.to_s,
+        password: encrypted_password
+      }.to_json
+    end
+
+    throw ("Unable to login - " + resp.status.to_s) unless resp.status.between?(200, 299)
+
+    return connect
+  end
+
+=begin
+  # Delete ontotext account
+  def delete_ontotext_account(connect)
+    resp = connect.delete do |req|
+      req.url '/dapaas-management-services/api/accounts'
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.options.timeout = 720
+    end
+    
+    throw ("Unable to delete Ontotext account - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
+    
+    return resp.body    
+  end
+=end
+  
   # Delete ontotext account
   def delete_ontotext_account
+    # Logs in the ontotext user
+    connect = ontotext_connexion(false)
+
+    # Deletes the ontotext user account
+    resp = connect.delete do |req|
+      req.url '/dapaas-management-services/api/accounts'
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.options.timeout = 720
+    end
     
+    throw ("Unable to delete Ontotext account - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
+    
+    return resp.body    
   end
-  
+
 end
