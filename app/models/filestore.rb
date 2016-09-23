@@ -26,9 +26,43 @@ class Filestore < Thing
 #    metadata['keyword'] = JSON.parse keyw_array
 #  end
 
+  def upload_filename
+    if metadata.blank?
+      ret = ""
+    else
+      ret = metadata['upload_filename']
+      if ret.blank?
+        ret = ""
+      end
+    end
+    return ret # Assure that ret is returned
+  end
+
+  def upload_filename=(name)
+    touch_metadata!
+    metadata['upload_filename'] = name
+  end
+
+  def upload_format
+    if metadata.blank?
+      ret = ""
+    else
+      ret = metadata['upload_format']
+      if ret.blank?
+        ret = ""
+      end
+    end
+    return ret # Assure that ret is returned
+  end
+
+  def upload_format=(format)
+    touch_metadata!
+    metadata['upload_format'] = format
+  end
+
   def separator
     if metadata.blank?
-      ret = Array.new
+      ret = "COMMA"
     else
       ret = metadata['csv_separator']
       if ret.blank?

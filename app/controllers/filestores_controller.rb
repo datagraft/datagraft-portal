@@ -17,7 +17,7 @@ class FilestoresController < ThingsController
     @preview_tab_obj = nil
     if @thing.file.exists?
       @preview_text = "This file is available"
-      open_spreadsheet(@thing.name, @thing.file)
+      open_spreadsheet(@thing.upload_format, @thing.file)
     else
       @preview_text = "This file is NOT available"
     end
@@ -39,6 +39,17 @@ class FilestoresController < ThingsController
 
     def fill_name_if_empty
       @thing.name = filestore_params[:file].original_filename if @thing.name.blank?
+
+      if @thing.upload_filename.blank?
+        # Store the original filename sections to use for upload
+        tmp_name = filestore_params[:file].original_filename
+        format_with_dot = File.extname(tmp_name)
+        filename_base = File.basename(tmp_name, format_with_dot)
+        @thing.upload_filename = filename_base
+
+        format_no_dot = format_with_dot.slice(1, format_with_dot.length)
+        @thing.upload_format = format_no_dot  if  @thing.upload_format.blank?
+      end
     end
 
   private
@@ -47,10 +58,10 @@ class FilestoresController < ThingsController
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
 
-    def open_spreadsheet(file_name_with_ext, file)
+    def open_spreadsheet(format, file)
       file_path = file.download.path
-      case File.extname(file_name_with_ext)
-      when '.csv' then
+      case format
+      when 'csv' then
         case @thing.separator
         when "COMMA" then
           sep = ","
@@ -64,14 +75,14 @@ class FilestoresController < ThingsController
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::CSV.new(file_path, { csv_options: {col_sep: sep}, file_warning: :ignore})
         @preview_tab_obj
-      when '.xls' then
+      when 'xls' then
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::Excel.new(file_path, file_warning: :ignore)
-      when '.xlsx' then
+      when 'xlsx' then
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::Excelx.new(file_path, file_warning: :ignore)
       else
-        @preview_text = "Unknown file type: #{file_name_with_ext}"
+        @preview_text = "Unknown file format: #{format}"
       end
     end
 
