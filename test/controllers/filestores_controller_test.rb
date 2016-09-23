@@ -9,10 +9,12 @@ class FilestoresControllerTest < ActionController::TestCase
     sign_in @user
 
     # use a filestore for testing
-    @filestore = Filestore.new
-    @filestore.user = @user
-    # TODO - Add a file here
-    @filestore.save(:validate => false)
+    @filestore = create_test_filestore_if_not_exists
+
+    puts "Setup all users"
+    puts User.all.inspect
+    puts "Setup all filestores"
+    puts Filestore.all.inspect
   end
 
   test "should get index" do
