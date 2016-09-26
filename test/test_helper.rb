@@ -19,13 +19,16 @@ end
 module FilestoreHelper
   # Uploads a new file if not already there
   def create_test_filestore_if_not_exists
-    byebug
-    if Filestore.exists?('test.xls')
+    if Filestore.exists?(name: 'test.xls')
       # Record exists ... nothing to do
+      puts "Found test filestore"
     else
+      puts "Creating test filestore"
       test_file = fixture_file_upload("/files/test.xls", "application/vnd.ms-excel", :binary)
-      post :create, params: {:controller => "filestores", :filestore => 'dummy', :username => @user.username, :file => test_file }
+      post :create, params: { username: @user.username, filestore: { file: test_file }}
     end
+    fs = Filestore.where(name: 'test.xls')
+    return fs
 
   end
 end
