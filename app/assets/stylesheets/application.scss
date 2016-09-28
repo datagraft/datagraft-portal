@@ -24,9 +24,14 @@ $accent-color: #FF609A;
 
 html, body.mdl-base {
   font-family: Roboto, Helvetica, Arial, sans-serif;
+  text-align: justify;
 
   h1, h2, h3, h4, h5, h6, .mdl-button, .mdl-layouti__header {
     font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  }
+  li {
+    padding-inline-start: 10px;
+    margin-left: 15px;
   }
 }
 

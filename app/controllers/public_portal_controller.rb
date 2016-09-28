@@ -1,11 +1,21 @@
 class PublicPortalController < ApplicationController
   before_action :set_user, only: [:user]
-  skip_authorize_resource only: [:user, :explore, :terms]
+  skip_authorize_resource only: [:user, :explore, :terms, :privacy, :faq]
   skip_authorization_check
 
   # GET /terms-of-use
   def terms
     render template: 'public_portal/terms_of_use'
+  end
+
+  # GET /privacy-policy
+  def privacy
+    render template: 'public_portal/privacy_policy'
+  end
+
+  # GET /faq
+  def faq
+    render template: 'public_portal/faq'
   end
 
   # GET /:username

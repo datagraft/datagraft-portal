@@ -89,10 +89,8 @@ html
           footer.mdl-mini-footer.sin-mini-footer
             .mdl-mini-footer__left-section
               ul.mdl-mini-footer__link-list
-                li 
-                  a href="//datagraft.net/news" News
-                li
-                  a href="//datagraft.net/documentation" Documentation
+                li News
+                li Documentation
                 li API
                 li Feedback
             .sin-mini-footer__small-print
@@ -101,6 +99,8 @@ html
               ul.mdl-mini-footer__link-list
                 li 
                   =link_to "Terms Of Use", terms_of_use_path
-                li Privacy Policy
+                li 
+                  =link_to "Privacy Policy", privacy_policy_path
                 li Cookie Policy
-                li FAQ
+                li 
+                  =link_to "FAQ", faq_path

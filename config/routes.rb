@@ -113,6 +113,10 @@ Rails.application.routes.draw do
   # Public static resources
   get 'terms-of-use' => 'public_portal#terms'
 
+  get 'privacy-policy' => 'public_portal#privacy'
+
+  get 'faq' => 'public_portal#faq'
+
   get ':username' => 'public_portal#user'
   # resources :transformations
   # resources :stars
