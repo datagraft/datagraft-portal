@@ -4,11 +4,11 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
   include ThingHelper
   setup do
-    # Create a test user
+    # Create a test user if it doesn't exist and sign in
     @user = create_test_user_if_not_exists
     sign_in @user
     
-    # Use a sparql endpoint for testing
+    # Create a sparql endpoint for testing
     @se = SparqlEndpoint.new
     @se.user = @user
     @se.save(:validate => false)
@@ -37,6 +37,7 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   end
   
 =begin
+  # TODO: Needs a test user with ontotext account to be able to create the SPARQL endpoint (Ontotext API)
   # POST /:username/:resource/
   test "should create sparql endpoint" do
     assert_difference('SparqlEndpoint.count') do
@@ -55,6 +56,8 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   end
 =end
   
+=begin
+  # TODO: Needs a test user with ontotext account to be able to get size of SPARQL endpoint (Ontotext API)
   # GET /:username/:resource/:id
   test "should show sparql endpoint" do
     get :show, params: { 
@@ -64,6 +67,7 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
     }
     assert_response :success
   end
+=end
   
   # GET /:username/:resource/:id/edit
   test "should get edit sparql endpoint" do

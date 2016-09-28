@@ -9,9 +9,27 @@
         dd
           - unless @thing.uri.blank?
             = render_markdown(@thing.uri)
-    
+        
     hr.mdl-cell--12-col
+
+    .mdl-cell--12-col
+      .mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
+        i.material-icons add circle
     
+    .sin-expandable-search.mdl-cell--8-col
+      i.material-icons search
+      form action="#" 
+        input placeholder="Search in queries" size="1" type="text" /
+      
+    .mdl-cell--4-col
+      label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-1" 
+        input#checkbox-1.mdl-checkbox__input checked="checked" type="checkbox" /
+        .mdl-checkbox__label Include all public queries
+    
+    .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
+          
+    hr.mdl-cell--12-col
+
     .mdl-cell--12-col
       .sin-tab-textfield__scroll
   
