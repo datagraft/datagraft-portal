@@ -160,3 +160,6 @@ gem 'flip'
 
 # brings back assigns to controller tests as well as assert_template to both controller and integration tests
 gem 'rails-controller-testing'
+
+# Prometheus metrics framework
+gem 'prometheus-client'
