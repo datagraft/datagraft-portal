@@ -1,0 +1,4 @@
+= form_for @filewizard, url: wizard_path do |f|
+  = yield f
+  .actions
+    = f.submit "Continue"
