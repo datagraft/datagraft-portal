@@ -3,18 +3,36 @@
   .mdl-grid
     h3.sin-tab-title.mdl-cell--12-col Query SPARQL endpoint
 
-    .mdl-cell--12-col
-      .sin-tab-label SPARQL endpoint
-      .sin-tab-text
-        dd
-          - unless @thing.uri.blank?
-            = render_markdown(@thing.uri)
+    .sin-endpoint-uri.mdl-cell--12-col
+      .sin-tab-label SPARQL endpoint:
+      .sin-tab-textfield__box
+        - unless @thing.uri.blank?
+          = render_markdown(@thing.uri)
+      .mdl-button
+        i.material-icons description
         
-    hr.mdl-cell--12-col
+    .sin-cell-with-add-button.mdl-cell--12-col
+      hr
+      = simple_form_for @thing, url: thing_path(@thing) do |f|
+        = f.simple_fields_for :queries do |p|
+          = render 'query_fields', f: p
+        .links.sin-nested-links
+          = link_to_add_association f, :queries, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
+            i.material-icons add
 
-    .mdl-cell--12-col
-      .mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
-        i.material-icons add circle
+      //.sin-add-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
+        = link_to thing_edit_path(@thing) do
+          i.material-icons add circle
+        
+      //i.material-icons add circle
+      //  = button_to "add f01a", send(:"f01a_foods_path", id: @user.id), class: "f01a btn btn-large btn-primary"
+      //= link_to 'Edit', thing_edit_path(@thing), :class => ".mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary"
+      //input onclick=("window.location = '/publish'") type="button"
+      
+      //.sin-add-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
+        //i.material-icons add circle
+        //input onclick=("window.location = '/publish'") type="button"
+          //== link_to, thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     
     .sin-expandable-search.mdl-cell--8-col
       i.material-icons search
@@ -29,9 +47,46 @@
     .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
           
     hr.mdl-cell--12-col
+  
+    .mdl-cell--12-col
+      .container
+        .collapse-card
+          .title
+            i.material-icons.md-48 help
+            span 
+              = link_to 'Run', query_execute_path(@thing, @thing), method: :post, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+            strong
+              font size="5" Query name
+            strong
+              | Last modified...
+          .body
+            .sin-tab-textfield__box
+              | query description text - the quick brown fox jumped over the lazy dog
+            br
+            .sin-tab-textfield__scroll
+              | SPARQL query - SELECT ...
+          
+    .mdl-cell--12-col
+      .container
+        .collapse-card
+          .title
+            i.material-icons.md-48 help
+            span 
+              = link_to 'Run', query_execute_path(@thing, @thing), method: :post, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+            strong
+              font size="5" Query name
+            strong
+              | Last modified...
+          .body
+            .sin-tab-textfield__box
+              | query description text - the quick brown fox jumped over the lazy dog
+            br
+            .sin-tab-textfield__scroll
+              | SPARQL query - SELECT ...
 
     .mdl-cell--12-col
       .sin-tab-textfield__scroll
+          
   
   hr.sin-invisible-form-separator
   div.mdl-card__actions

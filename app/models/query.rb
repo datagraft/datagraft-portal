@@ -5,6 +5,9 @@ class Query < Thing
   has_many :queriable_data_store_queries
   has_many :queriable_data_stores, :through => :queriable_data_store_queries
   
+  has_many :sparql_endpoint_queries
+  has_many :sparql_endpoints, :through => :sparql_endpoint_queries
+  
   validates_presence_of :query
 
   @@allowed_languages = %w(SPARQL SQL R whatever)
@@ -12,6 +15,7 @@ class Query < Thing
 
   validates :language, presence: true, inclusion: {in: @@allowed_languages}
   accepts_nested_attributes_for :queriable_data_stores
+  accepts_nested_attributes_for :sparql_endpoints
 
   def should_generate_new_friendly_id?
     name_changed? || super

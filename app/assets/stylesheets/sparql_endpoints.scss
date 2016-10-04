@@ -165,6 +165,7 @@ $accent-color: #FF609A;
 
 .sin-tab-title {
   text-align: center; 
+  margin-top: 0;
 }
 
 .sin-tab-label {
@@ -247,6 +248,40 @@ $accent-color: #FF609A;
   }
 }
 
+.sin-endpoint-uri {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sin-endpoint-uri .sin-tab-label,
+.sin-endpoint-uri .sin-tab-text,
+.sin-endpoint-uri .mdl-button {
+  padding: 2px;
+  min-width: 0;
+}
+
+.sin-endpoint-uri .sin-tab-textfield__box {
+  height: 24px;
+  width: 70%;
+  overflow-x: hidden;
+  text-overflow: clip;
+}
+
+.sin-cell-with-add-button {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  vertical-align: middle;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.sin-cell-with-add-button hr {
+  width: 100%;
+  height: 14px;
+}
+
 .sin-expandable-search {
 //  margin: 0 50px;
   align-items: center;
@@ -254,7 +289,7 @@ $accent-color: #FF609A;
 }
 
 .sin-expandable-search form {
-  max-width: 600px;
+  max-width: 95%;
 }
 
 .sin-expandable-search,
@@ -290,9 +325,9 @@ $accent-color: #FF609A;
   font-size: 16px;
   color: #FFFFFF;
   background-color: #78909C;
-  padding: 0px 35px 0px 70px;
-  height: 40px;
-  line-height: 40px; /* TODO: This was recommended for cross browser compatability of input height, check if its actually needed in modern browsers */
+  padding: 0px 30px 0px 60px;
+  height: 30px;
+  line-height: 30px; /* TODO: This was recommended for cross browser compatability of input height, check if its actually needed in modern browsers */
   
   border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;

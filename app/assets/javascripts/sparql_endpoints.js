@@ -22,3 +22,7 @@ keywordDeleteFunction = function(element){
     my_elem.html(JSON.stringify(new_arr_keyw));
     return false;
 }
+
+$(".sin-add-button").on("click", function() {
+  // do something
+});

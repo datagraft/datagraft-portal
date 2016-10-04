@@ -4,6 +4,11 @@ class SparqlEndpoint < Thing
 
   acts_as_taggable_on :keywords
   
+  has_many :sparql_endpoint_queries
+  has_many :queries, :through => :sparql_endpoint_queries
+  
+  accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
+
   def should_generate_new_friendly_id?
     name_changed? || super
   end
@@ -25,17 +30,6 @@ class SparqlEndpoint < Thing
     touch_metadata!
     attribute_will_change!('uri') if uri != val
     metadata["uri"] = val
-  end
-  
-  def size
-    if self.user.nil?
-      0
-    else
-      1
-#    user = self.find(:user)
-#      user = self.user
-#      user.send(get_ontotext_repository_size(@thing.uri))
-    end
   end
   
 end

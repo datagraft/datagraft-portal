@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160729105529) do
+ActiveRecord::Schema.define(version: 20161004124128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,15 @@ ActiveRecord::Schema.define(version: 20160729105529) do
     t.datetime "updated_at",              null: false
     t.index ["queriable_data_store_id"], name: "index_queriable_data_store_queries_on_queriable_data_store_id", using: :btree
     t.index ["query_id"], name: "index_queriable_data_store_queries_on_query_id", using: :btree
+  end
+
+  create_table "sparql_endpoint_queries", force: :cascade do |t|
+    t.integer  "query_id"
+    t.integer  "sparql_endpoint_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["query_id"], name: "index_sparql_endpoint_queries_on_query_id", using: :btree
+    t.index ["sparql_endpoint_id"], name: "index_sparql_endpoint_queries_on_sparql_endpoint_id", using: :btree
   end
 
   create_table "sparql_endpoints", force: :cascade do |t|
