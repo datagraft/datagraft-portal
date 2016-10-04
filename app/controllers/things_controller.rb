@@ -68,7 +68,7 @@ class ThingsController < ApplicationController
     method_prefix = virtual_resource_name(true)
     @thing = resource.new(self.send("#{method_prefix}_params"))
     @thing.user = current_user
-    
+
     set_relation = "#{method_prefix}_set_relations".to_sym
     if self.respond_to?(set_relation, :include_private)
       self.send(set_relation, @thing)

@@ -1,2 +1,0 @@
-module FileWizardHelper
-end

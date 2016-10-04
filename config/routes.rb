@@ -14,6 +14,22 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
     }
 
+  def datagraft_wizard(wizard_sym)
+    wizard = wizard_sym.to_s
+    context = ':username/'+wizard
+    context_id = context + '/:id'
+    context_full = context_id + '/:wiz_id'
+
+    get    context + '/:task'  =>    wizard + '#index'   #Start a new wizard for a task
+    post   context_full  =>         wizard + '#create'  #Upload a file
+    #get    context+'/new' =>         wizard + '#new'     #Start a new wizard
+    #get    context_id =>             wizard + '#show'    #Show the current step
+    get    context_full =>           wizard + '#show'    #Show the current step
+    delete context_full =>           wizard + '#destroy'
+    put    context_full =>           wizard + '#update'
+    patch  context_full =>           wizard + '#update'
+  end
+
   def datagraft_resources(resource_sym)
     resource = resource_sym.to_s
     context = ':username/'+resource
@@ -52,6 +68,9 @@ Rails.application.routes.draw do
 
   end
 
+  resources :wiztest
+  datagraft_wizard :upwizard
+
   datagraft_resources :data_distributions
   datagraft_resources :data_pages
   datagraft_resources :transformations
@@ -80,7 +99,7 @@ Rails.application.routes.draw do
       datagraft_resources :queriable_data_stores
     end
 
-    
+
     if Flip.on? :utility_functions
       datagraft_resources :utility_functions
     end
@@ -90,7 +109,7 @@ Rails.application.routes.draw do
 
   get 'api_keys/first' => 'api_keys#first'
   resources :api_keys
-  
+
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
   get 'publishfilestore' => 'filestores#publish'

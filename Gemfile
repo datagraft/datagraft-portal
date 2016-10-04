@@ -168,3 +168,6 @@ gem 'rails-controller-testing'
 
 #clipboard-rails gem is the integration of clipboard.js javascript library for your Rails 4 application.
 gem 'clipboard-rails'
+
+#Use wicked to make your Rails controllers into step-by-step wizards.
+gem 'wicked'

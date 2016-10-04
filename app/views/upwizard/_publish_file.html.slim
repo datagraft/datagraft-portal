@@ -1,0 +1,23 @@
+- title "Create a file page: upload or select a file"
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  /! MDL Tabs container
+  div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    /! Tab bars
+    div.mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#upload-panel" Upload file
+      a.mdl-tabs__tab href="#file-list-panel"  Choose existing file
+
+    /! MDL tab panels, is-active to denote currently active
+    #upload-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_file_upload_tab'
+    /! MDL Tab panel 2
+    #file-list-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_file_list_tab'
