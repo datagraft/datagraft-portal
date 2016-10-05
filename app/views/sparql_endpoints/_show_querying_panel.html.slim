@@ -11,7 +11,15 @@
       .mdl-button
         i.material-icons description
         
-    .sin-cell-with-add-button.mdl-cell--12-col
+    //.sin-cell-with-add-button.mdl-cell--12-col
+      hr
+      == link_to thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+        i.material-icons add
+          
+    .mdl-cell--12-col
+      = render 'new_query_form'
+
+    //.sin-cell-with-add-button.mdl-cell--12-col
       hr
       = simple_form_for @thing, url: thing_path(@thing) do |f|
         = f.simple_fields_for :queries do |p|
@@ -19,21 +27,7 @@
         .links.sin-nested-links
           = link_to_add_association f, :queries, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
             i.material-icons add
-
-      //.sin-add-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
-        = link_to thing_edit_path(@thing) do
-          i.material-icons add circle
-        
-      //i.material-icons add circle
-      //  = button_to "add f01a", send(:"f01a_foods_path", id: @user.id), class: "f01a btn btn-large btn-primary"
-      //= link_to 'Edit', thing_edit_path(@thing), :class => ".mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary"
-      //input onclick=("window.location = '/publish'") type="button"
-      
-      //.sin-add-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--primary
-        //i.material-icons add circle
-        //input onclick=("window.location = '/publish'") type="button"
-          //== link_to, thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
-    
+            
     .sin-expandable-search.mdl-cell--8-col
       i.material-icons search
       form action="#" 
@@ -46,6 +40,9 @@
     
     .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
           
+    hr.mdl-cell--12-col
+      = render 'list_queries'
+
     hr.mdl-cell--12-col
   
     .mdl-cell--12-col

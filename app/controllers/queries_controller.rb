@@ -1,7 +1,6 @@
 class QueriesController < ThingsController
 
   def execute
-
     if !params[:id].blank? && !params[:username].blank?
       set_thing
       authorize! :read, @thing
@@ -29,7 +28,6 @@ class QueriesController < ThingsController
     else
       raise CanCan::AccessDenied.new("Not authorized!")
     end
-
 
     if @queriable_data_store.nil?
       @query_result = {
@@ -69,7 +67,8 @@ class QueriesController < ThingsController
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
         params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :language, :description,
-          queriable_data_store_ids: [])
+          queriable_data_store_ids: [],
+          sparql_endpoint_ids: [])
     end
 
     def query_set_relations(query)
@@ -82,5 +81,13 @@ class QueriesController < ThingsController
         end
       end
       # throw query.queriable_data_stores
+      
+      query.sparql_endpoints.to_a.each do |se|
+        if se.user != query.user && !se.public
+          query.sparql_endpoints.delete(se)
+        end
+      end
+      # throw query.sparql_endpoints  
     end
+  
 end
