@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004131220) do
+ActiveRecord::Schema.define(version: 20161005122416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 20161004131220) do
     t.jsonb    "metadata"
     t.jsonb    "configuration"
     t.integer  "parent_id"
+    t.string   "original_filename"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree
@@ -212,6 +213,8 @@ ActiveRecord::Schema.define(version: 20161004131220) do
     t.string   "file_id"
     t.integer  "file_size"
     t.string   "file_content_type"
+    t.string   "original_filename"
+    t.string   "redirect_step"
   end
 
   create_table "users", force: :cascade do |t|

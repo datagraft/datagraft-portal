@@ -1,0 +1,24 @@
+- title "Uploaded file page"
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  - unless @upwizard.original_filename.blank?
+    .sin-description
+      = @upwizard.original_filename
+
+  - unless @upwizard.file_content_type.blank?
+    .sin-description
+      = @upwizard.file_content_type
+
+  div.mdl-card__actions
+    == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
+    - if @sparql_file
+      == link_to 'Next: Add SPARQL endpoint details', wizard_path(:go_sparql), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect "
+    - if @filestore_file
+      == link_to 'Finish: Add details', wizard_path(:go_filestore), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
+    - if @filestore_file
+      == link_to 'Next: Cleanup and transform file', wizard_path(:go_transform), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"

@@ -38,11 +38,13 @@ class FilestoresController < ThingsController
     end
 
     def fill_name_if_empty
-      @thing.name = filestore_params[:file].original_filename if @thing.name.blank?
+      #@thing.name = filestore_params[:file].original_filename if @thing.name.blank?
+      @thing.name = @thing.original_filename if @thing.name.blank?
 
       if @thing.upload_filename.blank?
         # Store the original filename sections to use for upload
-        tmp_name = filestore_params[:file].original_filename
+        #tmp_name = filestore_params[:file].original_filename
+        tmp_name = @thing.original_filename
         format_with_dot = File.extname(tmp_name)
         filename_base = File.basename(tmp_name, format_with_dot)
         @thing.upload_filename = filename_base
@@ -55,7 +57,7 @@ class FilestoresController < ThingsController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list, :upwizard])
     end
 
     def open_spreadsheet(format, file)

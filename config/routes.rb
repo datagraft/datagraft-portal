@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     context_id = context + '/:id'
 
     get    context + '/new' =>       resource + '#new'
+    get    context + '/new/:wiz_id' => resource + '#new'
     post   context =>                resource + '#create'
     get    context =>                resource + '#index'
     get    context_id =>             resource + '#show'

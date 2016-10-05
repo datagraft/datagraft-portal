@@ -1,2 +1,5 @@
-h1 Decide
-p = @upwizard.task
+p
+  = 'Decide '
+  = @upwizard.task
+- render_page = 'decide_'+ @upwizard.task
+= render render_page
