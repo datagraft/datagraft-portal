@@ -65,7 +65,8 @@ class UpwizardController < ApplicationController
     # Delete the old file object if we get a new file object
     unless upwizard_params[:file] == nil
       unless @upwizard.file == nil
-        @upwizard.file.destroy
+        @upwizard.file.delete
+        @upwizard.file = nil
         @upwizard.file_size = 0
         @upwizard.file_content_type = ""
         @upwizard.original_filename = ""
