@@ -1,6 +1,9 @@
 class ThingsController < ApplicationController
   include ApplicationHelper
   include ThingHelper
+  include ThingConcern
+  # TODO remove this whenever possible
+  include JsonConcern
 
   before_action :set_thing, only: [
     :show, :edit, :update, :destroy, :star, :unstar, :fork, :versions,
@@ -206,12 +209,10 @@ class ThingsController < ApplicationController
     @versions = @thing.versions.reverse
   end
 
-  # GET /:username/:resource/:id/metadata
-  # GET /:username/:resource/:id/metadata/:key
-  def show_metadata
-    authorize! :read, @thing
-    show_json @thing.metadata
-  end
+  #def show_metadata
+  #  authorize! :read, @thing
+  #  show_json @thing.metadata
+  #end
 
   # GET /:username/:resource/:id/configuration
   # GET /:username/:resource/:id/configuration/:key
@@ -267,19 +268,6 @@ class ThingsController < ApplicationController
   # These two methods are magic and it's probably faster to override them
   # in the child classes
 
-  def virtual_resource_name(underscore = false)
-    name = /^(.+)Controller$/.match(self.class.name)[1].singularize
-    underscore ? name.underscore : name
-  end
-
-  def virtual_resources_name
-    /^(.+)_controller$/.match(self.class.name.underscore)[1]
-  end
-
-  def virtual_resource
-    Object.const_get(virtual_resource_name)
-  end
-
   def create_notice
     'Asset has been successfully created!'
   end
@@ -304,9 +292,6 @@ class ThingsController < ApplicationController
     'Unable to save the metadata'
   end
 
-  def not_found
-    raise ActionController::RoutingError.new('Not Found')
-  end
 
   def fill_default_values_if_empty
     fill_name_if_empty
@@ -316,87 +301,5 @@ class ThingsController < ApplicationController
     # deal with it
     @thing.name = Bazaar.object if @thing.name.blank?
   end
-
-  private
-  def set_thing
-    throw "A username parameter is required" if not params[:username]
-    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
-      user = current_user
-    else
-      raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
-      user = User.find_by_username(params[:username]) or not_found
-    end
-    @thing = user.send(virtual_resources_name).friendly.find(params[:id])
-
-    if params[:version_at]
-      @latest_thing = @thing
-      @thing = @thing.version_at(params[:version_at]) or not_found
-    end
-
-    instance_variable_set("@"+virtual_resource_name(true), @thing)
-  end
-
-  def show_json(data)
-    if params["key"]
-      data = Rodash.get(data, params["key"])
-      not_found if not data
-    end
-
-    if data.kind_of? String
-      render :text => data
-    else
-      render :json => data
-    end
-  end
-
-  def edit_json(full_data)
-
-    # Use raw_post because it doesn't contain magic variables
-    data = request.raw_post
-
-    begin
-      data = JSON.parse(data)
-    rescue JSON::ParserError => e
-      # Automatically convert few json types
-      if data == 'true'
-        data = true
-      elsif data == 'false'
-        data = false
-      elsif data =~ /\./
-        data = Float(data) rescue data
-      else
-        data = Integer(data) rescue data
-      end
-    end
-
-    if params[:key]
-      Rodash.set(full_data, params[:key], data)
-      yield full_data
-    else
-      yield data
-    end
-
-    if @thing.save
-      head :created
-    else
-      render json: @thing.errors, status: :unprocessable_entity
-    end
-  end
-
-  def delete_json(full_data)
-    if params[:key]
-      Rodash.unset(full_data, params[:key])
-      yield full_data
-    else
-      yield nil
-    end
-
-    if @thing.save
-      head :ok
-    else
-      render json: @thing.errors, status: :unprocessable_entity
-    end
-  end
-
 
 end
