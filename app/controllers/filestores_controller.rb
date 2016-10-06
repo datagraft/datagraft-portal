@@ -12,6 +12,47 @@ class FilestoresController < ThingsController
     redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
   end
 
+
+  # GET /:username/filestores/new
+  # GET /:username/filestores/new/:wiz_id
+  def new
+    authorize! :create, Filestore
+    @thing = Filestore.new
+
+    @thing.user = current_user
+    @filestore = @thing
+
+    unless params[:wiz_id] == nil
+      @upwizard = Upwizard.find(params[:wiz_id])
+      @thing.file = @upwizard.file
+      @thing.file_size = @upwizard.file_size
+      @thing.file_content_type = @upwizard.file_content_type
+      @thing.original_filename = @upwizard.original_filename
+      @upwizard.destroy
+    end
+
+    set_relation = "filestore_set_relations".to_sym
+    if self.respond_to?(set_relation, :include_private)
+      self.send(set_relation, @thing)
+    end
+
+    fill_default_values_if_empty
+
+    #instance_variable_set("@"+virtual_resource_name(true), @thing)
+
+    respond_to do |format|
+      if @thing.save
+        puts 'Thing saved ok'
+        format.html { render :new, notice: create_notice }
+        format.json { render :show, status: :created, location: thing_path(@thing) }
+      else
+        puts 'Thing save failed'
+        format.html { render :new }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def show
     super
     @preview_tab_obj = nil

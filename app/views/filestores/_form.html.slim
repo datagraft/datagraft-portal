@@ -43,8 +43,9 @@
     //          button.mdl-button.mdl-js-button.mdl-button--raised type="button" onclick="keywordDeleteFunction(this)"
     //            = kwd
     //            i.material-icons delete onclick="keywordDeleteFunction(this)"
-  .mdl-grid
-    = f.input :file, as: :file, wrapper: :select
+  - if @thing.file == nil
+    .mdl-grid
+      = f.input :file, as: :file, wrapper: :select
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit

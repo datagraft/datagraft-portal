@@ -56,7 +56,7 @@ html
                   = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
 
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
-          - byebug
+
           - flash.each do |key, value|
             div class="alert alert-#{key}"
               = value

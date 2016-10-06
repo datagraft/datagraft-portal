@@ -1,4 +1,4 @@
-- title "Create a file page:"
+- title "Create SPARQL endpoint:"
 - setOption :mdlCard
 
 div.mdl-card
@@ -18,7 +18,5 @@ div.mdl-card
     == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
     - if @sparql_file
       == link_to 'Next: Add SPARQL endpoint details', wizard_path(:go_sparql), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect "
-    - if @filestore_file
-      == link_to 'Finish: Add details', wizard_path(:go_filestore), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
     - if @filestore_file
       == link_to 'Next: Cleanup and transform file', wizard_path(:go_transform), :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"

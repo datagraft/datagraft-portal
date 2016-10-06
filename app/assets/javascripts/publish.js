@@ -126,7 +126,7 @@ Dropzone.options.filestoreDropZone = {
       this.options.url = this.options.url.replace(endOfUrl, 'filestores');
       done();
     } else {
-      window.alert('Error filetype <'+ext+'> is not supported');
+      window.alert('Error Datagraft does not support the file format <'+ext+'> of your uploaded file. Supported file formats: CSV, TSV, XLS or XLSX, RDF/XML, Turtle, N-Triples, N-quads, N3, JSON-LD');
       done('Error filetype <'+ext+'> is not supported');
       this.removeFile(file);
     }

@@ -8,7 +8,7 @@ class UpwizardController < ApplicationController
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     @upwizard.save
-    calculate_filetype
+    calculate_filetype_and_warning
     #byebug
   end
 
@@ -42,7 +42,7 @@ class UpwizardController < ApplicationController
   def show
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :read, @upwizard
-    calculate_filetype
+    calculate_filetype_and_warning
     #byebug
     case step
     when :go_filestore
@@ -54,7 +54,7 @@ class UpwizardController < ApplicationController
     when :go_back
       redirect_to_homepage
     else
-      render_wizard nil, notice: 'upwizard show.'
+      render_wizard
     end
   end
 
@@ -75,7 +75,7 @@ class UpwizardController < ApplicationController
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     @upwizard.save
-    calculate_filetype
+    calculate_filetype_and_warning
     #byebug
     render_wizard nil, notice: 'upwizard update.'
   end
@@ -101,10 +101,6 @@ private
                 :only_path  => true
                }.merge options
 
-    #authorize! :destroy, @upwizard
-    #get :index, params: { username: @user.username ,resource: 'filestores'}
-    #@upwizard.destroy
-
     redirect_to url_for(options)
   end
 
@@ -122,8 +118,10 @@ private
 
   def redirect_to_homepage
     @upwizard.redirect_step = 'redirect_to_homepage not_implemented'
-    @upwizard.save
-    render :redirect,  notice: 'Error not implemented.'
+    #@upwizard.save
+    authorize! :destroy, @upwizard
+    @upwizard.destroy
+    redirect_to dashboard_path
   end
 
   def fill_filedetails_if_empty
@@ -144,26 +142,38 @@ private
     end
   end
 
-  def calculate_filetype
+  def calculate_filetype_and_warning
     @sparql_file = false
     @filestore_file = false
     ext = file_ext
 
-    if (ext == 'rdf')
+    if (sparql_ext? ext)
       @sparql_file =  true
-    elsif (ext == 'csv')
+    elsif (filestore_ext? ext)
       @filestore_file = true
-    elsif (ext == 'xls')
-      @filestore_file = true
-    elsif (ext == 'xlsx')
-      @filestore_file = true
-    elsif (ext == 'tsv')
-      @filestore_file = true
+    end
+
+    if (@upwizard.task == 'file')
+      if (@sparql_file)
+        flash[:warning] = "You have uploaded an RDF file format, which is published in a SPARQL endpoint. If you would like to continue creating a file page, please press BACK and upload a tabular file (CSV, TSV, XLS, XLSX)."
+      end
+    elsif (@upwizard.task == 'sparql')
+      # No warnings
+    else
+      flash[:error] = 'This wizard does not support <'+@upwizard.task+'>'
+    end
+
+  end
+
+  def sparql_ext? (ext)
+    if (ext == 'rdf')
+      return true
+    else
+      return false
     end
   end
 
-  def filestore_file?
-    ext = file_ext
+  def filestore_ext? (ext)
     if (ext == 'csv')
       return true
     elsif (ext == 'xls')
