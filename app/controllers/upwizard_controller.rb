@@ -54,7 +54,7 @@ class UpwizardController < ApplicationController
     when :go_back
       redirect_to_homepage
     else
-      render_wizard
+      render_wizard nil, notice: 'upwizard show.'
     end
   end
 
@@ -77,7 +77,7 @@ class UpwizardController < ApplicationController
     @upwizard.save
     calculate_filetype
     #byebug
-    render_wizard
+    render_wizard nil, notice: 'upwizard update.'
   end
 
 
@@ -111,19 +111,19 @@ private
   def redirect_to_create_transformation
     @upwizard.redirect_step = 'redirect_to_create_transformation not_implemented'
     @upwizard.save
-    render :redirect
+    render :redirect, notice: 'Error not implemented.'
   end
 
   def redirect_to_create_sparql_endpoint
     @upwizard.redirect_step = 'redirect_to_create_sparql_endpoint not_implemented'
     @upwizard.save
-    render :redirect
+    render :redirect, notice: 'Error not implemented.'
   end
 
   def redirect_to_homepage
     @upwizard.redirect_step = 'redirect_to_homepage not_implemented'
     @upwizard.save
-    render :redirect
+    render :redirect,  notice: 'Error not implemented.'
   end
 
   def fill_filedetails_if_empty
