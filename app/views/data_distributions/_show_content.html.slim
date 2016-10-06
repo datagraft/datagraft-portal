@@ -5,7 +5,7 @@ dl
   dd = number_to_human_size @thing.file_size
   dt Content-type
   dd = @thing.file_content_type
-  - if @thing.file_content_type.start_with? 'image/'
+  - if (!@thing.file_content_type.nil? && @thing.file_content_type.start_with?('image/'))
     dt Preview
     dd
       br
