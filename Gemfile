@@ -63,7 +63,7 @@ gem 'devise'
 gem 'cancancan', '~> 1.10'
 
 # ActiveRecord versioning module
-gem 'paper_trail', '~> 5.2.0'
+gem 'paper_trail', '~> 5.2.2'
 
 # Generates good looking URI safe IDs
 gem 'friendly_id', '~> 5.1.0'
