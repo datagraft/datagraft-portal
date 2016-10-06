@@ -163,3 +163,6 @@ gem 'rails-controller-testing'
 
 # This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
 gem 'jquery-datatables-rails', '~> 3.3.0'
+
+# Prometheus metrics framework
+gem 'prometheus-client'
