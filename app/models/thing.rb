@@ -153,11 +153,11 @@ class Thing < ApplicationRecord
 
       protected
       def touch_metadata!
-        self.metadata = {} if not metadata
+    self.metadata = {} if not metadata.is_a?(Hash)
       end
 
       def touch_configuration!
-        self.configuration = {} if not configuration
+    self.configuration = {} if not configuration.is_a?(Hash)
       end 
     end
 
