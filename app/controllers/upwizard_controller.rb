@@ -43,6 +43,7 @@ class UpwizardController < ApplicationController
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :read, @upwizard
     calculate_filetype_and_warning
+    search_for_existing_things
     #byebug
     case step
     when :go_filestore
@@ -76,6 +77,7 @@ class UpwizardController < ApplicationController
     fill_filedetails_if_empty
     @upwizard.save
     calculate_filetype_and_warning
+    search_for_existing_things
     #byebug
     render_wizard nil, notice: 'upwizard update.'
   end
@@ -139,6 +141,49 @@ private
       return ext_no_dot
     else
       return nil
+    end
+  end
+
+  def search_for_existing_things
+    @things = {
+      'all_public' => nil,
+      'all_user' => nil
+    }
+    case step
+    when :publish
+      user = @upwizard.user
+
+    if params[:search]
+      query_things = current_user.search_dashboard_things(params[:search])
+      query_catalogues = current_user.search_dashboard_catalogues(params[:search])
+    else
+      query_things = current_user.dashboard_things
+      query_catalogues = current_user.dashboard_catalogues
+    end
+
+
+
+
+      if (@upwizard.task == 'file')
+        tmp = user.filestores.where(public: false)
+        @things = {
+          'all_user' => tmp,
+          'all_public_and_user' => user.filestores.where(public: true) + tmp
+        }
+      elsif (@upwizard.task == 'sparql')
+        tmp = user.sparql_endpoints.where(public: false)
+        @things = {
+          'all_user' => tmp,
+          'all_public_and_user' => user.sparql_endpoints.where(public: true) + tmp,
+        }
+      end
+      byebug
+      @things.each do |key, query|
+        if params[:search]
+          @things[key] = query.where(params[:search])
+        end
+        @things[key] = query.paginate(:page => params['projects_page_'+key], :per_page => 12)
+      end
     end
   end
 
