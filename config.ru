@@ -11,8 +11,10 @@ require 'prometheus/client/rack/collector'
 
 # HTTP endpoint to be scraped by a prometheus server 
 require 'prometheus/client/rack/exporter'
-use Prometheus::Client::Rack::Collector
-use Prometheus::Client::Rack::Exporter
 
-run ->(env) { [200, {'Content-Type' => 'text/html'}, ['OK']] }
+use Prometheus::Client::Rack::Collector
+use MetricsExporter
+
+run Proc.new { |env| [200, {'Content-Type' => 'text/html'}, ['OK']] }
+#run ->(env) { [200, {'Content-Type' => 'text/html'}, ['OK']] }
 run Rails.application

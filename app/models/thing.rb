@@ -1,5 +1,6 @@
 class Thing < ApplicationRecord
   extend FriendlyId
+  include ThingHelper
   # friendly_id :name, :use => [:slugged, :simple_i18n, :history]
   # friendly_id :name, use: => [:slugged, :simple_i18n, :history, :scoped], :scope => :user
   # friendly_id :name, :use => [:history, :scoped], :scope => :user
@@ -18,28 +19,39 @@ class Thing < ApplicationRecord
   # Versionning
   has_paper_trail
 
+
   # Update metrics
-  before_destroy :decrement_asset_metric
+  before_destroy :update_asset_metrics_destroy
   after_create_commit :increment_asset_metric
 
 
-  # TODO decrement_asset_metric and increment_asset_metric are not DRY ;(
-  def decrement_asset_metric
-    num_assets = Prometheus::Client.registry.get(:num_assets)
-
-    curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'});
-
-    num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val - 1)
+  # TODO update_asset_metrics_destroy and increment_asset_metric are not DRY ;(
+  # updates asset number metrics (number of versions, decrements number of assets)
+  def update_asset_metrics_destroy
+    begin
+      num_assets = Prometheus::Client.registry.get(:num_assets)
+      curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'});
+      num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val - 1)
+      update_asset_version_metric(self.type)
+    rescue Exception => e  
+      puts 'Error decrementing num_assets metric'
+      puts e.message  
+      puts e.backtrace.inspect
+    end
   end
-
+  # increments number of assets metric
   def increment_asset_metric
-    num_assets = Prometheus::Client.registry.get(:num_assets)
-
-    curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'});
-
-    num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val + 1)
+    begin
+      num_assets = Prometheus::Client.registry.get(:num_assets)
+      curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'});
+      num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val + 1)
+    rescue Exception => e
+      puts 'Error incrementing num_assets metric'
+      puts e.message  
+      puts e.backtrace.inspect
+    end
   end
-  
+
   # We overload the write_attribute function to correctly update attribute-related metrics
   def write_attribute(attr_name, value)
     if attr_name == 'public'
@@ -47,91 +59,108 @@ class Thing < ApplicationRecord
     end
     super
   end
-  
+
   # if asset permissions change, we update metric accordingly
   def public_private_changed (attr_name, old_value, new_value)
-    num_assets = Prometheus::Client.registry.get(:num_assets)
-    # decrement metric for old value
-    curr_num_assets_metric_old_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'});
-    num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'}, curr_num_assets_metric_old_val - 1)
-    
-    # increment metric for new value - for some reason we don't receive a boolean here...
-    curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: !new_value.to_i.zero? ? 'public' : 'private'});
-    num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: !new_value.to_i.zero? ? 'public' : 'private'}, curr_num_assets_metric_val + 1);
-  end
-  
-  def self.public_list
-    # returns a default registry
-    Thing.where(
-      :public => true, 
-      :type => ['DataPage', 'SparqlEndpoint,' 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
-      )
-    .order(stars_count: :desc, created_at: :desc).includes(:user)
+    begin
+      num_assets = Prometheus::Client.registry.get(:num_assets)
+      # decrement metric for old value
+      curr_num_assets_metric_old_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'});
+      num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'}, curr_num_assets_metric_old_val - 1)
 
-  end
+      if !new_value.in? [true, false] then
+        if new_value new_value.in? ["1", "0"] then
+          new_value = !new_value.to_i.zero?
+        else
+          # new value neither string nor boolean - should not happen
+          throw "Invalid value for user access attribute"
+        end
+        end
 
-  def self.public_search(search)
-    # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
-    self.public_list
-    .basic_search({name: search, metadata: search}, false)
-    # .fuzzy_search(name: search)
-  end
+        # increment metric for new value - for some reason we don't receive a boolean here...
+        curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: new_value ? 'public' : 'private'});
 
-  def fork(newuser)
-    self.deep_clone do |original, copy|
-      copy.user = newuser
-      copy.stars_count = 0
-      copy.public = false
-      original.add_child copy
-      increment_forks_metric
+
+        num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: new_value ? 'public' : 'private'}, curr_num_assets_metric_val + 1);
+      rescue Exception => e  
+        puts 'Error decrementing num_assets metric'
+        puts e.message  
+        puts e.backtrace.inspect
+      end
+      end
+
+      def self.public_list
+        # returns a default registry
+        Thing.where(
+          :public => true, 
+          :type => ['DataPage', 'SparqlEndpoint,' 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+          )
+        .order(stars_count: :desc, created_at: :desc).includes(:user)
+
+      end
+
+      def self.public_search(search)
+        # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
+        self.public_list
+        .basic_search({name: search, metadata: search}, false)
+        # .fuzzy_search(name: search)
+      end
+
+      def fork(newuser)
+        self.deep_clone do |original, copy|
+          copy.user = newuser
+          copy.stars_count = 0
+          copy.public = false
+          original.add_child copy
+          increment_forks_metric
+        end
+      end
+
+      def increment_forks_metric
+        num_forks = Prometheus::Client.registry.get(:num_forks)
+        curr_num_forks = num_forks.get({asset_type: thing.type})
+        num_forks.set({asset_type: thing.type}, curr_num_forks + 1)
+      end
+
+      # should we call this at all?
+      def decrement_forks_metric
+        num_forks = Prometheus::Client.registry.get(:num_forks)
+        curr_num_forks = num_forks.get({asset_type: thing.type})
+        num_forks.set({asset_type: thing.type}, curr_num_forks - 1)
+      end
+
+      def has_metadata?(key)
+        !get_metadata(key).nil?
+      end
+
+      def get_metadata(key)
+        # throw metadata
+        Rodash.get(metadata, key)
+      end
+
+      def description
+        metadata["description"] if metadata
+      end
+
+      def description=(val)
+        touch_metadata!
+        metadata["description"] = val
+      end
+
+      def has_children?
+        return !self.children.empty?
+      end
+
+      protected
+      def touch_metadata!
+        self.metadata = {} if not metadata
+      end
+
+      def touch_configuration!
+        self.configuration = {} if not configuration
+      end 
     end
-  end
 
-  def increment_forks_metric
-    num_forks = Prometheus::Client.registry.get(:num_forks)
-    curr_num_forks = num_forks.get({asset_type: thing.type})
-    num_forks.set({asset_type: thing.type}, curr_num_forks + 1)
-  end
-  
-  # should we call this at all?
-  def decrement_forks_metric
-    num_forks = Prometheus::Client.registry.get(:num_forks)
-    curr_num_forks = num_forks.get({asset_type: thing.type})
-    num_forks.set({asset_type: thing.type}, curr_num_forks - 1)
-  end
-  
-  def has_metadata?(key)
-    !get_metadata(key).nil?
-  end
-
-  def get_metadata(key)
-    # throw metadata
-    Rodash.get(metadata, key)
-  end
-
-  def description
-    metadata["description"] if metadata
-  end
-
-  def description=(val)
-    touch_metadata!
-    metadata["description"] = val
-  end
-
-  def has_children?
-    return !self.children.empty?
-  end
-
-  protected
-  def touch_metadata!
-    self.metadata = {} if not metadata
-  end
-
-  def touch_configuration!
-    self.configuration = {} if not configuration
-  end 
-end
-
-# class Query < Thing; end
-# class Widget < Thing; end
-# class UtilityFunction < Thing;
+    # class Query < Thing; end
+    # class Widget < Thing; end
+    # class UtilityFunction < Thing;
