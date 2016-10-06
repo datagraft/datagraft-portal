@@ -41,11 +41,12 @@
     .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
           
     hr.mdl-cell--12-col
-      = render 'list_queries'
-
+      = render 'list_queries_cards'
+      
     hr.mdl-cell--12-col
+      = render 'list_queries_table'
   
-    .mdl-cell--12-col
+    //.mdl-cell--12-col
       .container
         .collapse-card
           .title
@@ -63,7 +64,7 @@
             .sin-tab-textfield__scroll
               | SPARQL query - SELECT ...
           
-    .mdl-cell--12-col
+    //.mdl-cell--12-col
       .container
         .collapse-card
           .title
@@ -81,9 +82,8 @@
             .sin-tab-textfield__scroll
               | SPARQL query - SELECT ...
 
-    .mdl-cell--12-col
-      .sin-tab-textfield__scroll
-          
+    //.mdl-cell--12-col
+      .sin-tab-textfield__scroll        
   
   hr.sin-invisible-form-separator
   div.mdl-card__actions
