@@ -49,6 +49,7 @@ class PublicPortalController < ApplicationController
         things_and_catalogues += query_catalogues
       end
     end
+    
     # TODO: make this into a helper function
     things_and_catalogues.to_a.sort_by! do |thing_or_catalogue|
       -thing_or_catalogue.stars_count
