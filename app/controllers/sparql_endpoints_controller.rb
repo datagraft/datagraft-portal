@@ -38,5 +38,5 @@ class SparqlEndpointsController < ThingsController
       query.user = se.user
     end 
   end
-
+  
 end

@@ -10,8 +10,10 @@
   .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
   .sin-list-textfield__scroll
     ul.list
-      - unless @thing.queries.empty?
-        - @thing.queries.order(stars_count: :desc, created_at: :desc).each do |query|
+      //- unless @thing.queries.empty?
+      - unless all_queries.empty?
+        //- @thing.queries.order(stars_count: :desc, created_at: :desc).each do |query|
+        - all_queries.order(stars_count: :desc, created_at: :desc).each do |query|
           - if can? :read, query
             li
               .sin-container-hidden-name
