@@ -1,9 +1,0 @@
-div.mdl-layout
-  div.mdl-grid
-    div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
-      div.mdl-card__title.mdl-card--expand
-        h2.mdl-card__title-text Upload a file to continue
-      div.mdl-card__supporting-text
-        == form_for(@upwizard, html: {class: "dropzone sin-dropzone", id: "upwizardDropZone"}, url: wizard_path) do
-      div.mdl-card__actions
-        == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"

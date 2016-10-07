@@ -1,0 +1,21 @@
+div.mdl-card__supporting-text.sin-padding
+  = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
+    ul.mdl-list
+      - unless @thing_entries.empty?
+        - @thing_entries.each do |thing|
+          li.mdl-list__item
+            .mdl-list__item-icon
+              = f.radio_button :radio_thing_id, thing.id
+            .mld-list__item-primary-content
+              = thing.name
+            .mdl-list__item-secondary-content
+              = thing.user.username
+            .mdl-list__item-secondary-content
+              = time_ago_in_words thing.updated_at
+              | ago
+      - if @thing_entries.empty?
+        li.mdl-list__item
+          .mld-list__item-primary-content
+            em Nothing published yet
+    div.mdl-card__actions
+      = f.submit("Next: Transform and add details")

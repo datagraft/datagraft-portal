@@ -1,6 +1,6 @@
 class UpwizardController < ApplicationController
   include Wicked::Wizard
-  steps :publish, :decide, :go_sparql, :go_filestore, :go_transform, :go_back
+  steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
   def create
     @upwizard = Upwizard.find(params[:wiz_id])
@@ -9,7 +9,7 @@ class UpwizardController < ApplicationController
     fill_filedetails_if_empty
     @upwizard.save
     calculate_filetype_and_warning
-    #byebug
+    byebug
   end
 
   def index
@@ -34,32 +34,21 @@ class UpwizardController < ApplicationController
   end
 
   def destroy
+    puts "************ upwizard destroy"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :destroy, @upwizard
     @upwizard.destroy
   end
 
   def show
+    puts "************ upwizard show"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :read, @upwizard
-    calculate_filetype_and_warning
-    search_for_existing_things
-    #byebug
-    case step
-    when :go_filestore
-      redirect_to_create_filestore
-    when :go_sparql
-      redirect_to_create_sparql_endpoint
-    when :go_transform
-      redirect_to_create_transformation
-    when :go_back
-      redirect_to_homepage
-    else
-      render_wizard
-    end
+    process_state
   end
 
   def update
+    puts "************ upwizard update"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
 
@@ -69,67 +58,32 @@ class UpwizardController < ApplicationController
         @upwizard.file.delete
         @upwizard.file = nil
         @upwizard.file_size = 0
-        @upwizard.file_content_type = ""
-        @upwizard.original_filename = ""
+        @upwizard.file_content_type = nil
+        @upwizard.original_filename = nil
       end
     end
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     @upwizard.save
-    calculate_filetype_and_warning
-    search_for_existing_things
-    #byebug
-    render_wizard nil, notice: 'upwizard update.'
+    process_state
   end
 
 
 
 private
-
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
-    params.require(:upwizard).permit([:file, :task])
-  end
-
-  def redirect_to_create_filestore
-    @upwizard.redirect_step = 'redirect_to_create_filestore'
-    @upwizard.save
-    #byebug
-    options = request.query_parameters
-    options = options.respond_to?(:to_h) ? options.to_h : options
-    options = { :controller => 'filestores',
-                :action     => 'new',
-                :wiz_id     => @upwizard.id,
-                :only_path  => true
-               }.merge options
-
-    redirect_to url_for(options)
-  end
-
-  def redirect_to_create_transformation
-    @upwizard.redirect_step = 'redirect_to_create_transformation not_implemented'
-    @upwizard.save
-    render :redirect, notice: 'Error not implemented.'
-  end
-
-  def redirect_to_create_sparql_endpoint
-    @upwizard.redirect_step = 'redirect_to_create_sparql_endpoint not_implemented'
-    @upwizard.save
-    render :redirect, notice: 'Error not implemented.'
-  end
-
-  def redirect_to_homepage
-    @upwizard.redirect_step = 'redirect_to_homepage not_implemented'
-    #@upwizard.save
-    authorize! :destroy, @upwizard
-    @upwizard.destroy
-    redirect_to dashboard_path
+    params.require(:upwizard).permit([:file, :task, :radio_thing_id])
   end
 
   def fill_filedetails_if_empty
     if @upwizard.original_filename.blank?
-      # Store the original filename sections to use for upload
-      @upwizard.original_filename = upwizard_params[:file].original_filename
+      unless upwizard_params[:file] == nil
+        unless upwizard_params[:file].original_filename.blank?
+          # Store the original filename sections to use for upload
+          @upwizard.original_filename = upwizard_params[:file].original_filename
+        end
+      end
     end
   end
 
@@ -144,46 +98,19 @@ private
     end
   end
 
-  def search_for_existing_things
-    @things = {
-      'all_public' => nil,
-      'all_user' => nil
-    }
+  def search_for_existing_filestores
     case step
     when :publish
       user = @upwizard.user
-
-    if params[:search]
-      query_things = current_user.search_dashboard_things(params[:search])
-      query_catalogues = current_user.search_dashboard_catalogues(params[:search])
-    else
-      query_things = current_user.dashboard_things
-      query_catalogues = current_user.dashboard_catalogues
+      tmp = user.filestores.where(public: false)
+      @thing_entries = user.filestores.where(public: true) + tmp
     end
+  end
 
-
-
-
-      if (@upwizard.task == 'file')
-        tmp = user.filestores.where(public: false)
-        @things = {
-          'all_user' => tmp,
-          'all_public_and_user' => user.filestores.where(public: true) + tmp
-        }
-      elsif (@upwizard.task == 'sparql')
-        tmp = user.sparql_endpoints.where(public: false)
-        @things = {
-          'all_user' => tmp,
-          'all_public_and_user' => user.sparql_endpoints.where(public: true) + tmp,
-        }
-      end
-      byebug
-      @things.each do |key, query|
-        if params[:search]
-          @things[key] = query.where(params[:search])
-        end
-        @things[key] = query.paginate(:page => params['projects_page_'+key], :per_page => 12)
-      end
+  def search_for_existing_transformations
+    case step
+    when :transformation
+      @thing_entries = nil #TODO
     end
   end
 
@@ -231,5 +158,164 @@ private
       return false
     end
   end
+
+  def process_state
+    puts "************ upwizard process_state"
+    #byebug
+    now = Time.now
+    old_step = @upwizard.redirect_step
+    old_step = "" if old_step.blank?
+    @upwizard.redirect_step = now.to_s + " => " + step.to_s + "\n" + old_step
+
+    calculate_filetype_and_warning
+    search_for_existing_filestores
+    search_for_existing_transformations
+    @upwizard.save
+
+    case step
+    when :publish
+      handle_publish_and_render
+    when :decide
+      handle_decide_and_render
+    when :transform
+      handle_transform_and_render
+    when :create_transform
+      handle_create_transform
+    when :transform_select_execute
+      handle_transform_select_execute
+    when :file_select_transform
+      handle_file_select_transform_and_render
+    when :go_filestore
+      handle_go_filestore_and_render
+    when :go_sparql
+      handle_go_sparql_and_render
+    when :go_back
+      handle_go_back_and_render
+    when :not_implemented
+      handle_not_implemented_and_render
+    when :error
+      handle_error_and_render
+    end
+
+
+  end
+
+  def handle_publish_and_render
+    puts "************ upwizard handle_publish_and_render"
+    #Placeholder ... Nothing to do so far
+    render_wizard
+  end
+
+  def handle_decide_and_render
+    puts "************ upwizard handle_decide_and_render"
+    #Placeholder ... Nothing to do so far
+    render_wizard
+  end
+
+  def handle_file_select_transform_and_render
+    puts "************ upwizard handle_file_select_transform"
+    unless params[:upwizard][:radio_thing_id] == nil
+      # Copy file information from the selected thing
+      @thing = Thing.find(@upwizard.radio_thing_id)
+      unless @upwizard.file == nil
+        @upwizard.file.delete
+      end
+      @upwizard.file = @thing.file
+      @upwizard.file_size = @thing.file_size
+      @upwizard.file_content_type = @thing.file_content_type
+      @upwizard.original_filename = @thing.original_filename
+      @upwizard.save
+
+      # Update state and process the new state
+      jump_to :transform
+    else
+      jump_to :error
+    end
+    render_wizard
+  end
+
+  def handle_transform_and_render
+    puts "************ upwizard handle_transform"
+    #Placeholder ... Nothing to do so far
+
+    render_wizard
+  end
+
+  def handle_create_transform
+    puts "************ upwizard handle_create_transform"
+    #Placeholder ... Nothing to do so far
+
+    jump_to :not_implemented
+    render_wizard
+  end
+
+  def handle_transform_select_execute
+    puts "************ upwizard handle_transform_select_execute"
+
+    unless params[:upwizard][:radio_thing_id] == nil
+      # Copy file information from the selected thing
+      @thing = Thing.find(@upwizard.radio_thing_id)
+      # TODO Got a transformation ... what to do next?
+
+      # Update state and process the new state
+      jump_to :not_implemented
+    else
+      jump_to :error
+    end
+    render_wizard
+  end
+
+  # Pass this upwizard object over to a new filestore object
+  def handle_go_filestore_and_render
+    puts "************ upwizard handle_go_filestore"
+
+    options = request.query_parameters
+    options = options.respond_to?(:to_h) ? options.to_h : options
+    options = { :controller => 'filestores',
+                :action     => 'new',
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+               }.merge options
+
+    redirect_to url_for(options)
+  end
+
+  def handle_go_sparql_and_render
+    puts "************ upwizard handle_go_sparql"
+
+    options = request.query_parameters
+    options = options.respond_to?(:to_h) ? options.to_h : options
+    options = { :controller => 'sparql_endpoints',
+                :action     => 'new',
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+               }.merge options
+
+    redirect_to url_for(options)
+  end
+
+  def handle_go_back_and_render
+    puts "************ upwizard handle_go_back"
+    authorize! :destroy, @upwizard
+    @upwizard.destroy
+    redirect_to dashboard_path
+    jump_to :error
+    render_wizard
+  end
+
+  def handle_not_implemented_and_render
+    puts "************ upwizard handle_not_implemented"
+    #Will show a debug page
+    #Nothing more to do so far...
+    render_wizard
+  end
+
+  def handle_error_and_render
+    puts "************ upwizard handle_not_implemented"
+    #Will show a debug page
+    #Nothing more to do so far...
+    render_wizard
+  end
+
 
 end

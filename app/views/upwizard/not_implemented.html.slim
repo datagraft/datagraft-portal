@@ -1,6 +1,10 @@
 h3
   = 'This function is not implemented'
 p
-  = @upwizard.redirect_step
-p
   = "Task = #{@upwizard.task}"
+p
+  = params
+p
+  = @upwizard
+p
+  = simple_format(@upwizard.redirect_step)
