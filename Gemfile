@@ -166,3 +166,7 @@ gem 'jquery-datatables-rails', '~> 3.3.0'
 
 # Prometheus metrics framework
 gem 'prometheus-client'
+
+# Gem installation of javascript framework for list and table manipulation, List.js
+# https://github.com/arturhoo/listjs-rails
+gem 'listjs-rails'

@@ -9,7 +9,6 @@ module PaperTrail
     # increments the value of the version metric for the asset type of the asset we create a version for
     def increment_versions_metric
       begin
-        byebug
         num_versions = Prometheus::Client.registry.get(:num_versions)
         curr_num_versions_metric_val = num_versions.get({asset_type: self.item.type})
         num_versions.set({asset_type: self.item.type}, curr_num_versions_metric_val + 1)

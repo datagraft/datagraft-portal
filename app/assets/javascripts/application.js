@@ -18,6 +18,9 @@
 //= require material
 //= require jquery.gridster.js
 //= require dataTables/jquery.dataTables
+//= require list
+//= require list.pagination.min
+//= require list.fuzzysearch.min
 
 document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();
