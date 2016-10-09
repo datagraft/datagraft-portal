@@ -1,7 +1,5 @@
 div.mdl-layout
   div.mdl-grid
     div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
-      div.mdl-card__title.mdl-card--expand
-        == link_to 'Next: Create a new transformation', wizard_path(:create_transformation), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
       div.mdl-card__supporting-text
         == form_for(@upwizard, html: {class: "dropzone sin-dropzone", id: "upwizardDropZone"}, url: wizard_path) do

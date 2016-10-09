@@ -9,13 +9,13 @@ class UpwizardController < ApplicationController
     fill_filedetails_if_empty
     @upwizard.save
     calculate_filetype_and_warning
-    byebug
   end
 
   def index
     #byebug
     upwizard = Upwizard.new  # Create new wizard
     upwizard.user = current_user
+
     authorize! :create, upwizard
     upwizard.update_attributes(params.permit([:task]))
     upwizard.save
@@ -109,8 +109,10 @@ private
 
   def search_for_existing_transformations
     case step
-    when :transformation
-      @thing_entries = nil #TODO
+    when :transform
+      user = @upwizard.user
+      tmp = user.transformations.where(public: false)
+      @thing_entries = user.transformations.where(public: true) + tmp
     end
   end
 
@@ -161,7 +163,8 @@ private
 
   def process_state
     puts "************ upwizard process_state"
-    #byebug
+    @upwizard.trace_push step, params
+
     now = Time.now
     old_step = @upwizard.redirect_step
     old_step = "" if old_step.blank?
@@ -224,11 +227,12 @@ private
       @upwizard.file_size = @thing.file_size
       @upwizard.file_content_type = @thing.file_content_type
       @upwizard.original_filename = @thing.original_filename
-      @upwizard.save
 
       # Update state and process the new state
+      @upwizard.trace_back_step_skip
       jump_to :transform
     else
+      @upwizard.trace_back_step_skip
       jump_to :error
     end
     render_wizard
@@ -245,6 +249,7 @@ private
     puts "************ upwizard handle_create_transform"
     #Placeholder ... Nothing to do so far
 
+    @upwizard.trace_back_step_skip
     jump_to :not_implemented
     render_wizard
   end
@@ -258,8 +263,10 @@ private
       # TODO Got a transformation ... what to do next?
 
       # Update state and process the new state
+      @upwizard.trace_back_step_skip
       jump_to :not_implemented
     else
+      @upwizard.trace_back_step_skip
       jump_to :error
     end
     render_wizard
@@ -296,17 +303,23 @@ private
 
   def handle_go_back_and_render
     puts "************ upwizard handle_go_back"
+    back_step = @upwizard.trace_pop_back_step
+
+    jump_to back_step unless back_step == nil
+    render_wizard
+  end
+
+  def handle_go_cancel_and_render
     authorize! :destroy, @upwizard
     @upwizard.destroy
     redirect_to dashboard_path
-    jump_to :error
-    render_wizard
   end
 
   def handle_not_implemented_and_render
     puts "************ upwizard handle_not_implemented"
     #Will show a debug page
     #Nothing more to do so far...
+    @upwizard.trace_back_step_skip
     render_wizard
   end
 
@@ -314,8 +327,8 @@ private
     puts "************ upwizard handle_not_implemented"
     #Will show a debug page
     #Nothing more to do so far...
+    @upwizard.trace_back_step_skip
     render_wizard
   end
-
 
 end
