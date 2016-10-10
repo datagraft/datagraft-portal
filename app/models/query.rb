@@ -69,5 +69,9 @@ class Query < Thing
       raise "Only SPARQL on Ontotext backend querying is supported"
     end
   end
+  
+  def execute_on_sparql_endpoint(sparql_endpoint)
+    return "TEST"
+  end
 
 end

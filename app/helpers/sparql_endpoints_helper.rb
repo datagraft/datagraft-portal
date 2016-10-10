@@ -11,5 +11,9 @@ module SparqlEndpointsHelper
   def all_queries
     return Thing.where(type: 'Query')
   end
+
+  def execute_query(query)
+    return 'test'
+  end
   
 end
