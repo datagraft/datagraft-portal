@@ -32,19 +32,25 @@ class Upwizard < ApplicationRecord
   end
 
   def trace_pop_back_step
-    ret = nil
+    ret = trace_stack[-1]['step'] #There is always one
 
-    tmp = trace_pop # remove the :go_back step
-    tmp = trace_pop # remove the step where we clicked go_back
-    loop do
-      byebug
-      if trace_stack[-1]['back_step_skip'] == false
-        ret = trace_stack[-1]['step']
-        break
-      else
-        tmp = trace_pop
+    if trace_stack.length == 2
+      puts "************ trace_pop_back_step on top"
+      tmp = trace_pop # remove the :go_back step
+      tmp = trace_pop # remove the step where we clicked go_back
+      ret = tmp['step'] # reenter the same
+    else
+      tmp = trace_pop # remove the :go_back step
+      tmp = trace_pop # remove the step where we clicked go_back
+      loop do
+        tmp = trace_pop # remove the next and check if we can reenter it
+        if tmp['back_step_skip'] == false
+          ret = tmp['step']
+          break
+        end
       end
     end
+    puts "************ trace_pop_back_step return: " + ret.inspect
     return ret
   end
 
@@ -77,7 +83,7 @@ class Upwizard < ApplicationRecord
   def store_trace_stack (new_arr)
     self.trace = [].to_json if not self.trace.is_a?(Array)
     self.trace = new_arr.to_json
-    self.save
+    #self.save
   end
 
 end

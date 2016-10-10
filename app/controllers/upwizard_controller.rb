@@ -3,15 +3,17 @@ class UpwizardController < ApplicationController
   steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
   def create
+    puts "************ upwizard create"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     @upwizard.save
-    calculate_filetype_and_warning
+    #calculate_filetype_and_warning
   end
 
   def index
+    puts "************ upwizard index"
     #byebug
     upwizard = Upwizard.new  # Create new wizard
     upwizard.user = current_user
@@ -64,7 +66,6 @@ class UpwizardController < ApplicationController
     end
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
-    @upwizard.save
     process_state
   end
 
@@ -165,15 +166,14 @@ private
     puts "************ upwizard process_state"
     @upwizard.trace_push step, params
 
-    now = Time.now
-    old_step = @upwizard.redirect_step
-    old_step = "" if old_step.blank?
-    @upwizard.redirect_step = now.to_s + " => " + step.to_s + "\n" + old_step
+    #now = Time.now
+    #old_step = @upwizard.redirect_step
+    #old_step = "" if old_step.blank?
+    #@upwizard.redirect_step = now.to_s + " => " + step.to_s + "\n" + old_step
 
     calculate_filetype_and_warning
     search_for_existing_filestores
     search_for_existing_transformations
-    @upwizard.save
 
     case step
     when :publish
@@ -206,12 +206,14 @@ private
   def handle_publish_and_render
     puts "************ upwizard handle_publish_and_render"
     #Placeholder ... Nothing to do so far
+    @upwizard.save
     render_wizard
   end
 
   def handle_decide_and_render
     puts "************ upwizard handle_decide_and_render"
     #Placeholder ... Nothing to do so far
+    @upwizard.save
     render_wizard
   end
 
@@ -235,6 +237,7 @@ private
       @upwizard.trace_back_step_skip
       jump_to :error
     end
+    @upwizard.save
     render_wizard
   end
 
@@ -242,6 +245,7 @@ private
     puts "************ upwizard handle_transform"
     #Placeholder ... Nothing to do so far
 
+    @upwizard.save
     render_wizard
   end
 
@@ -251,6 +255,7 @@ private
 
     @upwizard.trace_back_step_skip
     jump_to :not_implemented
+    @upwizard.save
     render_wizard
   end
 
@@ -269,6 +274,7 @@ private
       @upwizard.trace_back_step_skip
       jump_to :error
     end
+    @upwizard.save
     render_wizard
   end
 
@@ -276,6 +282,7 @@ private
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
 
+    @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'filestores',
@@ -290,6 +297,7 @@ private
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
+    @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'sparql_endpoints',
@@ -306,6 +314,7 @@ private
     back_step = @upwizard.trace_pop_back_step
 
     jump_to back_step unless back_step == nil
+    @upwizard.save
     render_wizard
   end
 
@@ -320,6 +329,7 @@ private
     #Will show a debug page
     #Nothing more to do so far...
     @upwizard.trace_back_step_skip
+    @upwizard.save
     render_wizard
   end
 
@@ -328,6 +338,7 @@ private
     #Will show a debug page
     #Nothing more to do so far...
     @upwizard.trace_back_step_skip
+    @upwizard.save
     render_wizard
   end
 
