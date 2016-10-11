@@ -34,9 +34,11 @@ Rails.application.routes.draw do
   post 'querying' => 'queries#execute'
 
 
-  get    ':username/upwizard/:task'       => 'upwizard#index'   #Start a new wizard for a task
+  get    ':username/upwizard'             => 'upwizard#index'   #List all wizards
+  get    ':username/upwizard/new/:task'   => 'upwizard#new'     #Start a new wizard for a task
   post   ':username/upwizard/:id/:wiz_id' => 'upwizard#create'  #Upload a file
   get    ':username/upwizard/:id/:wiz_id' => 'upwizard#show'    #Show the current step
+  get    ':username/upwizard/:id/:wiz_id/debug' => 'upwizard#debug'    #Show debug information
   delete ':username/upwizard/:id/:wiz_id' => 'upwizard#destroy'
   put    ':username/upwizard/:id/:wiz_id' => 'upwizard#update'
   patch  ':username/upwizard/:id/:wiz_id' => 'upwizard#update'

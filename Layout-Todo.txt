@@ -1,0 +1,16 @@
+1) Add second line below heading
+    h3 Create a file page: <br> Upload or select a file
+
+2) Layout of action buttons, active and passive
+    mdl-button--raised
+    make passive? sjekk med Nicolay
+3) Multiple lines in flash message. How to specify layout and do action
+    ???
+4) Big action with text below
+     button size use style sheet later...
+    .sin-supporting-textfield
+
+5) Liste med filtrering
+6) Ikoner for filestore og transformation
+                img src=image_url("60_utility.png")
+                img src=image_url("60_file.png")

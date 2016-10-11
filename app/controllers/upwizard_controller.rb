@@ -6,6 +6,7 @@ class UpwizardController < ApplicationController
     puts "************ upwizard create"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
+    delete_old_file_if_new
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     @upwizard.save
@@ -13,26 +14,49 @@ class UpwizardController < ApplicationController
   end
 
   def index
-    puts "************ upwizard index"
+    byebug
+
+    if user_signed_in? && (current_user.username == params[:username] )
+      @user = User.find_by_username(params[:username])
+    else
+      raise CanCan::AccessDenied.new("Not authorized!")
+    end
+
+    @upwizard_entries = @user.send(upwizard).where()
+
+  end
+
+  def new
+    puts "************ upwizard new"
     #byebug
-    upwizard = Upwizard.new  # Create new wizard
-    upwizard.user = current_user
 
-    authorize! :create, upwizard
-    upwizard.update_attributes(params.permit([:task]))
-    upwizard.save
+    #Check if known task
+    task = params['task']
+    known_task = false
+    known_task = true if task == 'file'
+    known_task = true if task == 'sparql'
 
-    goto_step = steps.first
-    options = request.query_parameters
 
-    options = options.respond_to?(:to_h) ? options.to_h : options
-    options = { :controller => wicked_controller,
-                :action     => 'show',
-                :id         => goto_step || params[:id],
-                :wiz_id     => upwizard.id,
-                :only_path  => true
-               }.merge options
-    redirect_to url_for(options)
+    if known_task
+      upwizard = Upwizard.new  # Create new wizard
+      upwizard.user = current_user
+
+      authorize! :create, upwizard
+      upwizard.update_attributes(params.permit([:task]))
+      upwizard.save
+
+      goto_step = steps.first
+      options = request.query_parameters
+
+      options = options.respond_to?(:to_h) ? options.to_h : options
+      options = { :controller => wicked_controller,
+                  :action     => 'show',
+                  :id         => goto_step || params[:id],
+                  :wiz_id     => upwizard.id,
+                  :only_path  => true
+                 }.merge options
+      redirect_to url_for(options)
+    end
   end
 
   def destroy
@@ -49,21 +73,18 @@ class UpwizardController < ApplicationController
     process_state
   end
 
+  def debug
+    puts "************ upwizard debug"
+    @upwizard = Upwizard.find(params[:wiz_id])
+    authorize! :read, @upwizard
+  end
+
   def update
     puts "************ upwizard update"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
 
-    # Delete the old file object if we get a new file object
-    unless upwizard_params[:file] == nil
-      unless @upwizard.file == nil
-        @upwizard.file.delete
-        @upwizard.file = nil
-        @upwizard.file_size = 0
-        @upwizard.file_content_type = nil
-        @upwizard.original_filename = nil
-      end
-    end
+    delete_old_file_if_new
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     process_state
@@ -77,6 +98,18 @@ private
     params.require(:upwizard).permit([:file, :task, :radio_thing_id])
   end
 
+  def delete_old_file_if_new
+    # Delete the old file object if we get a new file object
+    unless upwizard_params[:file] == nil
+      unless @upwizard.file == nil
+        @upwizard.file.delete
+        @upwizard.file = nil
+        @upwizard.file_size = 0
+        @upwizard.file_content_type = nil
+        @upwizard.original_filename = nil
+      end
+    end
+  end
   def fill_filedetails_if_empty
     if @upwizard.original_filename.blank?
       unless upwizard_params[:file] == nil
@@ -164,12 +197,13 @@ private
 
   def process_state
     puts "************ upwizard process_state"
+    @curr_step = step
     @upwizard.trace_push step, params
 
-    #now = Time.now
-    #old_step = @upwizard.redirect_step
-    #old_step = "" if old_step.blank?
-    #@upwizard.redirect_step = now.to_s + " => " + step.to_s + "\n" + old_step
+    now = Time.now
+    old_step = @upwizard.redirect_step
+    old_step = "" if old_step.blank?
+    @upwizard.redirect_step = now.to_s + " => " + step.to_s + "\n" + old_step
 
     calculate_filetype_and_warning
     search_for_existing_filestores

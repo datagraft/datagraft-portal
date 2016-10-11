@@ -9,11 +9,22 @@ class Upwizard < ApplicationRecord
 
   # Return self
   def trace_push(now_step, params)
-    #byebug
-    now = Time.now
-    h = {:step => now_step, :params => params, :back_step_skip => false, :time => now}
-    tmp = trace_stack.push h
-    store_trace_stack tmp
+
+    add_entry = false
+    if trace_stack.length == 0
+      add_entry = true
+    else
+      unless now_step.to_s == trace_stack[-1]['step']
+        add_entry = true
+      end
+    end
+
+    if add_entry
+      now = Time.now
+      h = {:step => now_step, :params => params, :back_step_skip => false, :time => now}
+      tmp = trace_stack.push h
+      store_trace_stack tmp
+    end
   end
 
   def trace_pop

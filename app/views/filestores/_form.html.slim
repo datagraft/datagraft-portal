@@ -32,21 +32,11 @@
         #tooltip-separator.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-separator" Choose different separator if your file preview fails to detect correct columns.
 
-
-    //= f.input :keywords, as: :text, input_html: { rows: 5 }
-    //#keyword-frame
-    //  - kwds = @thing.keywords
-    //  - unless kwds.blank?
-    //    ul.keyw-array-container
-    //      - kwds.each do |kwd|
-    //        li.keyw-array-item
-    //          button.mdl-button.mdl-js-button.mdl-button--raised type="button" onclick="keywordDeleteFunction(this)"
-    //            = kwd
-    //            i.material-icons delete onclick="keywordDeleteFunction(this)"
   - if @thing.file == nil
     .mdl-grid
       = f.input :file, as: :file, wrapper: :select
   hr.sin-invisible-form-separator
   .mdl-grid
     = f.button :submit
+    = link_to thing_path(@thing)
 //#keyword-debug debug
