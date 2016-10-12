@@ -28,7 +28,7 @@ class Upwizard < ApplicationRecord
   end
 
   def trace_pop
-    #byebug
+
     tmp = trace_stack
     ret = tmp.pop
     store_trace_stack tmp
@@ -36,7 +36,6 @@ class Upwizard < ApplicationRecord
   end
 
   def trace_back_step_skip
-    #byebug
     tmp = trace_stack
     tmp[-1]["back_step_skip"] = true
     store_trace_stack tmp
@@ -82,7 +81,6 @@ class Upwizard < ApplicationRecord
   end
 
   def trace_stack
-    #byebug
     if self.trace.blank?
       ret = []
     else

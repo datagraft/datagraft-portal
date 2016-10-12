@@ -15,7 +15,7 @@ class FilestoresController < ThingsController
   def create
     puts "************ filestore create"
     super
-    byebug
+
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
       @thing.file = @upwizard.file
@@ -33,7 +33,6 @@ class FilestoresController < ThingsController
   def new
     puts "************ filestore new"
     super
-    byebug
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])

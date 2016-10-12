@@ -14,7 +14,6 @@ class UpwizardController < ApplicationController
   end
 
   def index
-    byebug
 
     if user_signed_in? && (current_user.username == params[:username] )
       @user = User.find_by_username(params[:username])
@@ -28,7 +27,6 @@ class UpwizardController < ApplicationController
 
   def new
     puts "************ upwizard new"
-    #byebug
 
     #Check if known task
     task = params['task']
