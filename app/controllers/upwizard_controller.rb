@@ -22,7 +22,7 @@ class UpwizardController < ApplicationController
       raise CanCan::AccessDenied.new("Not authorized!")
     end
 
-    @upwizard_entries = @user.send(upwizard).where()
+    @upwizard_entries = @user.upwizards
 
   end
 
@@ -95,7 +95,7 @@ class UpwizardController < ApplicationController
 private
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
-    params.require(:upwizard).permit([:file, :task, :radio_thing_id])
+    params.require(:upwizard).permit([:file, :task, :username, :radio_thing_id])
   end
 
   def delete_old_file_if_new
@@ -316,6 +316,7 @@ private
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
 
+    @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
@@ -331,6 +332,7 @@ private
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
+    @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options

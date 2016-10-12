@@ -1,4 +1,5 @@
 = simple_form_for @thing, url: thing_path(@thing) do |f|
+  = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
     h4.mdl-cell--12-col Properties
     .sin-input-with-help-icon
@@ -32,7 +33,7 @@
         #tooltip-separator.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-separator" Choose different separator if your file preview fails to detect correct columns.
 
-  - if @thing.file == nil
+  - if params[:wiz_id] == nil
     .mdl-grid
       = f.input :file, as: :file, wrapper: :select
   hr.sin-invisible-form-separator

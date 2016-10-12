@@ -12,45 +12,39 @@ class FilestoresController < ThingsController
     redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
   end
 
-
-  # GET /:username/filestores/new
-  # GET /:username/filestores/new/:wiz_id
-  def new
-    authorize! :create, Filestore
-    @thing = Filestore.new
-
-    @thing.user = current_user
-    @filestore = @thing
-
+  def create
+    puts "************ filestore create"
+    super
+    byebug
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
       @thing.file = @upwizard.file
       @thing.file_size = @upwizard.file_size
       @thing.file_content_type = @upwizard.file_content_type
       @thing.original_filename = @upwizard.original_filename
+      fill_default_values_if_empty
+      @thing.save
       @upwizard.destroy
     end
+  end
 
-    set_relation = "filestore_set_relations".to_sym
-    if self.respond_to?(set_relation, :include_private)
-      self.send(set_relation, @thing)
+  # GET /:username/filestores/new
+  # GET /:username/filestores/new/:wiz_id
+  def new
+    puts "************ filestore new"
+    super
+    byebug
+
+    unless params[:wiz_id] == nil
+      @upwizard = Upwizard.find(params[:wiz_id])
+      #@thing.file = @upwizard.file
+      #@thing.file_size = @upwizard.file_size
+      #@thing.file_content_type = @upwizard.file_content_type
+      @thing.original_filename = @upwizard.original_filename
+      #@upwizard.destroy
     end
-
     fill_default_values_if_empty
 
-    #instance_variable_set("@"+virtual_resource_name(true), @thing)
-
-    respond_to do |format|
-      if @thing.save
-        puts 'Thing saved ok'
-        format.html { render :new, notice: create_notice }
-        format.json { render :show, status: :created, location: thing_path(@thing) }
-      else
-        puts 'Thing save failed'
-        format.html { render :new }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   def show
@@ -80,25 +74,28 @@ class FilestoresController < ThingsController
 
     def fill_name_if_empty
       #@thing.name = filestore_params[:file].original_filename if @thing.name.blank?
-      @thing.name = @thing.original_filename if @thing.name.blank?
 
-      if @thing.upload_filename.blank?
-        # Store the original filename sections to use for upload
-        #tmp_name = filestore_params[:file].original_filename
-        tmp_name = @thing.original_filename
-        format_with_dot = File.extname(tmp_name)
-        filename_base = File.basename(tmp_name, format_with_dot)
-        @thing.upload_filename = filename_base
+      unless @thing.original_filename == nil
+        @thing.name = @thing.original_filename if @thing.name.blank?
 
-        format_no_dot = format_with_dot.slice(1, format_with_dot.length)
-        @thing.upload_format = format_no_dot  if  @thing.upload_format.blank?
+        if @thing.upload_filename.blank?
+          # Store the original filename sections to use for upload
+          #tmp_name = filestore_params[:file].original_filename
+          tmp_name = @thing.original_filename
+          format_with_dot = File.extname(tmp_name)
+          filename_base = File.basename(tmp_name, format_with_dot)
+          @thing.upload_filename = filename_base
+
+          format_no_dot = format_with_dot.slice(1, format_with_dot.length)
+          @thing.upload_format = format_no_dot  if  @thing.upload_format.blank?
+        end
       end
     end
 
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def filestore_params
-      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list, :upwizard])
+      params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
 
     def open_spreadsheet(format, file)
