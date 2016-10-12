@@ -63,7 +63,7 @@ gem 'devise'
 gem 'cancancan', '~> 1.10'
 
 # ActiveRecord versioning module
-gem 'paper_trail', '~> 5.2.0'
+gem 'paper_trail', '~> 5.2.2'
 
 # Generates good looking URI safe IDs
 gem 'friendly_id', '~> 5.1.0'
@@ -168,6 +168,8 @@ gem 'rails-controller-testing'
 
 #clipboard-rails gem is the integration of clipboard.js javascript library for your Rails 4 application.
 gem 'clipboard-rails'
+# Prometheus metrics framework
+gem 'prometheus-client'
 
 #Use wicked to make your Rails controllers into step-by-step wizards.
 gem 'wicked'
