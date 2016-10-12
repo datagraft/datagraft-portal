@@ -71,7 +71,25 @@ class Query < Thing
   end
   
   def execute_on_sparql_endpoint(sparql_endpoint)
-    return "TEST"
+    conn = Faraday.new(sparql_endpoint.uri) do |c|
+      c.request :url_encoded
+      c.adapter Faraday.default_adapter
+      result = conn.get do |req|
+        req.params['query'] = query
+        req.headers['Accept'] = 'application/sparql-results+json'
+      end
+      
+      if result.status != 200
+        raise result.body
+      end
+
+      parsed = JSON.parse(result.body)
+
+      return {
+        headers: parsed["head"]["vars"],
+        results: parsed["results"]["bindings"]
+      }    
+    end
   end
 
 end

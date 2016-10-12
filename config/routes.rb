@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   get 'querying' => 'queries#execute'
   post 'querying' => 'queries#execute'
 
+  post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
+
   # TODO REMOVE THIS LATER ?
   get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
 

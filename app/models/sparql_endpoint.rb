@@ -9,6 +9,9 @@ class SparqlEndpoint < Thing
   
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
 
+  # Non-persistent attribute for storing query to be executed
+  attr_accessor :execute_query
+  
   def should_generate_new_friendly_id?
     name_changed? || super
   end

@@ -11,32 +11,33 @@
       .mdl-button
         i.material-icons description        
           
-    .mdl-cell--12-col
+    .links.sin-nested-links
+      hr
+      .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored
+        i.material-icons add
+      
+    .sin-query-execute-form.mdl-cell--12-col
+      = render 'query_execute_form'
+
+    .links.sin-nested-links
+      hr
+      .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored
+        i.material-icons clear
+
+    //.mdl-cell--12-col
       = render 'new_query_form'
       
     .sin-queries-list.mdl-cell--12-col
       = render 'list_queries_search'
       
-    //.sin-expandable-search.mdl-cell--8-col
-      i.material-icons search
-      form action="#" 
-        input placeholder="Search in queries" size="1" type="text" /
-      
-    //.mdl-cell--4-col
-      label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-1" 
-        input#checkbox-1.mdl-checkbox__input checked="checked" type="checkbox" /
-        .mdl-checkbox__label Include all public queries
-    
-    //.sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
-          
+    //.sin-query-result.mdl-cell--12-col
+      = render 'query_show_result'      
+
     //hr.mdl-cell--12-col
       = render 'list_queries_cards'
       
     //hr.mdl-cell--12-col
-      = render 'list_queries_table'
-  
-    //.mdl-cell--12-col
-      .sin-tab-textfield__scroll        
+      = render 'list_queries_table'    
   
   hr.sin-invisible-form-separator
   div.mdl-card__actions
