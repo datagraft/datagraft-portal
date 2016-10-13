@@ -55,7 +55,8 @@ class ThingsController < ApplicationController
     authorize! :update, @thing
   end
 
-  # GET /:username/:resource/new
+
+ # GET /:username/:resource/new
   def new
     resource = virtual_resource
     authorize! :create, resource
@@ -69,6 +70,7 @@ class ThingsController < ApplicationController
     resource = virtual_resource
     authorize! :create, resource
     method_prefix = virtual_resource_name(true)
+
     @thing = resource.new(self.send("#{method_prefix}_params"))
     @thing.user = current_user
 
@@ -140,7 +142,7 @@ class ThingsController < ApplicationController
   end
 
   # POST /:username/:resource/:id/unstar
-  def unstar 
+  def unstar
     authenticate_user!
     authorize! :read, @thing
     current_user.unstar(@thing)
@@ -155,7 +157,7 @@ class ThingsController < ApplicationController
     authenticate_user!
     authorize! :read, @thing
     @thing = @thing.fork(current_user)
-    
+
     respond_to do |format|
       if @thing.save
         format.html { redirect_to thing_path(@thing), notice: unstar_notice }
@@ -248,7 +250,7 @@ class ThingsController < ApplicationController
   def star_notice
     'Successfully starred asset!'
   end
-  
+
   def unstar_notice
     'Successfully un-starred asset!'
   end
@@ -256,7 +258,7 @@ class ThingsController < ApplicationController
   def cannot_save_metadata_notice
     'Unable to save the metadata'
   end
-  
+
 
   def fill_default_values_if_empty
     fill_name_if_empty

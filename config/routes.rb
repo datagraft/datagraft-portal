@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   get 'api_keys/first' => 'api_keys#first'
   resources :api_keys
-  
+
   get 'explore' => 'public_portal#explore'
   get 'publish' => 'data_distributions#publish'
   get 'publishfilestore' => 'filestores#publish'
@@ -27,12 +27,24 @@ Rails.application.routes.draw do
 
   get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
+  get ':username/filestores/new/:wiz_id' => 'filestores#new'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
   post 'querying' => 'queries#execute'
 
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
+
+
+  get    ':username/upwizard'             => 'upwizard#index'   #List all wizards
+  get    ':username/upwizard/new/:task'   => 'upwizard#new'     #Start a new wizard for a task
+  post   ':username/upwizard/:id/:wiz_id' => 'upwizard#create'  #Upload a file
+  get    ':username/upwizard/:id/:wiz_id' => 'upwizard#show'    #Show the current step
+  get    ':username/upwizard/:id/:wiz_id/debug' => 'upwizard#debug'    #Show debug information
+  delete ':username/upwizard/:id/:wiz_id' => 'upwizard#destroy'
+  put    ':username/upwizard/:id/:wiz_id' => 'upwizard#update'
+  patch  ':username/upwizard/:id/:wiz_id' => 'upwizard#update'
+
 
   # TODO REMOVE THIS LATER ?
   get ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
@@ -47,7 +59,7 @@ Rails.application.routes.draw do
     root "public_portal#user"
 
     def datagraft_resources(resource_sym)
-      resources resource_sym do 
+      resources resource_sym do
         member do
           get  'versions'
           post 'star'
@@ -90,7 +102,7 @@ Rails.application.routes.draw do
           member do
             get 'versions'
             post 'star'
-            post 'unstar' 
+            post 'unstar'
           end
         end
       end
@@ -99,7 +111,7 @@ Rails.application.routes.draw do
         datagraft_resources :queriable_data_stores
       end
 
-      
+
       if Flip.on? :utility_functions
         datagraft_resources :utility_functions
       end

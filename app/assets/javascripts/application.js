@@ -18,6 +18,7 @@
 //= require material
 //= require jquery.gridster.js
 //= require dataTables/jquery.dataTables
+//= require clipboard
 //= require list
 //= require list.pagination.min
 //= require list.fuzzysearch.min
@@ -40,3 +41,11 @@ document.addEventListener('turbolinks:load', function() {
       widget_base_dimensions: [140, 140]
   });
 });
+
+$(document).ready(function(){
+
+  var clip = new Clipboard('.clipboard_btn');
+  console.log("Starting clipboard");
+
+});
+

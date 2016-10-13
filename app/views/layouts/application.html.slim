@@ -54,9 +54,9 @@ html
                   = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
                 li
                   = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
-          
+
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
-        
+
           - flash.each do |key, value|
             div class="alert alert-#{key}"
               = value
@@ -88,4 +88,3 @@ html
           footer.mdl-grid
             div
               ' DataGraft is a service operated by the DaPaaS project, co-funded by the EC under 7th Framework Programme (FP7 2007-2013)
-

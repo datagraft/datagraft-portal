@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004124128) do
+ActiveRecord::Schema.define(version: 20161009154918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,11 @@ ActiveRecord::Schema.define(version: 20161004124128) do
     t.boolean  "enabled",    default: false, null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+  end
+
+  create_table "file_wizards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -203,9 +208,24 @@ ActiveRecord::Schema.define(version: 20161004124128) do
     t.jsonb    "metadata"
     t.jsonb    "configuration"
     t.integer  "parent_id"
+    t.string   "original_filename"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree
+  end
+
+  create_table "upwizards", force: :cascade do |t|
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "task"
+    t.integer  "user_id"
+    t.string   "file_id"
+    t.integer  "file_size"
+    t.string   "file_content_type"
+    t.string   "original_filename"
+    t.string   "redirect_step"
+    t.integer  "radio_thing_id"
+    t.jsonb    "trace"
   end
 
   create_table "users", force: :cascade do |t|
@@ -246,6 +266,12 @@ ActiveRecord::Schema.define(version: 20161004124128) do
     t.text     "object"
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+  end
+
+  create_table "wizards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "task"
   end
 
   add_foreign_key "catalogues", "users"

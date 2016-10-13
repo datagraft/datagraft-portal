@@ -2,6 +2,8 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'roo' #Used for viewing Excel files
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -41,7 +43,7 @@ module Datagraft
         MultiJson.use :yajl
     end
     
-    Refile.store ||= Refile::Backend::FileSystem.new("/tmp/uploads/store".to_s)
-    Refile.cache ||= Refile::Backend::FileSystem.new("/tmp/uploads/cache".to_s)
+    Refile.store ||= Refile::Backend::FileSystem.new("/var/refile_uploads/store".to_s)
+    Refile.cache ||= Refile::Backend::FileSystem.new("/var/refile_uploads/cache".to_s)
   end
 end
