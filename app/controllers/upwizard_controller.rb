@@ -1,4 +1,5 @@
 class UpwizardController < ApplicationController
+  include UpwizardHelper
   include Wicked::Wizard
   steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
@@ -60,8 +61,11 @@ class UpwizardController < ApplicationController
   def destroy
     puts "************ upwizard destroy"
     @upwizard = Upwizard.find(params[:wiz_id])
+    @user = @upwizard.user
     authorize! :destroy, @upwizard
     @upwizard.destroy
+
+    redirect_to upwizard_index_path(@user)
   end
 
   def show

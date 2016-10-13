@@ -2,10 +2,10 @@ div.mdl-card__supporting-text.sin-padding
   = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
     #upwizard-list
       i.material-icons search
-      input.search placeholder="Search in queries"
-      button.sort data-sort="sin-list-name"  Sort by name
-      button.sort data-sort="sin-list-user"  Sort by user
-      button.sort data-sort="sin-list-time"  Sort by time
+      input.search placeholder="Search in files"
+      button.sort type="button" data-sort="sin-list-name"  Sort by name
+      button.sort type="button" data-sort="sin-list-user"  Sort by user
+      button.sort type="button" data-sort="sin-list-time"  Sort by time
       .sin-list-textfield__scroll
         ul.list
           - if @thing_entries.empty?
@@ -15,8 +15,9 @@ div.mdl-card__supporting-text.sin-padding
           - else
             - @thing_entries.each do |thing|
               li
-                img src=image_url("60_file.png")
-                = f.radio_button :radio_thing_id, thing.id
+                .sin-list
+                  img src=image_url("icon-white-raster-60--file-page.png")
+                  = f.radio_button :radio_thing_id, thing.id
                 .sin-list-name
                   = thing.name
                 .sin-list-user
