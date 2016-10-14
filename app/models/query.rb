@@ -78,6 +78,7 @@ class Query < Thing
     } if not sparql_endpoint.uri
 
     conn = Faraday.new(sparql_endpoint.uri) do |c|
+#    conn = Faraday.new("https://rdf.datagraft.net/4845348921/db/repositories/1512015698_graft-computed-transformation-6") do |c|
       c.request :url_encoded
       c.adapter Faraday.default_adapter
     end
