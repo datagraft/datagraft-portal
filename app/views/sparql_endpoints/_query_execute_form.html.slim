@@ -1,7 +1,7 @@
 = simple_form_for :execute_query, url: thing_path(@thing)+'/execute_query', remote: true do |f|
   div.mdl-cell.mdl-cell--12-col.mdl-shadow--4dp.nested-fields.mdl-card.sin-nested-form.sin-form-widget
     div.mdl-card__title.mdl-color-text--grey-50
-      | New Query
+      | Execute a query on this SPARQL endpoint
     div.mdl-card__supporting-text
       = f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
     div.mdl-card__actions

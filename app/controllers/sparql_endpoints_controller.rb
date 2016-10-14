@@ -60,7 +60,7 @@ class SparqlEndpointsController < ThingsController
       @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
     end
 
-    render :partial => 'execute_query' if request.xhr?
+    render :partial => 'execute_query_results' if request.xhr?
   end
 
   private
