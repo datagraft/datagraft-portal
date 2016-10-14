@@ -254,6 +254,8 @@ module OntotextUser
   
   # Get the size of the repository
   def get_ontotext_repository_size(uri)
+    return 'unknown number of' if not uri
+
     connect = ontotext_connexion(true)
     resp_size = connect.get do |req|
       req.url uri+'/size'
