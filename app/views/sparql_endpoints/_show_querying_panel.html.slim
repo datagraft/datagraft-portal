@@ -13,15 +13,16 @@
           
     .links.sin-nested-links
       hr
-      .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored
+      .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#open-query-panel
         i.material-icons add
       
-    .sin-query-execute-form.mdl-cell--12-col
+    .sin-query-execute-form.mdl-cell--12-col#query-panel style="display:none"
       = render 'query_execute_form'
 
+    div#query-panel-result
+
     .links.sin-nested-links
-      hr
-      .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored
+      .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#close-query-panel style="display:none"
         i.material-icons clear
 
     //.mdl-cell--12-col
