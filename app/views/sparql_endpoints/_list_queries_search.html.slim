@@ -27,7 +27,7 @@
                   .title
                     i.material-icons.md-48 help
                     span 
-                      = link_to 'Run', query_execute_path(query, @thing), method: :post, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+                      = link_to 'Run', query_execute_path(query, @thing), method: :post, remote: true, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-execute-request-button'
                     strong
                       font size="5" 
                         = query.name
@@ -40,6 +40,7 @@
                       | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       | By:&nbsp;
                       = query.user.username
+                    .sin-execute-request-response
                   .body
                     .sin-tab-textfield__box
                       = query.description

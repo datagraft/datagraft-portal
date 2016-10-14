@@ -16,6 +16,12 @@ document.addEventListener('turbolinks:load', function() {
     $('#query-panel-result').html(xhr.responseText);
   });
 
+  $('.sin-execute-request-button').on("ajax:success", function(e, data, status, xhr) {
+    $(this).parents('.container').find('.sin-execute-request-response').html(data);
+  }).on("ajax:error", function(e, xhr, status, error) {
+    $(this).parents('.container').find('.sin-execute-request-response').html(xhr.responseText);
+  });
+
   var queriesListOptions = {
     valueNames: [ 'name', 'city' ]
   };
