@@ -36,14 +36,14 @@ Rails.application.routes.draw do
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
 
 
-  get    ':username/upwizard'             => 'upwizard#index'   #List all wizards
-  get    ':username/upwizard/new/:task'   => 'upwizard#new'     #Start a new wizard for a task
-  post   ':username/upwizard/:id/:wiz_id' => 'upwizard#create'  #Upload a file
-  get    ':username/upwizard/:id/:wiz_id' => 'upwizard#show'    #Show the current step
-  get    ':username/upwizard/:id/:wiz_id/debug' => 'upwizard#debug'    #Show debug information
-  delete ':username/upwizard/:id/:wiz_id' => 'upwizard#destroy'
-  put    ':username/upwizard/:id/:wiz_id' => 'upwizard#update'
-  patch  ':username/upwizard/:id/:wiz_id' => 'upwizard#update'
+  get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
+  get    ':username/upwizards/new/:task'   => 'upwizards#new'     #Start a new wizard for a task
+  post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
+  get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
+  get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information
+  delete ':username/upwizards/:wiz_id' => 'upwizards#destroy'
+  put    ':username/upwizards/:id/:wiz_id' => 'upwizards#update'
+  patch  ':username/upwizards/:id/:wiz_id' => 'upwizards#update'
 
 
   # TODO REMOVE THIS LATER ?

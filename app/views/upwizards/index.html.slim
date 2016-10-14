@@ -1,4 +1,4 @@
-- title 'LIsting of all wizards'
+- title 'Listing of all wizards'
 - setOption :mdlCard
 
 div.mdl-card
@@ -18,14 +18,18 @@ div.mdl-card
           - if @upwizard_entries.empty?
             li
               .mld-list__item-primary-content
-                em Nothing published yet
+                em No upwizards found
           - else
             - @upwizard_entries.each do |wiz|
               li
                 .sin-list-name
-                  = wiz.original_filename
+                  = wiz.id
+                .sin-list
+                  == link_to 'Delete', upwizard_delete_path(wiz), :method => :delete, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
                 .sin-list-user
                   = wiz.user.username
                 .sin-list-time
                   = time_ago_in_words wiz.updated_at
                   | ago
+                .sin-list
+                  = wiz.original_filename

@@ -33,9 +33,9 @@ class Thing < ApplicationRecord
       curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'});
       num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val - 1)
       update_asset_version_metric(self.type)
-    rescue Exception => e  
+    rescue Exception => e
       puts 'Error decrementing num_assets metric'
-      puts e.message  
+      puts e.message
       puts e.backtrace.inspect
     end
   end
@@ -47,7 +47,7 @@ class Thing < ApplicationRecord
       num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: self.public ? 'public' : 'private'}, curr_num_assets_metric_val + 1)
     rescue Exception => e
       puts 'Error incrementing num_assets metric'
-      puts e.message  
+      puts e.message
       puts e.backtrace.inspect
     end
   end
@@ -82,9 +82,9 @@ class Thing < ApplicationRecord
 
 
         num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: new_value ? 'public' : 'private'}, curr_num_assets_metric_val + 1);
-      rescue Exception => e  
+      rescue Exception => e
         puts 'Error decrementing num_assets metric'
-        puts e.message  
+        puts e.message
         puts e.backtrace.inspect
       end
       end
@@ -92,7 +92,7 @@ class Thing < ApplicationRecord
       def self.public_list
         # returns a default registry
         Thing.where(
-          :public => true, 
+          :public => true,
           :type => ['DataPage', 'SparqlEndpoint,' 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
           )
         .order(stars_count: :desc, created_at: :desc).includes(:user)
@@ -112,18 +112,18 @@ class Thing < ApplicationRecord
           copy.stars_count = 0
           copy.public = false
           original.add_child copy
-          increment_forks_metric
+          increment_forks_metric(original)
         end
       end
 
-      def increment_forks_metric
+      def increment_forks_metric(thing)
         num_forks = Prometheus::Client.registry.get(:num_forks)
         curr_num_forks = num_forks.get({asset_type: thing.type})
         num_forks.set({asset_type: thing.type}, curr_num_forks + 1)
       end
 
       # should we call this at all?
-      def decrement_forks_metric
+      def decrement_forks_metric(thing)
         num_forks = Prometheus::Client.registry.get(:num_forks)
         curr_num_forks = num_forks.get({asset_type: thing.type})
         num_forks.set({asset_type: thing.type}, curr_num_forks - 1)
@@ -158,7 +158,7 @@ class Thing < ApplicationRecord
 
       def touch_configuration!
     self.configuration = {} if not configuration.is_a?(Hash)
-      end 
+      end
     end
 
     # class Query < Thing; end

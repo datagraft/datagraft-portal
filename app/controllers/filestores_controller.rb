@@ -47,6 +47,7 @@ class FilestoresController < ThingsController
   end
 
   def show
+    puts "************ filestore show"
     super
     @preview_tab_obj = nil
     if @thing.file.exists?

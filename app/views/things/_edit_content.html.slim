@@ -6,5 +6,5 @@ div.mdl-card
   div.mdl-card__supporting-text
     = render 'form'
   div.mdl-card__actions
-    = link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 
-    = link_to 'Destroy', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-js-ripple-effect sin-button--danger"
+    = link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Delete file page', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-js-ripple-effect sin-button--danger"
