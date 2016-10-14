@@ -50,7 +50,7 @@ class FilestoresController < ThingsController
     puts "************ filestore show"
     super
     @preview_tab_obj = nil
-    if @thing.file.exists?
+    if !@thing.file.nil? and @thing.file.exists?
       @preview_text = "This file is available"
       open_spreadsheet(@thing.upload_format, @thing.file)
     else

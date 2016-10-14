@@ -25,13 +25,13 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
   div.mdl-card__actions
     //== link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
     - if can? :edit, @thing
-      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     - if user_signed_in?
-      == link_to 'Copy', thing_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
-    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+      == link_to 'Copy', thing_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     //- if user_signed_in?
     //  -if current_user.has_star(@thing)
     //    == link_to "Unstar (#{@thing.stars_count})", thing_unstar_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
     //  -else
     //    == link_to "Star (#{@thing.stars_count})", thing_star_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
-    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
