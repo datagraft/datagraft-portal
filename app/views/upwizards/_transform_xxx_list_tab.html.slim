@@ -1,8 +1,8 @@
 div.mdl-card__supporting-text.sin-padding
-  = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
+  = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
     #upwizard-list
       i.material-icons search
-      input.search placeholder="Search in files"
+      input.search placeholder="Search in transformations"
       button.sort type="button" data-sort="sin-list-name"  Sort by name
       button.sort type="button" data-sort="sin-list-user"  Sort by user
       button.sort type="button" data-sort="sin-list-time"  Sort by time
@@ -15,9 +15,8 @@ div.mdl-card__supporting-text.sin-padding
           - else
             - @thing_entries.each do |thing|
               li
-                .sin-list
-                  img src=image_url("icon--file.svg")
-                  = f.radio_button :radio_thing_id, thing.id
+                = image_tag("icon--transformation.svg", height: "30")
+                = f.radio_button :radio_thing_id, thing.id
                 .sin-list-name
                   = thing.name
                 .sin-list-user
@@ -26,4 +25,4 @@ div.mdl-card__supporting-text.sin-padding
                   = time_ago_in_words thing.updated_at
                   | ago
       div.mdl-card__actions
-        = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+        = f.submit "Next: Transform and add details", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UpwizardControllerTest < ActionDispatch::IntegrationTest
+class UpwizardsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

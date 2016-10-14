@@ -1,4 +1,4 @@
-class UpwizardController < ApplicationController
+class UpwizardsController < ApplicationController
   include UpwizardHelper
   include Wicked::Wizard
   steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
