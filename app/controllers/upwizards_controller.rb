@@ -3,6 +3,9 @@ class UpwizardsController < ApplicationController
   include Wicked::Wizard
   steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
+  # Receive new file attacement from form
+  # Step in the wizard is indicated by :id. Not used by this method
+  # POST     /:username/upwizards/:id/:wiz_id
   def create
     puts "************ upwizard create"
     @upwizard = Upwizard.find(params[:wiz_id])
@@ -14,6 +17,8 @@ class UpwizardsController < ApplicationController
     #calculate_filetype_and_warning
   end
 
+  # List all upwizard objects
+  # GET      /:username/upwizards
   def index
 
     if user_signed_in? && (current_user.username == params[:username] )
@@ -26,6 +31,9 @@ class UpwizardsController < ApplicationController
 
   end
 
+  # Create a new upwizard with a specific task.
+  #   Valid tasks are 'file' and 'sparql'
+  # GET      /:username/upwizards/new/:task
   def new
     puts "************ upwizard new"
 
@@ -58,6 +66,8 @@ class UpwizardsController < ApplicationController
     end
   end
 
+  # Delete a given upwizard including attaced file
+  # DELETE   /:username/upwizards/:wiz_id
   def destroy
     puts "************ upwizard destroy"
     @upwizard = Upwizard.find(params[:wiz_id])
@@ -68,6 +78,9 @@ class UpwizardsController < ApplicationController
     redirect_to upwizard_index_path(@user)
   end
 
+  # Show the step in the wizard
+  # Step in the wizard is indicated by :id.
+  # GET      /:username/upwizards/:id/:wiz_id
   def show
     puts "************ upwizard show"
     @upwizard = Upwizard.find(params[:wiz_id])
@@ -75,12 +88,20 @@ class UpwizardsController < ApplicationController
     process_state
   end
 
+  # Show trace information for this wizard
+  # Step in the wizard is indicated by :id. Not used by this method
+  # GET      /:username/upwizards/:id/:wiz_id/debug
   def debug
     puts "************ upwizard debug"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :read, @upwizard
   end
 
+  # Update with params from form
+  # Show the step in the wizard
+  # Step in the wizard is indicated by :id.
+  # PUT      /:username/upwizards/:id/:wiz_id
+  # PATCH    /:username/upwizards/:id/:wiz_id
   def update
     puts "************ upwizard update"
     @upwizard = Upwizard.find(params[:wiz_id])
@@ -100,8 +121,8 @@ private
     params.require(:upwizard).permit([:file, :task, :username, :radio_thing_id])
   end
 
+  # Delete the old file object if we get a new file object from form
   def delete_old_file_if_new
-    # Delete the old file object if we get a new file object
     unless upwizard_params[:file] == nil
       unless @upwizard.file == nil
         @upwizard.file.delete
@@ -112,6 +133,8 @@ private
       end
     end
   end
+
+  # Copy additional fileinformation from form
   def fill_filedetails_if_empty
     if @upwizard.original_filename.blank?
       unless upwizard_params[:file] == nil
@@ -123,6 +146,7 @@ private
     end
   end
 
+  # Extract file extension from filename
   def file_ext
     unless @upwizard.original_filename.blank?
       tmp_name = @upwizard.original_filename
@@ -134,6 +158,7 @@ private
     end
   end
 
+  # Make a list of existing filestores. Used by view
   def search_for_existing_filestores
     case step
     when :publish
@@ -143,6 +168,7 @@ private
     end
   end
 
+  # Make a list of existing transformations. Used by view
   def search_for_existing_transformations
     case step
     when :transform
@@ -152,6 +178,7 @@ private
     end
   end
 
+  # Check if file is compatible with task. Used by view
   def calculate_filetype_and_warning
     @sparql_file = false
     @filestore_file = false
@@ -165,7 +192,10 @@ private
 
     if (@upwizard.task == 'file')
       if (@sparql_file)
-        flash[:warning] = "You have uploaded an RDF file format, which is published in a SPARQL endpoint. If you would like to continue creating a file page, please press BACK and upload a tabular file (CSV, TSV, XLS, XLSX)."
+        if (step == :decide)
+          puts '******** Make FLASH warning'
+          flash[:warning] = "You have uploaded an RDF file format, which is published in a SPARQL endpoint.<BR> If you would like to continue creating a file page, please press BACK and upload a tabular file (CSV, TSV, XLS, XLSX)."
+        end
       end
     elsif (@upwizard.task == 'sparql')
       # No warnings
@@ -175,6 +205,7 @@ private
 
   end
 
+  # Is extension compatible for task sparql
   def sparql_ext? (ext)
     if (ext == 'rdf')
       return true
@@ -183,6 +214,7 @@ private
     end
   end
 
+  # Is extension compatible for task file
   def filestore_ext? (ext)
     if (ext == 'csv')
       return true
@@ -197,6 +229,9 @@ private
     end
   end
 
+  # Do handle next state request
+  # Push trace info onto the stack
+  # Render suitable view as a response
   def process_state
     puts "************ upwizard process_state"
     @curr_step = step
@@ -235,8 +270,6 @@ private
     when :error
       handle_error_and_render
     end
-
-
   end
 
   def handle_publish_and_render

@@ -10,20 +10,27 @@
         - unless kwds.blank?
           ul.keyw-array-container
             - kwds.each do |kwd|
-              li.keyw-array-item 
-                button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+              li.keyw-array-item
+                button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
                   = kwd
 
     hr.mdl-cell--12-col
 
-    .sin-endpoint-uri.mdl-cell--12-col
-      .sin-tab-label Download link: 
-      .sin-tab-textfield__box
-        = attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)
-      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
-        i.material-icons content_copy
-      = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
-        i.material-icons file_download
+    - unless @thing.file == nil
+      .sin-endpoint-uri.mdl-cell--10-col
+        .sin-tab-label Download link:
+        .sin-tab-textfield__box
+          = attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)
+      .sin-endpoint-uri.mdl-cell--1-col
+        #tooltip-clipboard
+          .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
+            i.material-icons content_copy
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-clipboard" Click to copy link to clipboard
+      .sin-endpoint-uri.mdl-cell--1-col
+        #tooltip-download
+          = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
+            i.material-icons file_download
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-download" Click to download file asset
 
     hr.mdl-cell--12-col
 
@@ -40,7 +47,7 @@
           | &nbsp;
           = @thing.license
 
-    .mdl-cell--6-col 
+    .mdl-cell--6-col
       .sin-tab-label File metadata
       .sin-tab-textfield__box
         - unless @thing.file.nil?
@@ -52,7 +59,7 @@
           dd
             = @thing.created_at
           p
-          dt Size: 
+          dt Size:
           dd
             = number_to_human_size @thing.file.size
 

@@ -1,17 +1,22 @@
 class FilestoresController < ThingsController
 
+  # Deprecated after introduction of upwizard
+  # Receive a file attachement
   # GET /publish
   def publish
     authorize! :create, Filestore
     @filestore = Filestore.new
   end
 
+  # Fetch a file attached to the filestore
   # GET ':username/filestores/:id/attachment'
   def attachment
     set_thing
     redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
   end
 
+  # Create a permanent filestore. Called from a new_form
+  # If :wiz_id is present the file attaced to upwizard is transferred to filestorage
   def create
     puts "************ filestore create"
     super
@@ -28,6 +33,9 @@ class FilestoresController < ThingsController
     end
   end
 
+  # Create a temporary filestore object and pass it to a new_form
+  # If :wiz_id is present the file attaced to upwizard is shown in the form
+  # The upwizard lives on as owner of the attaced file until create is called
   # GET /:username/filestores/new
   # GET /:username/filestores/new/:wiz_id
   def new
@@ -46,6 +54,8 @@ class FilestoresController < ThingsController
 
   end
 
+  # Show an existing filestore entry
+  # GET ':username/filestores/:id'
   def show
     puts "************ filestore show"
     super
@@ -72,6 +82,7 @@ class FilestoresController < ThingsController
       'filestores'
     end
 
+    # Copy fileinformation passed from the form but not part of the file obj.
     def fill_name_if_empty
       #@thing.name = filestore_params[:file].original_filename if @thing.name.blank?
 
@@ -98,6 +109,8 @@ class FilestoresController < ThingsController
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
 
+    # Open an attached file if it is a spreadsheet
+    # Return an object with tabular information usable for preview
     def open_spreadsheet(format, file)
       file_path = file.download.path
       case format
