@@ -11,5 +11,10 @@ module FilestoresHelper
     
     return "/#{current_user.username}/filestores"
   end
-  
+
+  SEPARATOR_LIST = %w(COMMA SEMI TAB)
+  def get_separator_list
+    return SEPARATOR_LIST
+  end
+    
 end

@@ -1,0 +1,31 @@
+- title 'LIsting of all wizards'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-card__supporting-text.sin-padding
+    #upwizard-list
+      i.material-icons search
+      input.search placeholder="Search in queries"
+      button.sort data-sort="sin-list-name"  Sort by name
+      button.sort data-sort="sin-list-user"  Sort by user
+      button.sort data-sort="sin-list-time"  Sort by time
+      .sin-list-textfield__scroll
+        ul.list
+          - if @upwizard_entries.empty?
+            li
+              .mld-list__item-primary-content
+                em Nothing published yet
+          - else
+            - @upwizard_entries.each do |wiz|
+              li
+                .sin-list-name
+                  = wiz.original_filename
+                .sin-list-user
+                  = wiz.user.username
+                .sin-list-time
+                  = time_ago_in_words wiz.updated_at
+                  | ago

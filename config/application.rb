@@ -2,6 +2,8 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'roo' #Used for viewing Excel files
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -24,7 +26,7 @@ module Datagraft
     # config.autoload_paths << Rails.root.join('lib')
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+#    config.active_record.raise_in_transactional_callbacks = true
     config.action_controller.allow_forgery_protection = false
     
     Gravatarify.options[:default] = 'monsterid' # beautiful monsters by default
@@ -32,13 +34,6 @@ module Datagraft
     Gravatarify.options[:secure] = true # security is our primary concern
     Gravatarify.options[:filetype] = :png # png > jpeg for small avatars
     
-    config.middleware.insert_before 0, "Rack::Cors" do
-      allow do
-        origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options, :patch, :put, :delete]
-      end
-    end
-
     config.to_prepare do
         Doorkeeper::ApplicationsController.layout "application" 
         Doorkeeper::AuthorizationsController.layout "application" 
@@ -48,7 +43,7 @@ module Datagraft
         MultiJson.use :yajl
     end
     
-    Refile.store ||= Refile::Backend::FileSystem.new("/tmp/uploads/store".to_s)
-    Refile.cache ||= Refile::Backend::FileSystem.new("/tmp/uploads/cache".to_s)
+    Refile.store ||= Refile::Backend::FileSystem.new("/var/refile_uploads/store".to_s)
+    Refile.cache ||= Refile::Backend::FileSystem.new("/var/refile_uploads/cache".to_s)
   end
 end

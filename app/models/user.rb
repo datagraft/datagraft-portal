@@ -13,7 +13,8 @@ class User < ApplicationRecord
   has_many :api_keys
   has_many :catalogues
   has_many :sparql_endpoints
-  
+  has_many :upwizards
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -25,7 +26,7 @@ class User < ApplicationRecord
   validates :username, length: { in: 3..140 }
   validates :username, exclusion: {
     in: %w(
-      datagraft
+      datagraft test_user
       data_distribution data_distributions
       filestore filestores
       queriable_data_store queriable_data_stores
@@ -48,21 +49,21 @@ class User < ApplicationRecord
     message: "only allows letters, numbers, underscores, and dashes" }
 
   # Caca de taureau
-  validates :terms_of_service, acceptance: true 
+  validates :terms_of_service, acceptance: true
 
   validates :website, :url => {:allow_blank => true}
 
   def to_param
-    self.username 
+    self.username
   end
 
   def star(thing)
     star = Star.new
     star.user = self
     star.thing = thing
-    star.save 
+    star.save
   end
-  
+
   def star_catalogue(catalogue)
     catalogue_star = CatalogueStar.new
     catalogue_star.user = self
@@ -81,13 +82,13 @@ class User < ApplicationRecord
   #   # false by default
   #   new_thing.public = false
   #   new_thing.save
-    
+
   #   thing.add_child(new_thing)
   #   # new_thing.parent = thing
   #   # new_thing.save && thing.save
   #   return new_thing
   # end
-  
+
   def unstar_catalogue(catalogue)
     CatalogueStar.where(user: self, catalogue: catalogue).destroy_all
   end
@@ -95,7 +96,7 @@ class User < ApplicationRecord
   def has_star(thing)
     Star.where(user: self, thing: thing).exists?
   end
-  
+
   def has_catalogue_star(catalogue)
     CatalogueStar.where(user: self, catalogue: catalogue).exists?
   end
@@ -107,7 +108,7 @@ class User < ApplicationRecord
   def dashboard_catalogues
     Catalogue.where(user: self).order(stars_count: :desc, created_at: :desc)
   end
-    
+
   def search_dashboard_things(search)
     # ActiveRecord::Base.connection.execute("SELECT set_limit(0);")
     # dashboard_things.fuzzy_search(metadata: search)
@@ -116,7 +117,7 @@ class User < ApplicationRecord
     # dashboard_things.fuzzy_search("metadata->>a" => search)
     # dashboard_things.fuzzy_search("metadata" => search)
   end
-  
+
   def search_dashboard_catalogues(search)
     # ActiveRecord::Base.connection.execute("SELECT set_limit(0.1);")
     dashboard_catalogues.basic_search(name: search)
@@ -134,7 +135,7 @@ class User < ApplicationRecord
       user.provider = auth.provider
       user.uid = auth.uid
       user.password = Devise.friendly_token[0,20]
-      # user.skip_confirmation! 
+      # user.skip_confirmation!
       # user.skip_confirmation! if user.respond_to?(:skip_confirmation)
       user.name = auth.info.name   # assuming the user model has a name
       # user.image = auth.info.image # assuming the user model has an image
@@ -155,7 +156,7 @@ class User < ApplicationRecord
         raw_info = session["devise.github_data"]["extra"]["raw_info"]
         user.email = data["info"]["email"] if user.email.blank?
         user.username = raw_info["login"].parameterize if user.username.blank?
-      end      
+      end
     end
   end
 end
