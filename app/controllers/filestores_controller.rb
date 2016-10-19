@@ -15,6 +15,21 @@ class FilestoresController < ThingsController
     redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
   end
 
+  # View the first rows of the attached file
+  # GET ':username/filestores/:id/preview'
+  def preview
+    puts "************ filestore preview"
+    set_thing
+    authorize! :read, @thing
+    @preview_tab_obj = nil
+    if !@thing.file.nil? and @thing.file.exists?
+      @preview_text = "This file is available"
+      open_spreadsheet(@thing.upload_format, @thing.file)
+    else
+      @preview_text = "This file is NOT available"
+    end
+  end
+
   # Create a permanent filestore. Called from a new_form
   # If :wiz_id is present the file attaced to upwizard is transferred to filestorage
   def create
@@ -44,11 +59,7 @@ class FilestoresController < ThingsController
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
-      #@thing.file = @upwizard.file
-      #@thing.file_size = @upwizard.file_size
-      #@thing.file_content_type = @upwizard.file_content_type
       @thing.original_filename = @upwizard.original_filename
-      #@upwizard.destroy
     end
     fill_default_values_if_empty
 
@@ -59,13 +70,13 @@ class FilestoresController < ThingsController
   def show
     puts "************ filestore show"
     super
-    @preview_tab_obj = nil
-    if !@thing.file.nil? and @thing.file.exists?
-      @preview_text = "This file is available"
-      open_spreadsheet(@thing.upload_format, @thing.file)
-    else
-      @preview_text = "This file is NOT available"
-    end
+    #@preview_tab_obj = nil
+    #if !@thing.file.nil? and @thing.file.exists?
+    #  @preview_text = "This file is available"
+    #  open_spreadsheet(@thing.upload_format, @thing.file)
+    #else
+    #  @preview_text = "This file is NOT available"
+    #end
   end
 
   protected
