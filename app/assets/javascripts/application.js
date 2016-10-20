@@ -28,12 +28,26 @@ document.addEventListener('turbolinks:load', function() {
 
   window.setTimeout(function() {
     $('.alert.alert-notice').hide();
-  }, 4200);
+  }, 10000);
+
+  window.setTimeout(function() {
+    $('.alert.alert-warning').hide();
+  }, 30000);
+
+  window.setTimeout(function() {
+    $('.alert.alert-error').hide();
+  }, 60000);
 
   $('body').on('cocoon:after-insert', function(e, insert) {
     componentHandler.upgradeDom();
     console.log("jaach")
   });
+
+hideIdAlert = function(objName){
+    //console.log("hideIdAlert");
+    var el = document.getElementById(objName);
+        el.style.display = 'none';
+}
 
 // TODO change to something more meaningful
   window.supercanard = $(".gridster ul").gridster({
@@ -48,4 +62,3 @@ $(document).ready(function(){
   console.log("Starting clipboard");
 
 });
-

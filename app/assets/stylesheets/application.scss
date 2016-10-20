@@ -76,6 +76,10 @@ html, body.mdl-base {
 .alert {
   // Change this property if your eyes burn too much
   background: $accent-color;
+  width: 50%;
+  margin: auto;
+  margin-top: 5px;
+  border-radius: 5px;
   // background: #384475;
   color: white;
   text-align: center;
@@ -84,8 +88,17 @@ html, body.mdl-base {
     // box-shadow: 0px -6px 8px -5px rgba(0, 0, 0, 0.35) inset;
 
 }
+.alert.alert-notice {
+  background: #00B200;
+}
+.alert.alert-warning {
+  background: #F28000;
+}
 .alert.alert-error {
   background: #F2504A;
+}
+.alert-close {
+  float: right;
 }
 .sin-condensed-form {
   margin: 8px;
