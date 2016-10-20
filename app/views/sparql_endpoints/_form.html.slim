@@ -30,5 +30,6 @@
   div.mdl-card__actions
     = link_to 'Back', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" 
     .mdl-layout-spacer
-    = link_to 'Delete endpoint', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to delete SPARQL endpoint?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
+    - unless @thing.new_record?
+      = link_to 'Delete endpoint', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to delete SPARQL endpoint?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
     = f.button :submit, "Save and show endpoint page", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
