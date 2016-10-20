@@ -36,9 +36,11 @@
         .mdl-tooltip.mdl-tooltip--left for="tooltip-separator" Choose different separator if your file preview fails to detect correct columns.
 
   hr.sin-invisible-form-separator
-  //.mdl-grid
+
   div.mdl-card__actions
     = link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
     - unless @thing.new_record?
       = link_to 'Delete file page', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
     = f.submit "Save and show file page", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

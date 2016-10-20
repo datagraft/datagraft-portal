@@ -34,4 +34,5 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     //    == link_to "Unstar (#{@thing.stars_count})", thing_unstar_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
     //  -else
     //    == link_to "Star (#{@thing.stars_count})", thing_star_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    .mdl-layout-spacer
     == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
