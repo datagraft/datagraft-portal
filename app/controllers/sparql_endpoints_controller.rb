@@ -37,11 +37,9 @@ class SparqlEndpointsController < ThingsController
     set_thing
     authorize! :read, @thing
 
-#byebug
-#    @sparql_endpoint = SparqlEndpoint.friendly.find(params[:id])
     @query = Query.new
     @query.name = 'Unsaved query'
-    @query.query = params["query"]
+    @query.query = params["execute_query"]["query"]
     @query.language = 'SPARQL'    
     
     begin
