@@ -51,7 +51,7 @@ Dropzone.options.filestoreDropZone = {
   maxFilesize: 4096,
   uploadMultiple : false,
   maxFiles : 1,
-  dictDefaultMessage: "Drop files(files) or click here to upload",
+  dictDefaultMessage: "Drop file or click here to upload",
 
   init: function() {
 
@@ -141,7 +141,7 @@ Dropzone.options.upwizardDropZone = {
   maxFilesize: 4096,
   uploadMultiple : false,
   maxFiles : 1,
-  dictDefaultMessage: "Drop files(files) or click here to upload",
+  dictDefaultMessage: "Drop file or click here to upload",
 
   init: function() {
 

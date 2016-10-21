@@ -163,8 +163,9 @@ private
     case step
     when :publish
       user = @upwizard.user
-      tmp = user.filestores.where(public: false)
-      @thing_entries = user.filestores.where(public: true) + tmp
+      tmp_user = user.filestores.where(public: false)
+      tmp_pub = Thing.public_list.where(:type => ['Filestore'])
+      @thing_entries =  tmp_pub + tmp_user
     end
   end
 
@@ -173,8 +174,9 @@ private
     case step
     when :transform
       user = @upwizard.user
-      tmp = user.transformations.where(public: false)
-      @thing_entries = user.transformations.where(public: true) + tmp
+      tmp_user = user.transformations.where(public: false)
+      tmp_pub = Thing.public_list.where(:type => ['Transformation'])
+      @thing_entries =  tmp_pub + tmp_user
     end
   end
 

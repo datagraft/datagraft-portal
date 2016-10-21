@@ -1,8 +1,7 @@
 div.mdl-layout
   div.mdl-grid
     div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
-      div.mdl-card__supporting-text
-        .sin-supporting-textfield
-          = raw 'Clicking this button will open the Grafterizer transformation tool and load the file you have chosen in the user interface. <br> You can store the result of your transformation and add more detatils when you are done!'
-      div.mdl-card__supporting-text
+      h2.mdl-card__title-text
+        = raw 'Clicking this button will open the Grafterizer transformation tool and <br>load the file you have chosen in the user interface. <br> You can store the result of your transformation and <br>add more details when you are done!'
+      div.mdl-card__actions
         == link_to 'Next: Create a transformation', wizard_path(:create_transform), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect "
