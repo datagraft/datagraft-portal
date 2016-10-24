@@ -1,0 +1,10 @@
+- title "Edit SPARQL query details"
+- setOption :mdlCard
+
+div.mdl-card
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+  div.sin-date-infos
+    = render 'last_modified_div'
+  div.mdl-card__supporting-text
+    = render 'form'

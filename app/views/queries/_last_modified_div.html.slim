@@ -1,0 +1,10 @@
+- if @thing.live?
+  em
+    | Last modification #{time_ago_in_words @thing.updated_at} ago
+    | &nbsp;-&nbsp; #{@thing.updated_at}
+- else
+  strong This is not the latest version.
+  em 
+    | &nbsp;#{time_ago_in_words @thing.updated_at} ago
+    | &nbsp;-&nbsp; #{@thing.updated_at}
+  == link_to "See latest version", thing_path(@thing), :class=> "mdl-button mdl-js-button mdl-js-ripple-effect"
