@@ -417,3 +417,11 @@ iframe.grafterizer {
 .turbolinks-progress-bar {
   background-color: $accent-color;
 }
+
+.sin-img-file > img {
+  align-self: center;
+  max-width: 50px;
+  max-height: 50px;
+  margin: auto;
+  display: inline;
+}

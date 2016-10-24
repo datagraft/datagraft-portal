@@ -111,6 +111,7 @@ class FilestoresController < ThingsController
           format_no_dot = format_with_dot.slice(1, format_with_dot.length)
           @thing.upload_format = format_no_dot  if  @thing.upload_format.blank?
         end
+        @ext = @thing.upload_format
       end
     end
 

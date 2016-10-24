@@ -7,13 +7,16 @@ class UpwizardsController < ApplicationController
   # Step in the wizard is indicated by :id. Not used by this method
   # POST     /:username/upwizards/:id/:wiz_id
   def create
+    #byebug
     puts "************ upwizard create"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
     delete_old_file_if_new
     @upwizard.update_attributes(upwizard_params)
+    #byebug
     fill_filedetails_if_empty
     @upwizard.save
+    #byebug
     #calculate_filetype_and_warning
   end
 
@@ -184,11 +187,11 @@ private
   def calculate_filetype_and_warning
     @sparql_file = false
     @filestore_file = false
-    ext = file_ext
+    @ext = file_ext
 
-    if (sparql_ext? ext)
+    if (sparql_ext? @ext)
       @sparql_file =  true
-    elsif (filestore_ext? ext)
+    elsif (filestore_ext? @ext)
       @filestore_file = true
     end
 
