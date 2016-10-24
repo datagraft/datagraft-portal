@@ -14,9 +14,12 @@ module QueriesHelper
   end
   
   def query_execute_sparql_endpoint_path(query, sparql_endpoint, parameters = {})
-byebug
     #"/#{query.user.username}/queries/#{query.slug}/execute/#{sparql_endpoint.user.username}/#{sparql_endpoint.slug}#{ "?#{parameters.to_query}" if parameters.present? }"
-    
+  end
+  
+  SPARQL_QUERY_TYPES = %w(SELECT CONSTRUCT)
+  def get_sparql_query_types
+    return SPARQL_QUERY_TYPES
   end
   
 end
