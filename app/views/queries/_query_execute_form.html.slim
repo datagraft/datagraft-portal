@@ -1,0 +1,18 @@
+= simple_form_for :querying, url: '/querying' do |f|
+  .mdl-cell--12-col
+    .sin-cell-layout-flex__start
+      .sin-form-input-label Endpoint
+      .sin-form-collection-select
+        = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
+      = link_to 'Go to endpoint page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+  
+  p
+  .mdl-cell--12-col
+    .sin-tab-textfield__scroll
+      = @thing.query
+      //= f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
+  
+  p
+  .mdl-cell--12-col
+    .sin-cell-layout-flex__center
+      = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'

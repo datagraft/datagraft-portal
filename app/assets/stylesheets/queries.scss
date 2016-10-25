@@ -1,0 +1,34 @@
+.sin-title__centered {
+  text-align: center; 
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.sin-cell-layout-flex__start {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+}
+
+.sin-cell-layout-flex__center {
+  display: flex;
+  justify-content: center;
+}
+
+.sin-form-input-label {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 2px;
+}
+
+.sin-form-collection-select {
+  padding-top: 8px;
+}
+
+.sin-cell-layout-flex__start .sin-form-input-label,
+.sin-cell-layout-flex__start .sin-form-collection-select,
+.sin-cell-layout-flex__start .mdl-button {
+  padding-right: 10px;
+}
