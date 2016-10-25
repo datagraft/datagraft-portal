@@ -1,0 +1,10 @@
+- title 'Task not supported'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-card__supporting-text.sin-padding
+    p = "Task = <#{params['task']}> is not supported by upwizard"

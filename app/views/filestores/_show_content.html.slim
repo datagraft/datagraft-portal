@@ -1,19 +1,61 @@
 - unless @thing.description.blank?
   hr
+
+- kwds = @thing.keywords
+- unless kwds.blank?
+  ul.filestore-array-container
+    - kwds.each do |kwd|
+      li.filestore-array-item
+        button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
+          = kwd
+  hr
+
 dl
-  dt Size
-  dd = number_to_human_size @thing.file_size
-  dt Content-type
-  dd = @thing.file_content_type
-  - if @thing.file_content_type.start_with? 'image/'
-    dt Preview
-    dd
-      br
-      = link_to attachment_url(@thing, :file) do
-        = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
+
+  dt Tabular data preview
+  dd
+    - if @preview_tab_obj == nil
+      = @preview_text
+    - else
+      .container-scroll
+        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
+          - to = @preview_tab_obj
+          - rows = to.last_row
+          - rows = 10 if rows > 10
+          - 1.upto(rows) do |i|
+            tr
+              - 1.upto(to.last_column) do |j|
+                th = to.cell(i,j)
+  - unless @thing.file_content_type == nil
+    dt Content-type
+    dd = @thing.file_content_type
+    - if @thing.file_content_type.start_with? 'image/'
+      dt Preview
+      dd
+        br
+        = link_to attachment_url(@thing, :file) do
+          = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
+
+  dt Download links
+  dd
+    .mdl-grid
+      .mdl-cell.mdl-cell--2-col
+        = 'Download link'
+      .mdl-cell.mdl-cell--6-col
+        = truncate(attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), length:60)
+
+      .mdl-cell.mdl-cell--2-col
+        .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
+          i.material-icons content_copy
+
+      .mdl-cell.mdl-cell--2-col
+        = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
+          i.material-icons file_download
+  dt Size (filestores)
+  dd = number_to_human_size @thing.file.size
+
+
 br
 
 .mdl-grid
   = link_to "Transform", 'perdu.com', class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-cell mdl-cell--3-col"
-
-  = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"

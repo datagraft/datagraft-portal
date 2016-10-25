@@ -2,17 +2,17 @@
 - setOption :mdlCard
 
 
-div[class="mdl-card #{@thing.live? ? '' : 'sin-old-version'}"]
+div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
   div.mdl-card__title.mdl-color-text--grey-50
-    = render 'thing_header' 
+    = render 'thing_header'
   div.sin-date-infos
-    - if @thing.live?
+    - if @thing.paper_trail.live?
       em
         | Last modification #{time_ago_in_words @thing.updated_at} ago
         | &nbsp;-&nbsp; #{@thing.updated_at}
     - else
       strong This is not the latest version.
-      em 
+      em
         | &nbsp;#{time_ago_in_words @thing.updated_at} ago
         | &nbsp;-&nbsp; #{@thing.updated_at}
       == link_to "See latest version", thing_path(@thing), :class=> "mdl-button mdl-js-button mdl-js-ripple-effect"

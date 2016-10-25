@@ -1,0 +1,28 @@
+div.mdl-card__supporting-text.sin-padding
+  = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
+    #upwizard-list
+      i.material-icons search
+      input.search placeholder="Search in queries"
+      button.sort data-sort="sin-list-name"  Sort by name
+      button.sort data-sort="sin-list-user"  Sort by user
+      button.sort data-sort="sin-list-time"  Sort by time
+      .sin-list-textfield__scroll
+        ul.list
+          - if @thing_entries.empty?
+            li
+              .mld-list__item-primary-content
+                em Nothing published yet
+          - else
+            - @thing_entries.each do |thing|
+              li
+                img src=image_url("60_file.png")
+                = f.radio_button :radio_thing_id, thing.id
+                .sin-list-name
+                  = thing.name
+                .sin-list-user
+                  = thing.user.username
+                .sin-list-time
+                  = time_ago_in_words thing.updated_at
+                  | ago
+      div.mdl-card__actions
+        = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

@@ -1,0 +1,48 @@
+// Place all the styles related to the upwizard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+/* CSS for scrollable list */
+.sin-list-textfield__scroll {
+  //border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+  overflow-y: auto;
+  max-height: 800px;
+}
+
+.sin-supporting-textfield{
+  font-size: 16px;
+}
+
+.list {
+  font-family:sans-serif;
+  margin:0;
+  //padding:20px 0 0;
+  padding: 0 0 0;
+}
+.list > li {
+  display:block;
+  //background-color: #aaa;
+  //padding:10px;
+  padding: 2px;
+  box-shadow: inset 0 1px 0 rgba(3,3,3,0.3);
+}
+
+.sin-list-icon {
+  display: inline;
+  margin: 10px;
+}
+
+.sin-list-name {
+  display: inline;
+  margin: 10px;
+}
+
+.sin-list-user {
+  display: inline;
+  margin: 10px;
+}
+
+.sin-list-time {
+  display: inline;
+  margin: 10px;
+}

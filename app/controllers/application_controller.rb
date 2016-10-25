@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_action :authenticate_user_from_token_or_doorkeeper!
-  after_filter :store_location!
+  after_action :store_location!
 
   #check_authorization :unless => :do_not_check_authorization?
 
@@ -63,6 +63,10 @@ class ApplicationController < ActionController::Base
 
     def user_for_paper_trail
       user_signed_in? ? current_user.username : 'anonymous'
+    end
+
+    def not_found
+      raise ActionController::RoutingError.new('Not Found')
     end
 
   private

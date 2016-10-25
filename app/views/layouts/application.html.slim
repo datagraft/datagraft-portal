@@ -15,7 +15,7 @@ html
     = csrf_meta_tags
   body[class="mdl-base mdl-color--grey-100 mdl-color-text--grey-700 sin-controller--#{controller.controller_name} sin-action--#{controller.action_name}"]
     .mdl-layout__container
-      .mdl-layout.mdl-js-layout.mdl-layout--fixed-header[style="position:absolute;"]
+      .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
         header.mdl-layout__header.mdl-color--primary.mdl-color-text--white
           .mdl-layout__header-row
             a.mdl-navigation__link.mdl-layout-title.datagraft-main-title href="/"
@@ -62,7 +62,7 @@ html
               = value
 
           - if hasOption :noShadow
-            section.section--center.sin-padding
+            section.section--center.sin-padding.sin-section-simple-margin
               = yield
 
           - elsif hasOption :flexPage
@@ -73,8 +73,9 @@ html
             section.sin-section-simple-margin
               = yield
           - elsif hasOption :colourFull
-            section.sin-colourfull.mdl-grid
-              = yield
+            section[style="flex: 1 1 0%"]
+              div.mdl-grid.sin-colourfull
+                = yield
           - elsif hasOption :mdlCard
             section.section--center.mdl-shadow--2dp.mdl-color--white.sin-card-layout
               = yield
@@ -85,7 +86,21 @@ html
           - else
             section.section--center.mdl-shadow--2dp.mdl-color--white.sin-padding
               = yield
-          footer.mdl-grid
-            div
-              ' DataGraft is a service operated by the DaPaaS project, co-funded by the EC under 7th Framework Programme (FP7 2007-2013)
-
+          footer.mdl-mini-footer.sin-mini-footer
+            .mdl-mini-footer__left-section
+              ul.mdl-mini-footer__link-list
+                li News
+                li Documentation
+                li API
+                li Feedback
+            .sin-mini-footer__small-print
+              ' DataGraft is a service operated by the #{link_to 'proDataMarket', 'http://prodatamarket.eu'} project, co-funded by the EC under HORIZON 2020, The EU Framework Programme for Research and Innovation (2015-2017)
+            .mdl-mini-footer__right-section
+              ul.mdl-mini-footer__link-list
+                li 
+                  =link_to "Terms Of Use", terms_of_use_path
+                li 
+                  =link_to "Privacy Policy", privacy_policy_path
+                li Cookie Policy
+                li 
+                  =link_to "FAQ", faq_path
