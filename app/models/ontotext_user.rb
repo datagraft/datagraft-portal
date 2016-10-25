@@ -197,7 +197,7 @@ module OntotextUser
           '@context' => ontotext_declaration,
           'dct:title' => qds[:name].parameterize,
           'dct:description' => qds[:description].to_s,
-          'dcat:public' => 'false',
+          'dcat:public' => qds[:public].to_s,
           'dct:modified'=> today,
           'dct:issued' => today
         }.to_json

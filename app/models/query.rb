@@ -13,7 +13,8 @@ class Query < Thing
   @@allowed_languages = %w(SPARQL SQL R whatever)
   cattr_accessor :allowed_languages
 
-  validates :language, presence: true, inclusion: {in: @@allowed_languages}
+# No longer required for SPARQL endpoints
+#  validates :language, presence: true, inclusion: {in: @@allowed_languages}
   accepts_nested_attributes_for :queriable_data_stores
   accepts_nested_attributes_for :sparql_endpoints
 
@@ -30,6 +31,15 @@ class Query < Thing
     configuration["query"] = val
   end
 
+  def query_type
+    configuration["query_type"] unless configuration.blank?
+  end
+  
+  def query_type=(val)
+    touch_configuration!
+    configuration["query_type"] = val
+  end
+  
   def language
     configuration["language"] unless configuration.blank?
   end
@@ -76,9 +86,8 @@ class Query < Thing
       headers: [],
       results: []
     } if not sparql_endpoint.uri
-
     conn = Faraday.new(sparql_endpoint.uri) do |c|
-#    conn = Faraday.new("https://rdf.datagraft.net/4845348921/db/repositories/1512015698_graft-computed-transformation-6") do |c|
+#    conn = Faraday.new("https://rdf.datagraft.net/4845348921/db/repositories/1512015698_graft-computed-transformation-4") do |c|
       c.request :url_encoded
       c.adapter Faraday.default_adapter
     end
@@ -87,7 +96,7 @@ class Query < Thing
       req.params['query'] = query
       req.headers['Accept'] = 'application/sparql-results+json'
     end
-    
+#byebug    
     if result.status != 200
       raise result.body
     end

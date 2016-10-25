@@ -8,8 +8,8 @@
       .sin-tab-textfield__box
         - unless @thing.uri.blank?
           = render_markdown(@thing.uri)
-      .mdl-button
-        i.material-icons description        
+      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #"
+        i.material-icons content_copy 
           
     .links.sin-nested-links
       hr

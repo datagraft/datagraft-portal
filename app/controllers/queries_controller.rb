@@ -66,7 +66,7 @@ class QueriesController < ThingsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :language, :description,
+        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description,
           queriable_data_store_ids: [],
           sparql_endpoint_ids: [])
     end
