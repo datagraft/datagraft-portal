@@ -44,7 +44,8 @@
         p
         dt Size: 
         dd
-          = repository_size + ' triples'
+          //= repository_size + ' triples'
+          = number_to_human_size repository_size
     
   hr.sin-invisible-form-separator
   div.mdl-card__actions
