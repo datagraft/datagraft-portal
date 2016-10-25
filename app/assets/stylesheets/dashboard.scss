@@ -196,6 +196,14 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     button.mdl-button {
       min-height: 20px;
     }
+
+    li.mdl-menu__item {
+      display: flex;
+      & > i.material-icons {
+        align-self: center;
+        padding-right: 5px;
+      }
+    }
   }
 }
 .sin-dashboard-layout .mdl-card {

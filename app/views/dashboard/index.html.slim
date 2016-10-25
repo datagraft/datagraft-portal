@@ -120,9 +120,15 @@
                 button.mdl-button.mdl-js-button.mdl-button--icon id=("menu-#{thing.id}")
                   i.material-icons more_vert
                 ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
-                  li.mdl-menu__item Copy
-                  li.mdl-menu__item Edit
-                  li.mdl-menu__item Delete
+                  li.mdl-menu__item 
+                    i.material-icons content_copy
+                    | Copy
+                  li.mdl-menu__item  
+                    i.material-icons mode_edit
+                    | Edit
+                  li.mdl-menu__item  
+                    i.material-icons delete
+                    | Delete
 
         - if @things.empty?
           tfoot 
