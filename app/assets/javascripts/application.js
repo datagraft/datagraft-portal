@@ -18,7 +18,7 @@
 //= require material
 //= require jquery.gridster.js
 //= require clipboard
-
+//= require dataTables/jquery.dataTables
 
 document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();

@@ -227,9 +227,10 @@ main .mdl-button.mdl-js-ripple-effect {
 }
 
 .mdl-layout__content.sin-main-layout {
-  display:flex;
+  justify-content: space-between;
+  display: flex;
   flex-direction: column;
-  flex: 1;
+//  flex: 1;
 }
 
 // .sin-main-layout > section {
