@@ -13,6 +13,7 @@ class Thing < ApplicationRecord
   validates :name, presence: true
   validates :user, presence: true
 
+  acts_as_taggable_on :keywords
   # As parents and children (forking stuff)
   has_closure_tree
 

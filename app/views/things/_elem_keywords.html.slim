@@ -1,0 +1,9 @@
+- kwds = @thing.keywords
+- unless kwds.blank?
+  .sin-keyword-fbox
+    ul
+      - kwds.each do |kwd|
+        li
+          span.mdl-chip
+            span.mdl-chip__text
+              = kwd

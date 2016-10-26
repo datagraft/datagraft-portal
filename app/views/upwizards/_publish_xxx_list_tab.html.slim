@@ -1,29 +1,58 @@
-div.mdl-card__supporting-text.sin-padding
+div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
-    #upwizard-list
-      i.material-icons search
-      input.search placeholder="Search in files"
-      button.sort type="button" data-sort="sin-list-name"  Sort by name
-      button.sort type="button" data-sort="sin-list-user"  Sort by user
-      button.sort type="button" data-sort="sin-list-time"  Sort by time
-      .sin-list-textfield__scroll
-        ul.list
-          - if @thing_entries.empty?
-            li
-              .mld-list__item-primary-content
-                em Nothing published yet
-          - else
-            - @thing_entries.each do |thing|
+    div.mdl-card__supporting-text.sin-padding
+      #upwizard-list
+        i.material-icons search
+        input.search placeholder="Search in files"
+        button.sort type="button" data-sort="sin-list-hidden-name"  Sort by name
+        button.sort type="button" data-sort="sin-list-hidden-user"  Sort by user
+        button.sort type="button" data-sort="sin-list-hidden-time"  Sort by time
+        label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
+          input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublic(this, '.row-public')"
+          span.mdl-checkbox__label Include public entries
+        .sin-list-textfield__scroll
+          ul.list
+            - if @thing_entries.empty?
               li
-                .sin-list
-                  = image_tag("icon--file.svg", height: "30")
-                  = f.radio_button :radio_thing_id, thing.id
-                .sin-list-name
-                  = thing.name
-                .sin-list-user
-                  = thing.user.username
-                .sin-list-time
-                  = time_ago_in_words thing.updated_at
-                  | ago
-      div.mdl-card__actions
+                .mld-list__item-primary-content
+                  em Nothing published yet
+            - else
+              - @thing_entries.each do |thing|
+                li
+                  .sin-list-hidden-name
+                    = thing.name
+                  .sin-list-hidden-user
+                    = thing.user.username
+                  .sin-list-hidden-time
+                    = time_ago_in_words thing.updated_at
+                    | ago
+
+                  - add_class = 'row-private'
+                  - unless thing.user.username == @upwizard.user.username
+                    - add_class = 'row-public'
+                  div class="#{add_class}"
+                    ul.row-fbox
+                      li
+                        .sin-list
+                          = image_tag("icon--file.svg", height: "30")
+                      li
+                        .sin-list
+                          = f.radio_button :radio_thing_id, thing.id
+                      li
+                        .sin-list-name
+                          = thing.name
+                      li
+                        .sin-list-user
+                          = thing.user.username
+                      li
+                        .sin-list
+                          i.material-icons = thing.public ? 'lock_open' : 'lock'
+                      li
+                        .sin-list-time
+                          = time_ago_in_words thing.updated_at
+                          | ago
+    div.mdl-card__actions
+      == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+      .mdl-layout-spacer
+      - unless @thing_entries.empty?
         = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

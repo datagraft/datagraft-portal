@@ -9,8 +9,10 @@ div.mdl-card
   - unless @upwizard.original_filename.blank?
     div.mdl-card__supporting-text.sin-padding
       .sin-supporting-textfield
-        - unless @upwizard.original_filename.blank?
-          = 'File name: ' + @upwizard.original_filename
+        .sin-img-file
+          = render 'file_logo_div'
+          - unless @upwizard.original_filename.blank?
+            = 'File name: ' + @upwizard.original_filename
       .sin-supporting-textfield
         - unless @upwizard.file_content_type.blank?
           = 'File content type: ' + @upwizard.file_content_type
@@ -18,6 +20,7 @@ div.mdl-card
 
   div.mdl-card__actions
     == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    .mdl-layout-spacer
     - if @sparql_file
       == link_to 'Next: Add SPARQL endpoint details', wizard_path(:go_sparql), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect "
     - if @filestore_file

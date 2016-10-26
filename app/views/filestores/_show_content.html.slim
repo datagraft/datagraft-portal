@@ -1,124 +1,14 @@
-- unless @thing.description.blank?
-  hr
 
-.sin-tab-layout
-  .mdl-grid
-    .mdl-cell--12-col
-      .sin-tab-label Keywords
-      .sin-tab-textfield__colorbox
-        - kwds = @thing.keywords
-        - unless kwds.blank?
-          ul.keyw-array-container
-            - kwds.each do |kwd|
-              li.keyw-array-item 
-                button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
-                  = kwd
+= render 'elem_keywords'
 
-    hr.mdl-cell--12-col
+hr
+= render 'elem_download'
 
-    .sin-endpoint-uri.mdl-cell--12-col
-      .sin-tab-label Download link: 
-      .sin-tab-textfield__box
-        = attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)
-      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
-        i.material-icons content_copy
-      = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
-        i.material-icons file_download
+hr
+.sin-info-fbox
+  ul
+    li
+      = render 'elem_license'
 
-    hr.mdl-cell--12-col
-
-    .mdl-cell--6-col
-      .sin-tab-label License
-      .sin-img-license
-        - unless @thing.license.blank?
-          = render 'license_logo_div'
-      .sin-tab-text.center
-        - unless @thing.license.blank?
-          = @thing.name
-          | &nbsp;
-          | is licensed under
-          | &nbsp;
-          = @thing.license
-
-    .mdl-cell--6-col 
-      .sin-tab-label File metadata
-      .sin-tab-textfield__box
-        - unless @thing.file.nil?
-          dt Filename:
-          dd
-            = @thing.original_filename
-          p
-          dt Uploaded on:
-          dd
-            = @thing.created_at
-          p
-          dt Size: 
-          dd
-            = number_to_human_size @thing.file.size
-
-    .mdl-cell--12-col
-      dt Tabular data preview
-      dd
-        - if @preview_tab_obj == nil
-          = @preview_text
-        - else
-          .container-scroll
-            table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
-              - to = @preview_tab_obj
-              - rows = to.last_row
-              - rows = 10 if rows > 10
-              - 1.upto(rows) do |i|
-                tr
-                  - 1.upto(to.last_column) do |j|
-                    th = to.cell(i,j)
-      - unless @thing.file_content_type == nil
-        dt Content-type
-        dd = @thing.file_content_type
-        - if @thing.file_content_type.start_with? 'image/'
-          dt Preview
-          dd
-            br
-            = link_to attachment_url(@thing, :file) do
-              = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
-
-dl
-
-  //dt Tabular data preview
-  //dd
-    - if @preview_tab_obj == nil
-      = @preview_text
-    - else
-      .container-scroll
-        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
-          - to = @preview_tab_obj
-          - rows = to.last_row
-          - rows = 10 if rows > 10
-          - 1.upto(rows) do |i|
-            tr
-              - 1.upto(to.last_column) do |j|
-                th = to.cell(i,j)
-  //- unless @thing.file_content_type == nil
-    dt Content-type
-    dd = @thing.file_content_type
-    - if @thing.file_content_type.start_with? 'image/'
-      dt Preview
-      dd
-        br
-        = link_to attachment_url(@thing, :file) do
-          = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
-
-  //dt Download links
-  //dd
-    .mdl-grid
-      .mdl-cell.mdl-cell--2-col
-        = 'Download link'
-      .mdl-cell.mdl-cell--6-col
-        = truncate(attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), length:60)
-
-      .mdl-cell.mdl-cell--2-col
-        .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
-          i.material-icons content_copy
-
-      .mdl-cell.mdl-cell--2-col
-        = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
-          i.material-icons file_download
+    li
+      = render 'elem_file_metadata'

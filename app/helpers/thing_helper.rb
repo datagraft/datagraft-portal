@@ -43,18 +43,63 @@ module ThingHelper
     "/#{username}/#{params[:controller]}/new"
   end
   
-  private
 
-  def thing_generic_path(thing, method, parameters = {})
+  def update_asset_version_metric(asset_type_string)
+    
+    begin
+      num_assets = 0
+      case asset_type_string
+      when "DataPage"
+        Thing.includes(:versions).where(type: "DataPage").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Transformation"
+        Thing.includes(:versions).where(type: "Transformation").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "QueriableDataStore"
+        Thing.includes(:versions).where(type: "QueriableDataStore").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Query"
+        Thing.includes(:versions).where(type: "Query").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "SparqlEndpoint"
+        Thing.includes(:versions).where(type: "SparqlEndpoint").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Filestore"
+        Thing.includes(:versions).where(type: "Filestore").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "DataDistribution"
+        Thing.includes(:versions).where(type: "DataDistribution").each do |thing|
+          num_assets += thing.versions.count
+        end
+      else
+        throw "unknown asset type"
+      end
+      num_versions = Prometheus::Client.registry.get(:num_versions)
+      num_versions.set({asset_type: asset_type_string}, num_assets)
+    rescue Exception => e
+      puts 'Error updating num_versions metric: '
+      puts e.message  
+      puts e.backtrace
+    end
 
-    user = thing.nil? ? current_user : thing.user
-    return "" if user.nil?
-
-    classname = thing.class.name
-
-    slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
-
-    "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
   end
 
+  private
+
+    def thing_generic_path(thing, method, parameters = {})
+      user = thing.nil? ? current_user : thing.user
+      return "" if user.nil?
+
+      classname = thing.class.name
+
+      slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+
+      "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+    end
 end

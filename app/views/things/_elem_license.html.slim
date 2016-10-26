@@ -1,0 +1,11 @@
+.sin-info-label License
+.sin-img-license
+  - unless @thing.license.blank?
+    = render 'license_logo_div'
+.sin-info-text.center
+  - unless @thing.license.blank?
+    = @thing.name
+    | &nbsp;
+    | is licensed under
+    | &nbsp;
+    = @thing.license

@@ -17,6 +17,7 @@
 //= require cocoon
 //= require material
 //= require jquery.gridster.js
+//= require dataTables/jquery.dataTables
 //= require clipboard
 //= require list
 //= require list.pagination.min
@@ -27,14 +28,28 @@ document.addEventListener('turbolinks:load', function() {
 
   window.setTimeout(function() {
     $('.alert.alert-notice').hide();
-  }, 4200);
+  }, 10000);
+
+  window.setTimeout(function() {
+    $('.alert.alert-warning').hide();
+  }, 30000);
+
+  window.setTimeout(function() {
+    $('.alert.alert-error').hide();
+  }, 60000);
 
   $('body').on('cocoon:after-insert', function(e, insert) {
     componentHandler.upgradeDom();
     console.log("jaach")
   });
 
+hideIdAlert = function(objName){
+    //console.log("hideIdAlert");
+    var el = document.getElementById(objName);
+        el.style.display = 'none';
+}
 
+// TODO change to something more meaningful
   window.supercanard = $(".gridster ul").gridster({
       widget_margins: [10, 10],
       widget_base_dimensions: [140, 140]
@@ -48,3 +63,9 @@ $(document).ready(function(){
 
 });
 
+/*console.log("wat")
+$('body').on('cocoon:after-insert', function() {
+console.log("meh")
+  componentHandler.upgradeDom();
+});
+*/

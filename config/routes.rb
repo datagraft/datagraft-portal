@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
   get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
+  get ':username/filestores/:id/preview' => 'filestores#preview'
   get ':username/filestores/new/:wiz_id' => 'filestores#new'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'

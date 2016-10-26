@@ -1,28 +1,16 @@
 = simple_form_for @thing, url: thing_path(@thing) do |f|
   = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
+    = render 'elem_download'
     h4.mdl-cell--12-col Properties
-    .mdl-grid
-      - unless @thing.file == nil
-        .mdl-cell.mdl-cell--2-col
-          = 'Download link'
-        .mdl-cell.mdl-cell--6-col
-          = truncate(attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), length:60)
-
-        .mdl-cell.mdl-cell--2-col
-          .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
-            i.material-icons content_copy
-
-        .mdl-cell.mdl-cell--2-col
-          = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored "
-            i.material-icons file_download
+    - unless @thing.file == nil
     .sin-input-with-help-icon
-      = f.input :name, placeholder: "Enter a file page name", wrapper: :default
+      = f.input :name, wrapper: :default
       .sin-help-icon-with-tooltip
         #tooltip-name.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the file which will appear on the asset browsing table. File name by default.
     .sin-input-with-help-icon
-      = f.input :description, placeholder: "Enter a description for the file page", as: :text, input_html: { rows: 5 }
+      = f.input :description, as: :text, input_html: { rows: 5 }
       .sin-help-icon-with-tooltip
         #tooltip-description.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the file, which will appear on the file details page.
@@ -32,7 +20,7 @@
         #tooltip-public.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the file page will be visible to other users of DataGraft.
     .sin-input-with-help-icon
-      = f.input :keyword_list, label: "Keywords", placeholder: "Enter keywords separated by commas", as: :text, input_html: { rows: 5 }
+      = f.input :keyword_list, label: "Keywords", prompt: "Enter keywords separated by commas", as: :text, input_html: { rows: 5 }
       .sin-help-icon-with-tooltip
         #tooltip-keywords.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords" Enter keywords separated by commas.
@@ -48,10 +36,11 @@
         .mdl-tooltip.mdl-tooltip--left for="tooltip-separator" Choose different separator if your file preview fails to detect correct columns.
 
   hr.sin-invisible-form-separator
-  //.mdl-grid
+
   div.mdl-card__actions
     = link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
     - unless @thing.new_record?
       = link_to 'Delete file page', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
     = f.submit "Save and show file page", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
-    

@@ -60,9 +60,15 @@ html
           
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
         
+          //- flash[:error] = "Test error"
+          //- flash[:warning] = "Test warning"
+          //- flash[:notice] = "Test notice"
           - flash.each do |key, value|
-            div class="alert alert-#{key}"
-              = value
+            div id="show-alert-#{key}" class="alert alert-#{key}"
+              button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab.alert-close onClick="hideIdAlert('show-alert-#{key}')"
+                i.material-icons close
+              = raw value
+          - flash.clear
 
           - if hasOption :noShadow
             section.section--center.sin-padding.sin-section-simple-margin

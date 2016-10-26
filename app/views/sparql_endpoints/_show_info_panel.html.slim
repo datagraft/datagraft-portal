@@ -2,7 +2,7 @@
 .sin-tab-layout
   .mdl-grid
     h3.sin-tab-title.mdl-cell--12-col Endpoint information
-    
+
     .mdl-cell--12-col
       .sin-tab-label Description
       .sin-tab-textfield__scroll
@@ -16,12 +16,12 @@
         - unless kwds.blank?
           ul.keyw-array-container
             - kwds.each do |kwd|
-              li.keyw-array-item 
-                button.mdl-button.mdl-js-button.mdl-button--raised disabled="" 
+              li.keyw-array-item
+                button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
                   = kwd
-                
+
     hr.mdl-cell--12-col
-    
+
     .mdl-cell--6-col
       .sin-tab-label License
       .sin-img-license
@@ -35,21 +35,21 @@
           | &nbsp;
           = @thing.license
 
-    .mdl-cell--6-col 
+    .mdl-cell--6-col
       .sin-tab-label SPARQL endpoint information
       .sin-tab-textfield__box
         dt Provisioned on:
         dd
           = @thing.created_at
         p
-        dt Size: 
+        dt Size:
         dd
           = repository_size + ' triples'
-    
+
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     - if can? :edit, @thing
       == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     .mdl-layout-spacer
-    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to 'Back to Home Page', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

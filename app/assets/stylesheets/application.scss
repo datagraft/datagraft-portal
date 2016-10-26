@@ -81,15 +81,29 @@ html, body.mdl-base {
 .alert {
   // Change this property if your eyes burn too much
   background: $accent-color;
+  width: 50%;
+  margin: auto;
+  margin-top: 5px;
+  border-radius: 5px;
   // background: #384475;
   color: white;
+  text-align: center;
   padding: 1.2em 1em 1.2em 2em;
   box-shadow: 0px -6px 3px -5px rgba(0, 0, 0, 0.25) inset
     // box-shadow: 0px -6px 8px -5px rgba(0, 0, 0, 0.35) inset;
 
 }
+.alert.alert-notice {
+  background: #00B200;
+}
+.alert.alert-warning {
+  background: #F28000;
+}
 .alert.alert-error {
   background: #F2504A;
+}
+.alert-close {
+  float: right;
 }
 .sin-condensed-form {
   margin: 8px;
@@ -407,6 +421,18 @@ iframe.grafterizer {
   color: rgba(0,0,0,0.6);
 }
 
+.turbolinks-progress-bar {
+  background-color: $accent-color;
+}
+
+.sin-img-file > img {
+  align-self: center;
+  max-width: 50px;
+  max-height: 50px;
+  margin: auto;
+  display: inline;
+}
+  
 .sin-mini-footer {
   flex: 0 0 36px;
   flex-wrap: nowrap;
@@ -465,8 +491,4 @@ iframe.grafterizer {
       padding: 3px 0 0 0;
     }
   }
-}
-
-.turbolinks-progress-bar {
-  background-color: $accent-color;
 }
