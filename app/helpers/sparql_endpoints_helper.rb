@@ -22,5 +22,15 @@ module SparqlEndpointsHelper
   def all_queries
     return Thing.where(type: 'Query')
   end
+  
+  
+  # Search for queries 
+  def search_for_existing_queries
+    user = @thing.user
+    tmp_user = user.queries.where(public: false)
+    tmp_pub = Thing.public_list.where(:type => ['Query'])
+
+    return tmp_user + tmp_pub
+  end
 
 end

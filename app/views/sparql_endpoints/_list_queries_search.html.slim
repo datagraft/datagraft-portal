@@ -5,15 +5,16 @@
   button.sort data-sort="sin-container-hidden-date"  Sort by date
   button.sort data-sort="sin-container-hidden-user"  Sort by user
   label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public" 
-    input#checkbox-queries-public.mdl-checkbox__input checked="checked" type="checkbox" /
+    input#checkbox-queries-public.mdl-checkbox__input type="checkbox" onClick="updateFilterPublic(this, '.row-public')"
     .mdl-checkbox__label Include all public queries
   .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
   .sin-list-textfield__scroll
     ul.list
-      //- unless @thing.queries.empty?
-      - unless all_queries.empty?
+      - queriesList = search_for_existing_queries
+      - unless queriesList.empty?
         //- @thing.queries.order(stars_count: :desc, created_at: :desc).each do |query|
-        - all_queries.order(stars_count: :desc, created_at: :desc).each do |query|
+        //- queriesList.order(stars_count: :desc, created_at: :desc).each do |query|
+        - queriesList.each do |query|
           - if can? :read, query
             li
               .sin-container-hidden-name
@@ -22,7 +23,11 @@
                 = query.updated_at
               .sin-container-hidden-user
                 = query.user.username
-              .container
+              
+              - add_class = 'row-private'
+              - unless query.user.username == @thing.user.username
+                - add_class = 'row-public'
+              div class = "container #{add_class}"
                 .collapse-card
                   .title
                     i.material-icons.md-48 help

@@ -4,7 +4,8 @@
       .sin-form-input-label Endpoint
       .sin-form-collection-select
         = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
-      = link_to 'Go to endpoint page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+        //- byebug
+      = link_to 'Go to endpoint page', things_path(@thing.sparql_endpoints[0]), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
   
   p
   .mdl-cell--12-col
