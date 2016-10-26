@@ -4,6 +4,7 @@ class Upwizard < ApplicationRecord
 
   belongs_to :user
   attachment :file
+  attachment :transformed_file
 
   validates :user, presence: true
 

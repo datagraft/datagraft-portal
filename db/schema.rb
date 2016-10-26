@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009154918) do
+ActiveRecord::Schema.define(version: 20161026145118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -226,6 +226,8 @@ ActiveRecord::Schema.define(version: 20161009154918) do
     t.string   "redirect_step"
     t.integer  "radio_thing_id"
     t.jsonb    "trace"
+    t.string   "transformed_file_id"
+    t.integer  "transformed_file_size"
   end
 
   create_table "users", force: :cascade do |t|
