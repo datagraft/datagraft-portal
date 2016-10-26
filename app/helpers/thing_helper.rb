@@ -45,11 +45,16 @@ module ThingHelper
   
   private
 
+  def thing_generic_path(thing, method, parameters = {})
 
-      classname = thing.class.name
+    user = thing.nil? ? current_user : thing.user
+    return "" if user.nil?
 
-      slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+    classname = thing.class.name
 
-      "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
-    end
+    slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+
+    "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
+
 end

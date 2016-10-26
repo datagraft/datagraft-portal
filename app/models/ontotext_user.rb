@@ -1,3 +1,6 @@
+# Assign this to a variable in the function that requires it
+# ENV['DBAAS_COORDINATOR_ENDPOINT']
+
 module OntotextUser
   private
     def new_api_connexion
@@ -252,6 +255,26 @@ module OntotextUser
     connect.delete qds.uri
   end
   
+  # Update the public property of the repository
+  def update_ontotext_repository_public(se)
+    begin
+      connect = Faraday.new
+      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+se.id+'/repository'+se.id
+      resp = connect.get do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/ld+json'
+        req.options.timeout = 720
+      end
+
+    rescue Exception => e
+      puts 'Error updating Ontotext repository public property'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+    
+  end
+  
+  
   # Get the size of the repository
   def get_ontotext_repository_size(se)
     begin
@@ -274,12 +297,13 @@ module OntotextUser
       resp_size.status.between?(200, 299)
 
       return resp_size.body
+    
     rescue Exception => e
-        puts 'Error getting Ontotext repository size'
-        puts e.message
-        puts e.backtrace.inspect
+      puts 'Error getting Ontotext repository size'
+      puts e.message
+      puts e.backtrace.inspect
       
-        return 'unknown size of'
+      return 'unknown size of'
     end
   end
   
