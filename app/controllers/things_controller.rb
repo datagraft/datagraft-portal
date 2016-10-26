@@ -125,7 +125,7 @@ class ThingsController < ApplicationController
     @thing.destroy
 
     respond_to do |format|
-      format.html { redirect_to things_path(@thing), notice: destroy_notice }
+      format.html { redirect_to dashboard_path, notice: destroy_notice }
       format.json { head :no_content }
     end
   end

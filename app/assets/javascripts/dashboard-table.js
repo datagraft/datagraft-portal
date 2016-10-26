@@ -4,7 +4,7 @@ document.addEventListener('turbolinks:load', function () {
 
   // configure DataTables to perform search using filter values
   $.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
-    
+
     var getFiles = $('#dashboard-filter--files').is(':checked'),
         getSparql = $('#dashboard-filter--sparql').is(':checked'),
         getTransformations = $('#dashboard-filter--transformations').is(':checked'),
@@ -13,12 +13,12 @@ document.addEventListener('turbolinks:load', function () {
         owner = data[2],
         filterPublicAssets = !$('#dashboard-filter--public').is(':checked') && !(owner === 'You');
 
-//    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
-    
+    //    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
+
     return !filterPublicAssets && (assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
   });
-  
-  
+
+
   // Calculates how to display the asset menu element (on the top or bottom) to avoid scrolling in the assets table
   function calculateMenuClass (menuButtonId) {
     var tableOffset = $('#dashboard-user-assets-table').offset().top,
@@ -26,7 +26,7 @@ document.addEventListener('turbolinks:load', function () {
         buttonHeight = $('#' + menuButtonId).height(),
         tableHeight = $('#dashboard-user-assets-table').height(),
         menuHeight = $('[for=' + menuButtonId + ']').height();
-    
+
     if ((menuButtonOffset - tableOffset) + menuHeight + buttonHeight > tableHeight) {
       $('[for=' + menuButtonId + ']').removeClass('mdl-menu--bottom-right').addClass('mdl-menu--top-right');
     } 
@@ -59,8 +59,6 @@ document.addEventListener('turbolinks:load', function () {
         switchElements = tableObj.find('tbody tr td label.mdl-switch'),
         buttonElements = tableObj.find('tbody tr td button.mdl-button'),
         menuElements = tableObj.find('tbody tr td ul.mdl-menu');
-        
-    
 
     tooltipElements.each(function (index, tooltip) {
       componentHandler.upgradeElement(tooltip);
@@ -77,6 +75,21 @@ document.addEventListener('turbolinks:load', function () {
 
     menuElements.each(function (index, menuElement) {
       componentHandler.upgradeElement(menuElement);
+    });
+
+    // attach callback for click events on current page
+    $('.dashboard-user-assets__is-public-cell :checkbox').click(function (event) {
+      var $this = $(this),
+          isChecked = $this.is(':checked'),
+          id = $this.attr('id');
+
+
+      if (confirm("Click OK to continue?")){
+        id = id.split('switch-')[1];
+        console.log(id);
+      } else {
+        event.preventDefault();
+      }
     });
 
   }
@@ -119,7 +132,7 @@ document.addEventListener('turbolinks:load', function () {
         isChecked = $this.is(':checked');
     oTable.search($('#dashboard-assets-search').val()).draw();
   });
-  
+
   // Filter assets based on asset type (using checkboxes)
   $('.sin-dashboard-asset-filters :checkbox').click(function () {
     var $this = $(this),
@@ -155,17 +168,7 @@ document.addEventListener('turbolinks:load', function () {
     oTable.search($('#dashboard-assets-search').val()).draw();
   });
 
-  $('.dashboard-user-assets__is-public-cell :checkbox').click(function () {
-    var $this = $(this),
-        isChecked = $this.is(':checked'),
-        id = $this.attr('id');
 
-    console.log(id);
-    id = id.split('switch-')[1];
-    console.log(id);
-    //    $.ajax('/users/render_read')
-  });
-  
   // re-draw table when the window is resized
   $(window).resize(function() {
     $('#dashboard-user-assets-table').DataTable().draw();

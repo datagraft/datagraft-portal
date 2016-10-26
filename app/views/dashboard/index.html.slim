@@ -122,11 +122,11 @@
                 .mdl-tooltip for=("icon-#{thing.id}")
                   = thing.class.model_name.human.titleize
 
-              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__name-cell href=thing_path(thing)
-                = link_to thing.name, thing_path(thing)
+              td.sin-short-name.sin-zero-padding href=thing_path(thing)
+                = link_to thing.name, thing_path(thing), style: "text-decoration: none;", class: "mdl-button mdl-js-button mdl-js-ripple-effect sin-dashboard-table-asset-name"
 
-              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
-                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user)
+              td.sin-short-name.sin-zero-padding style="text-align: left;"
+                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user), style: "text-decoration: none; ", class: "mdl-button mdl-js-button mdl-js-ripple-effect"
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell id=("last-modified-#{thing.id}")
                 = time_ago_in_words thing.updated_at
@@ -153,13 +153,15 @@
                 ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
                   li.mdl-menu__item 
                     i.material-icons content_copy
-                    | Copy
-                  li.mdl-menu__item  
-                    i.material-icons mode_edit
-                    | Edit
-                  li.mdl-menu__item  
-                    i.material-icons delete
-                    | Delete
+                    == link_to 'Copy', thing_fork_path(thing), :method => 'post', style: "text-decoration: none; color: black;"
+                  - if thing.user == current_user  
+                    li.mdl-menu__item
+                      i.material-icons mode_edit
+                      == link_to 'Edit', thing_edit_path(thing), style: "text-decoration: none; color: black;"
+                  - if thing.user == current_user
+                    li.mdl-menu__item.sin-delete-asset-text
+                      i.material-icons delete
+                      = link_to 'Delete', thing_path(thing), method: :delete, data: { confirm: 'Are you sure you want to delete this asset?' }, style: "text-decoration: none; color: firebrick;"
 
         - if @things.empty?
           tfoot
