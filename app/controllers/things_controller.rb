@@ -9,7 +9,7 @@ class ThingsController < ApplicationController
     :show, :edit, :update, :destroy, :star, :unstar, :fork, :versions,
     :show_metadata, :edit_metadata, :delete_metadata,
     :show_configuration, :edit_configuration, :delete_configuration
-  ]
+    ]
 
   # GET /:username/:resource
   def index
@@ -56,7 +56,7 @@ class ThingsController < ApplicationController
   end
 
 
- # GET /:username/:resource/new
+  # GET /:username/:resource/new
   def new
     resource = virtual_resource
     authorize! :create, resource
@@ -160,7 +160,7 @@ class ThingsController < ApplicationController
 
     respond_to do |format|
       if @thing.save
-        format.html { redirect_to thing_path(@thing), notice: unstar_notice }
+        format.html { redirect_to thing_path(@thing), notice: copy_notice }
         format.json { render :show, status: :ok, location: thing_path(@thing) }
       else
         format.html { render :edit }
@@ -237,6 +237,10 @@ class ThingsController < ApplicationController
 
   def create_notice
     'Asset has been successfully created!'
+  end
+
+  def copy_notice
+    'Successfully copied asset!'
   end
 
   def update_notice

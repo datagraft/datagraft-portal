@@ -62,3 +62,10 @@ $(document).ready(function(){
   console.log("Starting clipboard");
 
 });
+
+/*console.log("wat")
+$('body').on('cocoon:after-insert', function() {
+console.log("meh")
+  componentHandler.upgradeDom();
+});
+*/
