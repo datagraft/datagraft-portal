@@ -20,7 +20,7 @@
             |  uploaded files. Additionally, you can choose to clean up and transform
             |  your selected files using the Grafterizer data transformation tool.
         .mdl-card__actions
-            =link_to publish_path, class: "mdl-navigation__link"
+            =link_to upwizard_new_path('file'), class: "mdl-navigation__link"
                 button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored Create
     .sin-vertical-card.mdl-card.mdl-shadow--2dp
         .mdl-card__title SPARQL endpoint page
@@ -30,7 +30,7 @@
             |  the Grafterizer tool to transform a tabular file. Supported RDF formats:
             |  RDF/XML, Turtle, N-Triples, N-Quads, N3, JSON-LD.
         .mdl-card__actions
-            = link_to publish_path, class: "mdl-navigation__link"
+            = link_to upwizard_new_path('sparql'), class: "mdl-navigation__link"
                 button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored Create
     .sin-vertical-card.mdl-card.mdl-shadow--2dp
         .mdl-card__title SPARQL query

@@ -3,6 +3,9 @@ module UpwizardHelper
     "/#{upwizard_input.user.username}/upwizards/#{upwizard_input.id}"
   end
   def upwizard_index_path(user_input)
-    "/#{user_input.username}/upwizards"
+    "/#{current_user.username}/upwizards"
+  end
+  def upwizard_new_path(type)
+    "/#{current_user.username}/upwizards/new/#{type}"
   end
 end

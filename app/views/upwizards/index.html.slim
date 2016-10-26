@@ -9,10 +9,9 @@ div.mdl-card
   div.mdl-card__supporting-text.sin-padding
     #upwizard-list
       i.material-icons search
-      input.search placeholder="Search in queries"
-      button.sort data-sort="sin-list-name"  Sort by name
-      button.sort data-sort="sin-list-user"  Sort by user
-      button.sort data-sort="sin-list-time"  Sort by time
+      input.search placeholder="Search in wizards"
+      button.sort data-sort="sin-list-hidden-user"  Sort by user
+      button.sort data-sort="sin-list-hidden-time"  Sort by time
       .sin-list-textfield__scroll
         ul.list
           - if @upwizard_entries.empty?
@@ -22,14 +21,28 @@ div.mdl-card
           - else
             - @upwizard_entries.each do |wiz|
               li
-                .sin-list-name
-                  = wiz.id
-                .sin-list
-                  == link_to 'Delete', upwizard_delete_path(wiz), :method => :delete, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-                .sin-list-user
+                .sin-list-hidden-user
                   = wiz.user.username
-                .sin-list-time
+                .sin-list-hidden-time
                   = time_ago_in_words wiz.updated_at
                   | ago
-                .sin-list
-                  = wiz.original_filename
+                ul.row-fbox
+                  li
+                    .sin-list
+                      = wiz.id
+                  li
+                    .sin-list
+                      = wiz.task
+                  li
+                    .sin-list
+                      == link_to 'Delete', upwizard_delete_path(wiz), :method => :delete, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+                  li
+                    .sin-list-user
+                      = wiz.user.username
+                  li
+                    .sin-list-time
+                      = time_ago_in_words wiz.updated_at
+                      | ago
+                  li
+                    .sin-list
+                      = wiz.original_filename

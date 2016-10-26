@@ -9,13 +9,13 @@
         - unless @thing.uri.blank?
           = render_markdown(@thing.uri)
       .mdl-button
-        i.material-icons description        
-          
+        i.material-icons description
+
     .links.sin-nested-links
       hr
       .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#open-query-panel
         i.material-icons add
-      
+
     .sin-query-execute-form.mdl-cell--12-col#query-panel style="display:none"
       = render 'query_execute_form'
 
@@ -27,23 +27,23 @@
 
     //.mdl-cell--12-col
       = render 'new_query_form'
-      
+
     .sin-queries-list.mdl-cell--12-col
       = render 'list_queries_search'
-      
+
     //.sin-query-result.mdl-cell--12-col
-      = render 'query_show_result'      
+      = render 'query_show_result'
 
     //hr.mdl-cell--12-col
       = render 'list_queries_cards'
-      
+
     //hr.mdl-cell--12-col
-      = render 'list_queries_table'    
-  
+      = render 'list_queries_table'
+
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     - if can? :edit, @thing
       == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     .mdl-layout-spacer
-    == link_to 'Back to Home Page', publish_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to 'Back to Home Page', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
