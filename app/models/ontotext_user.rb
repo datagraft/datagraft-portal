@@ -253,20 +253,34 @@ module OntotextUser
   end
   
   # Get the size of the repository
-  def get_ontotext_repository_size(uri)
-    return 'unknown number of' if not uri
+  def get_ontotext_repository_size(se)
+    begin
+      return 'unknown size of' if not se.uri
 
-    connect = ontotext_connexion(true)
-    resp_size = connect.get do |req|
-      req.url uri+'/size'
-      req.headers['Content-Type'] = 'application/ld+json'
-      req.options.timeout = 720
-    end  
+      # No user authentication required for public SPARQL endpoints
+      connect = Faraday.new
+      if not se.public
+        # User authentication required for private SPARQL endpoints
+        connect = ontotext_connexion(true)
+      end
+
+      resp_size = connect.get do |req|
+        req.url se.uri+'/size'
+        req.headers['Content-Type'] = 'application/ld+json'
+        req.options.timeout = 720
+      end  
     
-    throw ("Unable to get size of the Ontotext Repository - " + resp_size.body + " - " + resp_size.status) unless 
-    resp_size.status.between?(200, 299)
-    
-    return resp_size.body
+      throw ("Unable to get size of the Ontotext repository - " + resp_size.body + " - " + resp_size.status) unless 
+      resp_size.status.between?(200, 299)
+
+      return resp_size.body
+    rescue Exception => e
+        puts 'Error getting Ontotext repository size'
+        puts e.message
+        puts e.backtrace.inspect
+      
+        return 'unknown size of'
+    end
   end
   
   # Get login status
