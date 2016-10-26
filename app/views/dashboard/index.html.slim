@@ -12,7 +12,35 @@
   #current-user-name-hidden
     = current_user.username
   #create-assets.sin-centered.mdl-tabs__panel
-    h3 SUP
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title File page
+        .mdl-card__supporting-text
+            |  Use the Datagraft wizard to create a page for accessing your file.
+            |  You can choose to directly upload a file, or use one of your already
+            |  uploaded files. Additionally, you can choose to clean up and transform
+            |  your selected files using the Grafterizer data transformation tool.
+        .mdl-card__actions
+            =link_to publish_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title SPARQL endpoint page
+        .mdl-card__supporting-text
+            |  Use the Datagraft wizard to dynamically provision a SPARQL endpoint
+            |  and store your data. You can directly upload your RDF dataset or use
+            |  the Grafterizer tool to transform a tabular file. Supported RDF formats:
+            |  RDF/XML, Turtle, N-Triples, N-Quads, N3, JSON-LD.
+        .mdl-card__actions
+            = link_to publish_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title SPARQL query
+        .mdl-card__supporting-text
+            |  Use the Datagraft wizard to create a new SPARQL query and execute
+            |  it against an existing endpoint. Your queries will be accessible
+            |  through the Assets access page.
+        .mdl-card__actions
+            = link_to publish_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored Create
   #browse-assets.sin-centered.mdl-tabs__panel.is-active
     - if feature? :activity_feed
       .mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
@@ -29,7 +57,7 @@
                   | You
                 - else
                   = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  starred 
+                '  starred
                 == link_to activity.thing.name, thing_path(activity.thing)
               - elsif activity.kind_of? Thing
                 img src=image_url("icon--service.svg")
@@ -37,12 +65,12 @@
                   | You
                 - else
                   = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  made 
+                '  made
                 == link_to activity.name, thing_path(activity)
                 '&nbsp;public
               - elsif activity.kind_of? CatalogueStar
                 img src=image_url("icon--star.svg")
-                'You starred 
+                'You starred
                 == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
               - elsif activity.kind_of? Catalogue
                 'You made
@@ -53,28 +81,28 @@
         .mdl-textfield.mdl-js-textfield
           input#dashboard-assets-search.mdl-textfield__input type="text" /
           label.mdl-textfield__label for="dashboard-assets-search"  Search
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--public" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--public"
           input#dashboard-filter--public.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | Include public assets
       .sin-dashboard-asset-filters
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all"
           input#dashboard-filter--all.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | All
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--files" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--files"
           input#dashboard-filter--files.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | Files
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--sparql" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--sparql"
           input#dashboard-filter--sparql.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | SPARQL endpoints
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--transformations" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--transformations"
           input#dashboard-filter--transformations.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | Data Transformations
-        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--queries" 
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--queries"
           input#dashboard-filter--queries.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | Queries
@@ -98,7 +126,7 @@
                 = link_to thing.name, thing_path(thing)
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__owner-cell
-                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user)  
+                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user)
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell id=("last-modified-#{thing.id}")
                 = time_ago_in_words thing.updated_at
@@ -125,7 +153,7 @@
                   li.mdl-menu__item Delete
 
         - if @things.empty?
-          tfoot 
+          tfoot
             tr
               td.mdl-data-table__cell--non-numeric[colspan=2]
-                em Nothing published yet  
+                em Nothing published yet

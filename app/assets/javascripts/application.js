@@ -17,7 +17,6 @@
 //= require cocoon
 //= require material
 //= require jquery.gridster.js
-//= require dataTables/jquery.dataTables
 //= require clipboard
 //= require list
 //= require list.pagination.min
@@ -35,7 +34,7 @@ document.addEventListener('turbolinks:load', function() {
     console.log("jaach")
   });
 
-// TODO change to something more meaningful
+
   window.supercanard = $(".gridster ul").gridster({
       widget_margins: [10, 10],
       widget_base_dimensions: [140, 140]

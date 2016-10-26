@@ -45,9 +45,6 @@ module ThingHelper
   
   private
 
-    def thing_generic_path(thing, method, parameters = {})
-      user = thing.nil? ? current_user : thing.user
-      return "" if user.nil?
 
       classname = thing.class.name
 

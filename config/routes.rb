@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'
+  get 'privacy-policy' => 'public_portal#privacy'
+  get 'faq' => 'public_portal#faq'
+  get 'terms-of-use' => 'public_portal#terms'
   get 'publish' => 'data_distributions#publish'
   get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
