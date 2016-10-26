@@ -4,13 +4,18 @@ document.addEventListener('turbolinks:load', function () {
 
   // configure DataTables to perform search using filter values
   $.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
+    
     var getFiles = $('#dashboard-filter--files').is(':checked'),
         getSparql = $('#dashboard-filter--sparql').is(':checked'),
         getTransformations = $('#dashboard-filter--transformations').is(':checked'),
         getQueries = $('#dashboard-filter--queries').is(':checked'),
-        assetTypeStr = data[0];
+        assetTypeStr = data[0],
+        owner = data[2],
+        filterPublicAssets = !$('#dashboard-filter--public').is(':checked') && !(owner === 'You');
 
-    return assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations;
+//    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
+    
+    return !filterPublicAssets && (assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
   });
   
   
@@ -95,7 +100,7 @@ document.addEventListener('turbolinks:load', function () {
     'columnDefs': [
       { 'width': '5%', 'targets': 0 },
       { 'width': '35%', 'targets': 1 },
-      { 'width': '15%', searchable: false, 'targets': 2 },
+      { 'width': '15%', searchable: true, 'targets': 2 },
       { 'width': '15%', searchable: false, 'targets': 3 },
       { 'width': '15%', searchable: false, 'targets': 4 },
       { 'width': '10%', searchable: false, 'targets': 5 }
@@ -108,6 +113,13 @@ document.addEventListener('turbolinks:load', function () {
     oTable.search($(this).val()).draw();
   });
 
+  // Filter assets based on owner
+  $('#dashboard-filter--public').click(function () {
+    var $this = $(this),
+        isChecked = $this.is(':checked');
+    oTable.search($('#dashboard-assets-search').val()).draw();
+  });
+  
   // Filter assets based on asset type (using checkboxes)
   $('.sin-dashboard-asset-filters :checkbox').click(function () {
     var $this = $(this),

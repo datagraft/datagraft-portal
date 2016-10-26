@@ -84,7 +84,7 @@
         label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--public"
           input#dashboard-filter--public.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
-          | Include public assets
+          | Include other users' public assets
       .sin-dashboard-asset-filters
         label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all"
           input#dashboard-filter--all.mdl-checkbox__input checked="checked" type="checkbox" /
@@ -142,7 +142,10 @@
 
               td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
                 label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for=("switch-#{thing.id}")
-                  input.mdl-switch__input id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false)
+                  - if thing.user == current_user
+                    input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) )
+                  - else
+                    input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) disabled)
                   span.mdl-switch__label style="font-size: 0"
                     = thing.public
                 button.mdl-button.mdl-js-button.mdl-button--icon id=("menu-#{thing.id}")
