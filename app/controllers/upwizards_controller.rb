@@ -116,6 +116,13 @@ class UpwizardsController < ApplicationController
     process_state
   end
 
+  # Redirect to the attached file of the upwizard object
+  # GET /:username/upwizards/:id/attachment
+  def attachment
+    @upwizard = Upwizard.find(params[:wiz_id])
+    authorize! :read, @upwizard
+    redirect_to Refile.attachment_url(@upwizard, :file), status: :moved_permanently
+  end
 
 
 private
