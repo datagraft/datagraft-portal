@@ -117,16 +117,24 @@ class Thing < ApplicationRecord
       end
 
       def increment_forks_metric
-        num_forks = Prometheus::Client.registry.get(:num_forks)
-        curr_num_forks = num_forks.get({asset_type: thing.type})
-        num_forks.set({asset_type: thing.type}, curr_num_forks + 1)
+        begin
+          num_forks = Prometheus::Client.registry.get(:num_forks)
+          curr_num_forks = num_forks.get({asset_type: self.type})
+          
+          curr_num_forks = 0 if !curr_num_forks
+          num_forks.set({asset_type: self.type}, curr_num_forks + 1)
+        rescue Exception => e  
+          puts 'Error decrementing num_forks metric'
+          puts e.message  
+          puts e.backtrace.inspect
+        end
       end
 
       # should we call this at all?
       def decrement_forks_metric
         num_forks = Prometheus::Client.registry.get(:num_forks)
-        curr_num_forks = num_forks.get({asset_type: thing.type})
-        num_forks.set({asset_type: thing.type}, curr_num_forks - 1)
+        curr_num_forks = num_forks.get({asset_type: self.type})
+        num_forks.set({asset_type: self.type}, curr_num_forks - 1)
       end
 
       def has_metadata?(key)
@@ -153,11 +161,11 @@ class Thing < ApplicationRecord
 
       protected
       def touch_metadata!
-    self.metadata = {} if not metadata.is_a?(Hash)
+        self.metadata = {} if not metadata.is_a?(Hash)
       end
 
       def touch_configuration!
-    self.configuration = {} if not configuration.is_a?(Hash)
+        self.configuration = {} if not configuration.is_a?(Hash)
       end 
     end
 
