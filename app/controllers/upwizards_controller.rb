@@ -1,7 +1,7 @@
 class UpwizardsController < ApplicationController
   include UpwizardHelper
   include Wicked::Wizard
-  steps :publish, :decide, :transform, :create_transform, :transform_select_execute, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
+  steps :publish, :decide, :transform, :create_transform, :save_transform, :transform_select_execute, :fill_sparql_endpoint, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
   # Receive new file attacement from form
   # Step in the wizard is indicated by :id. Not used by this method
@@ -121,7 +121,14 @@ class UpwizardsController < ApplicationController
   def attachment
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :read, @upwizard
-    redirect_to Refile.attachment_url(@upwizard, :file), status: :moved_permanently
+    location = Refile.attachment_url(@upwizard, :file)
+    if location.nil?
+      render :json => {
+        error: 'The wizard doesn\'t contain a file'
+      }, :status => 404
+    else
+      redirect_to location, status: :moved_permanently
+    end
   end
 
 
@@ -247,7 +254,11 @@ private
   def process_state
     puts "************ upwizard process_state"
     @curr_step = step
-    @upwizard.trace_push step, params
+    
+    # TODO this fails weirdly
+    unless step == :save_transform
+      @upwizard.trace_push step, params
+    end
 
     now = Time.now
     old_step = @upwizard.redirect_step
@@ -267,8 +278,12 @@ private
       handle_transform_and_render
     when :create_transform
       handle_create_transform
+    when :save_transform
+      handle_save_transform
     when :transform_select_execute
       handle_transform_select_execute
+    when :fill_sparql_endpoint
+      handle_fill_sparql_endpoint
     when :file_select_transform
       handle_file_select_transform_and_render
     when :go_filestore
@@ -335,10 +350,32 @@ private
     #Placeholder ... Nothing to do so far
 
     @upwizard.trace_back_step_skip
-    jump_to :not_implemented
+    # jump_to :not_implemented
     @upwizard.save
     render_wizard
   end
+
+  def handle_save_transform
+    puts "************ upwizard handle_save_transform"
+    respond_to do |format|
+      if @upwizard.save
+        format.html { jump_to :not_implemented }
+        format.json { head :no_content }
+      else
+        format.html { jump_to :create_transform }
+        format.json { render json: @upwizard.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def handle_fill_sparql_endpoint
+    puts "************ upwizard handle_fill_sparql_endpoint"
+    #Placeholder ... Nothing to do so far
+
+    @upwizard.save
+    render_wizard
+  end
+
 
   def handle_transform_select_execute
     puts "************ upwizard handle_transform_select_execute"
