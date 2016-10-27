@@ -1,4 +1,13 @@
 document.addEventListener('turbolinks:load', function() {
+
+  $('.accordion').squeezebox({
+      headers: '.squeezhead',
+      folders: '.squeezecnt',
+      closeOthers: false,
+      closedOnStart: true,
+      animated : true
+  });
+
   $('#open-query-panel').click(function() {
     $('#query-panel, #close-query-panel').show();
     $(this).hide();
@@ -27,7 +36,7 @@ document.addEventListener('turbolinks:load', function() {
   };
 
   var queriesList = new List('queries-list', queriesListOptions);
-  
+
   var seQueriesListOptions = {
     valueNames: [ 'sin-container-hidden-name', 'sin-container-hidden-date', 'sin-container-hidden-user' ]
   };

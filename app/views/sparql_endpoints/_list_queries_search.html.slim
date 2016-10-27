@@ -4,11 +4,11 @@
   button.sort data-sort="sin-container-hidden-name"  Sort by name
   button.sort data-sort="sin-container-hidden-date"  Sort by date
   button.sort data-sort="sin-container-hidden-user"  Sort by user
-  label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public" 
+  label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public"
     input#checkbox-queries-public.mdl-checkbox__input type="checkbox" onClick="updateFilterPublic(this, '.row-public')"
     .mdl-checkbox__label Include all public queries
   .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
-  .sin-list-textfield__scroll
+  .sin-list-textfield__scroll.accordion
     ul.list
       - queriesList = search_for_existing_queries
       - unless queriesList.empty?
@@ -23,22 +23,24 @@
                 = query.updated_at
               .sin-container-hidden-user
                 = query.user.username
-              
+
               - add_class = 'row-private'
               - unless query.user.username == @thing.user.username
                 - add_class = 'row-public'
               div class = "container #{add_class}"
-                .collapse-card
-                  .title
+                //.collapse-card
+                .squeezebox
+                  //.title
+                  .squeezhead
                     i.material-icons.md-48 help
-                    span 
+                    span
                       = link_to 'Run', query_execute_path(query, @thing), method: :post, remote: true, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-execute-request-button'
                     strong
-                      font size="5" 
+                      font size="5"
                         = query.name
                     strong
                       | Last modification&nbsp;
-                      = time_ago_in_words query.updated_at 
+                      = time_ago_in_words query.updated_at
                       | &nbsp;ago
                       | &nbsp;-&nbsp;
                       = query.updated_at
@@ -46,7 +48,8 @@
                       | By:&nbsp;
                       = query.user.username
                     .sin-execute-request-response
-                  .body
+                  //.body
+                  .squeezecnt
                     .sin-tab-textfield__box
                       = query.description
                     br
@@ -61,7 +64,7 @@ br
   button.sort data-sort="sin-container-hidden-name"  Sort by name
   button.sort data-sort="sin-container-hidden-date"  Sort by date
   button.sort data-sort="sin-container-hidden-user"  Sort by user
-  label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public" 
+  label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public"
     input#checkbox-queries-public.mdl-checkbox__input checked="checked" type="checkbox" /
     .mdl-checkbox__label Include all public queries
   .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
@@ -78,24 +81,27 @@ br
               .sin-container-hidden-user
                 = query.user.username
               .container
-                .collapse-card
-                  .title
+                //.collapse-card
+                .squeezebox
+                  //.title
+                  .squeezhead
                     i.material-icons.md-48 help
-                    span 
+                    span
                       = link_to 'Run', query_execute_path(query, @thing), method: :post, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
                     strong
-                      font size="5" 
+                      font size="5"
                         = query.name
                     strong
                       | Last modification&nbsp;
-                      = time_ago_in_words query.updated_at 
+                      = time_ago_in_words query.updated_at
                       | &nbsp;ago
                       | &nbsp;-&nbsp;
                       = query.updated_at
                       | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       | By:&nbsp;
                       = query.user.username
-                  .body
+                  //.body
+                  .squeezecnt
                     .sin-tab-textfield__box
                       = query.description
                     br
