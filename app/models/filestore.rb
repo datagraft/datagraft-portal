@@ -3,8 +3,6 @@ class Filestore < Thing
   # friendly_id :name, use: => [:slugged, :simple_i18n]
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  acts_as_taggable_on :keywords
-
   attachment :file
 
   def should_generate_new_friendly_id?

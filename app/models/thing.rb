@@ -13,6 +13,7 @@ class Thing < ApplicationRecord
   validates :name, presence: true
   validates :user, presence: true
 
+  acts_as_taggable_on :keywords
   # As parents and children (forking stuff)
   has_closure_tree
 
@@ -120,7 +121,7 @@ class Thing < ApplicationRecord
         begin
           num_forks = Prometheus::Client.registry.get(:num_forks)
           curr_num_forks = num_forks.get({asset_type: self.type})
-          
+
           curr_num_forks = 0 if !curr_num_forks
           num_forks.set({asset_type: self.type}, curr_num_forks + 1)
         rescue Exception => e  
