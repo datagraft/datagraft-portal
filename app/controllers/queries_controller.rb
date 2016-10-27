@@ -70,6 +70,12 @@ class QueriesController < ThingsController
     def query_params
         params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :language, :description,
           queriable_data_store_ids: [])
+    end    
+  
+  # It may be scary, but you should sometimes trust parameters from the internet!
+    def query_params_partial
+        params.permit(:query, :public, :name, :metadata, :configuration, :language, :description,
+          queriable_data_store_ids: [])
     end
 
     def query_set_relations(query)

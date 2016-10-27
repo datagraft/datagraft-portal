@@ -96,6 +96,10 @@ class FilestoresController < ThingsController
     def filestore_params
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
+  
+    def filestore_params_partial
+      params.permit(:filestore, [:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
+    end
 
     def open_spreadsheet(format, file)
       file_path = file.download.path

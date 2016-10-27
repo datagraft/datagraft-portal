@@ -16,4 +16,8 @@ class SparqlEndpointsController < ThingsController
       params.require(:sparql_endpoint).permit(:public, :name, :description, :license, :keyword_list) ## Rails 4 strong params usage
     end
 
+    def sparql_endpoint_params_partial
+      params.permit(:sparql_endpoint, :public, :name, :description, :license, :keyword_list) ## Rails 4 strong params usage
+    end
+
 end

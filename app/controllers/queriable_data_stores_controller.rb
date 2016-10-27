@@ -33,6 +33,12 @@ class QueriableDataStoresController < ThingsController
           queries_attributes: [:id, :name, :query, :description, :language, :_destroy],
           data_page_ids: [])
     end
+  
+    def queriable_data_store_params_partial
+      params.permit(:queriable_data_store, :public, :name, :description, :uri, :hosting_provider,
+          queries_attributes: [:id, :name, :query, :description, :language, :_destroy],
+          data_page_ids: [])
+    end
 
     def queriable_data_store_set_relations(qds)
       return if qds.queries.blank?
