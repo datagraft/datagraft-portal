@@ -33,7 +33,11 @@ FriendlyId.defaults do |config|
     session logout login user users admin oauth
     stylesheets assets javascripts images
     configuration metadata
-    myasset myassets public_asset public_assets)
+    myasset myassets public_asset public_assets 
+    you 
+    filestore filestores 
+    sparql_endpoint sparql_endpoints)
+  
 
   #  ## Friendly Finders
   #

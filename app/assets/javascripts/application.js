@@ -49,7 +49,6 @@ hideIdAlert = function(objName){
         el.style.display = 'none';
 }
 
-// TODO change to something more meaningful
   window.supercanard = $(".gridster ul").gridster({
       widget_margins: [10, 10],
       widget_base_dimensions: [140, 140]

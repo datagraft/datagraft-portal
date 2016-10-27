@@ -78,11 +78,6 @@ ActiveRecord::Schema.define(version: 20161026145118) do
     t.datetime "updated_at",                 null: false
   end
 
-  create_table "file_wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -215,8 +210,8 @@ ActiveRecord::Schema.define(version: 20161026145118) do
   end
 
   create_table "upwizards", force: :cascade do |t|
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
     t.string   "task"
     t.integer  "user_id"
     t.string   "file_id"
@@ -268,12 +263,6 @@ ActiveRecord::Schema.define(version: 20161026145118) do
     t.text     "object"
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
-  end
-
-  create_table "wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "task"
   end
 
   add_foreign_key "catalogues", "users"

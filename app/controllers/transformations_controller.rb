@@ -22,10 +22,11 @@ class TransformationsController < ThingsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def transformation_params
-      params.require(:transformation).permit(
-       :name, :public, :code, :description)
-       # :name, :public, :name, :code, :description).permit!
-       # :name, :public, :name, :code, :description, metadata => [:description, 'dcat:keywords'], :configuration)
+      params.require(:transformation).permit(:name, :public, :code, :description)
+    end
+  
+    def transformation_params_partial
+      params.permit(:transformation, :name, :public, :code, :description)
     end
 
 end

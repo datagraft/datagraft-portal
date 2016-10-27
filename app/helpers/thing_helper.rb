@@ -2,7 +2,7 @@ module ThingHelper
   def thing_url(thing, parameters = {})
     return root_url[0...-1] + thing_path(thing, parameters)
   end
-  
+
   def thing_path(thing, parameters = {})
     thing_generic_path(thing, '', parameters)
   end
@@ -42,17 +42,17 @@ module ThingHelper
     username = current_user.username
     "/#{username}/#{params[:controller]}/new"
   end
-  
+
   private
 
-    def thing_generic_path(thing, method, parameters = {})
-      user = thing.nil? ? current_user : thing.user
-      return "" if user.nil?
+  def thing_generic_path(thing, method, parameters = {})
+    user = thing.nil? ? current_user : thing.user
+    return "" if user.nil?
 
-      classname = thing.class.name
+    classname = thing.class.name
 
-      slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+    slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
 
-      "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
-    end
+    "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
 end

@@ -15,6 +15,11 @@ class DataPagesController < ThingsController
         widgets_attributes: [:id, :name, :url, :widget_class, :_destroy],
         queriable_data_store_ids: [])
     end
+    def data_page_params_partial
+      params.permit(:data_page, :public, :name, :description, :license, :layout,
+        widgets_attributes: [:id, :name, :url, :widget_class, :_destroy],
+        queriable_data_store_ids: [])
+    end
 
     def data_page_set_relations(data_page)
       unless data_page.widgets.blank?
