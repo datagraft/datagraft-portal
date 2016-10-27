@@ -263,6 +263,11 @@ module OntotextUser
       resp = connect.get do |req|
         req.url url
         req.headers['Content-Type'] = 'application/ld+json'
+        req.body = {
+          meta: Faraday::UploadIO.new(StringIO.new({
+            'public' => se.public
+          }.to_json), 'application/ld+json'),
+        }
         req.options.timeout = 720
       end
 
@@ -270,8 +275,7 @@ module OntotextUser
       puts 'Error updating Ontotext repository public property'
       puts e.message
       puts e.backtrace.inspect
-    end
-    
+    end  
   end
   
   

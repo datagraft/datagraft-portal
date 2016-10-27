@@ -8,6 +8,11 @@ class SparqlEndpointsController < ThingsController
   end
   
   def update
+    super
+    current_user.update_ontotext_repository_public(@thing)
+
+# Hack to support two submit buttons in a form with different actions
+=begin
     if params[:commit] == "Execute"
       setemp = SparqlEndpoint.new
       setemp.assign_attributes(params.require(:sparql_endpoint).permit(queries_attributes: [:id, :query]))
@@ -19,6 +24,7 @@ class SparqlEndpointsController < ThingsController
     else
       super
     end    
+=end
   end  
   
   def destroy
