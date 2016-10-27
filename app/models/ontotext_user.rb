@@ -257,10 +257,12 @@ module OntotextUser
   
   # Update the public property of the repository
   def update_ontotext_repository_public(se)
+byebug
     begin
-      connect = Faraday.new
       url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+se.id+'/repository'+se.id
-      resp = connect.get do |req|
+byebug
+      connect = Faraday.new
+      resp = connect.post do |req|
         req.url url
         req.headers['Content-Type'] = 'application/ld+json'
         req.body = {
@@ -270,6 +272,11 @@ module OntotextUser
         }
         req.options.timeout = 720
       end
+      
+      throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless 
+      resp.status.between?(200, 299)
+      
+      return resp.body
 
     rescue Exception => e
       puts 'Error updating Ontotext repository public property'

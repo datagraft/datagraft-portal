@@ -9,6 +9,8 @@ class SparqlEndpointsController < ThingsController
   
   def update
     super
+    username = current_user.username + '_' + current_user.ontotext_account.to_s
+byebug
     current_user.update_ontotext_repository_public(@thing)
 
 # Hack to support two submit buttons in a form with different actions
