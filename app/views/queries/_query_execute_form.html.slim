@@ -1,18 +1,21 @@
 = simple_form_for :querying, url: '/querying' do |f|
   .mdl-cell--12-col
     .sin-cell-layout-flex__start
-      .sin-form-input-label Endpoint
-      .sin-form-collection-select
-        = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
-        //- byebug
-      = link_to 'Go to endpoint page', things_path(@thing.sparql_endpoints[0]), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
-  
+      - unless @thing.sparql_endpoints.length == 0
+        .sin-form-input-label Endpoint
+        .sin-form-collection-select
+          = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
+        .sin-form-collection-select-hidden
+          = f.collection_select "sparql_slugs", @thing.sparql_endpoints, :slug, :name
+        = link_to  'Go to selected endpoint page', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", :onClick => "redirectToSparqlEndpoint('#{things_path(@thing.sparql_endpoints[0])}', 'querying_sparql_endpoints', 'querying_sparql_slugs')"
+
+
   p
   .mdl-cell--12-col
     .sin-tab-textfield__scroll
       = @thing.query
       //= f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
-  
+
   p
   .mdl-cell--12-col
     .sin-cell-layout-flex__center
