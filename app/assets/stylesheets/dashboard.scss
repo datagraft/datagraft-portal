@@ -324,7 +324,7 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
 }
 
 // icons for the different asset types
-.sin-icon__data_page {
+.sin-icon__data_page, .sin-icon__filestore {
   background: transparent image-url("icon--data_page.svg") no-repeat center;
   background-size: auto 85%;
   padding-top: 5px;

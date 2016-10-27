@@ -15,9 +15,8 @@ document.addEventListener('turbolinks:load', function () {
 
     //    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
 
-    return !filterPublicAssets && (assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
+    return !filterPublicAssets && (assetTypeStr == 'Filestore' && getFiles || assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
   });
-
 
   // Calculates how to display the asset menu element (on the top or bottom) to avoid scrolling in the assets table
   function calculateMenuClass (menuButtonId) {
@@ -29,7 +28,9 @@ document.addEventListener('turbolinks:load', function () {
 
     if ((menuButtonOffset - tableOffset) + menuHeight + buttonHeight > tableHeight) {
       $('[for=' + menuButtonId + ']').removeClass('mdl-menu--bottom-right').addClass('mdl-menu--top-right');
-    } 
+    } else {
+      $('[for=' + menuButtonId + ']').removeClass('mdl-menu--top-right').addClass('mdl-menu--bottom-right');
+    }
   }
 
   // Generates empty rows for the DataTables so it displays better when less items are present in a page
@@ -77,26 +78,33 @@ document.addEventListener('turbolinks:load', function () {
       componentHandler.upgradeElement(menuElement);
     });
 
-    // attach callback for click events on current page
-    $('.dashboard-user-assets__is-public-cell :checkbox').click(function (event) {
-      var $this = $(this),
-          isChecked = $this.is(':checked'),
-          id = $this.attr('id');
-
-
-      if (confirm("Click OK to continue?")){
-        id = id.split('switch-')[1];
-        console.log(id);
-      } else {
-        event.preventDefault();
-      }
-    });
-
   }
+
+  // attach callback for click events on current page
+  $('.dashboard-user-assets__is-public-cell :checkbox').click(function (event) {
+    var $this = $(this),
+        hrefUpdateParam = !$this.is(':checked'),
+        id = $this.attr('id'),
+        currentHref,
+        new_asset_state;
+
+    new_asset_state = !hrefUpdateParam ? 'public' : 'private';
+    if ( confirm('Are you sure you want to make this asset ' + new_asset_state +'?') ) {
+      // get the ID of the toggle
+      id = id.split('switch-')[1];
+      // get the HREF attribute of the link for toggling public/private
+      currentHref = $('#toggle-public-' + id).attr('href');
+      // trigger the change of public/private
+      $('#toggle-public-' + id).click();
+      // update the HREF link to toggle the 'public' attribute
+      $('#toggle-public-' + id).attr('href', currentHref.split('&public=')[0] + '&public=' + hrefUpdateParam);
+    } else {
+      event.preventDefault();
+    }
+  });
 
   // Initialise DataTables table
   $table = $('#dashboard-user-assets-table');
-
   $table.dataTable({
     'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, 'All']],
     responsive: true,
@@ -167,7 +175,6 @@ document.addEventListener('turbolinks:load', function () {
     // re-draw table content
     oTable.search($('#dashboard-assets-search').val()).draw();
   });
-
 
   // re-draw table when the window is resized
   $(window).resize(function() {

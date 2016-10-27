@@ -144,6 +144,7 @@
                 label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for=("switch-#{thing.id}")
                   - if thing.user == current_user
                     input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) )
+                    = link_to '', thing_path(thing, :format => :json, :public => !thing.public), remote: true, :method => 'patch', :id => "toggle-public-#{thing.id}"
                   - else
                     input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) disabled)
                   span.mdl-switch__label style="font-size: 0"
@@ -153,15 +154,15 @@
                 ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
                   li.mdl-menu__item 
                     i.material-icons content_copy
-                    == link_to 'Copy', thing_fork_path(thing), :method => 'post', style: "text-decoration: none; color: black;"
+                    == link_to 'Copy', thing_fork_path(thing), :method => 'post', style: "text-decoration: none; color: black; width: 100%;"
                   - if thing.user == current_user  
                     li.mdl-menu__item
                       i.material-icons mode_edit
-                      == link_to 'Edit', thing_edit_path(thing), style: "text-decoration: none; color: black;"
+                      == link_to 'Edit', thing_edit_path(thing), style: "text-decoration: none; color: black; width: 100%;"
                   - if thing.user == current_user
                     li.mdl-menu__item.sin-delete-asset-text
                       i.material-icons delete
-                      = link_to 'Delete', thing_path(thing), method: :delete, data: { confirm: 'Are you sure you want to delete this asset?' }, style: "text-decoration: none; color: firebrick;"
+                      = link_to 'Delete', thing_path(thing), method: :delete, data: { confirm: 'Are you sure you want to delete this asset?' }, style: "text-decoration: none; color: firebrick; width: 100%;"
 
         - if @things.empty?
           tfoot
