@@ -1,1 +1,9 @@
-h1 Je suis un canard
+- title "Create a grafterizer transformation"
+- setOption :flexPage
+
+script
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
+    $('main > section').get(0))
+    .go('transformations.new.preview', {
+      distributionId: "#{@distributionId}"
+    }, true);

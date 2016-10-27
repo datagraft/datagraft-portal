@@ -352,6 +352,12 @@ private
     @upwizard.trace_back_step_skip
     # jump_to :not_implemented
     @upwizard.save
+
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    # Make sure the wiz_id is an number, to prevent XSS
+    @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+
+
     render_wizard
   end
 

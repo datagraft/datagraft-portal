@@ -45,5 +45,7 @@ module Datagraft
     
     Refile.store ||= Refile::Backend::FileSystem.new("/var/refile_uploads/store".to_s)
     Refile.cache ||= Refile::Backend::FileSystem.new("/var/refile_uploads/cache".to_s)
+
+    config.grafterizer = config_for(:grafterizer)
   end
 end
