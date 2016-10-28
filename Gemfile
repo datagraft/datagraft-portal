@@ -168,8 +168,6 @@ gem 'roo-google'
 # brings back assigns to controller tests as well as assert_template to both controller and integration tests
 gem 'rails-controller-testing'
 
-# This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
-gem 'jquery-datatables-rails', '~> 3.3.0'
 #clipboard-rails gem is the integration of clipboard.js javascript library for your Rails 4 application.
 gem 'clipboard-rails'
 
@@ -181,4 +179,3 @@ gem 'prometheus-client'
 gem 'listjs-rails'
 #Use wicked to make your Rails controllers into step-by-step wizards.
 gem 'wicked'
-

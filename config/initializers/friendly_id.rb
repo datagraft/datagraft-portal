@@ -18,6 +18,9 @@ FriendlyId.defaults do |config|
 
   config.reserved_words = %w(
     datagraft
+    upwizard upwizards
+    filestore filestores
+    sparql_endpoint sparql_endpoints
     data_distribution data_distributions
     queriable_data_store queriable_data_stores
     data_page data_pages

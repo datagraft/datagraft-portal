@@ -207,7 +207,7 @@ module OntotextUser
         #throw req.body
       end
 
-      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status) unless resp_dataset.status.between?(200, 299)
+      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status.to_s) unless resp_dataset.status.between?(200, 299)
 
       json_dataset = JSON.parse(resp_dataset.body)
 
@@ -227,7 +227,7 @@ module OntotextUser
         }
       end 
 
-      throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body) unless resp_distribution.status.between?(200, 299)
+      throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
 
       json_distribution = JSON.parse(resp_distribution.body)
 
@@ -242,7 +242,7 @@ module OntotextUser
         req.options.timeout = 720
       end
 
-      throw ("Unable to create the Ontotext Repository - " + resp_repository.body) unless resp_repository.status.between?(200, 299)
+      throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
 
       json_repository = JSON.parse(resp_repository.body)
 
