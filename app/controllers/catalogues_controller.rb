@@ -138,7 +138,10 @@ class CataloguesController < ApplicationController
     @catalogue = Catalogue.friendly.find(params[:id])
   end
   def catalogue_params
-    params.require(:catalogue).permit([:public, :name])
+    params.require(:catalogue).permit(:public, :name)
+  end
+  def catalogue_params_partial
+    params.permit(:catalogue, :public, :name)
   end
 
 end

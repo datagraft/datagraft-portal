@@ -120,6 +120,10 @@ class FilestoresController < ThingsController
     def filestore_params
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
+  
+    def filestore_params_partial
+      params.permit(:filestore, [:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
+    end
 
     # Open an attached file if it is a spreadsheet
     # Return an object with tabular information usable for preview

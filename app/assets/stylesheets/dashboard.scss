@@ -248,7 +248,6 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     overflow: hidden;
     white-space: nowrap !important;
   }
-
   .dashboard-user-assets__is-public-cell {
     overflow: visible;
     & > .mdl-switch {
@@ -257,8 +256,17 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     button.mdl-button {
       min-height: 20px;
     }
+
+    li.mdl-menu__item {
+      display: flex;
+      & > i.material-icons {
+        align-self: center;
+        padding-right: 5px;
+      }
+    }
   }
 }
+
 .sin-dashboard-layout .mdl-card {
   width: 100%;
   align-items: stretch;
@@ -275,10 +283,16 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     td {
       font-size: 14px !important;
     }
+    & .sin-dashboard-table-asset-name {
+      width: 100%;
+    }
     & .mdl-card__actions {
       align-items: flex-end;
       border-top: 1px solid #cdcdcd;
       font-size: 16px !important;
+    }
+    & .sin-delete-asset-text {
+      color: firebrick;
     }
   }
   & .sin-dashboard-search {
@@ -304,10 +318,13 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
     }
   }
 }
+
 #current-user-name-hidden {
   font-size: 0;
 }
-.sin-icon__data_page {
+
+// icons for the different asset types
+.sin-icon__data_page, .sin-icon__filestore {
   background: transparent image-url("icon--data_page.svg") no-repeat center;
   background-size: auto 85%;
   padding-top: 5px;
@@ -325,3 +342,8 @@ ul.pagination-dashboard-assets-table li:hover:not(.active) a {
   background: transparent image-url("icon--queriable_data_store.svg") no-repeat center;
   background-size: auto 85%;
 }
+td.sin-zero-padding {
+  padding: 0px 0px 0px 0px !important;
+  width: 100%;
+}
+

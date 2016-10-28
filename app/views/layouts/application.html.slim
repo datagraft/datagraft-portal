@@ -57,9 +57,6 @@ html
                   = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
                 li
                   = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
-          
-        main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''}"
-        
           //- flash[:error] = "Test error"
           //- flash[:warning] = "Test warning"
           //- flash[:notice] = "Test notice"
@@ -69,6 +66,7 @@ html
                 i.material-icons close
               = raw value
           - flash.clear
+        main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''} #{(hasOption :dashboardLayout) ? 'mdl-color--white' : ''}"
 
           - if hasOption :noShadow
             section.section--center.sin-padding.sin-section-simple-margin
