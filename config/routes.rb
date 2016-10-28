@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   resources :api_keys
 
   get 'explore' => 'public_portal#explore'
+  get 'privacy-policy' => 'public_portal#privacy'
+  get 'faq' => 'public_portal#faq'
+  get 'terms-of-use' => 'public_portal#terms'
   get 'publish' => 'data_distributions#publish'
   get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
@@ -61,7 +64,10 @@ Rails.application.routes.draw do
     root "public_portal#user"
 
     def datagraft_resources(resource_sym)
-      resources resource_sym do
+      resource_name = resource_sym.to_s
+      resource_and_context = resource_name + '/:id'
+      patch resource_and_context => resource_name + '#update_partial'
+      resources resource_sym, :except => :patch do
         member do
           get  'versions'
           post 'star'

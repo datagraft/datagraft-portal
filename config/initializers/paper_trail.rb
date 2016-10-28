@@ -2,7 +2,9 @@
 PaperTrail.config.track_associations = false
 
 module PaperTrail
+  
   class Version < ActiveRecord::Base
+    include PaperTrail::VersionConcern
     # Updates metric for versions; we do it only on creation of a version unless the event that triggered the version creation is "destroy" (yes, we also store versions of destroyed assets), which means that we do not need to increment versions
     after_create_commit :increment_versions_metric, unless: :is_event_destroy?
 

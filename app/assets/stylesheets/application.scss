@@ -24,9 +24,14 @@ $accent-color: #FF609A;
 
 html, body.mdl-base {
   font-family: Roboto, Helvetica, Arial, sans-serif;
+  text-align: justify;
 
   h1, h2, h3, h4, h5, h6, .mdl-button, .mdl-layouti__header {
     font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+  }
+  li {
+    padding-inline-start: 10px;
+    margin-left: 15px;
   }
 }
 
@@ -236,7 +241,8 @@ main .mdl-button.mdl-js-ripple-effect {
 }
 
 .mdl-layout__content.sin-main-layout {
-  display:flex;
+  justify-content: space-between;
+  display: flex;
   flex-direction: column;
 }
 
@@ -246,6 +252,7 @@ main .mdl-button.mdl-js-ripple-effect {
 
 .sin-section-simple-margin {
   margin:0px;
+  flex: 1;
 }
 
 /* Liberation lol */
@@ -424,4 +431,63 @@ iframe.grafterizer {
   max-height: 50px;
   margin: auto;
   display: inline;
+}
+.sin-mini-footer {
+  flex: 0 0 36px;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 10px 20px;
+  background-color: $primary-color;
+  color: white;
+
+  & > .sin-mini-footer__small-print {
+    font-size: 10px;
+    padding: 5px 0;
+    line-height: 1.4em;
+    margin: 0 4em;
+    text-align: center;
+
+    & > a {
+      font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  }
+
+  & .mdl-mini-footer__left-section {
+    flex: 1 1 50%;
+  }
+
+  & .mdl-mini-footer__link-list > li {
+    white-space: nowrap;
+    flex: 0 min-content;
+  }
+
+  & .mdl-mini-footer__right-section {
+    flex: 1 1 50%;
+
+    & > ul {
+      justify-content: flex-end;
+
+      & > li {
+        margin-right: 0;
+        margin-left: 16px;
+      }
+
+      @media only screen and (max-width: 760px) {
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1160px) {
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+
+    & > .sin-mini-footer__small-print {
+      order: 3;
+      width: 100%;
+      padding: 3px 0 0 0;
+    }
+  }
 }
