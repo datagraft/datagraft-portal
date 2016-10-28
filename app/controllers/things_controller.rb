@@ -8,9 +8,9 @@ class ThingsController < ApplicationController
   before_action :set_thing, only: [
     :show, :edit, :update, :destroy, :star, :unstar, :fork, :versions,
     :show_metadata, :edit_metadata, :delete_metadata,
-    :show_configuration, :edit_configuration, :delete_configuration
+    :show_configuration, :edit_configuration, :delete_configuration, :update_partial
     ]
-
+  
   # GET /:username/:resource
   def index
     # If the user lists her own resources
@@ -94,14 +94,38 @@ class ThingsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /:username/:resource/:id
+  # PUT /:username/:resource/:id
   def update
     authorize! :update, @thing
-
     method_prefix = virtual_resource_name(true)
     instance_variable_set("@"+method_prefix, @thing)
 
     @thing.assign_attributes(self.send(virtual_resource_name(true)+"_params"))
+
+    set_relation = "#{method_prefix}_set_relations".to_sym
+    if self.respond_to?(set_relation, :include_private)
+      self.send(set_relation, @thing)
+    end
+
+    respond_to do |format|
+      if @thing.save
+        format.html { redirect_to thing_path(@thing), notice: update_notice }
+        format.json { render :show, status: :ok, location: thing_path(@thing) }
+      else
+        format.html { render :edit }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
+# PATCH /:username/:resource/:id
+  def update_partial
+    authorize! :update, @thing
+    
+    method_prefix = virtual_resource_name(true)
+    instance_variable_set("@"+method_prefix, @thing)
+
+    @thing.update_attributes(self.send(virtual_resource_name(true)+"_params_partial"))
 
     set_relation = "#{method_prefix}_set_relations".to_sym
     if self.respond_to?(set_relation, :include_private)
@@ -125,7 +149,7 @@ class ThingsController < ApplicationController
     @thing.destroy
 
     respond_to do |format|
-      format.html { redirect_to things_path(@thing), notice: destroy_notice }
+      format.html { redirect_to dashboard_path, notice: destroy_notice }
       format.json { head :no_content }
     end
   end

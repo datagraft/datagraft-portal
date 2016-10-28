@@ -158,6 +158,8 @@ gem 'deep_cloneable', '~> 2.2.0'
 # Feature flippin'
 gem 'flip'
 
+# This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
+gem 'jquery-datatables-rails', '~> 3.4.0'
 # Read Excel files
 gem 'roo', '~> 2.4.0'
 gem 'roo-xls'

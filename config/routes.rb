@@ -63,7 +63,10 @@ Rails.application.routes.draw do
     root "public_portal#user"
 
     def datagraft_resources(resource_sym)
-      resources resource_sym do
+      resource_name = resource_sym.to_s
+      resource_and_context = resource_name + '/:id'
+      patch resource_and_context => resource_name + '#update_partial'
+      resources resource_sym, :except => :patch do
         member do
           get  'versions'
           post 'star'

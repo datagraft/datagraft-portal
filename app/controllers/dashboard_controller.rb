@@ -4,17 +4,20 @@ class DashboardController < ApplicationController
 
   # TODO: there is an intense amount of requests coming to this function - we might want to think to optimise it or throttle the requests
   def index
+    # TODO: change or remove the if-part of this statement - it is never called (no more search through the DB)
     if params[:search]
       query_things = current_user.search_dashboard_things(params[:search])
       query_catalogues = current_user.search_dashboard_catalogues(params[:search])
+      other_user_public_things = Thing.where(public: true).where.not(user: current_user).basic_search(name: params[:search])
     else
       query_things = current_user.dashboard_things
       query_catalogues = current_user.dashboard_catalogues
+      other_user_public_things = Thing.where(public: true).where.not(user: current_user)
     end
 
     query_things = query_things.includes(:user)
     query_catalogues = query_catalogues.includes(:user)
-
+    
     @things = {
       'all' => query_things,
       'catalogues' => query_catalogues,
@@ -30,8 +33,9 @@ class DashboardController < ApplicationController
 
     @things.each do |key, query|
       if key == 'all'
-        things_and_catalogues = query_catalogues + query_things
+        things_and_catalogues = query_catalogues + query_things + other_user_public_things
         @things[key] = things_and_catalogues
+        
       else
         @things[key] = query
       end
