@@ -49,6 +49,8 @@ class Query < Thing
     configuration["language"] = val
   end
 
+# Old execute method on queriable data stores replaced with sparql endpoints
+=begin
   def execute(queriable_data_store)
     # HERE IS UGLY CODE LOL
     if language == 'SPARQL' && queriable_data_store.hosting_provider = 'ontotext'
@@ -79,9 +81,33 @@ class Query < Thing
       raise "Only SPARQL on Ontotext backend querying is supported"
     end
   end
+=end
+  
+  def execute(sparql_endpoint)
+    conn = Faraday.new(sparql_endpoint.uri) do |c|
+      # c.response :json
+      c.request :url_encoded
+      c.adapter Faraday.default_adapter
+    end
+
+    result = conn.get do |req|
+      req.params['query'] = query
+      req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
+    end
+
+    if result.status != 200
+      raise result.body
+    end
+
+    parsed = JSON.parse(result.body)
+
+    return {
+      headers: parsed["head"]["vars"],
+      results: parsed["results"]["bindings"]
+    }
+  end
   
   def execute_on_sparql_endpoint(sparql_endpoint)
-    
     return {
       headers: [],
       results: []

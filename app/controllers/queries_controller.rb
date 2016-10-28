@@ -1,5 +1,7 @@
 class QueriesController < ThingsController
 
+# Old execute method on queriable data stores replaced with sparql endpoints
+=begin
   def execute
     if !params[:id].blank? && !params[:username].blank?
       set_thing
@@ -40,6 +42,67 @@ class QueriesController < ThingsController
       # HERE IS THE FUN PART
       begin
         @query_result = @query.execute(@queriable_data_store)
+      rescue => error
+        flash[:error] = error.message
+        # redirect_to thing_path(@query)
+        # @results_list = []
+        @query_result = {
+          headers: [],
+          results: []
+        }
+      end
+    end
+
+    if @query_result.blank?
+      @results_list = []
+    else
+      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+    end
+    # throw @query_result
+  end
+=end
+
+  def execute_query
+=begin
+    if !params[:id].blank? && !params[:username].blank?
+      set_thing
+      authorize! :read, @thing
+
+      if user_signed_in? && (current_user.username == params[:se_username] || params[:se_username] == 'myassets')
+        se_user = current_user
+      else
+        raise CanCan::AccessDenied.new("Not authorized!") if params[:se_username] == 'myassets'
+        se_user = User.find_by_username(params[:se_username]) or not_found
+      end
+
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:se_id])
+      # throw @queriable_data_store
+    elsif user_signed_in?
+      querying = params["querying"] || {}
+      @query = @thing = Query.new
+      @query.name = 'Unsaved query'
+      @query.query = querying["query"]
+      @query.language = querying["language"]
+      @unsaved_query = true
+
+      unless querying["sparql_endpoint"].blank?
+        @sparql_endpoint = SparqlEndpoint.friendly.find(querying["sparql_endpoint"])
+      end
+    else
+      raise CanCan::AccessDenied.new("Not authorized!")
+    end
+=end
+    if @sparql_endpoint.nil?
+      @query_result = {
+        headers: [],
+        results: []
+      }
+    else
+      authorize! :read, @sparql_endpoint
+
+      # HERE IS THE FUN PART
+      begin
+        @query_result = @query.execute(@sparql_endpoint)
       rescue => error
         flash[:error] = error.message
         # redirect_to thing_path(@query)
