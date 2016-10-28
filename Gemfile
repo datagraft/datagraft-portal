@@ -179,4 +179,3 @@ gem 'prometheus-client'
 gem 'listjs-rails'
 #Use wicked to make your Rails controllers into step-by-step wizards.
 gem 'wicked'
-

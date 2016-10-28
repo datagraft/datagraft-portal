@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009154918) do
+ActiveRecord::Schema.define(version: 20161026145118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,11 +76,6 @@ ActiveRecord::Schema.define(version: 20161009154918) do
     t.boolean  "enabled",    default: false, null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-  end
-
-  create_table "file_wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -215,8 +210,8 @@ ActiveRecord::Schema.define(version: 20161009154918) do
   end
 
   create_table "upwizards", force: :cascade do |t|
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
     t.string   "task"
     t.integer  "user_id"
     t.string   "file_id"
@@ -226,6 +221,8 @@ ActiveRecord::Schema.define(version: 20161009154918) do
     t.string   "redirect_step"
     t.integer  "radio_thing_id"
     t.jsonb    "trace"
+    t.string   "transformed_file_id"
+    t.integer  "transformed_file_size"
   end
 
   create_table "users", force: :cascade do |t|
@@ -266,12 +263,6 @@ ActiveRecord::Schema.define(version: 20161009154918) do
     t.text     "object"
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
-  end
-
-  create_table "wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "task"
   end
 
   add_foreign_key "catalogues", "users"

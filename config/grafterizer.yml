@@ -1,0 +1,8 @@
+development:
+  publicPath: http://localhost:9000
+
+test:
+  publicPath: <%= ENV["GRAFTERIZER_PUBLIC_PATH"] %>
+
+production:
+  publicPath: <%= ENV["GRAFTERIZER_PUBLIC_PATH"] %>

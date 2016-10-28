@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
   get    ':username/upwizards/new/:task'   => 'upwizards#new'     #Start a new wizard for a task
+  get    ':username/upwizards/:wiz_id/attachment' => 'upwizards#attachment' #Download attachment
   post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
   get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
   get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information

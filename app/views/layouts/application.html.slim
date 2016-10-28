@@ -57,15 +57,12 @@ html
                   = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
                 li
                   = link_to('OAuth Applications', oauth_applications_path, class: "mdl-menu__item")
-          //- flash[:error] = "Test error"
-          //- flash[:warning] = "Test warning"
-          //- flash[:notice] = "Test notice"
-          - flash.each do |key, value|
-            div id="show-alert-#{key}" class="alert alert-#{key}"
-              button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab.alert-close onClick="hideIdAlert('show-alert-#{key}')"
-                i.material-icons close
-              = raw value
-          - flash.clear
+        - flash.each do |key, value|
+          div id="show-alert-#{key}" class="alert alert-#{key}"
+            button.mdl-button.mdl-js-button.mdl-button--fab.mdl-button--mini-fab.alert-close onClick="hideIdAlert('show-alert-#{key}')"
+              i.material-icons close
+            = raw value
+        - flash.clear
         main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''} #{(hasOption :dashboardLayout) ? 'mdl-color--white' : ''}"
 
           - if hasOption :noShadow
