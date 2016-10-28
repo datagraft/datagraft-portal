@@ -135,7 +135,7 @@ class UpwizardsController < ApplicationController
 private
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
-    params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id])
+    params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id, :type_of_transformed_file])
   end
 
   # Delete the old file object if we get a new file object from form
