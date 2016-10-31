@@ -63,8 +63,8 @@ html
               i.material-icons close
             = raw value
         - flash.clear
-        
-        main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage
+
+        main class="mdl-layout__content sin-main-layout #{(hasOption :flexPage) ? 'sin-layout-flex' : ''} #{(hasOption :dashboardLayout) ? 'mdl-color--white' : ''}"
           - if hasOption :noShadow
             section.section--center.sin-padding.sin-section-simple-margin
               = yield
@@ -101,10 +101,10 @@ html
               ' DataGraft is a service operated by the #{link_to 'proDataMarket', 'http://prodatamarket.eu'} project, co-funded by the EC under HORIZON 2020, The EU Framework Programme for Research and Innovation (2015-2017)
             .mdl-mini-footer__right-section
               ul.mdl-mini-footer__link-list
-                li 
+                li
                   =link_to "Terms Of Use", terms_of_use_path
-                li 
+                li
                   =link_to "Privacy Policy", privacy_policy_path
                 li Cookie Policy
-                li 
+                li
                   =link_to "FAQ", faq_path
