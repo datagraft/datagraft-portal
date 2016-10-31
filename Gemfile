@@ -29,9 +29,6 @@ gem 'acts-as-taggable-on', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Unicorn as the app server
-# gem 'unicorn'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -47,10 +44,6 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
-# Use unicornkaosj
-gem 'unicorn'
-gem 'unicorn-rails'
 
 gem 'rack-cors', :require => 'rack/cors'
 
@@ -179,3 +172,4 @@ gem 'prometheus-client'
 gem 'listjs-rails'
 #Use wicked to make your Rails controllers into step-by-step wizards.
 gem 'wicked'
+gem 'puma'
