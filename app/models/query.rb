@@ -89,7 +89,6 @@ class Query < Thing
       c.request :url_encoded
       c.adapter Faraday.default_adapter
     end
-
     result = conn.get do |req|
       req.params['query'] = query
       req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
@@ -100,7 +99,7 @@ class Query < Thing
     end
 
     parsed = JSON.parse(result.body)
-
+byebug
     return {
       headers: parsed["head"]["vars"],
       results: parsed["results"]["bindings"]

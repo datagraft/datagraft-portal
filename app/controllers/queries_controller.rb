@@ -62,36 +62,21 @@ class QueriesController < ThingsController
   end
 =end
 
+  # Method called by the query execute form
   def execute_query
-=begin
     if !params[:id].blank? && !params[:username].blank?
       set_thing
       authorize! :read, @thing
-
-      if user_signed_in? && (current_user.username == params[:se_username] || params[:se_username] == 'myassets')
+      if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
         se_user = current_user
       else
-        raise CanCan::AccessDenied.new("Not authorized!") if params[:se_username] == 'myassets'
-        se_user = User.find_by_username(params[:se_username]) or not_found
+        raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+        se_user = User.find_by_username(params[:username]) or not_found
       end
 
-      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:se_id])
-      # throw @queriable_data_store
-    elsif user_signed_in?
-      querying = params["querying"] || {}
-      @query = @thing = Query.new
-      @query.name = 'Unsaved query'
-      @query.query = querying["query"]
-      @query.language = querying["language"]
-      @unsaved_query = true
-
-      unless querying["sparql_endpoint"].blank?
-        @sparql_endpoint = SparqlEndpoint.friendly.find(querying["sparql_endpoint"])
-      end
-    else
-      raise CanCan::AccessDenied.new("Not authorized!")
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_slugs])
     end
-=end
+    
     if @sparql_endpoint.nil?
       @query_result = {
         headers: [],

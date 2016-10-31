@@ -1,4 +1,5 @@
 = simple_form_for @thing, url: thing_path(@thing) do |f|
+  = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
     h4.mdl-cell--12-col Properties
     .sin-input-with-help-icon

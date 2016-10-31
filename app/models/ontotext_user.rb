@@ -318,6 +318,32 @@ byebug
     end
   end
   
+  
+  # Upload file to the repository
+  def upload_file_ontotext_repository(rdfFile, sparql_endpoint)
+    begin
+      #tmpFile = rdfFile.download
+      
+      connect = ontotext_connexion(true)  
+      resp = connect.post do |req|
+        req.url sparql_endpoint.uri+'/statements'
+        req.headers['Content-Type'] = 'application/x-turtle'
+        req.body = rdfFile.read
+        #req.body = tmpFile
+      end
+      throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status) unless 
+      resp.status.between?(200, 299)
+    
+    rescue Exception => e
+      puts 'Error uploading file to Ontotext repository'
+      puts e.message
+      puts e.backtrace.inspect
+    #ensure
+      #tmpFile.unlink 
+    end
+  end
+  
+    
   # Get login status
   def get_login_status(connect)
     resp = connect.get do |req|

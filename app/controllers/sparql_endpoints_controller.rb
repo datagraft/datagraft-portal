@@ -72,8 +72,20 @@ byebug
   private
     def fill_default_values_if_empty
       fill_name_if_empty
+      
       if @thing.uri.blank?
         @thing.uri = current_user.new_ontotext_repository(@thing)
+      end
+
+      unless params[:wiz_id] == nil
+        @upwizard = Upwizard.find(params[:wiz_id])
+        
+        #rdfFile = @upwizard.file.download.path
+        #rdfFile = Refile.attachment_url(@upwizard, :file)
+        current_user.upload_file_ontotext_repository(@upwizard.file, @thing)
+
+        # Delete wizard
+        @upwizard.destroy
       end
     end
 
