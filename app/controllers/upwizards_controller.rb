@@ -1,7 +1,7 @@
 class UpwizardsController < ApplicationController
   include UpwizardHelper
   include Wicked::Wizard
-  steps :publish, :decide, :transform, :create_transform, :save_transform, :transform_select_execute, :fill_sparql_endpoint, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
+  steps :publish, :decide, :transform, :create_transform, :save_transform, :transform_select_execute, :fill_sparql_endpoint, :fill_filestore, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
   # Receive new file attacement from form
   # Step in the wizard is indicated by :id. Not used by this method
@@ -131,11 +131,57 @@ class UpwizardsController < ApplicationController
     end
   end
 
+protected
+
+  def get_current_file
+    ret = @upwizard.file
+    if use_transformed_file?
+      ret =  @upwizard.transformed_file
+    end
+    return ret
+  end
+
+  def get_current_file_size
+    return get_current_file.size
+  end
+
+  def get_current_file_content_type
+    ret = @upwizard.file_content_type
+    if use_transformed_file?
+      ret = "application/octet-stream";
+    end
+    return ret
+  end
+
+  def get_current_file_original_name
+    ret = @upwizard.original_filename
+    if use_transformed_file?
+      if transformed_file_type == 'rdf'
+        ret = "transformed-"+ret+".rdf"
+      elsif transformed_file_type == 'csv'
+        ret = "transformed-"+ret+".csv"
+      end
+    end
+    return ret
+  end
 
 private
+
+  def use_transformed_file?
+    ret = false
+    unless transformed_file_type.blank?
+      if transformed_file_type == 'rdf'
+        ret = true
+      elsif transformed_file_type == 'csv'
+        ret = true
+      end
+    end
+    return ret
+  end
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
-    params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id, :type_of_transformed_file])
+    params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id])
   end
 
   # Delete the old file object if we get a new file object from form
@@ -254,7 +300,7 @@ private
   def process_state
     puts "************ upwizard process_state"
     @curr_step = step
-    
+
     # TODO this fails weirdly
     unless step == :save_transform
       @upwizard.trace_push step, params
@@ -284,6 +330,8 @@ private
       handle_transform_select_execute
     when :fill_sparql_endpoint
       handle_fill_sparql_endpoint
+    when :fill_filestore
+      handle_fill_filestore
     when :file_select_transform
       handle_file_select_transform_and_render
     when :go_filestore
@@ -378,6 +426,16 @@ private
     puts "************ upwizard handle_fill_sparql_endpoint"
     #Placeholder ... Nothing to do so far
 
+    @upwizard.transformed_file_type = 'rdf'
+    @upwizard.save
+    render_wizard
+  end
+
+  def handle_fill_filestore
+    puts "************ upwizard handle_fill_filestore"
+    #Placeholder ... Nothing to do so far
+
+    @upwizard.transformed_file_type = 'csv'
     @upwizard.save
     render_wizard
   end
@@ -406,6 +464,7 @@ private
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
 
+    @upwizard.transformed_file_type = nil  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
@@ -422,6 +481,7 @@ private
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
+    @upwizard.transformed_file_type = nil  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
