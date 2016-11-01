@@ -1,0 +1,26 @@
+div.mdl-layout
+  div.mdl-grid
+    div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+        div.mdl-card__supporting-text.sin-padding
+          = devise_error_messages!
+          - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+            div
+              | Currently waiting confirmation for: #{resource.unconfirmed_email}
+          .mdl-grid
+            .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              = f.password_field :password, autocomplete: "off", class: "mdl-textfield__input"
+              = f.label :password, class: "mdl-textfield__label", value: "New password (leave blank if you don't want to change it)"
+            .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              = f.password_field :password_confirmation, autocomplete: "off", class: "mdl-textfield__input"
+              = f.label :password_confirmation, class: "mdl-textfield__label", value: "Confirm your new password (leave blank if you don't want to change it)"
+            p.mdl-cell.mdl-cell--12-col
+              em We need your current password to confirm your changes
+            .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              = f.password_field :current_password, autocomplete: "off", class: "mdl-textfield__input", required: true
+              = f.label :current_password, class: "mdl-textfield__label"
+
+        div.mdl-card__actions
+          div style="margin:auto"
+            = f.submit "Update", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
