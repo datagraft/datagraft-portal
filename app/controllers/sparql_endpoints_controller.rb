@@ -8,25 +8,15 @@ class SparqlEndpointsController < ThingsController
   end
   
   def update
+    attr_name = 'public'
+    old_value = @thing.read_attribute(attr_name)
     super
-    username = current_user.username + '_' + current_user.ontotext_account.to_s
-byebug
-    current_user.update_ontotext_repository_public(@thing)
+    new_value = @thing.read_attribute(attr_name)
 
-# Hack to support two submit buttons in a form with different actions
-=begin
-    if params[:commit] == "Execute"
-      setemp = SparqlEndpoint.new
-      setemp.assign_attributes(params.require(:sparql_endpoint).permit(queries_attributes: [:id, :query]))
-      
-      qtemp = setemp.queries.first
-      qresult = qtemp.execute_on_sparql_endpoint(@thing)
-      
-      render :text => qresult
-    else
-      super
-    end    
-=end
+    # Update public/private property if changed
+    if new_value != old_value
+      current_user.update_ontotext_repository_public(@thing)    
+    end
   end  
   
   def destroy

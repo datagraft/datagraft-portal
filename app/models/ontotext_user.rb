@@ -226,7 +226,7 @@ module OntotextUser
             }.to_json), 'application/ld+json'),
         }
       end 
-
+byebug
       throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
 
       json_distribution = JSON.parse(resp_distribution.body)
@@ -241,7 +241,7 @@ module OntotextUser
         req.headers['repository-id'] = repository_id
         req.options.timeout = 720
       end
-
+byebug
       throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
 
       json_repository = JSON.parse(resp_repository.body)
@@ -255,37 +255,7 @@ module OntotextUser
     connect.delete qds.uri
   end
   
-  # Update the public property of the repository
-  def update_ontotext_repository_public(se)
-byebug
-    begin
-      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+se.id+'/repository'+se.id
-byebug
-      connect = Faraday.new
-      resp = connect.post do |req|
-        req.url url
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.body = {
-          meta: Faraday::UploadIO.new(StringIO.new({
-            'public' => se.public
-          }.to_json), 'application/ld+json'),
-        }
-        req.options.timeout = 720
-      end
-      
-      throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless 
-      resp.status.between?(200, 299)
-      
-      return resp.body
 
-    rescue Exception => e
-      puts 'Error updating Ontotext repository public property'
-      puts e.message
-      puts e.backtrace.inspect
-    end  
-  end
-  
-  
   # Get the size of the repository
   def get_ontotext_repository_size(se)
     begin
@@ -343,7 +313,78 @@ byebug
     end
   end
   
+  
+  # Decode Ontotext user ID based on SPARQL endpoint URI
+  def decode_ontotext_user_id(sparql_endpoint)
+    encoded_id = sparql_endpoint.uri.split('/')[3]
+    encoded_id_length = encoded_id.length
     
+    decoded_id = ""
+    for i in 0..encoded_id_length-1
+#      puts("i = #{i}, encoded_id[#{i}] = #{encoded_id[i]}")
+      newValue = (encoded_id[i].to_i + 10 - 3) % 10
+#      puts("newValue = #{newValue}")
+      decoded_id = decoded_id + newValue.to_s
+    end
+    
+    return decoded_id
+  end
+  
+  
+  # Get Ontotext DB ID belonging to the Ontotext user account
+  def get_ontotext_db_id(ontotext_user_id)
+    begin
+      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'users/'+ontotext_user_id+'/db'
+      connect = Faraday.new
+      resp = connect.get do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/ld+json'
+        req.options.timeout = 720
+      end
+      
+      throw ("Unable to get Ontotext DB ID - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
+      
+      json_resp = JSON.parse(resp.body)
+      
+      return json_resp[0]['db-id']
+      
+    rescue Exception => e
+      puts 'Error getting Ontotext DB ID'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+  end
+    
+  # Update the public property of the repository
+  def update_ontotext_repository_public(se)
+    begin
+      user_id = decode_ontotext_user_id(se)
+      db_id = get_ontotext_db_id(user_id)
+      repository_id = se.uri.split('/')[6]    
+      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+db_id+'/repository/'+repository_id
+      body = '{"public": ' + '"' + se.public.to_s + '"}'
+
+      connect = Faraday.new
+      resp = connect.post do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/json'
+        req.body = body
+        req.options.timeout = 720
+      end
+
+      throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless 
+      resp.status.between?(200, 299)
+      
+      return resp.body
+
+    rescue Exception => e
+      puts 'Error updating Ontotext repository public property'
+      puts e.message
+      puts e.backtrace.inspect
+    end  
+  end
+
+  
   # Get login status
   def get_login_status(connect)
     resp = connect.get do |req|
@@ -357,6 +398,7 @@ byebug
     return resp.body
   end
 
+  
   # Ontotext login
   def ontotext_login
     connect = new_api_connexion
@@ -369,12 +411,13 @@ byebug
         password: encrypted_password
       }.to_json
     end
-
+    
     throw ("Unable to login - " + resp.status.to_s) unless resp.status.between?(200, 299)
 
     return connect
   end
 
+  
 =begin
   # Delete ontotext account
   def delete_ontotext_account(connect)
@@ -389,6 +432,7 @@ byebug
     return resp.body    
   end
 =end
+  
   
   # Delete ontotext account
   def delete_ontotext_account

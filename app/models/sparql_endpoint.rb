@@ -33,4 +33,15 @@ class SparqlEndpoint < Thing
     metadata["uri"] = val
   end
 
+=begin
+  def ontotext_repository_id
+    metadata["ontotext_repository_id"]
+  end
+  
+  def ontotext_repository_id=(val)
+    touch_metadata!
+    metadata["ontotext_repository_id"] = val
+  end
+=end
+
 end
