@@ -117,9 +117,12 @@ document.addEventListener('turbolinks:load', function () {
       upgradeTooltipsAndSwitchesMDL($table);
       var numcolumns = this.oApi._fnVisbleColumns(oSettings);
       generateEmptyRows($table, 10);
+      $(".dataTables_scrollHeadInner").css({"width":"100%"});
+      console.log("heres")
+      $(".mdl-data-table").css({"width":"100%"});
     },
     'columnDefs': [
-      { 'width': '5%', 'targets': 0 },
+      { 'width': '10%', 'targets': 0 },
       { 'width': '35%', 'targets': 1 },
       { 'width': '15%', searchable: true, 'targets': 2 },
       { 'width': '15%', searchable: false, 'targets': 3 },
