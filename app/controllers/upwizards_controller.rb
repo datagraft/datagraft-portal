@@ -7,16 +7,15 @@ class UpwizardsController < ApplicationController
   # Step in the wizard is indicated by :id. Not used by this method
   # POST     /:username/upwizards/:id/:wiz_id
   def create
-    #byebug
     puts "************ upwizard create"
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
-    delete_old_file_if_new
+
+    copy_additional_fileinfo
     @upwizard.update_attributes(upwizard_params)
-    #byebug
-    fill_filedetails_if_empty
+
     @upwizard.save
-    #byebug
+
     #calculate_filetype_and_warning
   end
 
@@ -87,6 +86,7 @@ class UpwizardsController < ApplicationController
   def show
     puts "************ upwizard show"
     @upwizard = Upwizard.find(params[:wiz_id])
+
     authorize! :read, @upwizard
     process_state
   end
@@ -110,7 +110,7 @@ class UpwizardsController < ApplicationController
     @upwizard = Upwizard.find(params[:wiz_id])
     authorize! :update, @upwizard
 
-    delete_old_file_if_new
+    copy_additional_fileinfo
     @upwizard.update_attributes(upwizard_params)
     fill_filedetails_if_empty
     process_state
@@ -184,30 +184,16 @@ private
     params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id])
   end
 
-  # Delete the old file object if we get a new file object from form
-  def delete_old_file_if_new
+  # Copy additional fileinformation from form
+  def copy_additional_fileinfo
     unless upwizard_params[:file] == nil
-      unless @upwizard.file == nil
-        @upwizard.file.delete
-        @upwizard.file = nil
-        @upwizard.file_size = 0
-        @upwizard.file_content_type = nil
-        @upwizard.original_filename = nil
+      @upwizard.original_filename = nil
+      unless upwizard_params[:file].original_filename.blank?
+        @upwizard.original_filename = upwizard_params[:file].original_filename
       end
     end
   end
 
-  # Copy additional fileinformation from form
-  def fill_filedetails_if_empty
-    if @upwizard.original_filename.blank?
-      unless upwizard_params[:file] == nil
-        unless upwizard_params[:file].original_filename.blank?
-          # Store the original filename sections to use for upload
-          @upwizard.original_filename = upwizard_params[:file].original_filename
-        end
-      end
-    end
-  end
 
   # Extract file extension from filename
   def file_ext
@@ -258,7 +244,6 @@ private
     if (@upwizard.task == 'file')
       if (@sparql_file)
         if (step == :decide)
-          puts '******** Make FLASH warning'
           flash[:warning] = "You have uploaded an RDF file format, which is published in a SPARQL endpoint.<BR> If you would like to continue creating a file page, please press BACK and upload a tabular file (CSV, TSV, XLS, XLSX)."
         end
       end
@@ -323,15 +308,15 @@ private
     when :transform
       handle_transform_and_render
     when :create_transform
-      handle_create_transform
+      handle_create_transform_and_render
     when :save_transform
-      handle_save_transform
+      handle_save_transform_and_render
     when :transform_select_execute
-      handle_transform_select_execute
+      handle_transform_select_execute_and_render
     when :fill_sparql_endpoint
-      handle_fill_sparql_endpoint
+      handle_fill_sparql_endpoint_and_render
     when :fill_filestore
-      handle_fill_filestore
+      handle_fill_filestore_and_render
     when :file_select_transform
       handle_file_select_transform_and_render
     when :go_filestore
@@ -393,7 +378,7 @@ private
     render_wizard
   end
 
-  def handle_create_transform
+  def handle_create_transform_and_render
     puts "************ upwizard handle_create_transform"
     #Placeholder ... Nothing to do so far
 
@@ -409,7 +394,7 @@ private
     render_wizard
   end
 
-  def handle_save_transform
+  def handle_save_transform_and_render
     puts "************ upwizard handle_save_transform"
     respond_to do |format|
       if @upwizard.save
@@ -420,28 +405,10 @@ private
         format.json { render json: @upwizard.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def handle_fill_sparql_endpoint
-    puts "************ upwizard handle_fill_sparql_endpoint"
-    #Placeholder ... Nothing to do so far
-
-    @upwizard.transformed_file_type = 'rdf'
-    @upwizard.save
     render_wizard
   end
 
-  def handle_fill_filestore
-    puts "************ upwizard handle_fill_filestore"
-    #Placeholder ... Nothing to do so far
-
-    @upwizard.transformed_file_type = 'csv'
-    @upwizard.save
-    render_wizard
-  end
-
-
-  def handle_transform_select_execute
+  def handle_transform_select_execute_and_render
     puts "************ upwizard handle_transform_select_execute"
 
     unless params[:upwizard][:radio_thing_id] == nil
@@ -460,7 +427,43 @@ private
     render_wizard
   end
 
-  # Pass this upwizard object over to a new filestore object
+  # Pass the transformed tabular object over to a new filestore object
+  def handle_fill_filestore_and_render
+    puts "************ upwizard handle_fill_filestore"
+
+    @upwizard.transformed_file_type = 'csv'
+    @upwizard.trace_back_step_skip
+    @upwizard.save
+    options = request.query_parameters
+    options = options.respond_to?(:to_h) ? options.to_h : options
+    options = { :controller => 'filestores',
+                :action     => 'new',
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+               }.merge options
+
+    redirect_to url_for(options)
+  end
+
+  # Pass the transformed graph object over to a new sparql endpoint
+  def handle_fill_sparql_endpoint_and_render
+    puts "************ upwizard handle_fill_sparql_endpoint"
+
+    @upwizard.transformed_file_type = 'rdf'
+    @upwizard.trace_back_step_skip
+    @upwizard.save
+    options = request.query_parameters
+    options = options.respond_to?(:to_h) ? options.to_h : options
+    options = { :controller => 'sparql_endpoints',
+                :action     => 'new',
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+               }.merge options
+
+    redirect_to url_for(options)
+  end
+
+  # Pass the uploaded object over to a new filestore object
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
 
@@ -478,6 +481,7 @@ private
     redirect_to url_for(options)
   end
 
+  # Pass the uploaded object over to a new sparql endpoint object
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
