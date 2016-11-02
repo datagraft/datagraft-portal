@@ -133,37 +133,6 @@ class UpwizardsController < ApplicationController
 
 protected
 
-  def get_current_file
-    ret = @upwizard.file
-    if use_transformed_file?
-      ret =  @upwizard.transformed_file
-    end
-    return ret
-  end
-
-  def get_current_file_size
-    return get_current_file.size
-  end
-
-  def get_current_file_content_type
-    ret = @upwizard.file_content_type
-    if use_transformed_file?
-      ret = "application/octet-stream";
-    end
-    return ret
-  end
-
-  def get_current_file_original_name
-    ret = @upwizard.original_filename
-    if use_transformed_file?
-      if transformed_file_type == 'rdf'
-        ret = "transformed-"+ret+".rdf"
-      elsif transformed_file_type == 'csv'
-        ret = "transformed-"+ret+".csv"
-      end
-    end
-    return ret
-  end
 
 private
 

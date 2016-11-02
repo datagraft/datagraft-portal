@@ -189,64 +189,71 @@ module OntotextUser
 
     # Create new ontotext repository
     def new_ontotext_repository(qds)
-      pname = qds[:name].parameterize
-      today = Time.now.to_s.slice(0,10)
+      begin
+        pname = qds[:name].parameterize
+        today = Time.now.to_s.slice(0,10)
 
-      connect = ontotext_connexion(true)
-      resp_dataset = connect.post do |req|
-        req.url '/catalog/datasets'
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.body = {
-          '@context' => ontotext_declaration,
-          'dct:title' => qds[:name].parameterize,
-          'dct:description' => qds[:description].to_s,
-          'dcat:public' => qds[:public].to_s,
-          'dct:modified'=> today,
-          'dct:issued' => today
-        }.to_json
-        #throw req.body
-      end
-
-      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status.to_s) unless resp_dataset.status.between?(200, 299)
-
-      json_dataset = JSON.parse(resp_dataset.body)
-
-      resp_distribution = connect.post do |req|
-        req.url '/catalog/distributions'
-        req.headers['dataset-id'] = json_dataset['@id']
-        req.body = {
-          file: Faraday::UploadIO.new(StringIO.new(''), 'text/csv'),
-          meta: Faraday::UploadIO.new(StringIO.new({
+        connect = ontotext_connexion(true)
+        resp_dataset = connect.post do |req|
+          req.url '/catalog/datasets'
+          req.headers['Content-Type'] = 'application/ld+json'
+          req.body = {
             '@context' => ontotext_declaration,
-            '@type' => 'dcat:Distribution',
-            'dct:title' => qds[:name].parameterize + '-distribution',
-            'dct:description' => 'temporary empty file',
-            'dcat:fileName' => 'empty.csv',
-            'dcat:mediaType' => 'text/csv'
-            }.to_json), 'application/ld+json'),
-        }
-      end 
-byebug
-      throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
+            'dct:title' => qds[:name].parameterize,
+            'dct:description' => qds[:description].to_s,
+            'dcat:public' => qds[:public].to_s,
+            'dct:modified'=> today,
+            'dct:issued' => today
+          }.to_json
+          #throw req.body
+        end
 
-      json_distribution = JSON.parse(resp_distribution.body)
+        throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status.to_s) unless resp_dataset.status.between?(200, 299)
 
-      # Compute a repository ID from the distribution ID
-      repository_id = json_distribution['@id'].match(/[^\/]*$/)[0].sub(/(.*)-distribution/, "\\1")
+        json_dataset = JSON.parse(resp_dataset.body)
 
-      resp_repository = connect.put do |req|
-        req.url '/catalog/distributions/repository'
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.headers['distrib-id'] = json_distribution['@id']
-        req.headers['repository-id'] = repository_id
-        req.options.timeout = 720
-      end
-byebug
-      throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
+        resp_distribution = connect.post do |req|
+          req.url '/catalog/distributions'
+          req.headers['dataset-id'] = json_dataset['@id']
+          req.body = {
+            file: Faraday::UploadIO.new(StringIO.new(''), 'text/csv'),
+            meta: Faraday::UploadIO.new(StringIO.new({
+              '@context' => ontotext_declaration,
+              '@type' => 'dcat:Distribution',
+              'dct:title' => qds[:name].parameterize + '-distribution',
+              'dct:description' => 'temporary empty file',
+              'dcat:fileName' => 'empty.csv',
+              'dcat:mediaType' => 'text/csv'
+              }.to_json), 'application/ld+json'),
+          }
+        end 
 
-      json_repository = JSON.parse(resp_repository.body)
+        throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
 
-      return json_repository['access-url']
+        json_distribution = JSON.parse(resp_distribution.body)
+
+        # Compute a repository ID from the distribution ID
+        repository_id = json_distribution['@id'].match(/[^\/]*$/)[0].sub(/(.*)-distribution/, "\\1")
+
+        resp_repository = connect.put do |req|
+          req.url '/catalog/distributions/repository'
+          req.headers['Content-Type'] = 'application/ld+json'
+          req.headers['distrib-id'] = json_distribution['@id']
+          req.headers['repository-id'] = repository_id
+          req.options.timeout = 720
+        end
+
+        throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
+
+        json_repository = JSON.parse(resp_repository.body)
+
+        return json_repository['access-url']
+
+    rescue Exception => e
+      puts 'Error creating Ontotext repository'
+      puts e.message
+      puts e.backtrace.inspect
+    end  
   end
 
   # Delete ontotext repository
@@ -355,6 +362,7 @@ byebug
     end
   end
     
+  
   # Update the public property of the repository
   def update_ontotext_repository_public(se)
     begin

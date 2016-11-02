@@ -33,9 +33,9 @@ class SparqlEndpoint < Thing
     metadata["uri"] = val
   end
 
-#=begin
   def write_attribute(attr_name, value)
-    if attr_name == 'public'
+    # Check if new (no user) or update (existing user)
+    if self.user != nil and attr_name == 'public'
       old_value = self.read_attribute(attr_name)
       super
       new_value = self.read_attribute(attr_name)
@@ -48,6 +48,5 @@ class SparqlEndpoint < Thing
       super
     end
   end
-#=end
 
 end
