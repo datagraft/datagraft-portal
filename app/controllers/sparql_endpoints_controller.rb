@@ -8,6 +8,8 @@ class SparqlEndpointsController < ThingsController
   end
   
   def update
+# Update of public/private property if changed moved to the sparql endpoint model
+=begin
     attr_name = 'public'
     old_value = @thing.read_attribute(attr_name)
     super
@@ -17,6 +19,7 @@ class SparqlEndpointsController < ThingsController
     if new_value != old_value
       current_user.update_ontotext_repository_public(@thing)    
     end
+=end
   end  
   
   def destroy
