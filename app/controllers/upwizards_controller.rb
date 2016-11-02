@@ -112,7 +112,6 @@ class UpwizardsController < ApplicationController
 
     copy_additional_fileinfo
     @upwizard.update_attributes(upwizard_params)
-    fill_filedetails_if_empty
     process_state
   end
 
@@ -212,7 +211,7 @@ private
     case step
     when :publish
       user = @upwizard.user
-      tmp_user = user.filestores.where(public: false)
+      tmp_user = user.filestores.includes(:user).where(public: false)
       tmp_pub = Thing.public_list.where(:type => ['Filestore'])
       @thing_entries =  tmp_pub + tmp_user
     end
@@ -223,7 +222,7 @@ private
     case step
     when :transform
       user = @upwizard.user
-      tmp_user = user.transformations.where(public: false)
+      tmp_user = user.transformations.includes(:user).where(public: false)
       tmp_pub = Thing.public_list.where(:type => ['Transformation'])
       @thing_entries =  tmp_pub + tmp_user
     end
