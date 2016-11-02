@@ -16,14 +16,10 @@ class Upwizard < ApplicationRecord
     return ret
   end
 
-  def get_current_file_size
-    return get_current_file.size
-  end
-
   def get_current_file_content_type
     ret = self.file_content_type
     if use_transformed_file?
-      ret = "application/octet-stream";
+      ret = "???";
     end
     return ret
   end
@@ -127,15 +123,13 @@ class Upwizard < ApplicationRecord
     self.trace = new_arr.to_json
     #self.save
   end
-  
+
   private
 
   def use_transformed_file?
     ret = false
     unless transformed_file_type.blank?
-      if transformed_file_type == 'rdf'
-        ret = true
-      elsif transformed_file_type == 'csv'
+      unless transformed_file_type == 'none'
         ret = true
       end
     end
