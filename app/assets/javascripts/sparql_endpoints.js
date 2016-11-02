@@ -33,12 +33,6 @@ document.addEventListener('turbolinks:load', function() {
     $(this).parents('.container').find('.sin-execute-request-response').html(xhr.responseText);
   });
 
-  var queriesListOptions = {
-    valueNames: [ 'name', 'city' ]
-  };
-
-  var queriesList = new List('queries-list', queriesListOptions);
-
   var seQueriesListOptions = {
     valueNames: [ 'sin-container-hidden-name', 'sin-container-hidden-date', 'sin-container-hidden-user' ]
   };

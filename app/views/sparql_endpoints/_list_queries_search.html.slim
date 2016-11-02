@@ -27,7 +27,10 @@
               - add_class = 'row-private'
               - unless query.user.username == @thing.user.username
                 - add_class = 'row-public'
-              div class = "container #{add_class}"
+              - highlight_class = 'highlight-false'
+              - if query_links_to_sparql_endpoint(query, @thing)
+                - highlight_class = 'highlight-true'
+              div class = "container #{add_class} #{highlight_class}"
                 //.collapse-card
                 .squeezebox
                   //.title

@@ -32,5 +32,11 @@ module SparqlEndpointsHelper
 
     return tmp_user + tmp_pub
   end
+  
+  
+  # Check if query links to sparql endpoint
+  def query_links_to_sparql_endpoint(query, sparql_endpoint)
+    return SparqlEndpointQuery.exists?({query_id: query.id, sparql_endpoint_id: sparql_endpoint.id})
+  end
 
 end
