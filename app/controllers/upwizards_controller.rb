@@ -112,7 +112,6 @@ class UpwizardsController < ApplicationController
 
     copy_additional_fileinfo
     @upwizard.update_attributes(upwizard_params)
-    fill_filedetails_if_empty
     process_state
   end
 
@@ -136,18 +135,6 @@ protected
 
 private
 
-  def use_transformed_file?
-    ret = false
-    unless transformed_file_type.blank?
-      if transformed_file_type == 'rdf'
-        ret = true
-      elsif transformed_file_type == 'csv'
-        ret = true
-      end
-    end
-    return ret
-  end
-
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
     params.require(:upwizard).permit([:file, :transformed_file, :task, :username, :radio_thing_id])
@@ -164,24 +151,12 @@ private
   end
 
 
-  # Extract file extension from filename
-  def file_ext
-    unless @upwizard.original_filename.blank?
-      tmp_name = @upwizard.original_filename
-      ext_with_dot = File.extname(tmp_name)
-      ext_no_dot = ext_with_dot.slice(1, ext_with_dot.length)
-      return ext_no_dot
-    else
-      return nil
-    end
-  end
-
   # Make a list of existing filestores. Used by view
   def search_for_existing_filestores
     case step
     when :publish
       user = @upwizard.user
-      tmp_user = user.filestores.where(public: false)
+      tmp_user = user.filestores.includes(:user).where(public: false)
       tmp_pub = Thing.public_list.where(:type => ['Filestore'])
       @thing_entries =  tmp_pub + tmp_user
     end
@@ -192,7 +167,7 @@ private
     case step
     when :transform
       user = @upwizard.user
-      tmp_user = user.transformations.where(public: false)
+      tmp_user = user.transformations.includes(:user).where(public: false)
       tmp_pub = Thing.public_list.where(:type => ['Transformation'])
       @thing_entries =  tmp_pub + tmp_user
     end
@@ -202,7 +177,7 @@ private
   def calculate_filetype_and_warning
     @sparql_file = false
     @filestore_file = false
-    @ext = file_ext
+    @ext = file_ext(@upwizard.original_filename)
 
     if (sparql_ext? @ext)
       @sparql_file =  true
@@ -227,6 +202,16 @@ private
   # Is extension compatible for task sparql
   def sparql_ext? (ext)
     if (ext == 'rdf')
+      return true
+    elsif (ext == 'nt')
+      return true
+    elsif (ext == 'ttl')
+      return true
+    elsif (ext == 'n3')
+      return true
+    elsif (ext == 'trix')
+      return true
+    elsif (ext == 'trig')
       return true
     else
       return false
@@ -400,7 +385,7 @@ private
   def handle_fill_filestore_and_render
     puts "************ upwizard handle_fill_filestore"
 
-    @upwizard.transformed_file_type = 'csv'
+    @upwizard.transformed_file_type = 'tabular'
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
@@ -418,7 +403,7 @@ private
   def handle_fill_sparql_endpoint_and_render
     puts "************ upwizard handle_fill_sparql_endpoint"
 
-    @upwizard.transformed_file_type = 'rdf'
+    @upwizard.transformed_file_type = 'graph'
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
@@ -436,7 +421,7 @@ private
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
 
-    @upwizard.transformed_file_type = nil  # Dont use the transformed file
+    @upwizard.transformed_file_type = 'none'  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
@@ -454,7 +439,7 @@ private
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
-    @upwizard.transformed_file_type = nil  # Dont use the transformed file
+    @upwizard.transformed_file_type = 'none'  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
