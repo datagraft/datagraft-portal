@@ -426,13 +426,13 @@ iframe.grafterizer {
 }
 
 .sin-img-file > img {
-  align-self: center;
-  max-width: 50px;
-  max-height: 50px;
-  margin: auto;
-  display: inline;
+  //align-self: center;
+  width: 50px;
+  //max-height: 50px;
+  //margin: auto;
+  //display: inline;
 }
-  
+
 .sin-mini-footer {
   flex: 0 0 36px;
   flex-wrap: nowrap;

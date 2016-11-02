@@ -70,6 +70,7 @@ class FilestoresController < ThingsController
   def show
     puts "************ filestore show"
     super
+    @ext = @thing.upload_format
     #@preview_tab_obj = nil
     #if !@thing.file.nil? and @thing.file.exists?
     #  @preview_text = "This file is available"
@@ -77,6 +78,11 @@ class FilestoresController < ThingsController
     #else
     #  @preview_text = "This file is NOT available"
     #end
+  end
+
+  def edit
+    super
+    @ext = @thing.upload_format
   end
 
   protected
@@ -120,7 +126,7 @@ class FilestoresController < ThingsController
     def filestore_params
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
-  
+
     def filestore_params_partial
       params.permit(:filestore, [:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
