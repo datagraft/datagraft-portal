@@ -300,7 +300,6 @@ module OntotextUser
   # Upload file to the repository
   def upload_file_ontotext_repository(rdfFile, rdfType, sparql_endpoint)
     begin
-      
       mime_type = case rdfType
         when 'rdf' then
           'application/rdf+xml'
@@ -317,13 +316,14 @@ module OntotextUser
         else
           'text/plain'
       end
-      
-      connect = ontotext_connexion(true)  
+
+      connect = ontotext_connexion(true)
       resp = connect.post do |req|
         req.url sparql_endpoint.uri+'/statements'
         req.headers['Content-Type'] = mime_type
         req.body = rdfFile.read
       end
+
       throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status) unless 
       resp.status.between?(200, 299)
     

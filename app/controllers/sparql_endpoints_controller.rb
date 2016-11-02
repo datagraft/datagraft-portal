@@ -1,4 +1,5 @@
 class SparqlEndpointsController < ThingsController
+  include UpwizardHelper
   
   def new
     super
@@ -74,7 +75,9 @@ byebug
         
         # Get file from wizard
         begin
-          current_user.upload_file_ontotext_repository(@upwizard.get_current_file, 'ttl', @thing)
+          rdfFile = @upwizard.get_current_file
+          rdfType = file_ext(@upwizard.get_current_file_original_name)
+          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
         rescue => error
           flash[:error] = error.message
         end
