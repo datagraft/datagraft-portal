@@ -64,7 +64,7 @@ byebug
   private
     def fill_default_values_if_empty
       fill_name_if_empty  
-      
+ 
       if @thing.uri.blank?
         @thing.uri = current_user.new_ontotext_repository(@thing)
       end
@@ -74,7 +74,7 @@ byebug
         
         # Get file from wizard
         begin
-          current_user.upload_file_ontotext_repository(@upwizard.get_current_file, @thing)
+          current_user.upload_file_ontotext_repository(@upwizard.get_current_file, 'ttl', @thing)
         rescue => error
           flash[:error] = error.message
         end

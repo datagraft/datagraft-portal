@@ -256,6 +256,7 @@ module OntotextUser
     end  
   end
 
+    
   # Delete ontotext repository
   def delete_ontotext_repository(qds)
     connect = ontotext_connexion(true)
@@ -297,16 +298,31 @@ module OntotextUser
   
   
   # Upload file to the repository
-  def upload_file_ontotext_repository(rdfFile, sparql_endpoint)
+  def upload_file_ontotext_repository(rdfFile, rdfType, sparql_endpoint)
     begin
-      #tmpFile = rdfFile.download
+      
+      mime_type = case rdfType
+        when 'rdf' then
+          'application/rdf+xml'
+        when 'nt' then
+          'text/plain'    
+        when 'ttl' then
+          'application/x-turtle'
+        when 'n3' then
+          'text/rdf+n3'
+        when 'trix' then
+          'application/trix'
+        when 'trig' then
+          'application/x-trix'
+        else
+          'text/plain'
+      end
       
       connect = ontotext_connexion(true)  
       resp = connect.post do |req|
         req.url sparql_endpoint.uri+'/statements'
-        req.headers['Content-Type'] = 'application/x-turtle'
+        req.headers['Content-Type'] = mime_type
         req.body = rdfFile.read
-        #req.body = tmpFile
       end
       throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status) unless 
       resp.status.between?(200, 299)
@@ -316,7 +332,7 @@ module OntotextUser
       puts e.message
       puts e.backtrace.inspect
     #ensure
-      #tmpFile.unlink 
+      # nothing
     end
   end
   
