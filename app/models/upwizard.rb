@@ -19,17 +19,18 @@ class Upwizard < ApplicationRecord
   def get_current_file_content_type
     ret = self.file_content_type
     if use_transformed_file?
-      ret = "???";
+      ret = "";
     end
     return ret
   end
 
+  #TODO FIXME The filename from Grafterizer is not usable. Here we generate a fake name
   def get_current_file_original_name
     ret = self.original_filename
     if use_transformed_file?
-      if transformed_file_type == 'rdf'
-        ret = "transformed-"+ret+".rdf"
-      elsif transformed_file_type == 'csv'
+      if transformed_file_type == 'graph'
+        ret = "transformed-"+ret+".nt"
+      elsif transformed_file_type == 'tabular'
         ret = "transformed-"+ret+".csv"
       end
     end

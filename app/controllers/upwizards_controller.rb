@@ -359,7 +359,6 @@ private
         format.json { render json: @upwizard.errors, status: :unprocessable_entity }
       end
     end
-    render_wizard
   end
 
   def handle_transform_select_execute_and_render
