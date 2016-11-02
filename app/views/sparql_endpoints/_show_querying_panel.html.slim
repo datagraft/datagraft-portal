@@ -8,7 +8,7 @@
       .sin-tab-textfield__box
         - unless @thing.uri.blank?
           = render_markdown(@thing.uri)
-      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #"
+      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{@thing.uri}"
         i.material-icons content_copy 
           
     .links.sin-nested-links
