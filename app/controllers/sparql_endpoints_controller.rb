@@ -7,19 +7,19 @@ class SparqlEndpointsController < ThingsController
   def publish
   end
   
+=begin
   def update
-    if params[:commit] == "Execute"
-      setemp = SparqlEndpoint.new
-      setemp.assign_attributes(params.require(:sparql_endpoint).permit(queries_attributes: [:id, :query]))
-      
-      qtemp = setemp.queries.first
-      qresult = qtemp.execute_on_sparql_endpoint(@thing)
-      
-      render :text => qresult
-    else
-      super
-    end    
-  end  
+    attr_name = 'public'
+    old_value = @thing.read_attribute(attr_name)
+    super
+    new_value = @thing.read_attribute(attr_name)
+byebug
+    # Update public/private property if changed
+    if new_value != old_value
+      current_user.update_ontotext_repository_public(@thing)    
+    end
+  end 
+=end
   
   def destroy
     super
@@ -63,9 +63,24 @@ class SparqlEndpointsController < ThingsController
 
   private
     def fill_default_values_if_empty
-      fill_name_if_empty
+      fill_name_if_empty  
+      
       if @thing.uri.blank?
         @thing.uri = current_user.new_ontotext_repository(@thing)
+      end
+
+      unless params[:wiz_id] == nil
+        @upwizard = Upwizard.find(params[:wiz_id])
+        
+        # Get file from wizard
+        begin
+          current_user.upload_file_ontotext_repository(@upwizard.get_current_file, @thing)
+        rescue => error
+          flash[:error] = error.message
+        end
+
+        # Delete wizard
+        @upwizard.destroy
       end
     end
 

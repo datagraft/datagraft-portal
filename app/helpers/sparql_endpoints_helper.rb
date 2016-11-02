@@ -16,7 +16,7 @@ module SparqlEndpointsHelper
       current_user.get_ontotext_repository_size(@thing)
     end
   end
-
+    
   
   # Return all queries
   def all_queries

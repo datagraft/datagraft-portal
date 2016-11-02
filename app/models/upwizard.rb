@@ -8,6 +8,38 @@ class Upwizard < ApplicationRecord
 
   validates :user, presence: true
 
+  def get_current_file
+    ret = self.file
+    if use_transformed_file?
+      ret =  self.transformed_file
+    end
+    return ret
+  end
+
+  def get_current_file_size
+    return get_current_file.size
+  end
+
+  def get_current_file_content_type
+    ret = self.file_content_type
+    if use_transformed_file?
+      ret = "application/octet-stream";
+    end
+    return ret
+  end
+
+  def get_current_file_original_name
+    ret = self.original_filename
+    if use_transformed_file?
+      if transformed_file_type == 'rdf'
+        ret = "transformed-"+ret+".rdf"
+      elsif transformed_file_type == 'csv'
+        ret = "transformed-"+ret+".csv"
+      end
+    end
+    return ret
+  end
+
   # Return self
   def trace_push(now_step, params)
 
@@ -94,6 +126,20 @@ class Upwizard < ApplicationRecord
     self.trace = [].to_json if not self.trace.is_a?(Array)
     self.trace = new_arr.to_json
     #self.save
+  end
+  
+  private
+
+  def use_transformed_file?
+    ret = false
+    unless transformed_file_type.blank?
+      if transformed_file_type == 'rdf'
+        ret = true
+      elsif transformed_file_type == 'csv'
+        ret = true
+      end
+    end
+    return ret
   end
 
 end

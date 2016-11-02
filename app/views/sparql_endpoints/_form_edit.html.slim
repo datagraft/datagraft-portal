@@ -1,4 +1,4 @@
-= simple_form_for @thing, url: thing_path(@thing), method: :post do |f|
+= simple_form_for @thing, url: thing_path(@thing), method: :put do |f|
   = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
     h4.mdl-cell--12-col Properties

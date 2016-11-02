@@ -1,4 +1,5 @@
-= simple_form_for :querying, url: '/querying' do |f|
+//= simple_form_for :querying, url: '/querying' do |f|
+= simple_form_for :execute_query, url: thing_path(@thing)+'/execute_query', remote: true do |f|
   .mdl-cell--12-col
     .sin-cell-layout-flex__start
       - unless @thing.sparql_endpoints.length == 0

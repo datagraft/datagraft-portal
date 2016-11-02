@@ -17,10 +17,12 @@ document.addEventListener('turbolinks:load', function() {
     $('#open-query-panel').show();
     $(this).hide();
     $('#query-panel').hide();
+    $('#se-queries-list').show();
   });
 
   $('#query-panel form').on("ajax:success", function(e, data, status, xhr) {
     $('#query-panel-result').html(data);
+    $('#se-queries-list').hide();
   }).on("ajax:error", function(e, xhr, status, error) {
     $('#query-panel-result').html(xhr.responseText);
   });
