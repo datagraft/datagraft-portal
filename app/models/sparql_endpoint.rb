@@ -33,12 +33,21 @@ class SparqlEndpoint < Thing
     metadata["uri"] = val
   end
 
+#=begin
   def write_attribute(attr_name, value)
-    # Update public/private property if changed
-    if attr_name == 'public' and read_attribute(attr_name) != value
-      self.user.update_ontotext_repository_public(self)
+    if attr_name == 'public'
+      old_value = self.read_attribute(attr_name)
+      super
+      new_value = self.read_attribute(attr_name)
+    
+      # Update public/private property if changed
+      if new_value != old_value
+        self.user.update_ontotext_repository_public(self)
+      end
+    else
+      super
     end
-    super
   end
+#=end
 
 end
