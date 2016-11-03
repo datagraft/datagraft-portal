@@ -38,10 +38,10 @@ class FilestoresController < ThingsController
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
-      @thing.file = @upwizard.file
-      @thing.file_size = @upwizard.file_size
-      @thing.file_content_type = @upwizard.file_content_type
-      @thing.original_filename = @upwizard.original_filename
+      @thing.file = @upwizard.get_current_file
+      @thing.file_size = @upwizard.get_current_file.size
+      @thing.file_content_type = @upwizard.get_current_file_content_type
+      @thing.original_filename = @upwizard.get_current_file_original_name
       fill_default_values_if_empty
       @thing.save
       @upwizard.destroy
@@ -59,7 +59,7 @@ class FilestoresController < ThingsController
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
-      @thing.original_filename = @upwizard.original_filename
+      @thing.original_filename = @upwizard.get_current_file_original_name
     end
     fill_default_values_if_empty
 
