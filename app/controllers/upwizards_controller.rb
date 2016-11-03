@@ -157,7 +157,7 @@ private
     when :publish
       user = @upwizard.user
       tmp_user = user.filestores.includes(:user).where(public: false)
-      tmp_pub = Thing.public_list.where(:type => ['Filestore'])
+      tmp_pub = Thing.public_list.includes(:user).where(:type => ['Filestore'])
       @thing_entries =  tmp_pub + tmp_user
     end
   end
@@ -168,7 +168,7 @@ private
     when :transform
       user = @upwizard.user
       tmp_user = user.transformations.includes(:user).where(public: false)
-      tmp_pub = Thing.public_list.where(:type => ['Transformation'])
+      tmp_pub = Thing.public_list.includes(:user).where(:type => ['Transformation'])
       @thing_entries =  tmp_pub + tmp_user
     end
   end

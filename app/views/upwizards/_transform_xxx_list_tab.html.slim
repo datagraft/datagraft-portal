@@ -8,7 +8,7 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
         button.sort type="button" data-sort="sin-list-hidden-user"  Sort by user
         button.sort type="button" data-sort="sin-list-hidden-time"  Sort by time
         label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-          input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublic(this, '.row-public')"
+          input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
           span.mdl-checkbox__label Include public entries
         .sin-list-textfield__scroll
           ul.list
@@ -18,7 +18,10 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                   em Nothing published yet
             - else
               - @thing_entries.each do |thing|
-                li
+                - add_class = 'row-private'
+                - unless thing.user.username == @upwizard.user.username
+                  - add_class = 'row-public'
+                li class="#{add_class}"
                   .sin-list-hidden-name
                     = thing.name
                   .sin-list-hidden-user
@@ -27,30 +30,26 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                     = time_ago_in_words thing.updated_at
                     | ago
 
-                  - add_class = 'row-private'
-                  - unless thing.user.username == @upwizard.user.username
-                    - add_class = 'row-public'
-                  div class="#{add_class}"
-                    ul.row-fbox
-                      li
-                        .sin-list
-                          = image_tag("icon--transformation.svg", height: "30")
-                      li
-                        .sin-list
-                          = f.radio_button :radio_thing_id, thing.id
-                      li
-                        .sin-list-name
-                          = thing.name
-                      li
-                        .sin-list-user
-                          = thing.user.username
-                      li
-                        .sin-list
-                          i.material-icons = thing.public ? 'lock_open' : 'lock'
-                      li
-                        .sin-list-time
-                          = time_ago_in_words thing.updated_at
-                          | ago
-      div.mdl-card__actions
-        - unless @thing_entries.empty?
-          = f.submit "Next: Transform and add details", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+                  ul.row-fbox
+                    li
+                      .sin-list
+                        = image_tag("icon--transformation.svg", height: "30")
+                    li
+                      .sin-list
+                        = f.radio_button :radio_thing_id, thing.id
+                    li
+                      .sin-list-name
+                        = thing.name
+                    li
+                      .sin-list-user
+                        = thing.user.username
+                    li
+                      .sin-list
+                        i.material-icons = thing.public ? 'lock_open' : 'lock'
+                    li
+                      .sin-list-time
+                        = time_ago_in_words thing.updated_at
+                        | ago
+    div.mdl-card__actions
+      - unless @thing_entries.empty?
+        = f.submit "Next: Transform and add details", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
