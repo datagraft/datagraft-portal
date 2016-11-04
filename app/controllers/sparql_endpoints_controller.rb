@@ -40,9 +40,14 @@ byebug
 
     @query = Query.new
     @query.name = 'Unsaved query'
-    @query.query = params["execute_query"]["query"]
-    @query.language = 'SPARQL'    
-    
+    @query.query = 
+      if params[:existing_query] != nil
+        params[:existing_query]
+      else
+        params["execute_query"]["query"]
+      end
+    @query.language = 'SPARQL'
+
     begin
       @query_result = @query.execute_on_sparql_endpoint(@thing)
     rescue => error
@@ -60,9 +65,11 @@ byebug
     end
 
     render :partial => 'execute_query_results' if request.xhr?
-  end
+  end  
 
+  
   private
+  
     def fill_default_values_if_empty
       fill_name_if_empty  
  

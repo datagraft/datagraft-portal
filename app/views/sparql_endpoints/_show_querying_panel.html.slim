@@ -19,7 +19,7 @@
     .sin-query-execute-form.mdl-cell--12-col#query-panel style="display:none"
       = render 'query_execute_form'
 
-    div#query-panel-result
+    //div#query-panel-result
 
     .links.sin-nested-links
       .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#close-query-panel style="display:none"
@@ -31,6 +31,8 @@
     .sin-queries-list.mdl-cell--12-col
       = render 'list_queries_search'    
   
+    div#query-panel-result
+    
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     - if can? :edit, @thing
