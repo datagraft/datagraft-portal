@@ -38,10 +38,10 @@ class FilestoresController < ThingsController
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
-      @thing.file = @upwizard.file
-      @thing.file_size = @upwizard.file_size
-      @thing.file_content_type = @upwizard.file_content_type
-      @thing.original_filename = @upwizard.original_filename
+      @thing.file = @upwizard.get_current_file
+      @thing.file_size = @upwizard.get_current_file.size
+      @thing.file_content_type = @upwizard.get_current_file_content_type
+      @thing.original_filename = @upwizard.get_current_file_original_name
       fill_default_values_if_empty
       @thing.save
       @upwizard.destroy
@@ -59,7 +59,7 @@ class FilestoresController < ThingsController
 
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
-      @thing.original_filename = @upwizard.original_filename
+      @thing.original_filename = @upwizard.get_current_file_original_name
     end
     fill_default_values_if_empty
 
@@ -70,6 +70,7 @@ class FilestoresController < ThingsController
   def show
     puts "************ filestore show"
     super
+    @ext = @thing.upload_format
     #@preview_tab_obj = nil
     #if !@thing.file.nil? and @thing.file.exists?
     #  @preview_text = "This file is available"
@@ -77,6 +78,11 @@ class FilestoresController < ThingsController
     #else
     #  @preview_text = "This file is NOT available"
     #end
+  end
+
+  def edit
+    super
+    @ext = @thing.upload_format
   end
 
   protected
@@ -120,7 +126,7 @@ class FilestoresController < ThingsController
     def filestore_params
       params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end
-  
+
     def filestore_params_partial
       params.permit(:filestore, [:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
     end

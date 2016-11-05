@@ -1,0 +1,37 @@
+- title "Edit your account information"
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 Edit your account information
+    a href="https://gravatar.com" target="_blank"
+      = gravatar_tag resource.email
+      - if resource.image
+        img src="#{resource.image}=100" /
+
+  /! MDL Tabs container
+  div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    /! Tab bars
+    div.mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#main-panel" Main info
+      a.mdl-tabs__tab href="#about-panel"  About you
+      a.mdl-tabs__tab href="#pwd-panel"  Change password
+      a.mdl-tabs__tab href="#cancel-panel"  Cancel account
+
+    /! MDL tab panels, is-active to denote currently active
+    #main-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'edit_main_tab'
+    /! MDL Tab panel 2
+    #about-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'edit_about_tab'
+    /! MDL Tab panel 3
+    #pwd-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'edit_pwd_tab'
+    /! MDL Tab panel 4
+    #cancel-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'edit_cancel_tab'

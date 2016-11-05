@@ -1,0 +1,18 @@
+div.mdl-layout
+  div.mdl-grid
+    div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+      div.mdl-card__supporting-text.sin-padding
+        = devise_error_messages!
+        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+          div
+            | Currently waiting confirmation for: #{resource.unconfirmed_email}
+        .mdl-grid
+          div style="text-align:center;"
+            h2.mdl-cell.mdl-cell--12-col
+              = "Warning!"
+            h3.mdl-cell.mdl-cell--12-col
+              = "This will destroy all assets connected to your user."
+
+      div.mdl-card__actions
+        div style="margin:auto"
+          == button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"

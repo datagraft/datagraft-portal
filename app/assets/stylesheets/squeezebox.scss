@@ -1,4 +1,7 @@
 /*
+TODO: Need to clean up and remove the Paper Collapse styles that are no longer being used. Currently commented out for testing with new Squeezebox styles.
+*/
+/*
   Paper Collapse
 
   Collapsible paper cards.
@@ -9,6 +12,7 @@
 
 //@import "_mixins";
 // Mixins for dependencies
+/*
 @mixin border-box {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -39,7 +43,7 @@
   box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.18824);
   z-index: 200;
 }
-
+*/
 //@import "_variables";
 // Variables
 
@@ -59,6 +63,7 @@ $mid-gray: #777;
 $dark-gray: #333 !default;
 
 //@import "_component";
+/*
 .collapse-card {
   background-color: $white;
   border-bottom: 1px solid $light-gray;
@@ -123,7 +128,7 @@ $dark-gray: #333 !default;
     }
   }
 }
-
+*/
 
 .squeezebox {
   background-color: $white;
@@ -164,7 +169,7 @@ $dark-gray: #333 !default;
     padding: 1rem;
     display: none;
   }
-
+/*
   * {
     @include border-box();
   }
@@ -188,4 +193,13 @@ $dark-gray: #333 !default;
       }
     }
   }
+  */
+}
+
+.highlight-true .squeezebox {
+  background-color: lightgrey;
+}
+
+.highlight-false {
+  
 }

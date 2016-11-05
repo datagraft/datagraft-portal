@@ -1,9 +1,9 @@
-[?28.?06.?2016 14:28] Nikolay Nikolov: 
-http://erb2slim.com/ 
+[?28.?06.?2016 14:28] Nikolay Nikolov:
+http://erb2slim.com/
 
 
-[?28.?06.?2016 14:45] Nikolay Nikolov: 
-Debugging: byebug https://github.com/deivid-rodriguez/byebug 
+[?28.?06.?2016 14:45] Nikolay Nikolov:
+Debugging: byebug https://github.com/deivid-rodriguez/byebug
 
 
 https://github.com/turbolinks/turbolinks
@@ -11,11 +11,11 @@ Makes faster pages by having multiple loaded pages that can fast swapping?
 
 
 ********* Problems with Spring and Rails 4+ *******
-rake rails:update:bin 
+rake rails:update:bin
 
 
 ********** Add file details **********
-Script for å organisere tags.
+Script for ï¿½ organisere tags.
 http://textextjs.com/manual/examples/tags-adding.html
 https://github.com/aehlke/tag-it
 https://sean.is/poppin/tags/
@@ -23,7 +23,7 @@ GEM for tagging
 https://github.com/mbleigh/acts-as-taggable-on
 
 
-Kjekk side for å teste Material Design Lite
+Kjekk side for ï¿½ teste Material Design Lite
 http://www.tutorialspark.com/Google_MaterialDesignLite_Tutorials/MDL_Small_Fab_Button.php
 
 ******* Javascript
@@ -75,6 +75,13 @@ https://github.com/sfaxon/serialized_json
 http://askubuntu.com/questions/227554/what-are-some-gui-clients-for-git
 
 
-****** Online kurs 
+****** Online kurs
 http://learn-rails.com/learn-ruby-on-rails.html?_ga=1.107076363.887801341.1469080882
 http://railsapps.github.io/
+
+****** Update gems local user
+bundle install --path $HOME/.gem
+bash datagraft-rails_migrate-db.sh
+
+******* Routes
+bash datagraft-rails_env.sh rake routes | grep xxx

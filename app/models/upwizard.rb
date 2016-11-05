@@ -8,6 +8,35 @@ class Upwizard < ApplicationRecord
 
   validates :user, presence: true
 
+  def get_current_file
+    ret = self.file
+    if use_transformed_file?
+      ret =  self.transformed_file
+    end
+    return ret
+  end
+
+  def get_current_file_content_type
+    ret = self.file_content_type
+    if use_transformed_file?
+      ret = "";
+    end
+    return ret
+  end
+
+  #TODO FIXME The filename from Grafterizer is not usable. Here we generate a fake name
+  def get_current_file_original_name
+    ret = self.original_filename
+    if use_transformed_file?
+      if transformed_file_type == 'graph'
+        ret = "transformed-"+ret+".nt"
+      elsif transformed_file_type == 'tabular'
+        ret = "transformed-"+ret+".csv"
+      end
+    end
+    return ret
+  end
+
   # Return self
   def trace_push(now_step, params)
 
@@ -94,6 +123,18 @@ class Upwizard < ApplicationRecord
     self.trace = [].to_json if not self.trace.is_a?(Array)
     self.trace = new_arr.to_json
     #self.save
+  end
+
+  private
+
+  def use_transformed_file?
+    ret = false
+    unless transformed_file_type.blank?
+      unless transformed_file_type == 'none'
+        ret = true
+      end
+    end
+    return ret
   end
 
 end

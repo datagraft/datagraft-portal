@@ -1,5 +1,7 @@
 class QueriesController < ThingsController
 
+# Old execute method on queriable data stores replaced with sparql endpoints
+=begin
   def execute
     if !params[:id].blank? && !params[:username].blank?
       set_thing
@@ -40,6 +42,52 @@ class QueriesController < ThingsController
       # HERE IS THE FUN PART
       begin
         @query_result = @query.execute(@queriable_data_store)
+      rescue => error
+        flash[:error] = error.message
+        # redirect_to thing_path(@query)
+        # @results_list = []
+        @query_result = {
+          headers: [],
+          results: []
+        }
+      end
+    end
+
+    if @query_result.blank?
+      @results_list = []
+    else
+      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+    end
+    # throw @query_result
+  end
+=end
+
+  # Method called by the query execute form
+  def execute_query
+    if !params[:id].blank? && !params[:username].blank?
+      set_thing
+      authorize! :read, @thing
+      if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+        se_user = current_user
+      else
+        raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+        se_user = User.find_by_username(params[:username]) or not_found
+      end
+
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_slugs])
+    end
+    
+    if @sparql_endpoint.nil?
+      @query_result = {
+        headers: [],
+        results: []
+      }
+    else
+      authorize! :read, @sparql_endpoint
+
+      # HERE IS THE FUN PART
+      begin
+        @query_result = @query.execute(@sparql_endpoint)
       rescue => error
         flash[:error] = error.message
         # redirect_to thing_path(@query)

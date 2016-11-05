@@ -195,6 +195,16 @@ Dropzone.options.upwizardDropZone = {
     console.log("Accept file : "+file.name+" ext :"+ext);
     if (ext == 'rdf') {
       acceptedFile = true;
+    } else if (ext == 'nt') {
+      acceptedFile = true;
+    } else if (ext == 'ttl') {
+      acceptedFile = true;
+    } else if (ext == 'n3') {
+      acceptedFile = true;
+    } else if (ext == 'trix') {
+      acceptedFile = true;
+    } else if (ext == 'trig') {
+      acceptedFile = true;
     } else if (ext == 'xls') {
       acceptedFile = true;
     } else if (ext == 'xlsx') {
