@@ -47,5 +47,6 @@ module Datagraft
     Refile.cache ||= Refile::Backend::FileSystem.new("/tmp/refile_uploads/cache".to_s)
 
     config.grafterizer = config_for(:grafterizer)
+    config.graftwerk = config_for(:graftwerk)
   end
 end

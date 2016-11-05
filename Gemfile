@@ -174,3 +174,5 @@ gem 'listjs-rails'
 gem 'wicked'
 
 gem 'puma'
+
+gem 'rest-client'

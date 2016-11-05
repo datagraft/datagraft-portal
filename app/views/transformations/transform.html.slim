@@ -1,7 +1,8 @@
 - title "Transform"
 - setOption :flexPage
 script
-  | var graftInstance = new Grafterizer("https://grafterizer.datagraft.net",
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
     $('main > section').get(0))
-    .setAuthorization("#{@key}")
-    .go('transformations.new');
+    .go('transformations.new.preview', {
+      distributionId: "#{@distributionId}"
+    }, true);
