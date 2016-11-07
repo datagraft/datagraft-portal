@@ -11,7 +11,7 @@
       .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{@thing.uri}"
         i.material-icons content_copy 
           
-    .links.sin-nested-links
+    .links.sin-nested-links.mdl-cell--12-col
       hr
       .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#open-query-panel
         i.material-icons add
@@ -31,7 +31,7 @@
     .sin-queries-list.mdl-cell--12-col
       = render 'list_queries_search'    
   
-    div#query-panel-result
+  .mdl-grid#query-panel-result
     
   hr.sin-invisible-form-separator
   div.mdl-card__actions
