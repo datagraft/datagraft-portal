@@ -16,7 +16,8 @@ div.mdl-card
           = 'File content type: ' + @upwizard.file_content_type
 
   div.mdl-card__actions
-    == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
     .mdl-layout-spacer
     - if @sparql_file
       == link_to 'Next: Add SPARQL endpoint details', wizard_path(:go_sparql), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect "

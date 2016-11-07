@@ -5,4 +5,5 @@ div.mdl-grid
     div.mdl-card__supporting-text
       == form_for(@upwizard, html: {class: "dropzone sin-dropzone", id: "upwizardDropZone"}, url: wizard_path, method: :post) do
   div.mdl-card__actions
-    == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
