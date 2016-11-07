@@ -69,7 +69,7 @@ class SparqlEndpointsController < ThingsController
     @query.language = 'SPARQL'
 
     begin
-      @query_result = @query.execute_on_sparql_endpoint(@thing)
+      @query_result = @query.execute_on_sparql_endpoint(@thing, current_user)
     rescue Exception => error
       flash[:error] = error.message
       @query_result = {
