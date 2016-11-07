@@ -11,4 +11,5 @@ div.mdl-card
     p = simple_format(@upwizard.trace_to_s)
 
   div.mdl-card__actions
-    == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
+    // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
