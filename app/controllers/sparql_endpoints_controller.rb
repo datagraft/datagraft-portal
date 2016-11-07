@@ -14,6 +14,7 @@ class SparqlEndpointsController < ThingsController
     if params[:wiz_id] 
       @thing = SparqlEndpoint.new(sparql_endpoint_params)
       @thing.uri = current_user.new_ontotext_repository(@thing)
+      @thing.user = current_user
       @upwizard = Upwizard.find(params[:wiz_id])
       throw "Wizard object not found!" if !@upwizard
       # Get file from wizard
@@ -22,7 +23,6 @@ class SparqlEndpointsController < ThingsController
         rdfFile = @upwizard.get_current_file
         rdfType = file_ext(@upwizard.get_current_file_original_name)
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-
         respond_to do |format|
           if @thing.save
             @upwizard.destroy
