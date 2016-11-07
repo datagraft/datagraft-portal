@@ -1,0 +1,15 @@
+- title "Preview transformation"
+- setOption :flexPage
+
+script
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
+    $('main > section').get(0))
+    .go('transformations.transformation.preview', {
+      id: "#{@transformationId}",
+      publisher: "#{@publisherId}",
+      distributionId: "#{@distributionId}",
+      path_back: "#{@path_back}"
+    }, true);
+
+  
+    

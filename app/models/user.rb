@@ -102,7 +102,8 @@ class User < ApplicationRecord
   end
 
   def dashboard_things
-    Thing.where(user: self).order(stars_count: :desc, created_at: :desc)
+    # TODO FIXME hack for filtering out previewed datasets using the name of the asset
+    Thing.where(user: self).where.not("name LIKE ?", "%previewed_dataset_%").order(stars_count: :desc, created_at: :desc)
   end
 
   def dashboard_catalogues
