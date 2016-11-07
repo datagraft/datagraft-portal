@@ -6,10 +6,7 @@
         .sin-form-input-label Endpoint
         .sin-form-collection-select
           = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
-        .sin-form-collection-select-hidden
-          = f.collection_select "sparql_slugs", @thing.sparql_endpoints, :slug, :name
-        = link_to  'Go to selected endpoint page', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect", :onClick => "redirectToSparqlEndpoint('#{things_path(@thing.sparql_endpoints[0])}', 'querying_sparql_endpoints', 'querying_sparql_slugs')"
-
+        = button_to 'Go to selected endpoint page', { action: "execute_query" }, remote: true, params: {:goto_sparql_endpoint_button => true}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
 
   p
   .mdl-cell--12-col
