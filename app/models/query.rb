@@ -99,7 +99,6 @@ class Query < Thing
     end
 
     parsed = JSON.parse(result.body)
-byebug
     return {
       headers: parsed["head"]["vars"],
       results: parsed["results"]["bindings"]
@@ -121,7 +120,6 @@ byebug
       req.params['query'] = query
       req.headers['Accept'] = 'application/sparql-results+json'
     end
-#byebug    
     if result.status != 200
       raise result.body
     end

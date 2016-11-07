@@ -9,24 +9,32 @@ class TransformationsController < ThingsController
       session[:tmp_api_key] = {
         'key' => api_result['api_key'] + ':' + api_result['secret'],
         'date' => DateTime.now
-      }
+        }
     end
 
     @key = session[:tmp_api_key]['key']
   end
 
-  private
-    def destroyNotice
-      "The transformation was successfully destroyed"
-    end
+  def edit
+    authorize! :update, @thing
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @publisherId = current_user.username
+    @transformationID = @transformation.id
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def transformation_params
-      params.require(:transformation).permit(:name, :public, :code, :description)
-    end
-  
-    def transformation_params_partial
-      params.permit(:transformation, :name, :public, :code, :description)
-    end
+
+  private
+  def destroyNotice
+    "The transformation was successfully destroyed"
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def transformation_params
+    params.require(:transformation).permit(:name, :public, :code, :description)
+  end
+
+  def transformation_params_partial
+    params.permit(:transformation, :name, :public, :code, :description)
+  end
 
 end

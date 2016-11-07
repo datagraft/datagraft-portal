@@ -59,11 +59,11 @@ class UpwizardsController < ApplicationController
 
       options = options.respond_to?(:to_h) ? options.to_h : options
       options = { :controller => wicked_controller,
-                  :action     => 'show',
-                  :id         => goto_step || params[:id],
-                  :wiz_id     => upwizard.id,
-                  :only_path  => true
-                 }.merge options
+        :action     => 'show',
+        :id         => goto_step || params[:id],
+        :wiz_id     => upwizard.id,
+        :only_path  => true
+        }.merge options
       redirect_to url_for(options)
     end
   end
@@ -124,16 +124,16 @@ class UpwizardsController < ApplicationController
     if location.nil?
       render :json => {
         error: 'The wizard doesn\'t contain a file'
-      }, :status => 404
+        }, :status => 404
     else
       redirect_to location, status: :moved_permanently
     end
   end
 
-protected
+  protected
 
 
-private
+  private
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def upwizard_params
@@ -295,7 +295,15 @@ private
 
   def handle_decide_and_render
     puts "************ upwizard handle_decide_and_render"
-    #Placeholder ... Nothing to do so far
+    ext = file_ext(@upwizard.original_filename)
+    if filestore_ext?(ext)
+      @upwizard.current_file_type = 'tabular'
+    elsif sparql_ext?(ext)
+      @upwizard.current_file_type = 'graph'
+    else
+      flash[:error] = 'Error: unsupported file extension' + ext.to_s
+      jump_to :decide
+    end
     @upwizard.save
     render_wizard
   end
@@ -310,7 +318,8 @@ private
       end
       @upwizard.file = @thing.file
       @upwizard.file_size = @thing.file_size
-      @upwizard.file_content_type = @thing.file_content_type
+      # BEWARE: We presume that the file type of the thing has been correctly set by the model/controller!
+      @upwizard.current_file_type = @thing.file_content_type
       @upwizard.original_filename = @thing.original_filename
 
       # Update state and process the new state
@@ -337,7 +346,6 @@ private
     #Placeholder ... Nothing to do so far
 
     @upwizard.trace_back_step_skip
-    # jump_to :not_implemented
     @upwizard.save
 
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
@@ -363,37 +371,97 @@ private
 
   def handle_transform_select_execute_and_render
     puts "************ upwizard handle_transform_select_execute"
-
     unless params[:upwizard][:radio_thing_id] == nil
-      # Copy file information from the selected thing
-      @thing = Thing.find(@upwizard.radio_thing_id)
-      # TODO Got a transformation ... what to do next?
+      # Copy file information from the selected thing TODO SAFELY
+      begin
+        transformation = Transformation.find(@upwizard.radio_thing_id)
 
-      # Update state and process the new state
-      @upwizard.trace_back_step_skip
-      jump_to :not_implemented
+        if (@upwizard.task == 'file')
+          begin
+            @upwizard.transformed_file = transformation.transform(@upwizard.file, 'pipe')
+            @upwizard.current_file_type = 'tabular'
+            @upwizard.trace_back_step_skip
+            @upwizard.save
+            options = request.query_parameters
+            options = options.respond_to?(:to_h) ? options.to_h : options
+            options = { :controller => 'filestores',
+              :action     => 'new',
+              :wiz_id     => @upwizard.id,
+              :only_path  => true
+              }.merge options
+            redirect_to url_for(options)
+          rescue Exception => e
+            puts 'Error transforming file ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(pipe)'  if @upwizard.get_current_file && transformation
+            puts e.message
+            puts e.backtrace.inspect
+            flash[:error] = 'Error transforming file. Cause: '+ '\n' + e.message
+            jump_to :error
+            render_wizard
+          end
+        elsif (@upwizard.task == 'sparql')
+          begin
+            @upwizard.transformed_file = transformation.transform(@upwizard.file, 'graft')
+
+            @upwizard.current_file_type = 'graph'
+            @upwizard.trace_back_step_skip
+            @upwizard.save
+            options = request.query_parameters
+            options = options.respond_to?(:to_h) ? options.to_h : options
+            options = { :controller => 'sparql_endpoints',
+              :action     => 'new',
+              :wiz_id     => @upwizard.id,
+              :only_path  => true
+              }.merge options
+
+            redirect_to url_for(options)
+          rescue Exception => e
+            puts 'Error transforming file with ID ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(graft)' if @upwizard.get_current_file && transformation
+            puts e.message
+            puts e.backtrace.inspect
+            flash[:error] = 'Error transforming file. Cause: ' + e.message
+            @upwizard.trace_back_step_skip
+            jump_to :error
+            render_wizard
+          end
+        else
+          flash[:error] = 'This wizard does not support <'+@upwizard.task+'>'
+          render_wizard
+        end
+
+      rescue Exception => e
+        puts 'Error retrieving transformation'
+        if (@upwizard)
+          puts 'Transformation ID: ' + @upwizard.radio_thing_id.to_s if @upwizard.radio_thing_id
+        else
+          puts 'Wizard does not exist!'
+        end
+        puts e.message
+        puts e.backtrace.inspect
+        flash[:error] = 'Error retrieving transformation. Cause: ' + e.message
+        jump_to :error
+        render_wizard
+      end
     else
       @upwizard.trace_back_step_skip
       jump_to :error
     end
     @upwizard.save
-    render_wizard
   end
 
   # Pass the transformed tabular object over to a new filestore object
   def handle_fill_filestore_and_render
     puts "************ upwizard handle_fill_filestore"
 
-    @upwizard.transformed_file_type = 'tabular'
+    @upwizard.current_file_type = 'tabular'
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'filestores',
-                :action     => 'new',
-                :wiz_id     => @upwizard.id,
-                :only_path  => true
-               }.merge options
+      :action     => 'new',
+      :wiz_id     => @upwizard.id,
+      :only_path  => true
+      }.merge options
 
     redirect_to url_for(options)
   end
@@ -402,16 +470,16 @@ private
   def handle_fill_sparql_endpoint_and_render
     puts "************ upwizard handle_fill_sparql_endpoint"
 
-    @upwizard.transformed_file_type = 'graph'
+    @upwizard.current_file_type = 'graph'
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'sparql_endpoints',
-                :action     => 'new',
-                :wiz_id     => @upwizard.id,
-                :only_path  => true
-               }.merge options
+      :action     => 'new',
+      :wiz_id     => @upwizard.id,
+      :only_path  => true
+      }.merge options
 
     redirect_to url_for(options)
   end
@@ -419,17 +487,17 @@ private
   # Pass the uploaded object over to a new filestore object
   def handle_go_filestore_and_render
     puts "************ upwizard handle_go_filestore"
-
-    @upwizard.transformed_file_type = 'none'  # Dont use the transformed file
+    # ?!?!?!?!
+    #    @upwizard.current_file_type = 'tabular'  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'filestores',
-                :action     => 'new',
-                :wiz_id     => @upwizard.id,
-                :only_path  => true
-               }.merge options
+      :action     => 'new',
+      :wiz_id     => @upwizard.id,
+      :only_path  => true
+      }.merge options
 
     redirect_to url_for(options)
   end
@@ -438,16 +506,16 @@ private
   def handle_go_sparql_and_render
     puts "************ upwizard handle_go_sparql"
 
-    @upwizard.transformed_file_type = 'none'  # Dont use the transformed file
+    #    @upwizard.transformed_file_type = 'none'  # Dont use the transformed file
     @upwizard.trace_back_step_skip
     @upwizard.save
     options = request.query_parameters
     options = options.respond_to?(:to_h) ? options.to_h : options
     options = { :controller => 'sparql_endpoints',
-                :action     => 'new',
-                :wiz_id     => @upwizard.id,
-                :only_path  => true
-               }.merge options
+      :action     => 'new',
+      :wiz_id     => @upwizard.id,
+      :only_path  => true
+      }.merge options
 
     redirect_to url_for(options)
   end

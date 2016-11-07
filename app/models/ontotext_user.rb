@@ -80,7 +80,7 @@ module OntotextUser
       if resp.status.between?(200, 299)
         self.ontotext_account = account_token
         save!
-      else 
+      else
         puts resp.body
         throw "Unable to register an Ontotext test user"
       end
@@ -324,7 +324,7 @@ module OntotextUser
         req.body = rdfFile.read
       end
 
-      throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status) unless 
+      throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status.to_s) unless 
       resp.status.between?(200, 299)
     
     rescue Exception => e

@@ -9,29 +9,36 @@ class Upwizard < ApplicationRecord
   validates :user, presence: true
 
   def get_current_file
-    ret = self.file
-    if use_transformed_file?
-      ret =  self.transformed_file
-    end
-    return ret
+    # if we have a transformed file - use that; otherwise - use the file
+    throw "Wizard corrupted - no input file detected" if !self.transformed_file && !self.file
+
+    self.transformed_file ? self.transformed_file : self.file
+    #TODO this doesn't make sense IMO
+    #    ret = self.file
+    #    if use_transformed_file?
+    #      ret =  self.transformed_file
+    #    end
+    #    return ret
   end
 
-  def get_current_file_content_type
-    ret = self.file_content_type
-    if use_transformed_file?
-      ret = "";
-    end
-    return ret
-  end
+  #  def get_current_file_content_type
+  #    self.current_file_type
+  #    # TODO this doesn't make sense either IMO
+  #    #    ret = self.current_file_type
+  #    #    if use_transformed_file?
+  #    #      ret = "";
+  #    #    end
+  #    #    return ret
+  #  end
 
   #TODO FIXME The filename from Grafterizer is not usable. Here we generate a fake name
   def get_current_file_original_name
     ret = self.original_filename
-    if use_transformed_file?
-      if transformed_file_type == 'graph'
-        ret = "transformed-"+ret+".nt"
-      elsif transformed_file_type == 'tabular'
-        ret = "transformed-"+ret+".csv"
+    if self.transformed_file
+      if self.current_file_type == 'graph'
+        ret = "transformed-" + ret + ".nt"
+      elsif self.current_file_type == 'tabular'
+        ret = "transformed-" + ret + ".csv"
       end
     end
     return ret

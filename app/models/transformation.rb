@@ -77,9 +77,20 @@ class Transformation < Thing
         "Accept" => transform_type == 'pipe' ? 'application/csv' : 'application/n-triples'
         })
 
+    begin
+      response = request.execute
+      throw "Error executing transformation (empty result)." if response.body.empty?
+      new_file = data_file.backend.upload(StringIO.new(response.body))
+      return new_file
+    rescue RestClient::ExceptionWithResponse => e
+      puts e.response
+      throw "Failed to execute transformation."
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+      throw "Failed to execute transformation. Unknown error."
+    end
 
-    response = request.execute
-    response
   end
 
 

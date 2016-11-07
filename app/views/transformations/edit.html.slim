@@ -1,0 +1,9 @@
+- title "Transform"
+- setOption :flexPage
+script
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
+    $('main > section').get(0))
+    .go('transformations.transformation', {
+      publisher: "#{@publisherId}",
+      id: "#{@transformationID}"
+    }, false);
