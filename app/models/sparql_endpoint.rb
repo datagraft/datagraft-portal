@@ -9,6 +9,7 @@ class SparqlEndpoint < Thing
 
   # Non-persistent attribute for storing query to be executed
   attr_accessor :execute_query
+  attr_accessor :tmp_file
   
   def should_generate_new_friendly_id?
     name_changed? || super

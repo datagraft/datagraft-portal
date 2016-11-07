@@ -41,6 +41,16 @@ class SparqlEndpointsController < ThingsController
       redirect_to upwizard_new_path('sparql')
     end
   end
+  
+  def update
+    super
+    
+    if @thing.tmp_file != nil
+      rdfFile = @thing.tmp_file
+      rdfType = file_ext(@thing.tmp_file.original_filename)
+      current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+    end
+  end
 
   def destroy
     super
@@ -91,7 +101,7 @@ class SparqlEndpointsController < ThingsController
   private
   def sparql_endpoint_params
     params.require(:sparql_endpoint).permit(:public, :name, :description, :license,
-      :keyword_list,
+      :keyword_list, :tmp_file, 
       queries_attributes: [:id, :name, :query, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
