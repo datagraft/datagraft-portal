@@ -1,7 +1,7 @@
 class UpwizardsController < ApplicationController
   include UpwizardHelper
   include Wicked::Wizard
-  steps :publish, :decide, :transform, :create_transform, :save_transform, :transform_select_execute, :fill_sparql_endpoint, :fill_filestore, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
+  steps :publish, :decide, :transform, :create_transform, :save_transform, :transform_select_execute, :preview_transform, :fill_sparql_endpoint, :fill_filestore, :not_implemented, :error, :go_sparql, :go_filestore, :go_back, :file_select_transform
 
   # Receive new file attacement from form
   # Step in the wizard is indicated by :id. Not used by this method
@@ -267,6 +267,8 @@ class UpwizardsController < ApplicationController
       handle_save_transform_and_render
     when :transform_select_execute
       handle_transform_select_execute_and_render
+    when :preview_transform
+      handle_transform_select_preview_and_render
     when :fill_sparql_endpoint
       handle_fill_sparql_endpoint_and_render
     when :fill_filestore
@@ -341,6 +343,7 @@ class UpwizardsController < ApplicationController
     render_wizard
   end
 
+  # Create a new transformation for the file
   def handle_create_transform_and_render
     puts "************ upwizard handle_create_transform"
     #Placeholder ... Nothing to do so far
@@ -351,7 +354,6 @@ class UpwizardsController < ApplicationController
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     # Make sure the wiz_id is an number, to prevent XSS
     @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
-
 
     render_wizard
   end
@@ -372,7 +374,18 @@ class UpwizardsController < ApplicationController
   def handle_transform_select_execute_and_render
     puts "************ upwizard handle_transform_select_execute"
     unless params[:upwizard][:radio_thing_id] == nil
-      # Copy file information from the selected thing TODO SAFELY
+
+      if params[:commit] == 'Next: Preview result of transformation'
+        radio_id = params[:upwizard][:radio_thing_id]
+#        jump_to (:preview_transform, selected_id: radio_id, wiz_id: @upwizard.id)
+        redirect_to wizard_path(:preview_transform, selected_id: radio_id, wiz_id: @upwizard.id)
+#        render_wizard
+        return
+        #    elsif params[:commit] == 'Next: Transform and add details'
+        #    else
+      end
+
+      # Copy file information from the selected thing
       begin
         transformation = Transformation.find(@upwizard.radio_thing_id)
 
@@ -427,7 +440,6 @@ class UpwizardsController < ApplicationController
           flash[:error] = 'This wizard does not support <'+@upwizard.task+'>'
           render_wizard
         end
-
       rescue Exception => e
         puts 'Error retrieving transformation'
         if (@upwizard)
@@ -447,6 +459,39 @@ class UpwizardsController < ApplicationController
     end
     @upwizard.save
   end
+
+  def handle_transform_select_preview_and_render
+    puts "************ upwizard handle_transform_select_preview_and_render"
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    unless !params[:wiz_id] || !params[:selected_id]
+      begin
+        transformation = Transformation.find(params[:selected_id])
+        @transformationId = transformation.slug
+        @publisherId = current_user.username
+        @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+        @path_back = wizard_path(:transform)
+        
+        render_wizard
+      rescue Exception => e
+        puts 'Error retrieving transformation'
+        if (@upwizard)
+          puts 'Transformation ID: ' + @upwizard.radio_thing_id.to_s if @upwizard.radio_thing_id
+        else
+          puts 'Wizard does not exist!'
+        end
+        puts e.message
+        puts e.backtrace.inspect
+        flash[:error] = 'Error retrieving transformation. Cause: ' + e.message
+        jump_to :error
+        render_wizard
+      end
+    else
+      @upwizard.trace_back_step_skip
+      flash[:error] = "Please select a transformation to preview."
+      render_wizard
+    end
+  end
+
 
   # Pass the transformed tabular object over to a new filestore object
   def handle_fill_filestore_and_render

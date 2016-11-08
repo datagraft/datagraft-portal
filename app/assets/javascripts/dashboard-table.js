@@ -1,10 +1,12 @@
 document.addEventListener('turbolinks:load', function () {
   var oTable,
       $table;
-
   // configure DataTables to perform search using filter values
   $.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
-
+    if (settings.nTable.getAttribute('id')!=="dashboard-user-assets-table") {
+//      ignore other tables
+       return true;
+    }
     var getFiles = $('#dashboard-filter--files').is(':checked'),
         getSparql = $('#dashboard-filter--sparql').is(':checked'),
         getTransformations = $('#dashboard-filter--transformations').is(':checked'),
@@ -118,7 +120,6 @@ document.addEventListener('turbolinks:load', function () {
       var numcolumns = this.oApi._fnVisbleColumns(oSettings);
       generateEmptyRows($table, 10);
       $(".dataTables_scrollHeadInner").css({"width":"100%"});
-      console.log("heres")
       $(".mdl-data-table").css({"width":"100%"});
     },
     'columnDefs': [

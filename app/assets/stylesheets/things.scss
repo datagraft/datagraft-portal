@@ -193,12 +193,15 @@ $accent-color: #FF609A;
     }
   }
 }
+#long-tooltip.mdl-tooltip {
+  max-width: 100%;
+}
 
 .sin-overflow-elipsis{
   white-space: nowrap;
   width: 30em;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis !important;
   border: 1px solid rgba(3,3,3,0.3);
 }
 

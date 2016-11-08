@@ -96,9 +96,8 @@ class SparqlEndpointsController < ThingsController
     if @query_result.blank?
       @results_list = []
     else
-      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+      @results_list = @query_result[:results]
     end
-
     render :partial => 'execute_query_results' if request.xhr?
   end  
 
