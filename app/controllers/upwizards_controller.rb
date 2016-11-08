@@ -146,6 +146,15 @@ class UpwizardsController < ApplicationController
       @upwizard.original_filename = nil
       unless upwizard_params[:file].original_filename.blank?
         @upwizard.original_filename = upwizard_params[:file].original_filename
+
+        ext = file_ext(@upwizard.original_filename)
+        if filestore_ext?(ext)
+          @upwizard.current_file_type = 'tabular'
+        elsif sparql_ext?(ext)
+          @upwizard.current_file_type = 'graph'
+        else
+          @upwizard.current_file_type = ''
+        end
       end
     end
   end

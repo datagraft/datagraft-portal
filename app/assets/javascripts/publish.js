@@ -146,7 +146,22 @@ Dropzone.options.upwizardDropZone = {
   init: function() {
 
     var uploadedFiles = [];
-    console.log("Running init function");
+    console.log("Running upwizard dropzone init function");
+
+    var x = document.querySelectorAll('.sin-drop-switchable-tab-hidden');
+    var i;
+    //debugger;
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = 'none';
+    }
+    console.log("hiding .tab occurences " + i);
+
+    x = document.querySelectorAll('.sin-drop-switchable-rdf-hidden');
+    //debugger;
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = 'none';
+    }
+    console.log("hiding .rdf occurences " + i);
 
     $('#sin-cancel-upload').click(function(e) {
       if (this.disabled) return;
@@ -168,16 +183,57 @@ Dropzone.options.upwizardDropZone = {
 
     this.on("success", function(file, data) {
       if (data) {
+        //console.log("Success for file: "+file.name);
         //debugger;
-        console.log("Success url : "+data["@id"]);
+        //console.log("Success url : "+data["@id"]);
         if (data["sin:extension"]) {
           // file.previewTemplate.appendChild(document.createTextNode(data["sin:extension"]));
           file.previewTemplate.classList.add('sin-preview-filetype-'+data["sin:extension"]);
         }
 
-        $('.sin-drop-switchable-disabled').removeAttr('disabled');
+        var ext = file.name.split('.').pop();
+        var rdfFile = false;
+        var tabFile = false;
+        console.log("Checking file : "+file.name+" ext :"+ext);
+        if (ext == 'rdf') {
+          rdfFile = true;
+        } else if (ext == 'nt') {
+          rdfFile = true;
+        } else if (ext == 'ttl') {
+          rdfFile = true;
+        } else if (ext == 'n3') {
+          rdfFile = true;
+        } else if (ext == 'trix') {
+          rdfFile = true;
+        } else if (ext == 'trig') {
+          rdfFile = true;
+        } else if (ext == 'xls') {
+          tabFile = true;
+        } else if (ext == 'xlsx') {
+          tabFile = true;
+        } else if (ext == 'csv') {
+          tabFile = true;
+        } else if (ext == 'tsv') {
+          tabFile = true;
+        }
+
+        if(tabFile) {
+          var x = document.querySelectorAll('.sin-drop-switchable-tab-hidden');
+          var i;
+          for (i = 0; i < x.length; i++) {
+            x[i].removeAttribute("style");
+          }
+          console.log("showing .tab occurences " + i);
+        }
+        if(rdfFile) {
+          var x = document.querySelectorAll('.sin-drop-switchable-rdf-hidden');
+          var i;
+          for (i = 0; i < x.length; i++) {
+            x[i].removeAttribute("style");
+          }
+          console.log("showing .rdf occurences " + i);
+        }
         uploadedFiles.push(data);
-        window.location = data["@id"];
 
       }
     });
