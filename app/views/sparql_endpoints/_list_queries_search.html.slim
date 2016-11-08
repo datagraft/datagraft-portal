@@ -56,8 +56,12 @@
                       = query.user.username
                     .sin-execute-request-response
                   .squeezecnt
-                    .sin-tab-textfield__box
-                      = query.description
+                    - if query.description.length > 0
+                      i Description:
+                      .sin-tab-textfield__box
+                        = query.description
+                    br
+                    i Query text:
                     br
                     .sin-tab-textfield__scroll
-                      = query.query
+                      = simple_format query.query
