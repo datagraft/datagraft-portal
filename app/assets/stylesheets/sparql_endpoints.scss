@@ -6,6 +6,27 @@ $primary-color: #5264AE;
 $dirty-white: #E9ECF6;
 $accent-color: #FF609A;
 
+.sin-card-layout .mdl-card {
+  & .dataTables_length {
+    padding-bottom: 8px;
+  }
+  th {
+    font-size: 16px !important;
+  }
+  td {
+    font-size: 14px !important;
+  }
+}
+
+// Search and filtering assets
+.sin-card-layout .sin-query-results-search {
+  display: flex;
+  align-items: center;
+  i.material-icons {
+    padding-right: 8px;
+  }
+}
+
 .sin-card-layout .mdl-card__supporting-text {
   width: auto;
 }
@@ -26,8 +47,8 @@ $accent-color: #FF609A;
   margin-right: 16px;
 }
 
-.sin-card-with-tabs-layout {
-
+.sin-search-container {
+  width: 90%;
 }
 
 .sin-card-with-tabs-title { 
@@ -250,7 +271,7 @@ $accent-color: #FF609A;
 }
 
 .sin-endpoint-uri {
-  width: 100%;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,7 +351,6 @@ input {
   border:solid 1px #ccc;
   border-radius: 5px;
   padding:7px 14px;
-  margin-bottom:10px
 }
 input:focus {
   outline:none;
@@ -341,7 +361,7 @@ input:focus {
   border-radius: 6px;
   border:none;
   display:inline-block;
-  color:#fff;
+  color: black;
   text-decoration: none;
   background-color: #28a8e0;
   height:30px;
@@ -369,7 +389,7 @@ input:focus {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid #fff;
+  border-top: 5px solid black;
   content:"";
   position: relative;
   top:13px;
@@ -380,7 +400,7 @@ input:focus {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-bottom: 5px solid #fff;
+  border-bottom: 5px solid black;
   content:"";
   position: relative;
   top:-10px;
@@ -401,3 +421,50 @@ input:focus {
 .sin-container-hidden-user {
   display: none;
 }
+
+// Pagination
+#query-results-table_paginate {
+  margin: auto;
+  text-align: center;
+  & > a {
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 8px 0;
+  }
+  & > span {
+    & > a {
+      cursor: pointer;
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+
+      &.current{
+        background-color: $primary-color;
+        color: white;
+      }
+
+    }
+  }
+}
+ul.pagination-query-results-table li {
+  display: inline-block;
+  padding: 0;
+  margin: 8px 0;
+}
+ul.pagination-query-results-table li a {
+  border: none;
+  padding: 8px 16px;
+  float: left;
+  text-decoration: none;
+}
+ul.pagination-query-results-table li.active a {
+  border: none;
+  background-color: #5264AE;
+  color: white;
+}
+ul.pagination-query-results-table li:hover:not(.active) a {
+  background-color: #ddd;
+}
+
+
