@@ -62,8 +62,29 @@ class QueriesController < ThingsController
   end
 =end
 
-  # Method called by the query execute form
   def execute_query
+    if !params[:id].blank? && !params[:username].blank?
+      set_thing
+      authorize! :read, @thing
+      if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+        se_user = current_user
+      else
+        raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+        se_user = User.find_by_username(params[:username]) or not_found
+      end
+
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_endpoints])
+    end
+    
+    if params[:goto_sparql_endpoint_button]
+      redirect_to thing_path(@sparql_endpoint)
+    end
+
+  end
+  
+  # Action invoked by the submit button in the query execute form
+  # TODO: ********* MERGE with execute_query above and fix link to SE instead of QDS
+  def execute_query2
     if !params[:id].blank? && !params[:username].blank?
       set_thing
       authorize! :read, @thing
@@ -76,7 +97,7 @@ class QueriesController < ThingsController
 
       @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_slugs])
     end
-    
+
     if @sparql_endpoint.nil?
       @query_result = {
         headers: [],
@@ -104,9 +125,11 @@ class QueriesController < ThingsController
     else
       @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
     end
-    # throw @query_result
-  end
+    # throw @query_result    
 
+  end
+  
+  
   private
     def destroyNotice
       "The query was successfully destroyed"
