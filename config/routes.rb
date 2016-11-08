@@ -59,7 +59,7 @@ Rails.application.routes.draw do
 
   #get ':username' => 'public_portal#user'
 
-  root to: 'public_portal#explore'
+  root to: 'dashboard#index'
 
   scope ':username' do
 
