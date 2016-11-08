@@ -27,7 +27,7 @@ $accent-color: #FF609A;
 }
 
 .sin-card-with-tabs-layout {
-  
+
 }
 
 .sin-card-with-tabs-title { 
@@ -35,12 +35,12 @@ $accent-color: #FF609A;
     linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
     image-url("background_blue_explore_page.jpg");
   background-position: right;
-  
+
   .mdl-card__title {
     align-items: flex-end;
     justify-content: space-between;
   }
-  
+
   h3, h4 {
     margin:0;
     a {
@@ -53,8 +53,8 @@ $accent-color: #FF609A;
   }
 
   h3 {
-      margin-top: 2em;
-    }
+    margin-top: 2em;
+  }
 
   h3:before {
     position: absolute;
@@ -63,10 +63,10 @@ $accent-color: #FF609A;
   }
 
   h4 {
-      font-size: large;
-      text-align: right;
-    }
-  
+    font-size: large;
+    text-align: right;
+  }
+
   .sin-lock {
     position:absolute;
     top: 1em;
@@ -102,7 +102,7 @@ $accent-color: #FF609A;
   & > .mdl-tabs__tab-bar {
     padding-top: 10px;
     align-self: stretch;
-        
+
     a {
       background: rgba(0, 0, 0, 0.07);
       width: 50%;
@@ -114,11 +114,11 @@ $accent-color: #FF609A;
       }
     }
   }
-    
+
   & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
     background: $dirty-white;
   }
-    
+
   & .mdl-tabs__tab.is-active:after {
     background: $primary-color !important;
     height: 6px !important;
@@ -152,7 +152,7 @@ $accent-color: #FF609A;
 .keyw-array-item {
   padding: 5px;
 }
- 
+
 .container-scroll {
   overflow-x: scroll;
 }
@@ -179,7 +179,7 @@ $accent-color: #FF609A;
 
 .sin-tab-text {
   padding-top: 8px;
-  
+
   &.center {
     text-align: center;
   }
@@ -194,7 +194,7 @@ $accent-color: #FF609A;
   border: 1px solid rgba(3,3,3,0.3);
   background-color: rgba(0,0,0, 0.1);
   padding: 4px;
-  
+
   & > .keyw-array-container > .keyw-array-item > .mdl-button {
     background-color: rgba(0,0,0, 0.3);
     color: rgba(0,0,0, 0.7);
@@ -211,37 +211,37 @@ $accent-color: #FF609A;
 
 .sin-tabs { 
   & > .mdl-tabs {
-//    display: flex;
-//    width: 100%;
-//    flex-direction: column;
-//    justify-content: space-between;
-//    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
-//    background-size: cover;
+    //    display: flex;
+    //    width: 100%;
+    //    flex-direction: column;
+    //    justify-content: space-between;
+    //    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
+    //    background-size: cover;
     //  background-position: left;
     // flex-direction: column;
-//    align-items: center;
-//    min-height: 8em;
+    //    align-items: center;
+    //    min-height: 8em;
 
     & > .mdl-tabs__tab-bar {
       padding-top: 10px;
       align-self: stretch;
-      
+
       a {
         background: rgba(0, 0, 0, 0.07);
         width: 50%;
         font-size: 18px !important;
-//        color: $dirty-white;
+        //        color: $dirty-white;
 
         &.is-active {
           background: rgba(0,0,0,0.25);
         }
       }
     }
-    
+
     & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
-//      background: $dirty-white;
+      //      background: $dirty-white;
     }
-    
+
     & .mdl-tabs__tab.is-active:after {
       background: $primary-color !important;
       height: 6px !important;
@@ -250,23 +250,41 @@ $accent-color: #FF609A;
 }
 
 .sin-endpoint-uri {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .sin-endpoint-uri .sin-tab-label,
-.sin-endpoint-uri .sin-tab-text,
-.sin-endpoint-uri .mdl-button {
-  padding: 2px;
+.sin-endpoint-uri .sin-tab-text {
   min-width: 0;
+  height: 30px;
+  line-height: 30px;
+  padding: 4px;
+}
+.sin-endpoint-uri .mdl-button {
+  min-width: 0;
+  height: 30px;
+  padding: 4px;
+  border: 1px solid rgba(3, 3, 3, 0.3);
+  margin-left: -1px;
+  background-image: linear-gradient(#fcfcfc, #eee);
+  & > i.material-icons {
+    height: 30px;
+    width: 30px;
+  }
 }
 
 .sin-endpoint-uri .sin-tab-textfield__box {
-  height: 24px;
+  height: 30px;
+  line-height: 30px;
   width: 70%;
   overflow-x: hidden;
   text-overflow: clip;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
 }
 
 /* CSS for list.js */
@@ -274,7 +292,7 @@ $accent-color: #FF609A;
 HTML  CSS  JS  Result
 Edit on 
 h2 {
-  font-family:sans-serif;
+font-family:sans-serif;
 }
 */
 .list {
@@ -296,16 +314,16 @@ h2 {
 }
 /*
 img {
-  max-width: 100%;
+max-width: 100%;
 }
 h3 {
-  font-size: 16px;
-  margin:0 0 0.3rem;
-  font-weight: normal;
-  font-weight:bold;
+font-size: 16px;
+margin:0 0 0.3rem;
+font-weight: normal;
+font-weight:bold;
 }
 p {
-  margin:0;
+margin:0;
 }
 */
 input {

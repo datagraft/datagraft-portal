@@ -7,9 +7,10 @@
       .sin-tab-label SPARQL endpoint:
       .sin-tab-textfield__box
         - unless @thing.uri.blank?
-          = render_markdown(@thing.uri)
-      .mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--raised.mdl-button--colored.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{@thing.uri}"
-        i.material-icons content_copy 
+          = link_to @thing.uri
+      #tooltip-clipboard.mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{@thing.uri}"
+        i.material-icons content_paste
+      .mdl-tooltip.mdl-tooltip--right for="tooltip-clipboard" Click to copy link to clipboard
           
     .links.sin-nested-links.mdl-cell--12-col
       hr
