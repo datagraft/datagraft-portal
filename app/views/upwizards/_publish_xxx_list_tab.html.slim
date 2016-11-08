@@ -3,15 +3,15 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
     div.mdl-card__supporting-text.sin-padding
       #upwizard-list
         ul.sort-heading-fbox
-          li
+          li.sin-query-results-search
             i.material-icons search
             input.search placeholder="Search in files"
           li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-name"  Sort by name
+            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-name"  Sort by name
           li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-user"  Sort by user
+            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-user"  Sort by user
           li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-time"  Sort by time
+            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-time"  Sort by time
           li
             label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
               input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
@@ -47,7 +47,7 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                       .sin-list-name
                         = thing.name
                         | <br>
-                        | -[#{thing.original_filename}]
+                        | <i>[#{thing.original_filename}]</i>
                     li
                       .sin-list-user
                         = thing.user.username

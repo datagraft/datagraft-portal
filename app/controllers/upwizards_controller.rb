@@ -165,8 +165,8 @@ class UpwizardsController < ApplicationController
     case step
     when :publish
       user = @upwizard.user
-      tmp_user = user.filestores.includes(:user).where(public: false)
-      tmp_pub = Thing.public_list.includes(:user).where(:type => ['Filestore'])
+      tmp_user = user.filestores.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%")
+      tmp_pub = Thing.public_list.includes(:user).where(:type => ['Filestore']).where.not("name LIKE ?", "%previewed_dataset_%")
       @thing_entries =  tmp_pub + tmp_user
     end
   end

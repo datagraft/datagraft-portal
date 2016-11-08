@@ -4,10 +4,6 @@ div.mdl-grid
       h2.mdl-card__title-text Upload a file
     div.mdl-card__supporting-text
       == form_for(@upwizard, html: {class: "dropzone sin-dropzone", id: "upwizardDropZone"}, url: wizard_path, method: :post) do
-    - if @upwizard.task == 'file'
-      div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell.sin-drop-switchable-rdf-hidden
-        h3.mdl-card__title.mdl-card--expand.sin-align-center
-          = raw "You have uploaded an RDF file format, <BR>which is published in a SPARQL endpoint.<BR> If you would like to continue creating a file page, <BR>please press RELOAD and upload a tabular file (CSV, TSV, XLS, XLSX)."
   div.mdl-card__actions
     // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
     = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"

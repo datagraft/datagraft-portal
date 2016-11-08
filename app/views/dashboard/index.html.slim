@@ -39,7 +39,7 @@
             |  it against an existing endpoint. Your queries will be accessible
             |  through the Assets access page.
         .mdl-card__actions
-            = link_to publish_path, class: "mdl-navigation__link"
+            = link_to new_query_path, class: "mdl-navigation__link"
                 button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
   #browse-assets.sin-centered.mdl-tabs__panel.is-active
     - if feature? :activity_feed

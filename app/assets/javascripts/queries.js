@@ -20,7 +20,6 @@ document.addEventListener('turbolinks:load', function() {
       },
     });
     oTable = $('#query-results-table').DataTable();
-    console.log($('.mdl-textfield'))
     $('.mdl-textfield').each(function (index, element) {
       componentHandler.upgradeElement(element);  
     });
@@ -32,7 +31,6 @@ document.addEventListener('turbolinks:load', function() {
   
   // Display query execute result
   $('#query-show-execute-form form').on("ajax:success", function(e, data, status, xhr) {
-    console.log("Success");
     $('#query-show-execute-result').html(data);
     $('#query-show-execute-result').show();
     createResultsTable();

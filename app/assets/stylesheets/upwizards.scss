@@ -93,3 +93,42 @@
 .sin-align-center {
   text-align: center;
 }
+.mdl-layout .sin-vertical-card.sin-upwizard-card {
+  & > .mdl-card__title {
+    background-image: image-url("squairy_light.png");
+    background-size: auto;
+    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.5em;
+    padding: 0;
+    min-height: 2.5em;
+    flex: 1 100%;
+    height: 40px;
+  }
+  width: 70%;
+  & > .mdl-card__title {
+    justify-content: center;
+  }
+  & > .mdl-card__actions {
+    flex: 1 0px;
+    order: 2;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: none;
+    button.sin-grafterizer-launch {
+      min-width: 120px;
+      font-size: medium;
+      min-height: 40px;
+    }
+  }
+}
+
+.mdl-layout .sin-centered {
+  margin: 0px auto;
+  width: calc(66vw + 6em);
+}
+
+.mdl-card__actions.sin-existing-transformation-actions {
+  justify-content: space-between;
+}

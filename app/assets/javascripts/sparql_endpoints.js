@@ -66,7 +66,7 @@ document.addEventListener('turbolinks:load', function() {
     $(this).children().first().submit();
     event.stopPropagation();
   });
-  
+
   $('.sin-execute-request-button form').on("ajax:success", function(e, data, status, xhr) {
     $('#query-panel-result').html(data);
     $('#query-panel-result').show();
@@ -80,5 +80,7 @@ document.addEventListener('turbolinks:load', function() {
   };
 
   var seQueriesList = new List('se-queries-list', seQueriesListOptions);
-
+  $('.row-public').each(function () {
+    !$('#checkbox_public')[0].checked ? $(this).css("display", 'none') : $(this).css("display", '');
+  });
 });

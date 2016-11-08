@@ -56,6 +56,7 @@ $accent-color: #FF609A;
     linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
     image-url("background_blue_explore_page.jpg");
   background-position: right;
+  background-size: cover;
 
   .mdl-card__title {
     align-items: flex-end;
