@@ -1,67 +1,5 @@
 class QueriesController < ThingsController
 
-# Old execute method on queriable data stores replaced with sparql endpoints
-=begin
-  def execute
-    if !params[:id].blank? && !params[:username].blank?
-      set_thing
-      authorize! :read, @thing
-
-      if user_signed_in? && (current_user.username == params[:qds_username] || params[:qds_username] == 'myassets')
-        qds_user = current_user
-      else
-        raise CanCan::AccessDenied.new("Not authorized!") if params[:qds_username] == 'myassets'
-        qds_user = User.find_by_username(params[:qds_username]) or not_found
-      end
-
-      @queriable_data_store = qds_user.queriable_data_stores.friendly.find(params[:qds_id])
-      # throw @queriable_data_store
-    elsif user_signed_in?
-      querying = params["querying"] || {}
-      @query = @thing = Query.new
-      @query.name = 'Unsaved query'
-      @query.query = querying["query"]
-      @query.language = querying["language"]
-      @unsaved_query = true
-
-      unless querying["queriable_data_store"].blank?
-        @queriable_data_store = QueriableDataStore.friendly.find(querying["queriable_data_store"])
-      end
-    else
-      raise CanCan::AccessDenied.new("Not authorized!")
-    end
-
-    if @queriable_data_store.nil?
-      @query_result = {
-        headers: [],
-        results: []
-      }
-    else
-      authorize! :read, @queriable_data_store
-
-      # HERE IS THE FUN PART
-      begin
-        @query_result = @query.execute(@queriable_data_store)
-      rescue => error
-        flash[:error] = error.message
-        # redirect_to thing_path(@query)
-        # @results_list = []
-        @query_result = {
-          headers: [],
-          results: []
-        }
-      end
-    end
-
-    if @query_result.blank?
-      @results_list = []
-    else
-      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
-    end
-    # throw @query_result
-  end
-=end
-
   def execute_query
     if !params[:id].blank? && !params[:username].blank?
       set_thing
@@ -75,60 +13,32 @@ class QueriesController < ThingsController
 
       @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_endpoints])
     end
-    
-    if params[:goto_sparql_endpoint_button]
+
+    # Go to selected endpoint page button_to
+    #if params[:goto_sparql_endpoint_button]
+    if params[:commit] == "Go to selected endpoint page"
       redirect_to thing_path(@sparql_endpoint)
-    end
-
-  end
-  
-  # Action invoked by the submit button in the query execute form
-  # TODO: ********* MERGE with execute_query above and fix link to SE instead of QDS
-  def execute_query2
-    if !params[:id].blank? && !params[:username].blank?
-      set_thing
-      authorize! :read, @thing
-      if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
-        se_user = current_user
-      else
-        raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
-        se_user = User.find_by_username(params[:username]) or not_found
-      end
-
-      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_slugs])
-    end
-
-    if @sparql_endpoint.nil?
-      @query_result = {
-        headers: [],
-        results: []
-      }
+    # Execute query button_to
     else
-      authorize! :read, @sparql_endpoint
-
-      # HERE IS THE FUN PART
       begin
-        @query_result = @query.execute(@sparql_endpoint)
-      rescue => error
+        @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
+      rescue Execption => error
         flash[:error] = error.message
-        # redirect_to thing_path(@query)
-        # @results_list = []
         @query_result = {
           headers: [],
           results: []
         }
       end
-    end
+      
+      if @query_result.blank?
+        @results_list = []
+      else
+        @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+      end
 
-    if @query_result.blank?
-      @results_list = []
-    else
-      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+      render :partial => 'execute_query_results' if request.xhr?
     end
-    # throw @query_result    
-
   end
-  
   
   private
     def destroyNotice
@@ -137,7 +47,7 @@ class QueriesController < ThingsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description,
+        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description, 
           queriable_data_store_ids: [],
           sparql_endpoint_ids: [])
     end    

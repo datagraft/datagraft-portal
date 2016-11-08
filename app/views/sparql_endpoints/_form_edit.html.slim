@@ -28,7 +28,7 @@
         #tooltip-license.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-license" Choose a license for use of the data in the SPARQL endpoint. You can find more details about data licensing on the Creative Commons web page (link), or at Open Data Commons web page (link).
     .sin-input-with-help-icon
-      = f.input :tmp_file, as: :file, label: "Upload RDF file"
+      = f.input :tmp_file, as: :file, :label => false
       .sin-help-icon-with-tooltip
         #tooltip-upload.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-upload" Choose an RDF file to upload/append data to the repository of the SPARQL endpoint.

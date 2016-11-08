@@ -8,31 +8,29 @@
       .sin-tab-textfield__box
         - unless @thing.uri.blank?
           = link_to @thing.uri
-      #tooltip-clipboard.mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text=" #{@thing.uri}"
+      #tooltip-clipboard.mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text="#{@thing.uri}"
         i.material-icons content_paste
       .mdl-tooltip.mdl-tooltip--right for="tooltip-clipboard" Click to copy link to clipboard
           
     .links.sin-nested-links.mdl-cell--12-col
       hr
-      .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#open-query-panel
-        i.material-icons add
-      
+      .sin-add-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--fab#open-query-panel
+        i.material-icons speaker_notes
+      .mdl-tooltip.mdl-tooltip--right for="open-query-panel" Open query panel
     .sin-query-execute-form.mdl-cell--12-col#query-panel style="display:none"
       = render 'query_execute_form'
 
     //div#query-panel-result
 
     .links.sin-nested-links
-      .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored#close-query-panel style="display:none"
+      .sin-clear-form-button.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--mini-fab.mdl-button--colored#close-query-panel style="display:none"
         i.material-icons clear
+      .mdl-tooltip.mdl-tooltip--right for="close-query-panel" Close query panel
 
-    //.mdl-cell--12-col
-      = render 'new_query_form'
-      
     .sin-queries-list.mdl-cell--12-col
       = render 'list_queries_search'    
   
-  .mdl-grid#query-panel-result
+  .mdl-grid#query-panel-result data-turbolinks-temporary=""
     
   hr.sin-invisible-form-separator
   div.mdl-card__actions

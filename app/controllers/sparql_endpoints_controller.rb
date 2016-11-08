@@ -48,7 +48,12 @@ class SparqlEndpointsController < ThingsController
     if @thing.tmp_file != nil
       rdfFile = @thing.tmp_file
       rdfType = file_ext(@thing.tmp_file.original_filename)
-      current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+      
+      begin
+        current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+      rescue Exception => e
+        flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
+      end
     end
   end
 
@@ -91,9 +96,8 @@ class SparqlEndpointsController < ThingsController
     if @query_result.blank?
       @results_list = []
     else
-      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+      @results_list = @query_result[:results]
     end
-
     render :partial => 'execute_query_results' if request.xhr?
   end  
 

@@ -1,14 +1,14 @@
 #se-queries-list
   ul.sort-heading-fbox
-    li
+    li.sin-query-results-search
       i.material-icons search
       input.search placeholder="Search in queries"
     li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-name"  Sort by name
+      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-name"  Sort by name
     li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-date"  Sort by date
+      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-date"  Sort by date
     li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-user"  Sort by user
+      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-user"  Sort by user
     li
       label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
         input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
@@ -41,7 +41,7 @@
                   .squeezhead
                     i.material-icons.md-48 help
                     span.sin-execute-request-button
-                      = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => query.query}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+                      = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => query.query}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect'
                     strong
                       font size="5"
                         = query.name
