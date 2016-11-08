@@ -1,22 +1,27 @@
+hr.mdl-cell--12-col
+h3.sin-tab-title.mdl-cell--12-col
+  | Query results
+.sin-search-container
+  .mdl-textfield.mdl-js-textfield.sin-query-results-search
+    i.material-icons search
+    .mdl-textfield.mdl-js-textfield
+      input#query-results-search.mdl-textfield__input type="text" /
+      label.mdl-textfield__label for="query-results-search"  Search
+      
 - unless @results_list.empty?
-  .mdl-grid
-    table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
-      thead
+  table#query-results-table.mdl-data-table.cell-border
+    thead
+      tr
+        - @query_result[:headers].each do |header|
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
+    tbody
+      - @results_list.each do |result|
         tr
           - @query_result[:headers].each do |header|
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
-      tbody
-        - @results_list.each do |result|
-          tr
-            - @query_result[:headers].each do |header|
-              - if result[header]["value"].is_a? Numeric
-                td = result[header]["value"]
-              - else
-                td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+            - if result[header]["value"].is_a? Numeric
+              td = result[header]["value"]
+            - else
+              td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
 
-      tfoot
-        tr
-          th.mdl-data-table__cell--non-numeric.sin-td-wrap colspan=@query_result[:headers].count
-            = will_paginate @results_list
 - else
-  em No rows returned
+  em.mdl-cell--12-col No rows returned
