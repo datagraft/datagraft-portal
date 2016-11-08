@@ -331,6 +331,8 @@ module OntotextUser
       puts 'Error uploading file to Ontotext repository'
       puts e.message
       puts e.backtrace.inspect
+         
+      throw e
     #ensure
       # nothing
     end
