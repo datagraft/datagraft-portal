@@ -1,12 +1,19 @@
 #se-queries-list
-  i.material-icons search
-  input.search placeholder="Search in queries"
-  button.sort data-sort="sin-container-hidden-name"  Sort by name
-  button.sort data-sort="sin-container-hidden-date"  Sort by date
-  button.sort data-sort="sin-container-hidden-user"  Sort by user
-  label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="checkbox-queries-public"
-    input#checkbox-queries-public.mdl-checkbox__input type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-    .mdl-checkbox__label Include all public queries
+  ul.sort-heading-fbox
+    li
+      i.material-icons search
+      input.search placeholder="Search in queries"
+    li
+      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-name"  Sort by name
+    li
+      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-date"  Sort by date
+    li
+      button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-container-hidden-user"  Sort by user
+    li
+      label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
+        input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
+        span.mdl-checkbox__label Include public queries
+
   .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
   .sin-list-textfield__scroll.accordion
     ul.list
@@ -23,7 +30,7 @@
               .sin-container-hidden-name
                 = query.name
               .sin-container-hidden-date
-                = query.updated_at
+                = query.updated_at.to_i
               .sin-container-hidden-user
                 = query.user.username
               - highlight_class = 'highlight-false'

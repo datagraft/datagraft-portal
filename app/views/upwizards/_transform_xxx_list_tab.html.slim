@@ -2,14 +2,20 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
     div.mdl-card__supporting-text.sin-padding
       #upwizard-list
-        i.material-icons search
-        input.search placeholder="Search in transformations"
-        button.sort type="button" data-sort="sin-list-hidden-name"  Sort by name
-        button.sort type="button" data-sort="sin-list-hidden-user"  Sort by user
-        button.sort type="button" data-sort="sin-list-hidden-time"  Sort by time
-        label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-          input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-          span.mdl-checkbox__label Include public entries
+        ul.sort-heading-fbox
+          li
+            i.material-icons search
+            input.search placeholder="Search in transformations"
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-name"  Sort by name
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-user"  Sort by user
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-time"  Sort by time
+          li
+            label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
+              input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
+              span.mdl-checkbox__label Include public entries
         .sin-list-textfield__scroll
           ul.list
             - if @thing_entries.empty?
@@ -27,8 +33,7 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                   .sin-list-hidden-user
                     = thing.user.username
                   .sin-list-hidden-time
-                    = time_ago_in_words thing.updated_at
-                    | ago
+                    = thing.updated_at.to_i
 
                   ul.row-fbox
                     li

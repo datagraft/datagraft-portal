@@ -2,14 +2,20 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
     div.mdl-card__supporting-text.sin-padding
       #upwizard-list
-        i.material-icons search
-        input.search placeholder="Search in files"
-        button.sort type="button" data-sort="sin-list-hidden-name"  Sort by name
-        button.sort type="button" data-sort="sin-list-hidden-user"  Sort by user
-        button.sort type="button" data-sort="sin-list-hidden-time"  Sort by time
-        label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-          input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-          span.mdl-checkbox__label Include public entries
+        ul.sort-heading-fbox
+          li
+            i.material-icons search
+            input.search placeholder="Search in files"
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-name"  Sort by name
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-user"  Sort by user
+          li
+            button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-time"  Sort by time
+          li
+            label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
+              input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
+              span.mdl-checkbox__label Include public entries
         .sin-list-textfield__scroll
           ul.list
             - if @thing_entries.empty?
@@ -24,22 +30,24 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                 li class="#{add_class}"
                   .sin-list-hidden-name
                     = thing.name
+                    | #{thing.original_filename}
                   .sin-list-hidden-user
                     = thing.user.username
                   .sin-list-hidden-time
-                    = time_ago_in_words thing.updated_at
-                    | ago
+                    = thing.updated_at.to_i
 
                   ul.row-fbox
                     li
                       .sin-list
-                        = image_tag("icon--file.svg", height: "30")
+                        = image_tag("icon--data_page.svg", height: "30")
                     li
                       .sin-list
                         = f.radio_button :radio_thing_id, thing.id
                     li
                       .sin-list-name
                         = thing.name
+                        | <br>
+                        | -[#{thing.original_filename}]
                     li
                       .sin-list-user
                         = thing.user.username
@@ -51,7 +59,8 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
                         = time_ago_in_words thing.updated_at
                         | ago
     div.mdl-card__actions
-      == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+      // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+      = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
       .mdl-layout-spacer
       - unless @thing_entries.empty?
         = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

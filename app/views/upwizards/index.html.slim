@@ -8,10 +8,14 @@ div.mdl-card
 
   div.mdl-card__supporting-text.sin-padding
     #upwizard-list
-      i.material-icons search
-      input.search placeholder="Search in wizards"
-      button.sort data-sort="sin-list-hidden-user"  Sort by user
-      button.sort data-sort="sin-list-hidden-time"  Sort by time
+      ul.sort-heading-fbox
+        li
+          i.material-icons search
+          input.search placeholder="Search in wizards"
+        li
+          button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-user"  Sort by user
+        li
+          button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-time"  Sort by time
       .sin-list-textfield__scroll
         ul.list
           - if @upwizard_entries.empty?
@@ -24,8 +28,7 @@ div.mdl-card
                 .sin-list-hidden-user
                   = wiz.user.username
                 .sin-list-hidden-time
-                  = time_ago_in_words wiz.updated_at
-                  | ago
+                  = wiz.updated_at.to_i
                 ul.row-fbox
                   li
                     .sin-list
