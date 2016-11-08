@@ -41,5 +41,4 @@ document.addEventListener('turbolinks:load', function() {
     $('#query-show-execute-result').html(xhr.responseText);
   });
   
-  
 });
