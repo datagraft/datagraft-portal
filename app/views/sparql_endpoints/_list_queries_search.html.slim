@@ -60,8 +60,10 @@
                       i Description:
                       .sin-tab-textfield__box
                         = query.description
-                    br
-                    i Query text:
+                    i
+                      | Query text:
                     br
                     .sin-tab-textfield__scroll
                       = simple_format query.query
+                    i.sin-flex-center
+                      = link_to "Go to asset...", thing_path(query)

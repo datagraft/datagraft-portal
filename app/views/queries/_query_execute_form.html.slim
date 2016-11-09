@@ -11,12 +11,13 @@
   p
   .mdl-cell--12-col
     .sin-tab-textfield__scroll
-      = @thing.query
+      = simple_format @thing.query
       //= f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
 
   p
   .mdl-cell--12-col
-    .sin-execute-request-button.sin-cell-layout-flex__center
-      = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
-      //= button_to 'Execute', { action: "execute_query" }, remote: true, params:  {:execute_query_button => true, :goto_sparql_endpoint => :sparql_endpoints}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
-        input.hidden
+    - unless @thing.sparql_endpoints.length == 0
+      .sin-execute-request-button.sin-cell-layout-flex__center
+        = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+        //= button_to 'Execute', { action: "execute_query" }, remote: true, params:  {:execute_query_button => true, :goto_sparql_endpoint => :sparql_endpoints}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+          input.hidden

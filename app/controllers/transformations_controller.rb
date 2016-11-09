@@ -15,6 +15,13 @@ class TransformationsController < ThingsController
     @key = session[:tmp_api_key]['key']
   end
 
+  def show
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @publisherId = current_user.username
+    @transformationID = @transformation.slug
+    super
+  end
+  
   def edit
     authorize! :update, @thing
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
