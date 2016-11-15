@@ -8,10 +8,10 @@
           = render_markdown(@thing.description)
 
     .mdl-cell--12-col
-      .sin-tab-label Keywords
-      .sin-tab-textfield__colorbox
-        - kwds = @thing.keywords
-        - unless kwds.blank?
+      - kwds = @thing.keywords
+      - unless kwds.blank?
+        .sin-tab-label Keywords
+        .sin-tab-textfield__colorbox
           ul.keyw-array-container
             - kwds.each do |kwd|
               li.keyw-array-item
