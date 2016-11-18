@@ -4,7 +4,8 @@ document.addEventListener('turbolinks:load', function() {
   };
 
   var upwizardList = new List('upwizard-list', upwizardListOptions);
-
+  // Avoid error message when sorting empty list
+  if (upwizardList.size() > 0) upwizardList.sort('sin-list-hidden-time', { order: "desc" });
 });
 
 $(document).ready(function(){

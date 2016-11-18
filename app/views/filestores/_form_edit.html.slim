@@ -24,6 +24,11 @@
       .sin-help-icon-with-tooltip
         #tooltip-keywords.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords" Enter keywords separated by commas.
+    #keyword-list
+      .sin-keyword-fbox
+        ul.list
+      input#keyword-name-field placeholder="Type new keyword" type="text"
+      button#add-keyword-btn type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   Add keyword
     .sin-input-with-help-icon
       = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
       .sin-help-icon-with-tooltip__select
