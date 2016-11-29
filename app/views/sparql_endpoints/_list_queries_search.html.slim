@@ -56,7 +56,7 @@
                       = query.user.username
                     .sin-execute-request-response
                   .squeezecnt
-                    - if query.description.length > 0
+                    - unless query.description.blank?
                       i Description:
                       .sin-tab-textfield__box
                         = query.description
