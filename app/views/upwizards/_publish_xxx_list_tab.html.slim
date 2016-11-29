@@ -1,6 +1,10 @@
 div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
+    = f.text_field :task, type: :hidden
     div.mdl-card__supporting-text.sin-padding
+
+      = render partial: "gen_list", locals: {items: "files", list: @thing_entries, show_item: "list_show_item", f: f}
+
       #upwizard-list
         ul.sort-heading-fbox
           li.sin-query-results-search

@@ -1,5 +1,6 @@
 div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
+    = f.text_field :task, type: :hidden
     div.mdl-card__supporting-text
       #upwizard-list
         ul.sort-heading-fbox
