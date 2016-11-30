@@ -2,66 +2,8 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
     = f.text_field :task, type: :hidden
     div.mdl-card__supporting-text.sin-padding
+      = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "file", show_thing_partial: "show_file", form: f}
 
-      = render partial: "gen_list", locals: {items: "files", list: @thing_entries, show_item: "list_show_item", f: f}
-
-      #upwizard-list
-        ul.sort-heading-fbox
-          li.sin-query-results-search
-            i.material-icons search
-            input.search placeholder="Search in files"
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-name"  Sort by name
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-user"  Sort by user
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-time"  Sort by time
-          li
-            label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-              input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-              span.mdl-checkbox__label Include public entries
-        .sin-list-textfield__scroll
-          ul.list
-            - if @thing_entries.empty?
-              li
-                .mld-list__item-primary-content
-                  em Nothing published yet
-            - else
-              - @thing_entries.each do |thing|
-                - add_class = 'row-private'
-                - unless thing.user.username == @upwizard.user.username
-                  - add_class = 'row-public'
-                li class="#{add_class}"
-                  .sin-list-hidden-name
-                    = thing.name
-                    | #{thing.original_filename}
-                  .sin-list-hidden-user
-                    = thing.user.username
-                  .sin-list-hidden-time
-                    = thing.updated_at.to_i
-
-                  ul.row-fbox
-                    li
-                      .sin-list
-                        = image_tag("icon--data_page.svg", height: "30")
-                    li
-                      .sin-list
-                        = f.radio_button :radio_thing_id, thing.id
-                    li
-                      .sin-list-name
-                        = thing.name
-                        | <br>
-                        | <i>[#{thing.original_filename}]</i>
-                    li
-                      .sin-list-user
-                        = thing.user.username
-                    li
-                      .sin-list
-                        i.material-icons = thing.public ? 'lock_open' : 'lock'
-                    li
-                      .sin-list-time
-                        = time_ago_in_words thing.updated_at
-                        | ago
     div.mdl-card__actions
       // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
       = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"

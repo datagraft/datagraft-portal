@@ -1,0 +1,31 @@
+// This partial shows details about a filestore thing using squeezebox to hide parts of the information
+// Input params:
+//   thing              - The thing to render
+//   form               - The form embracing the list
+
+.sin-gen-squeeze
+  .sin-gs-head
+    .sin-gs-left
+      = form.radio_button :radio_thing_id, thing.id
+      = image_tag(thing_icon_name(thing), height: "30")
+    strong
+      font size="5"
+        = thing.name
+      .sin-gs-right
+        i.material-icons = thing.public ? 'lock_open' : 'lock'
+    strong
+      | Last modification&nbsp;
+      = time_ago_in_words thing.updated_at
+      | &nbsp;ago
+      | &nbsp;-&nbsp;
+      = thing.updated_at
+      | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      | By:&nbsp;
+      = thing.user.username
+    .sin-execute-request-response
+  .sin-gs-cnt
+    - unless thing.description.blank?
+      strong Description:
+      .sin-tab-textfield__box
+        = thing.description
+    strong Original filename: #{thing.original_filename}
