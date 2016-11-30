@@ -1,12 +1,16 @@
 div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
-  = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
-    = f.text_field :task, type: :hidden
-    div.mdl-card__supporting-text.sin-padding
-      = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "file", show_thing_partial: "show_file", form: f}
+  - if @thing_entries.empty?
+    div.mdl-card__supporting-text
+      h2 Nothing published yet
+  - else
+    = form_for @upwizard, url: wizard_path(:file_select_transform), method: :put do |f|
+      = f.text_field :task, type: :hidden
+      div.mdl-card__supporting-text.sin-padding
+        = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "file", show_thing_partial: "show_file", form: f}
 
-    div.mdl-card__actions
-      // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-      = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-      .mdl-layout-spacer
-      - unless @thing_entries.empty?
-        = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+      div.mdl-card__actions
+        // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        .mdl-layout-spacer
+        - unless @thing_entries.empty?
+          = f.submit "Next: Clean up and transform file", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

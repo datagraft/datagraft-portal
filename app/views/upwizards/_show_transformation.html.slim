@@ -1,4 +1,4 @@
-// This partial shows details about a filestore thing using squeezebox to hide parts of the information
+// This partial shows details about a transformaton thing
 // Input params:
 //   thing              - The thing to render
 //   form               - The form embracing the list
@@ -22,9 +22,3 @@
       | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       | By:&nbsp;
       = thing.user.username
-  .sin-gs-cnt
-    - unless thing.description.blank?
-      strong Description:
-      .sin-tab-textfield__box
-        = thing.description
-    strong Original filename: #{thing.original_filename}
