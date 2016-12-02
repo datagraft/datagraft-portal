@@ -6,7 +6,8 @@
 .sin-gen-squeeze
   .sin-gs-head
     .sin-gs-left
-      = form.radio_button :radio_thing_id, thing.id
+      .sin-gl-stop-propagate
+        = form.radio_button :radio_thing_id, thing.id, :required => ''
       = image_tag(thing_icon_name(thing), height: "30")
     strong
       font size="5"

@@ -16,6 +16,11 @@ document.addEventListener('turbolinks:load', function() {
     animated : true
   });
 
+  $('.sin-gl-stop-propagate').click(function(event) {
+    // execute form but do not unfold squeezebox
+    event.stopPropagation();
+  });
+
 
 });
 

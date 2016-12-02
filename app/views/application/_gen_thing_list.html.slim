@@ -10,6 +10,7 @@
 //   It will be passed following parameters:
 //     thing              - The thing to render
 //     form (optional)    - The form embracing the list
+//     count              - Count the collection iteration from 1..n
 
 #gen-list
   ul.sin-gl-heading-fbox
@@ -33,7 +34,9 @@
   .sin-gl-textfield__scroll
     ul.sin-gl-list
       - unless things.empty?
+        - count = 0
         - things.each do |thing|
+          - count = count + 1
           - if can? :read, thing
             - add_class = 'sin-gl-row-private'
             - unless thing.user.name == current_user.name
@@ -45,4 +48,4 @@
                 = thing.updated_at.to_i
               .sin-gl-hidden-user
                 = thing.user.username
-              = render partial: show_thing_partial, locals: {thing: thing, form: defined?(form) ? form : nil}
+              = render partial: show_thing_partial, locals: {thing: thing, count: count, form: defined?(form) ? form : nil}
