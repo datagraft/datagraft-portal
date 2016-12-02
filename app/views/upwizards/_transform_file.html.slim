@@ -21,7 +21,6 @@
         = render 'transform_xxx_list_tab'
 
 div.mdl-card__actions
-  // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-  = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+  == link_to 'Back', wizard_path(:publish), :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
   .mdl-layout-spacer
   == link_to 'Skip: Add details', wizard_path(:go_filestore), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
