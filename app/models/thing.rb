@@ -70,7 +70,8 @@ class Thing < ApplicationRecord
       num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'}, curr_num_assets_metric_old_val - 1)
 
       if !new_value.in? [true, false] then
-        if new_value new_value.in? ["1", "0"] then
+        ##if new_value new_value.in? ["1", "0"] then
+        if new_value.in? ["1", "0"] then
           new_value = !new_value.to_i.zero?
         else
           # new value neither string nor boolean - should not happen
@@ -154,6 +155,33 @@ class Thing < ApplicationRecord
       def description=(val)
         touch_metadata!
         metadata["description"] = val
+      end
+
+      # meta_keyword_list is a string with comma separated keywords.
+      # This string is stored in the metadata and trigges update of gem paper_trail version
+      # The same string is also pushed to gem acts_as_taggable_on managing keywords
+      # The result is the same information at both places.
+      # When reading from meta_keyword_list the information is taken from the metadata
+      # The result is that rollback to older version can fetch correct keywords.
+      def meta_keyword_list
+        unless metadata.blank?
+          ret = metadata['keyword_list']
+        end
+        if ret == nil
+          ret = ''
+        end
+        puts "Has keyword_list <"+self.keyword_list.to_s+">"
+        puts "Read meta_keyword_list <"+ret+">"
+        return ret
+      end
+
+      def meta_keyword_list=(keyw_list)
+        touch_metadata!
+        puts "Write1 meta_keyword_list <"+keyw_list+">"
+        self.keyword_list = keyw_list
+        keyw_list_2 = self.keyword_list.to_s
+        puts "Write2 meta_keyword_list <"+keyw_list_2+">"
+        metadata['keyword_list'] = keyw_list_2
       end
 
       def has_children?

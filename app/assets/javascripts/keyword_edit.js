@@ -9,7 +9,7 @@ document.addEventListener('turbolinks:load', function() {
   console.log("keywordList started len:"+keywordList.size());
 
   var addKeywordBtn = $('#add-keyword-btn'),
-    formField = $('#filestore_keyword_list'),
+    formField = $('#filestore_meta_keyword_list'),
     keywordField = $('#keyword-name-field'),
     idCntr = 0,
     removeBtns = $('.remove-keyword-btn');
