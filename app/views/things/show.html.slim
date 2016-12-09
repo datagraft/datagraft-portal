@@ -17,13 +17,9 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
         | &nbsp;-&nbsp; #{@thing.updated_at}
       == link_to "See latest version", thing_path(@thing), :class=> "mdl-button mdl-js-button mdl-js-ripple-effect"
   div.mdl-card__supporting-text.sin-padding
-    - unless @thing.description.blank?
-      .sin-description
-        = render_markdown(@thing.description)
     = render 'show_content'
 
   div.mdl-card__actions
-    //== link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
     - if can? :edit, @thing
       == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     - if user_signed_in?

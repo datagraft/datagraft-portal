@@ -1,11 +1,15 @@
-.sin-info-label License
-.sin-img-license
-  - unless @thing.license.blank?
-    = render 'license_logo_div'
-.sin-info-text.center
-  - unless @thing.license.blank?
-    = @thing.name
-    | &nbsp;
-    | is licensed under
-    | &nbsp;
-    = @thing.license
+.mdl-cell--6-col
+  .sin-info-label License
+  .sin-info-frame
+    - unless @thing.license.blank?
+      .sin-img-license
+        = render 'license_logo_div'
+      .sin-info-text.center
+        = @thing.name
+        | &nbsp;
+        | is licensed under
+        | &nbsp;
+        = @thing.license
+    - else
+      .sin-info-text.center
+        = 'No license specified'

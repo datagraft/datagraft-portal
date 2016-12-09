@@ -1,9 +1,13 @@
 - kwds = @thing.meta_keyword_list.split(',')
 - unless kwds.blank?
-  .sin-keyword-fbox
-    ul
-      - kwds.each do |kwd|
-        li
-          span.mdl-chip
-            span.mdl-chip__text
-              = kwd
+  .mdl-cell--12-col
+    .sin-info-label Keywords
+    .sin-info-frame
+      - kwds = @thing.keywords
+      - unless kwds.blank?
+        ul.sin-info-array-container
+          - kwds.each do |kwd|
+            li.array-item
+              span.mdl-chip
+                span.mdl-chip__text
+                  = kwd

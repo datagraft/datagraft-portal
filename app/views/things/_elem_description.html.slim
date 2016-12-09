@@ -1,0 +1,5 @@
+.mdl-cell--12-col
+  .sin-info-label Description
+  .sin-info-textfield__scroll
+    - unless @thing.description.blank?
+      = render_markdown(@thing.description)
