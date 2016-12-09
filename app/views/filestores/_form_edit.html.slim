@@ -20,15 +20,17 @@
         #tooltip-public.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the file page will be visible to other users of DataGraft.
     .sin-input-with-help-icon
-      = f.input :meta_keyword_list, label: "Keywords", prompt: "Enter keywords separated by commas", as: :text, input_html: { rows: 5 }
+      = f.hidden_field :meta_keyword_list
+      .mdl-cell.mdl-cell--12-col.mdl-textfield
+        .mdl-textfield__label Keywords
+        .mdl-textfield__input
+          #keyword-list
+            ul.kwd-list.sin-info-array-container
+          input#keyword-name-field placeholder="Type new keyword" type="text"
+          button#add-keyword-btn type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   Add keyword
       .sin-help-icon-with-tooltip
         #tooltip-keywords.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords" Enter keywords separated by commas.
-    #keyword-list
-      .sin-keyword-fbox
-        ul.list
-      input#keyword-name-field placeholder="Type new keyword" type="text"
-      button#add-keyword-btn type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   Add keyword
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords"Add keyword by typing in the text box and click ADD. Delete by clicking on the keyword icon.
     .sin-input-with-help-icon
       = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
       .sin-help-icon-with-tooltip__select

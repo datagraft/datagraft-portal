@@ -1,8 +1,8 @@
 document.addEventListener('turbolinks:load', function() {
   var keywordListOptions = {
     valueNames: [ 'sin-list-keyword' , 'id'],
-    item: '<li><span class="mdl-chip"><span class="mdl-chip__text sin-list-keyword"></span><button type="button" class="mdl-chip__action remove-keyword-btn"><i class="material-icons">cancel</i></button></span></li>'
-
+    item: '<li><span class="mdl-chip"><span class="mdl-chip__text sin-list-keyword"></span><button type="button" class="mdl-chip__action remove-keyword-btn"><i class="material-icons">cancel</i></button></span></li>',
+    listClass: 'kwd-list'
   };
 
   var keywordList = new List('keyword-list', keywordListOptions);
