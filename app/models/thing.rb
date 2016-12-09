@@ -116,6 +116,7 @@ class Thing < ApplicationRecord
           original.add_child copy
           increment_forks_metric(original)
           copy.resync_keyword_list
+          copy.file = original.file
         end
       end
 
