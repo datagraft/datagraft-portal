@@ -143,19 +143,20 @@ class FilestoresController < ThingsController
   # Open an attached file if it is a spreadsheet
   # Return an object with tabular information usable for preview
   def open_spreadsheet(format, file)
-    file_path = file.download.path
-    case format
-    when 'csv' then
-      case @thing.separator
-      when "COMMA" then
-        sep = ","
-      when "SEMI" then
-        sep = ";"
-      when "TAB" then
-        sep = "\t"
-      else
-        sep = ","
-      end
+    begin
+      file_path = file.download.path
+      case format
+      when 'csv' then
+        case @thing.separator
+        when "COMMA" then
+          sep = ","
+        when "SEMI" then
+          sep = ";"
+        when "TAB" then
+          sep = "\t"
+        else
+          sep = ","
+        end
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::CSV.new(file_path, { csv_options: {col_sep: sep}, file_warning: :ignore})
         @preview_tab_obj
@@ -168,6 +169,25 @@ class FilestoresController < ThingsController
       else
         @preview_text = "Unknown file format: #{format}"
       end
-      end
 
+      unless @preview_tab_obj == nil
+        #Test if access of the object throws exception
+        to = @preview_tab_obj
+        rows = to.last_row
+        rows = 10 if rows > 10
+        1.upto(rows) do |i|
+          1.upto(to.last_column) do |j|
+            cell_content = to.cell(i,j)
+          end
+        end
       end
+    rescue Exception => e
+      puts "File decoding failed preview"
+      puts e.message
+      puts e.backtrace.inspect
+      @preview_text = "Decode of filetype <#{format}> failed with message <#{e.message}>. Try to download the file to check content."
+      @preview_tab_obj = nil
+    end
+  end
+
+end

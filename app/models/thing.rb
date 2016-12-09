@@ -115,6 +115,7 @@ class Thing < ApplicationRecord
           copy.public = false
           original.add_child copy
           increment_forks_metric(original)
+          copy.resync_keyword_list
         end
       end
 
@@ -177,11 +178,17 @@ class Thing < ApplicationRecord
 
       def meta_keyword_list=(keyw_list)
         touch_metadata!
-        puts "Write1 meta_keyword_list <"+keyw_list+">"
+        #puts "Write1 meta_keyword_list <"+keyw_list+">"
         self.keyword_list = keyw_list
         keyw_list_2 = self.keyword_list.to_s
-        puts "Write2 meta_keyword_list <"+keyw_list_2+">"
+        #puts "Write2 meta_keyword_list <"+keyw_list_2+">"
         metadata['keyword_list'] = keyw_list_2
+      end
+
+      #Get the keywords from metadata and write to acts_as_taggable_on
+      #This is needed when doing fork
+      def resync_keyword_list
+        self.meta_keyword_list= self.meta_keyword_list
       end
 
       def has_children?
