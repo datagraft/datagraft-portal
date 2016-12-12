@@ -30,4 +30,15 @@ module QueriesHelper
     return SPARQL_QUERY_TYPES
   end
   
+  def display_sparql_query_type(query_type)
+    case query_type
+      when "SELECT"
+        return "SPARQL/S"
+      when "CONSTRUCT"
+        return "SPARQL/C"
+      else
+        return "SPARQL/S"
+    end
+  end 
+  
 end

@@ -20,9 +20,11 @@ $dark-gray: #333 !default;
   border-bottom: 1px solid $light-gray;
   cursor: pointer;
   color: $mid-gray;
-  padding: 1rem;
+  //padding: 1rem;
+  padding: 4px;
 
   .squeezhead {
+    display: flex;
     font-size: 1rem;
     line-height: 1.8rem;
     i {

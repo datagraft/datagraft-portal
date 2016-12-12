@@ -1,5 +1,6 @@
 class SparqlEndpointsController < ThingsController
   include UpwizardHelper
+  include QueriesHelper
 
   def new
     super

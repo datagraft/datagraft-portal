@@ -488,3 +488,28 @@ i.sin-flex-center{
   justify-content: center;
 }
 
+.sin-query-list-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sin-query-list-meta {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.sin-query-list-meta .sin-query-list-meta-name {
+  font-size: x-large;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.sin-query-list-meta .sin-query-list-meta-date {
+  font-size: small;
+}
+
+.squeezhead .sin-execute-request-button {
+  padding-top: 8px;
+}
