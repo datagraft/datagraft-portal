@@ -5,7 +5,7 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   - else
     = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
       div.mdl-card__supporting-text
-        = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "transformation", show_thing_partial: "show_transformation", form: f}
+        = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "transformation", show_thing_partial: "show_transformation", rparams: {form: f}}
       div.mdl-card__actions.sin-existing-transformation-actions
         = f.submit "Next: Transform and add details", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id: "transform-and-submit"
         = f.submit "Next: Preview result of transformation", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id: "preview-transform-grafterizer"

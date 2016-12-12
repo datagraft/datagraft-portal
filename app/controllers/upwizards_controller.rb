@@ -446,7 +446,7 @@ class UpwizardsController < ApplicationController
     puts "************ upwizard handle_save_transform"
     respond_to do |format|
       if @upwizard.save
-        format.html { jump_to :transformation }
+        format.html { jump_to :transform }
         format.json { head :no_content }
       else
         format.html { jump_to :create_transform }
@@ -489,7 +489,7 @@ class UpwizardsController < ApplicationController
             redirect_to url_for(options)
           rescue Exception => e
             puts 'Error transforming file ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(pipe)'  if @upwizard.get_current_file && transformation
-            jump_error_to_state_and_render("Error transforming file.", :transformation, e)
+            jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
         elsif (@upwizard.task == 'sparql')
           begin
@@ -509,7 +509,7 @@ class UpwizardsController < ApplicationController
             redirect_to url_for(options)
           rescue Exception => e
             puts 'Error transforming file with ID ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(graft)' if @upwizard.get_current_file && transformation
-            jump_error_to_state_and_render("Error transforming file.", :transformation, e)
+            jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
         else
           redirect_error_to_dashboard('This wizard does not support <'+@upwizard.task+'>')
@@ -521,10 +521,10 @@ class UpwizardsController < ApplicationController
         else
           puts 'Wizard does not exist!'
         end
-        jump_error_to_state_and_render("Error retrieving transformation.", :transformation, e)
+        jump_error_to_state_and_render("Error retrieving transformation.", :transform, e)
       end
     else
-      jump_error_to_state_and_render("Error transformation is not selected.", :transformation)
+      jump_error_to_state_and_render("Error transformation is not selected.", :transform)
     end
     @upwizard.save
   end
@@ -547,11 +547,11 @@ class UpwizardsController < ApplicationController
         else
           puts 'Wizard does not exist!'
         end
-        jump_error_to_state_and_render("Error retrieving transformation", :transformation, e)
+        jump_error_to_state_and_render("Error retrieving transformation", :transform, e)
       end
     else
       @upwizard.trace_back_step_skip
-      jump_error_to_state_and_render("Please select a transformation to preview.", :transformation, e)
+      jump_error_to_state_and_render("Please select a transformation to preview.", :transform, e)
     end
   end
 

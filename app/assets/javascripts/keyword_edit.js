@@ -9,7 +9,7 @@ document.addEventListener('turbolinks:load', function() {
   console.log("keywordList started len:"+keywordList.size());
 
   var addKeywordBtn = $('#add-keyword-btn'),
-    formField = $('#filestore_meta_keyword_list'),
+    formField = $('.keyword_edit_list input'),
     keywordField = $('#keyword-name-field'),
     idCntr = 0,
     removeBtns = $('.remove-keyword-btn');
@@ -30,6 +30,7 @@ document.addEventListener('turbolinks:load', function() {
 
   function addKeywordsFromForm() {
     var txt = formField.val();
+
     if (!(txt === undefined)) {
       //console.log("Form keywords <" + txt + ">");
       var arr = txt.split(',');

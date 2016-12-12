@@ -1,3 +1,10 @@
+- queriesToShow = search_for_existing_queries
+- if queriesToShow.empty?
+  div.mdl-card__supporting-text
+    h2 No queries found
+- else
+  = render partial: "gen_thing_list", locals: {things: queriesToShow, thing_name: "querie", show_thing_partial: "run_query", rparams: {sparql_thing: @thing}}
+
 #se-queries-list
   ul.sort-heading-fbox
     li.sin-query-results-search

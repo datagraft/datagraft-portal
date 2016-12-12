@@ -3,13 +3,13 @@
 //   things             - A collection of things to be shown
 //   thing_name         - Name of the thing type to be used in the heading
 //   heading            - Text to be shown in the heading
-//   form (optional)    - Form object to be forwarded as local to show_thing_partial
+//   rparams (optional) - Render params hash object to be forwarded as local to show_thing_partial
 //   show_thing_partial - Partial used to show the the thing instance
 //
 //   The show_thing_partial will be called to render each thing.
 //   It will be passed following parameters:
 //     thing              - The thing to render
-//     form (optional)    - The form embracing the list
+//     rparams (optional) - Render params hash object with parameters to show_thing_partial
 //     count              - Count the collection iteration from 1..n
 
 #gen-list
@@ -48,4 +48,4 @@
                 = thing.updated_at.to_i
               .sin-gl-hidden-user
                 = thing.user.username
-              = render partial: show_thing_partial, locals: {thing: thing, count: count, form: defined?(form) ? form : nil}
+              = render partial: show_thing_partial, locals: {thing: thing, count: count, rparams: defined?(rparams) ? rparams : nil}

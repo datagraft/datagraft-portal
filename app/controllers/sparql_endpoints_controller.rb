@@ -12,7 +12,7 @@ class SparqlEndpointsController < ThingsController
   def create
     authorize! :create, SparqlEndpoint
 
-    if params[:wiz_id] 
+    if params[:wiz_id]
       @thing = SparqlEndpoint.new(sparql_endpoint_params)
       @thing.uri = current_user.new_ontotext_repository(@thing)
       @thing.user = current_user
@@ -42,14 +42,14 @@ class SparqlEndpointsController < ThingsController
       redirect_to upwizard_new_path('sparql')
     end
   end
-  
+
   def update
     super
-    
+
     if @thing.tmp_file != nil
       rdfFile = @thing.tmp_file
       rdfType = file_ext(@thing.tmp_file.original_filename)
-      
+
       begin
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
       rescue Exception => e
@@ -76,7 +76,7 @@ class SparqlEndpointsController < ThingsController
 
     @query = Query.new
     @query.name = 'Unsaved query'
-    @query.query = 
+    @query.query =
     if params[:existing_query] != nil
       params[:existing_query]
     else
@@ -100,13 +100,13 @@ class SparqlEndpointsController < ThingsController
       @results_list = @query_result[:results]
     end
     render :partial => 'execute_query_results' if request.xhr?
-  end  
+  end
 
 
   private
   def sparql_endpoint_params
     params.require(:sparql_endpoint).permit(:public, :name, :description, :license,
-      :keyword_list, :tmp_file, 
+      :meta_keyword_list, :tmp_file,
       queries_attributes: [:id, :name, :query, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
@@ -115,11 +115,11 @@ class SparqlEndpointsController < ThingsController
     se.queries.each do |query|
       query.public = se.public
       query.user = se.user
-    end 
+    end
   end
 
   def sparql_endpoint_params_partial
-    params.permit(:sparql_endpoint, :public, :name, :description, :license, :keyword_list) ## Rails 4 strong params usage
+    params.permit(:sparql_endpoint, :public, :name, :description, :license, :meta_keyword_list) ## Rails 4 strong params usage
   end
 
 end

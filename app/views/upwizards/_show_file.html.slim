@@ -1,8 +1,9 @@
 // This partial shows details about a filestore thing using squeezebox to hide parts of the information
 // Input params:
 //   thing              - The thing to render
-//   form               - The form embracing the list
+//   rparams {form}     - The form embracing the list
 
+- form = rparams[:form]
 .sin-gen-squeeze
   .sin-gs-head
     .sin-gs-left
