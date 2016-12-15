@@ -27,6 +27,14 @@ module ThingHelper
     thing_generic_path(thing, '/versions', parameters)
   end
 
+  def thing_version_fork_path(thing)
+    if thing.paper_trail.live?
+      thing_fork_path(@thing)
+    else
+      thing_fork_path(@thing, { version_at: @thing.updated_at+1})
+    end
+  end
+
   def thing_fork_path(thing, parameters = {})
     thing_generic_path(thing, '/fork', parameters)
   end

@@ -1,7 +1,8 @@
-- queriesToShow = search_for_existing_queries
-- if queriesToShow.empty?
-  div.mdl-card__supporting-text
-    h2 No queries found
-- else
-  - list_heading = "(queries linked to the current endpoint are highlighted)";
-  = render partial: "gen_thing_list", locals: {things: queriesToShow, things_name: "queries", show_thing_partial: "run_query", heading: list_heading, rparams: {sparql_thing: @thing}}
+#se-queries-list
+  - queriesToShow = search_for_existing_queries
+  - if queriesToShow.empty?
+    div.mdl-card__supporting-text
+      h2 No queries found
+  - else
+    - list_heading = "(queries linked to the current endpoint are highlighted)";
+    = render partial: "gen_thing_list", locals: {things: queriesToShow, things_name: "queries", show_thing_partial: "run_query", heading: list_heading, rparams: {sparql_thing: @thing}}

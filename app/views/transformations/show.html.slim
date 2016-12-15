@@ -17,7 +17,7 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     - if can? :edit, @thing
       == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     - if user_signed_in?
-      == link_to 'Copy', thing_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+      == link_to 'Copy', thing_version_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     //- if user_signed_in?
     //  -if current_user.has_star(@thing)
