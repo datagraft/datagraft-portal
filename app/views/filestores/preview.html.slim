@@ -1,5 +1,6 @@
 - title "Preview file"
 - setOption :mdlCard
+- lines_to_preview = 10
 
 div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
   div.mdl-card__title.mdl-color-text--grey-50
@@ -9,18 +10,24 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     = render 'elem_last_modified'
 
   div.mdl-card__supporting-text
-    h4 Tabular data preview
+    h4 Tabular data preview of the #{lines_to_preview} first lines in file
     - if @preview_tab_obj == nil
       = @preview_text
     - else
       .container-scroll
-        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
+        table#filestore-preview-table.mdl-data-table.cell-border overflow="auto" style="width:100%"
           - to = @preview_tab_obj
           - rows = to.last_row
-          - rows = 10 if rows > 10
-          - 1.upto(rows) do |i|
-            tr
-              - 1.upto(to.last_column) do |j|
-                th = to.cell(i,j)
+          - rows = lines_to_preview if rows > lines_to_preview
+          - if (rows > 0)
+              thead
+                tr
+                  - 1.upto(to.last_column) do |j|
+                    th.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(1,j)
+          tbody
+            - 2.upto(rows) do |i|
+              tr
+                - 1.upto(to.last_column) do |j|
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(i,j)
 
   div.mdl-card__actions
