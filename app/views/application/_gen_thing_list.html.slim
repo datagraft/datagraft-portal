@@ -1,7 +1,7 @@
 // This partial lists a collection of things with sorting and filtering.
 // Input params:
 //   things             - A collection of things to be shown
-//   thing_name         - Name of the thing type to be used in the heading
+//   things_name        - Name of the things type to be used in the heading
 //   heading            - Text to be shown in the heading
 //   rparams (optional) - Render params hash object to be forwarded as local to show_thing_partial
 //   show_thing_partial - Partial used to show the the thing instance
@@ -16,7 +16,7 @@
   ul.sin-gl-heading-fbox
     li.sin-gl-search
       i.material-icons search
-      input.search placeholder="Search in #{thing_name}s"
+      input.search placeholder="Search in #{things_name}"
     li
       button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
     li
@@ -26,7 +26,7 @@
     li
       label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_public"
         input#gen_checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateGlPublicStyle(this, 'block')"
-        span.mdl-checkbox__label Include public #{thing_name}s
+        span.mdl-checkbox__label Include public #{things_name}
 
   - if defined? heading
     .sin-gl-label

@@ -51,8 +51,8 @@ $accent-color: #FF609A;
   width: 90%;
 }
 
-.sin-card-with-tabs-title { 
-  background-image: 
+.sin-card-with-tabs-title {
+  background-image:
     linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
     image-url("background_blue_explore_page.jpg");
   background-position: right;
@@ -117,7 +117,7 @@ $accent-color: #FF609A;
     }
 
     &.sin-stared i.material-icons {
-      color: $accent-color; 
+      color: $accent-color;
     }
   }
 
@@ -149,7 +149,7 @@ $accent-color: #FF609A;
 
 .sin-img-license > img {
   align-self: center;
-  max-width: 100%; 
+  max-width: 100%;
   max-height: 100%;
   margin: auto;
   display: block;
@@ -161,7 +161,7 @@ $accent-color: #FF609A;
   -webkit-flex-flow: row wrap;
   justify-content: flex-start;
   flex-wrap: wrap
-} 
+}
 
 .keyword-frame {
   border: 1px solid rgba(3,3,3,0.2);
@@ -187,7 +187,7 @@ $accent-color: #FF609A;
 }
 
 .sin-tab-title {
-  text-align: center; 
+  text-align: center;
   margin-top: 0;
 }
 
@@ -237,7 +237,7 @@ $accent-color: #FF609A;
   max-height: 500px;
 }
 
-.sin-tabs { 
+.sin-tabs {
   & > .mdl-tabs {
     //    display: flex;
     //    width: 100%;
@@ -318,7 +318,7 @@ $accent-color: #FF609A;
 /* CSS for list.js */
 /*
 HTML  CSS  JS  Result
-Edit on 
+Edit on
 h2 {
 font-family:sans-serif;
 }
@@ -476,7 +476,7 @@ ul.pagination-query-results-table li:hover:not(.active) a {
 
 .sin-query-textarea  {
   & textarea {
-    min-height: 300px;  
+    min-height: 300px;
   }
 
   & .mdl-card__actions {
@@ -484,7 +484,7 @@ ul.pagination-query-results-table li:hover:not(.active) a {
   }
 }
 i.sin-flex-center{
-  display: flex; 
+  display: flex;
   justify-content: center;
 }
 
@@ -492,6 +492,7 @@ i.sin-flex-center{
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: medium;
 }
 
 .sin-query-list-meta {

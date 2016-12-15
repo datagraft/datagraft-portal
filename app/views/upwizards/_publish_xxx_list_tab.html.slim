@@ -5,7 +5,8 @@ div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
   - else
     = form_for @upwizard, url: wizard_path(:file_select_transform), :html => { method: :put } do |f|
       div.mdl-card__supporting-text.sin-padding
-        = render partial: "gen_thing_list", locals: {things: @thing_entries, thing_name: "file", show_thing_partial: "show_file", rparams: {form: f}}
+        - list_heading = "(Select one file to transform)"
+        = render partial: "gen_thing_list", locals: {things: @thing_entries, things_name: "files", show_thing_partial: "show_file", heading: list_heading, rparams: {form: f}}
 
       div.mdl-card__actions
         = link_to 'Back', dashboard_path, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"

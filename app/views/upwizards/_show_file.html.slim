@@ -6,24 +6,25 @@
 - form = rparams[:form]
 .sin-gen-squeeze
   .sin-gs-head
-    .sin-gs-left
+    .sin-query-list-icon
       .sin-gl-stop-propagate
         = form.radio_button :radio_thing_id, thing.id, :required => ''
-      = image_tag(thing_icon_name(thing), height: "30")
-    strong
-      font size="5"
+      = image_tag(thing_icon_name(thing), height: "48")
+    .sin-query-list-meta
+      .sin-query-list-meta-name
         = thing.name
-      .sin-gs-right
-        i.material-icons = thing.public ? 'lock_open' : 'lock'
-    strong
-      | Last modification&nbsp;
-      = time_ago_in_words thing.updated_at
-      | &nbsp;ago
-      | &nbsp;-&nbsp;
-      = thing.updated_at
-      | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      | By:&nbsp;
-      = thing.user.username
+      .sin-query-list-meta-date
+        | Last modification&nbsp;
+        = time_ago_in_words thing.updated_at
+        | &nbsp;ago
+        | &nbsp;-&nbsp;
+        = thing.updated_at
+        | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        | By:&nbsp;
+        = thing.user.username
+    .mdl-layout-spacer
+    .sin-gs-right
+      i.material-icons = thing.public ? 'lock_open' : 'lock'
   .sin-gs-cnt
     - unless thing.description.blank?
       strong Description:
