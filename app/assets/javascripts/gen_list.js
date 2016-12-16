@@ -21,13 +21,6 @@ document.addEventListener('turbolinks:load', function() {
     event.stopPropagation();
   });
 
-
-});
-
-
-
-$(document).ready(function(){
-
   // This procedure will hide all occurences of class row-public
   // this is used for hiding all public elements in lists when loading a page.
   var className = '.sin-gl-row-public';
@@ -38,9 +31,27 @@ $(document).ready(function(){
   for (i = 0; i < x.length; i++) {
     x[i].style.display = new_val;
   }
-  console.log("hiding .sin-gl-row-public occurences " + i);
+  console.log("hiding .sin-gl-row-public occurences tb " + i);
 
 });
+
+
+
+//$(document).ready(function(){
+//
+//  // This procedure will hide all occurences of class row-public
+//  // this is used for hiding all public elements in lists when loading a page.
+//  var className = '.sin-gl-row-public';
+//  var new_val = 'none';
+//  var x = document.querySelectorAll(className);
+//  var i;
+//  //debugger;
+//  for (i = 0; i < x.length; i++) {
+//    x[i].style.display = new_val;
+//  }
+//  console.log("hiding .sin-gl-row-public occurences " + i);
+//
+//});
 
 var updateGlPublicStyle = function(obj, blockStyle){
   var className = '.sin-gl-row-public';

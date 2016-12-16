@@ -12,28 +12,34 @@
 //     rparams (optional) - Render params hash object with parameters to show_thing_partial
 //     count              - Count the collection iteration from 1..n
 
-#gen-list
-  ul.sin-gl-heading-fbox
-    li.sin-gl-search
-      i.material-icons search
-      input.search placeholder="Search in #{things_name}"
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-date"  Sort by date
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-user"  Sort by user
-    li
-      label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_public"
-        input#gen_checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateGlPublicStyle(this, 'block')"
-        span.mdl-checkbox__label Include public #{things_name}
+- if things == nil
+  .sin-gl-label
+    = "The list of #{things_name} is nil"
+- elsif things.empty?
+  .sin-gl-label
+    = "The list of #{things_name} is empty"
+- else
+  #gen-list
+    ul.sin-gl-heading-fbox
+      li.sin-gl-search
+        i.material-icons search
+        input.search placeholder="Search in #{things_name}"
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-date"  Sort by date
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-user"  Sort by user
+      li
+        label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_public"
+          input#gen_checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateGlPublicStyle(this, 'block')"
+          span.mdl-checkbox__label Include public #{things_name}
 
-  - if defined? heading
-    .sin-gl-label
-      = heading
-  .sin-gl-textfield__scroll
-    ul.sin-gl-list
-      - unless things.empty?
+    - if defined? heading
+      .sin-gl-label
+        = heading
+    .sin-gl-textfield__scroll
+      ul.sin-gl-list
         - count = 0
         - things.each do |thing|
           - count = count + 1
