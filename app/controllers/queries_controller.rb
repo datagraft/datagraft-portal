@@ -1,5 +1,20 @@
 class QueriesController < ThingsController
 
+  def new
+    search_for_existing_sparql_endpoints
+    super
+  end
+
+  def edit
+    search_for_existing_sparql_endpoints
+    super
+  end
+
+  def create
+    search_for_existing_sparql_endpoints
+    super
+  end
+
   def execute_query
     if !params[:id].blank? && !params[:username].blank?
       set_thing
@@ -29,7 +44,7 @@ class QueriesController < ThingsController
           results: []
         }
       end
-      
+
       if @query_result.blank?
         @results_list = []
       else
@@ -39,7 +54,7 @@ class QueriesController < ThingsController
       render :partial => 'execute_query_results' if request.xhr?
     end
   end
-  
+
   private
     def destroyNotice
       "The query was successfully destroyed"
@@ -47,11 +62,14 @@ class QueriesController < ThingsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description, 
+        from_params = params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description,
           queriable_data_store_ids: [],
           sparql_endpoint_ids: [])
-    end    
-  
+
+        # If no checkboxes are ticked no array is present. Add an empty array to fix this
+        return {'sparql_endpoint_ids' => []}.merge(from_params)
+    end
+
   # It may be scary, but you should sometimes trust parameters from the internet!
     def query_params_partial
         params.permit(:query, :public, :name, :metadata, :configuration, :language, :description,
@@ -68,13 +86,25 @@ class QueriesController < ThingsController
         end
       end
       # throw query.queriable_data_stores
-      
+
       query.sparql_endpoints.to_a.each do |se|
         if se.user != query.user && !se.public
           query.sparql_endpoints.delete(se)
         end
       end
-      # throw query.sparql_endpoints  
+      # throw query.sparql_endpoints
+
     end
-  
+
+  # Make a list of existing sparql_endpoints. Used by view
+  def search_for_existing_sparql_endpoints
+    user = current_user
+    tmp_user = user.sparql_endpoints.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%").sort_by(&:updated_at).reverse
+    tmp_pub = Thing.public_list.includes(:user).where(:type => ['SparqlEndpoint']).where.not("name LIKE ?", "%previewed_dataset_%")
+    @sparql_endpoint_entries =  tmp_user + tmp_pub
+    puts "******************* search_for_existing_sparql_endpoints"
+    puts "@sparql_endpoint_entries: <#{@sparql_endpoint_entries.size}>"
+  end
+
+
 end

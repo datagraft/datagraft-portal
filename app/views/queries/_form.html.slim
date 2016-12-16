@@ -22,15 +22,26 @@
       .sin-help-icon-with-tooltip__select
         #tooltip-type.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-type" Choose the type of query. The result of the query will be determined by its type.
+    //.sin-input-with-help-icon
+    //  = f.association :sparql_endpoints, collection: current_user.sparql_endpoints.order(stars_count: :desc, created_at: :desc), wrapper: :select
+    //  .sin-help-icon-with-tooltip__select
+    //    #tooltip-endpoints.icon.material-icons help
+    //    .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
+
     .sin-input-with-help-icon
-      = f.association :sparql_endpoints, collection: current_user.sparql_endpoints.order(stars_count: :desc, created_at: :desc), wrapper: :select
+      .mdl-cell.mdl-cell--12-col
+        .sin-info-label
+          = 'SPARQL endpoints'
+        .sin-info-frame
+          = render partial: "gen_thing_list", locals: {things: @sparql_endpoint_entries, things_name: "endpoints", show_thing_partial: "select_sparql_endpoint",  rparams: {form: f, query: @thing}}
       .sin-help-icon-with-tooltip__select
         #tooltip-endpoints.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
+
     = f.input :query, label: "SPARQL query", as: :text, input_html: { rows: 10 }
   hr.sin-invisible-form-separator
   div.mdl-card__actions
-    = link_to 'Back', queries_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     .mdl-layout-spacer
     - unless @thing.new_record?
       = link_to 'Delete query', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to delete query?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"

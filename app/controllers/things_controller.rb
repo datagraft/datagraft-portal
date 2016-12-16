@@ -10,7 +10,7 @@ class ThingsController < ApplicationController
     :show_metadata, :edit_metadata, :delete_metadata,
     :show_configuration, :edit_configuration, :delete_configuration, :update_partial
     ]
-  
+
   # GET /:username/:resource
   def index
     # If the user lists her own resources
@@ -88,6 +88,7 @@ class ThingsController < ApplicationController
         format.html { redirect_to thing_path(@thing), notice: create_notice }
         format.json { render :show, status: :created, location: thing_path(@thing) }
       else
+        ##format.html { edirect_to action: :new }
         format.html { render :new }
         format.json { render json: @thing.errors, status: :unprocessable_entity }
       end
@@ -117,11 +118,11 @@ class ThingsController < ApplicationController
       end
     end
   end
-  
+
 # PATCH /:username/:resource/:id
   def update_partial
     authorize! :update, @thing
-    
+
     method_prefix = virtual_resource_name(true)
     instance_variable_set("@"+method_prefix, @thing)
 
