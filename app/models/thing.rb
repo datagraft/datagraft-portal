@@ -117,7 +117,7 @@ class Thing < ApplicationRecord
           increment_forks_metric(original)
           copy.resync_keyword_list
           if original.type == 'Filestore'
-            copy.file = original.file
+            copy.file = original.file unless original.file == nil
           end
         end
       end

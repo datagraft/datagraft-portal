@@ -7,9 +7,10 @@
       .sin-info-text.center
         = @thing.name
         | &nbsp;
-        | is licensed under
-        | &nbsp;
-        = @thing.license
+        | is licensed under:
+      .sin-info-text.center
+        - lic = get_license_info @thing.license
+        = link_to lic[:tip], lic[:path], :target => "_blank"
     - else
       .sin-info-text.center
         = 'No license specified'

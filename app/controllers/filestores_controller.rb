@@ -147,7 +147,8 @@ class FilestoresController < ThingsController
       file_path = file.download.path
       case format
       when 'csv' then
-        case @thing.separator
+        sep_start = @thing.separator.split('(')[0]
+        case sep_start
         when "COMMA" then
           sep = ","
         when "SEMI" then

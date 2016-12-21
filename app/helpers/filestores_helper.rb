@@ -5,7 +5,7 @@ module FilestoresHelper
   def filestore_preview_path(filestore_input)
     "#{filestore_path(filestore_input)}/preview"
   end
-  
+
   def filestore_path(filestore_input)
     "/#{filestore_input.user.username}/filestores/#{filestore_input.slug}"
   end
@@ -16,7 +16,7 @@ module FilestoresHelper
     return "/#{current_user.username}/filestores"
   end
 
-  SEPARATOR_LIST = %w(COMMA SEMI TAB)
+  SEPARATOR_LIST = %w(COMMA(,) SEMI(;) TAB(tab))
   def get_separator_list
     return SEPARATOR_LIST
   end

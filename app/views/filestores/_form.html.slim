@@ -5,12 +5,12 @@
     h4.mdl-cell--12-col Properties
     - unless @thing.file == nil
     .sin-input-with-help-icon
-      = f.input :name, wrapper: :default
+      = f.input :name, placeholder: "Enter a file page name", wrapper: :default
       .sin-help-icon-with-tooltip
         #tooltip-name.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the file which will appear on the asset browsing table. File name by default.
     .sin-input-with-help-icon
-      = f.input :description, as: :text, input_html: { rows: 5 }
+      = f.input :description, placeholder: "Enter a description for the file page", as: :text, input_html: { rows: 5 }
       .sin-help-icon-with-tooltip
         #tooltip-description.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the file, which will appear on the file details page.

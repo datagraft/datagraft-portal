@@ -3,6 +3,8 @@ class Filestore < Thing
   # friendly_id :name, use: => [:slugged, :simple_i18n]
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
+  include FilestoresHelper
+  
   attachment :file
 
   def should_generate_new_friendly_id?
@@ -60,11 +62,11 @@ class Filestore < Thing
 
   def separator
     if metadata.blank?
-      ret = "COMMA"
+      ret = get_separator_list[0]
     else
       ret = metadata['csv_separator']
       if ret.blank?
-        ret = "COMMA"
+        ret = get_separator_list[0]
       end
     end
     ret # Assure that ret is returned
