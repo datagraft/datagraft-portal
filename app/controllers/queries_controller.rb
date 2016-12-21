@@ -67,7 +67,10 @@ class QueriesController < ThingsController
           sparql_endpoint_ids: [])
 
         # If no checkboxes are ticked no array is present. Add an empty array to fix this
-        return {'sparql_endpoint_ids' => []}.merge(from_params)
+        unless from_params.has_key?('sparql_endpoint_ids')
+          from_params = from_params.merge({'sparql_endpoint_ids' => []})
+        end
+        return from_params
     end
 
   # It may be scary, but you should sometimes trust parameters from the internet!
