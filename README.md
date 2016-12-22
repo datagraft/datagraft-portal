@@ -1,6 +1,6 @@
-## DataGraft portal
+## DataGraft Portal
 
-Ruby On Rails implementation of the DataGraft portal.
+This repository contains the implementation for the graphical user interface (views) and corresponding user services (user interface controllers and models) that defines the portal component of the DataGraft Platform.
 
 ## How to build
 
@@ -37,3 +37,50 @@ docker exec datagraft-rails rake db:migrate
 # (Optional) Pre-compile the assets for better performances
 docker exec datagraft-rails rake assets:precompile
 ```
+
+## Running tests
+
+### The test environment and DB
+
+Test folder: /test/
+Environment: RAILS_ENV=test
+Test database (datagraft-test)
+Erased and re-generated from your development database
+
+Tests are generated any time the Rails generator is used
+
+### Test structure
+
+Test helper (test_helper.rb)
+Default configuration for all tests
+Should contain and/or inherit modules for all tests
+Base class – ActiveSupport::TestCase (test_helper.rb)
+Naming test methods 
+Use readable names - test framework takes care of it!
+	test "my method name however I want it"
+
+```sh
+require 'test_helper'
+
+class SparqlEndpointTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+end
+
+```
+
+## Questions or issues?
+
+For posting information about bugs, questions and discussions please use the [Github Issues](https://github.com/datagraft/datagraft-portal/issues) feature.
+
+## Core Team
+
+- [Nikolay Nikolov](https://github.com/nvnikolov)
+- [Antoine Pultier](https://github.com/yellowiscool)
+- [Brian Elvesæter](https://github.com/elvesater)
+- [Steffen Dalgard](https://github.com/sdalgard)
+- [Ana Tarita](https://github.com/taritaAna)
+
+## License
+Available under the [Eclipse Public License](/LICENSE) (v1.0).
