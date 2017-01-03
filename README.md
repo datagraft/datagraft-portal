@@ -1,6 +1,8 @@
-## DataGraft Portal
+# DataGraft Portal
 
 This repository contains the implementation for the graphical user interface (views) and corresponding user services (user interface controllers and models) that defines the portal component of the DataGraft Platform.
+
+The portal serves several functions. Firstly, it provides the web-based front-end that is used by the data publishers. Internally, it implements the data model and provides object-relational mapping between it and the database back-end. It also enables the communication with the database and manages the storage of uploaded files (Docker volume, or Amazon RDS in production). Finally, this component implements the connection to the data hosting and access services.
 
 ## How to build
 
@@ -83,4 +85,5 @@ For posting information about bugs, questions and discussions please use the [Gi
 - [Ana Tarita](https://github.com/taritaAna)
 
 ## License
+
 Available under the [Eclipse Public License](/LICENSE) (v1.0).
