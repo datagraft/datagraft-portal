@@ -78,7 +78,7 @@ For posting information about bugs, questions and discussions please use the [Gi
 
 ## Core Team
 
-- [Nikolay Nikolov](https://github.com/nvnikolov)
+- [Nikolay Nikolov](https://github.com/nvnikolov) (main contact person)
 - [Antoine Pultier](https://github.com/yellowiscool)
 - [Brian Elvesæter](https://github.com/elvesater)
 - [Steffen Dalgard](https://github.com/sdalgard)
