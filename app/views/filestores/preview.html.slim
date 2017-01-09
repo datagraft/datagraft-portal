@@ -1,6 +1,5 @@
 - title "Preview file"
 - setOption :mdlCard
-- lines_to_preview = 10
 
 div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
   div.mdl-card__title.mdl-color-text--grey-50
@@ -10,24 +9,34 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     = render 'elem_last_modified'
 
   div.mdl-card__supporting-text
-    h4 Tabular data preview of the #{lines_to_preview} first lines in file
     - if @preview_tab_obj == nil
-      = @preview_text
+      h4 #{@preview_text}
     - else
-      .container-scroll
-        table#filestore-preview-table.mdl-data-table.cell-border overflow="auto" style="width:100%"
-          - to = @preview_tab_obj
-          - rows = to.last_row
-          - rows = lines_to_preview if rows > lines_to_preview
-          - if (rows > 0)
-              thead
+      - lines_to_preview = @preview_tab_obj.last_row
+      - if lines_to_preview > 101
+        - lines_to_preview = 101
+        - heading_text = "Tabular data preview - truncated to #{lines_to_preview-1} first rows in file"
+      - else
+        - heading_text = "Tabular data preview - all rows in file"
+      h4
+        | #{heading_text}
+        .mdl-textfield.mdl-js-textfield.sin-query-results-search
+          i.material-icons search
+          .mdl-textfield.mdl-js-textfield
+            input#preview-search.mdl-textfield__input type="text" /
+            label.mdl-textfield__label for="preview-search"  Search
+        .container-scroll
+          table#filestore-preview-table.mdl-data-table.cell-border style="width:100%"
+            - to = @preview_tab_obj
+            - if (lines_to_preview > 0)
+                thead
+                  tr
+                    - 1.upto(to.last_column) do |j|
+                      th.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(1,j)
+            tbody
+              - 2.upto(lines_to_preview) do |i|
                 tr
                   - 1.upto(to.last_column) do |j|
-                    th.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(1,j)
-          tbody
-            - 2.upto(rows) do |i|
-              tr
-                - 1.upto(to.last_column) do |j|
-                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(i,j)
+                    td.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(i,j)
 
   div.mdl-card__actions
