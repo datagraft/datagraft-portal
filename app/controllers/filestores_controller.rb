@@ -17,6 +17,9 @@ class FilestoresController < ThingsController
 
   # View the first rows of the attached file
   # GET ':username/filestores/:id/preview'
+
+  # View the first rows of the attached file as part of an AJAX request
+  # POST ':username/filestores/:id/preview'
   def preview
     puts "************ filestore preview"
     set_thing
@@ -27,6 +30,11 @@ class FilestoresController < ThingsController
       open_spreadsheet(@thing.upload_format, @thing.file)
     else
       @preview_text = "This file is NOT available"
+    end
+    if request.xhr?
+      render :partial => 'ajax_preview'
+    else
+      render 'preview'
     end
   end
 

@@ -23,4 +23,13 @@
             #tooltip-preview
               = link_to filestore_preview_path(@thing), :target => "_blank", class: "mdl-button mdl-js-button mdl-js-ripple-effect"
                 i.material-icons pageview
-            .mdl-tooltip.mdl-tooltip--bottom for="tooltip-preview" Click to open preview of the file in a separate vindow
+            .mdl-tooltip.mdl-tooltip--bottom for="tooltip-preview" Click to open preview of the file in a separate window
+
+  .mdl-cell--12-col
+    .sin-info-label File preview
+    .sin-info-frame
+      #preview-panel-result
+        #tooltip-ajax-preview
+          span.sin-ajax-preview-button
+            = button_to 'Fetch preview', { action: "preview"}, { remote: true, class: 'mdl-button mdl-js-button mdl-button--raised'}
+        .mdl-tooltip.mdl-tooltip--bottom for="tooltip-ajax-preview" Click to open preview of the file
