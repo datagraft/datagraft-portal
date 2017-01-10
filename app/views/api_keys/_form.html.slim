@@ -1,0 +1,21 @@
+div.mdl-card.mdl-shadow--2dp
+  = form_for(@api_key) do |f|
+    .mdl-card__supporting-text
+      - if @api_key.errors.any?
+        #error_explanation
+          h2
+            = pluralize(@api_key.errors.count, "error")
+            | prohibited this api_key from being saved:
+          ul
+            - @api_key.errors.full_messages.each do |message|
+              li= message
+      .mdl-grid
+        .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+          = f.label :name, class: "mdl-textfield__label"
+          = f.text_field :name, class: "mdl-textfield__input"
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for="checkbox-enabled"
+          = f.check_box :enabled, id: "checkbox-enabled", class: "mdl-switch__input"
+          span.mdl-switch__label Enabled
+    .mdl-card__actions
+      div style="margin:auto"
+        = f.submit class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
