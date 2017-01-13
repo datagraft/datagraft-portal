@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
 
 
+  get 'landingpage/index'
+
   resources :features, only: [ :index ] do
     resources :strategies, only: [ :update, :destroy ]
   end

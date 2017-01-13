@@ -1,0 +1,50 @@
+- title "Landing page"
+- setOption :noShadow
+
+div.first-screen.mdl-grid
+  div.max-width-container.mdl-grid
+    div.mdl-cell.mdl-cell--6-col.mdl-cell--middle.mdl-cell--12-col-tablet.mdl-cell--12-col-phone
+      h2 One-stop-shop for hosted data management
+      p Powerful data transformation and reliable data access capabilities
+      p …for data workers to manage their data in a simple, effective, and efficient way
+
+    .mdl-cell.mdl-cell--1-col.mdl-cell--hide-tablet.mdl-cell--hide-phone
+
+    #screenshots-container.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.mdl-cell--middle.mdl-cell--hide-phone
+      .screenshot
+        img src=image_url("screenshots/query.png")
+      .screenshot
+        img src=image_url("screenshots/explore.png")
+      .screenshot
+        img src=image_url("screenshots/upload.png")
+      .screenshot
+        img src=image_url("screenshots/graph.png")
+      .screenshot
+        img src=image_url("screenshots/derive.png")
+      .screenshot
+        img src=image_url("screenshots/grafterizer.png")
+
+div.mdl-grid
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell.sin-landingpage-card
+    div.mdl-card__title.mdl-card--expand
+      h2.mdl-card__title-text Intro/signin
+    div.mdl-card__supporting-text
+      p Supporting text
+
+div.mdl-grid.mdl-cell--12-col.mdl-cell--middle
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+    div.mdl-card__supporting-text
+      = render 'info_1'
+      = render 'info_2'
+
+div.mdl-grid.mdl-cell--12-col.mdl-cell--middle
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+    div.mdl-card__title Who uses DataGraft?
+    div.mdl-card__supporting-text
+      = render 'usage'
+
+div.mdl-grid.mdl-cell--12-col.mdl-cell--middle
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+    div.mdl-card__title How DataGraft Works?
+    div.mdl-card__supporting-text
+      = render 'video'

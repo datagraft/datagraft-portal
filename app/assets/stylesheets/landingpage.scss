@@ -1,0 +1,115 @@
+// Place all the styles related to the Landingpage controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.mdl-card.sin-landingpage-card {
+  background: image-url("symphony.png");
+  &.sin-bg-alt-1 {
+    background: image-url("small_steps.png");
+  }
+  &.sin-bg-alt-2 {
+    background: image-url("squairy_light.png");
+  }
+  .mdl-card__actions {
+    background: rgba(255,255,255,0.6);
+  }
+
+}
+
+$dapaas-color: #5264AE;
+$white-not-so-white: hsl(226, 39%, 94%);
+
+.first-screen {
+    background:$dapaas-color;
+    background: $dapaas-color linear-gradient(0deg,
+        saturate(lighten($dapaas-color, 10%),12%),
+        $dapaas-color 95.09%) repeat scroll 0% 0%;
+    min-height:30em;
+    min-height:87vh;
+    color:$white-not-so-white;
+
+    p {
+        font-size:19px;
+    }
+
+    h2 {
+        font-size:57px;
+        margin-bottom:32px;
+        line-height: 57px;
+    }
+
+    #screenshots-container {
+        position:relative;
+        height:353px;
+        //left:50px;
+        cursor:pointer;
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        user-select: none;
+    }
+    .screenshot {
+        position:absolute;
+
+        transition: all 0.5s ease-in-out 0s;
+        height:300px;
+        width:100%;
+        left: 50%;
+
+        img {
+            border-radius:3px;
+            background: $white-not-so-white;
+            box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.048);
+            max-width:90%;
+            max-height:100%;
+            transition: all 0.5s ease 0s;
+            transform: scale(1,1) perspective(275px) rotateY(-3deg);
+        }
+
+        &:first-child {
+            left:50%;
+            img {
+                transform: scale(0.66,0.66) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(2) {
+            left:41%;
+            img {
+                transform: scale(0.728,0.728) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(3) {
+            left:32%;
+            img {
+                transform: scale(0.796,0.796) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(4) {
+            left:23%;
+            img {
+                transform: scale(0.864,0.864) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(5) {
+            left:14%;
+            img {
+                transform: scale(0.932,0.932) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:last-child {
+            left:-10px;
+
+            img {
+                transform: scale(1,1) perspective(250px) rotateY(-4deg);
+            }
+        }
+    }
+    .max-width-container {
+        max-width: 1200px;
+    }
+}
+
+@media screen and (min-width: 960px) {
+    .first-screen #screenshots-container {
+        transform: scale(1.2,1.2) translateX(10px);
+    }
+}
