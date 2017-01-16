@@ -3,6 +3,16 @@ class PublicPortalController < ApplicationController
   skip_authorize_resource only: [:user, :explore, :terms, :privacy, :faq]
   skip_authorization_check
 
+  # GET /feedback
+  def feedback
+    render template: 'public_portal/feedback'
+  end
+
+  # GET /documentation
+  def documentation
+    render template: 'public_portal/documentation'
+  end
+
   # GET /terms-of-use
   def terms
     render template: 'public_portal/terms_of_use'
@@ -13,11 +23,16 @@ class PublicPortalController < ApplicationController
     render template: 'public_portal/privacy_policy'
   end
 
+  # GET /cookie-policy
+  def cookie
+    render template: 'public_portal/cookie_policy'
+  end
+  
   # GET /faq
   def faq
     render template: 'public_portal/faq'
   end
-
+  
   # GET /:username
   # GET /:username.json
   def user

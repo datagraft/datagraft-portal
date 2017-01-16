@@ -92,10 +92,13 @@ html
           footer.mdl-mini-footer.sin-mini-footer
             .mdl-mini-footer__left-section
               ul.mdl-mini-footer__link-list
-                li News
-                li Documentation
-                li API
-                li Feedback
+                //li News
+                li 
+                  =link_to "Documentation", "https://github.com/datagraft/datagraft-reference/blob/master/documentation.md"
+                li 
+                  =link_to "API", "https://prodatamarket.github.io/datagraft-api-documentation/#!/default"
+                li 
+                  =link_to "Feedback", feedback_path
             .sin-mini-footer__small-print
               ' DataGraft is a service operated by the #{link_to 'proDataMarket', 'http://prodatamarket.eu'} project, co-funded by the EC under HORIZON 2020, The EU Framework Programme for Research and Innovation (2015-2017)
             .mdl-mini-footer__right-section
@@ -104,6 +107,7 @@ html
                   =link_to "Terms Of Use", terms_of_use_path
                 li 
                   =link_to "Privacy Policy", privacy_policy_path
-                li Cookie Policy
+                li
+                  =link_to "Cookie Policy", cookie_policy_path
                 li 
                   =link_to "FAQ", faq_path
