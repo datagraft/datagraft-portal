@@ -25,4 +25,4 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     //  -else
     //    == link_to "Star (#{@thing.stars_count})", thing_star_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
     .mdl-layout-spacer
-    == link_to 'Back to Home Page', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to 'Back to Dashboard', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
