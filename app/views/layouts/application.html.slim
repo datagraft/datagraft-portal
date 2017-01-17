@@ -85,6 +85,9 @@ html
           - elsif hasOption :dashboardLayout
             section.mdl-color--white.sin-dashboard-layout
               = yield
+          - elsif hasOption :landingpageLayout
+            section.sin-section-simple-margin
+              = yield
 
           - else
             section.section--center.mdl-shadow--2dp.mdl-color--white.sin-padding
@@ -103,11 +106,11 @@ html
               ' DataGraft is a service operated by the #{link_to 'proDataMarket', 'http://prodatamarket.eu'} project, co-funded by the EC under HORIZON 2020, The EU Framework Programme for Research and Innovation (2015-2017)
             .mdl-mini-footer__right-section
               ul.mdl-mini-footer__link-list
-                li 
+                li
                   =link_to "Terms Of Use", terms_of_use_path
-                li 
+                li
                   =link_to "Privacy Policy", privacy_policy_path
                 li
                   =link_to "Cookie Policy", cookie_policy_path
-                li 
+                li
                   =link_to "FAQ", faq_path

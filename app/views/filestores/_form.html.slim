@@ -5,25 +5,22 @@
     h4.mdl-cell--12-col Properties
     - unless @thing.file == nil
     .sin-input-with-help-icon
-      = f.input :name, wrapper: :default
+      = f.input :name, placeholder: "Enter a file page name", wrapper: :default
       .sin-help-icon-with-tooltip
         #tooltip-name.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the file which will appear on the asset browsing table. File name by default.
     .sin-input-with-help-icon
-      = f.input :description, as: :text, input_html: { rows: 5 }
+      = f.input :description, placeholder: "Enter a description for the file page", as: :text, input_html: { rows: 5 }
       .sin-help-icon-with-tooltip
         #tooltip-description.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the file, which will appear on the file details page.
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Enter a description for the file page, which will appear on the file details page. You can use Markdown to format the description.
     .sin-input-with-help-icon
       = f.input :public, wrapper: :switch
       .sin-help-icon-with-tooltip__switch
         #tooltip-public.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the file page will be visible to other users of DataGraft.
     .sin-input-with-help-icon
-      = f.input :keyword_list, label: "Keywords", prompt: "Enter keywords separated by commas", as: :text, input_html: { rows: 5 }
-      .sin-help-icon-with-tooltip
-        #tooltip-keywords.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords" Enter keywords separated by commas.
+      = render partial: "elem_edit_keywords", locals: {form: f}
     .sin-input-with-help-icon
       = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
       .sin-help-icon-with-tooltip__select

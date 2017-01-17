@@ -1,0 +1,31 @@
+- title "Landing page"
+- setOption :landingpageLayout
+
+
+div.first-screen.mdl-grid
+  = render 'first_screen'
+
+section.section--center.sin-padding
+
+  #howitworks
+  div.mdl-grid.mdl-cell--12-col.mdl-cell--middle.sin-landingpage-card
+    div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+      div.mdl-card__supporting-text
+        = render 'info_1'
+        = render 'info_2'
+        = render 'info_3'
+
+  //div.mdl-grid.mdl-cell--12-col.mdl-cell--middle.sin-landingpage-card
+  //  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+  //    div.mdl-card__title Who uses DataGraft?
+  //    div.mdl-card__supporting-text
+  //      = render 'usage'
+
+  div.mdl-grid.mdl-cell--12-col.mdl-cell--middle.sin-landingpage-card
+    div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
+      div.mdl-card__title How DataGraft Works?
+      div.mdl-card__supporting-text
+        = render 'video'
+
+div.last-screen.mdl-grid
+  = render 'last_screen'

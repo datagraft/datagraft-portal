@@ -1,14 +1,15 @@
-.sin-info-label File metadata
-.sin-info-frame
-  - unless @thing.file.nil?
-    dt Filename:
-    dd
-      = @thing.original_filename
-    p
-    dt Uploaded on:
-    dd
-      = @thing.created_at
-    p
-    dt Size:
-    dd
-      = number_to_human_size @thing.file.size
+.mdl-cell--6-col
+  .sin-info-label File metadata
+  .sin-info-frame
+    - unless @thing.file.nil?
+      dt Filename:
+      dd
+        = @thing.original_filename
+      p
+      dt Uploaded on:
+      dd
+        = @thing.created_at
+      p
+      dt Size:
+      dd
+        = number_to_human_size @thing.file.size

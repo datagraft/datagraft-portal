@@ -1,23 +1,35 @@
 - unless @thing.file == nil
-  .sin-download-fbox
-      .sin-endpoint-uri
-        .sin-tab-label
-          = "Download link:"
-        #tooltip-url.sin-tab-textfield__box.sin-overflow-elipsis
-          | #{request.protocol}#{request.host_with_port}#{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}
-        #long-tooltip.mdl-tooltip.mdl-tooltip--bottom for="tooltip-url"
-          | #{request.protocol}#{request.host_with_port}#{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}
-        #tooltip-clipboard
-          .mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text="#{request.protocol + request.host_with_port + attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
-            i.material-icons content_paste
-        .mdl-tooltip.mdl-tooltip--bottom for="tooltip-clipboard" Click to copy link to clipboard
+  .mdl-cell--12-col
+    .sin-info-label File download
+    .sin-info-frame
+      .sin-download-fbox
+          .sin-endpoint-uri
+            .sin-tab-label
+              = "Link:"
+            #tooltip-url.sin-tab-textfield__box.sin-overflow-elipsis
+              | #{request.protocol}#{request.host_with_port}#{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}
+            #long-tooltip.mdl-tooltip.mdl-tooltip--bottom for="tooltip-url"
+              | #{request.protocol}#{request.host_with_port}#{attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}
+            #tooltip-clipboard
+              .mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text="#{request.protocol + request.host_with_port + attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format)}"
+                i.material-icons content_paste
+            .mdl-tooltip.mdl-tooltip--bottom for="tooltip-clipboard" Click to copy link to clipboard
 
-        #tooltip-download
-          = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect "
-            i.material-icons file_download
-        .mdl-tooltip.mdl-tooltip--bottom for="tooltip-download" Click to download file asset
+            #tooltip-download
+              = link_to attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), class: "mdl-button mdl-js-button mdl-js-ripple-effect "
+                i.material-icons file_download
+            .mdl-tooltip.mdl-tooltip--bottom for="tooltip-download" Click to download file asset
 
-        #tooltip-preview
-          = link_to filestore_preview_path(@thing), :target => "_blank", class: "mdl-button mdl-js-button mdl-js-ripple-effect"
-            i.material-icons pageview
-        .mdl-tooltip.mdl-tooltip--bottom for="tooltip-preview" Click to open preview of the file in a separate vindow
+            #tooltip-preview
+              = link_to filestore_preview_path(@thing), :target => "_blank", class: "mdl-button mdl-js-button mdl-js-ripple-effect"
+                i.material-icons pageview
+            .mdl-tooltip.mdl-tooltip--bottom for="tooltip-preview" Click to open preview of the file in a separate window
+
+  .mdl-cell--12-col
+    .sin-info-label File preview
+    .sin-info-frame
+      #preview-panel-result
+        #tooltip-ajax-preview
+          span.sin-ajax-preview-button
+            = button_to 'Fetch preview', { action: "preview"}, { remote: true, class: 'mdl-button mdl-js-button mdl-button--raised'}
+        .mdl-tooltip.mdl-tooltip--bottom for="tooltip-ajax-preview" Click to open preview of the file

@@ -17,6 +17,9 @@ class FilestoresController < ThingsController
 
   # View the first rows of the attached file
   # GET ':username/filestores/:id/preview'
+
+  # View the first rows of the attached file as part of an AJAX request
+  # POST ':username/filestores/:id/preview'
   def preview
     puts "************ filestore preview"
     set_thing
@@ -27,6 +30,11 @@ class FilestoresController < ThingsController
       open_spreadsheet(@thing.upload_format, @thing.file)
     else
       @preview_text = "This file is NOT available"
+    end
+    if request.xhr?
+      render :partial => 'ajax_preview'
+    else
+      render 'preview'
     end
   end
 
@@ -133,29 +141,31 @@ class FilestoresController < ThingsController
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def filestore_params
-    params.require(:filestore).permit([:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
+    params.require(:filestore).permit([:public, :name, :description, :meta_keyword_list, :separator, :license, :file])
   end
 
   def filestore_params_partial
-    params.permit(:filestore, [:public, :name, :description, :keywords, :separator, :license, :file, :keyword_list])
+    params.permit(:filestore, [:public, :name, :description, :meta_keyword_list, :separator, :license, :file])
   end
 
   # Open an attached file if it is a spreadsheet
   # Return an object with tabular information usable for preview
   def open_spreadsheet(format, file)
-    file_path = file.download.path
-    case format
-    when 'csv' then
-      case @thing.separator
-      when "COMMA" then
-        sep = ","
-      when "SEMI" then
-        sep = ";"
-      when "TAB" then
-        sep = "\t"
-      else
-        sep = ","
-      end
+    begin
+      file_path = file.download.path
+      case format
+      when 'csv' then
+        sep_start = @thing.separator.split('(')[0]
+        case sep_start
+        when "COMMA" then
+          sep = ","
+        when "SEMI" then
+          sep = ";"
+        when "TAB" then
+          sep = "\t"
+        else
+          sep = ","
+        end
         @preview_text = "Decoded"
         @preview_tab_obj = Roo::CSV.new(file_path, { csv_options: {col_sep: sep}, file_warning: :ignore})
         @preview_tab_obj
@@ -168,6 +178,25 @@ class FilestoresController < ThingsController
       else
         @preview_text = "Unknown file format: #{format}"
       end
-      end
 
+      unless @preview_tab_obj == nil
+        #Test if access of the object throws exception
+        to = @preview_tab_obj
+        rows = to.last_row
+        rows = 10 if rows > 10
+        1.upto(rows) do |i|
+          1.upto(to.last_column) do |j|
+            cell_content = to.cell(i,j)
+          end
+        end
       end
+    rescue Exception => e
+      puts "File decoding failed preview"
+      puts e.message
+      puts e.backtrace.inspect
+      @preview_text = "Decode of filetype <#{format}> failed with message <#{e.message}>. Try to download the file to check content."
+      @preview_tab_obj = nil
+    end
+  end
+
+end

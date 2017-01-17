@@ -1,37 +1,13 @@
 /! Tab layout
 .sin-tab-layout
   .mdl-grid
-    .mdl-cell--12-col
-      .sin-tab-label Description
-      .sin-tab-textfield__scroll
-        - unless @thing.description.blank?
-          = render_markdown(@thing.description)
+    = render 'elem_description'
 
-    .mdl-cell--12-col
-      - kwds = @thing.keywords
-      - unless kwds.blank?
-        .sin-tab-label Keywords
-        .sin-tab-textfield__colorbox
-          ul.keyw-array-container
-            - kwds.each do |kwd|
-              li.keyw-array-item
-                button.mdl-button.mdl-js-button.mdl-button--raised disabled=""
-                  = kwd
+    = render 'elem_keywords'
 
     hr.mdl-cell--12-col
 
-    .mdl-cell--6-col
-      .sin-tab-label License
-      .sin-img-license
-        - unless @thing.license.blank?
-          = render 'license_logo_div'
-      .sin-tab-text.center
-        - unless @thing.license.blank?
-          = @thing.name
-          | &nbsp;
-          | is licensed under
-          | &nbsp;
-          = @thing.license
+    = render 'elem_license'
 
     .mdl-cell--6-col
       .sin-tab-label SPARQL endpoint information

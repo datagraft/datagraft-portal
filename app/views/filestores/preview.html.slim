@@ -6,30 +6,9 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     h3 = yield(:title)
     = render 'thing_header'
   div.sin-date-infos
-    - if @thing.paper_trail.live?
-      em
-        | Last modification #{time_ago_in_words @thing.updated_at} ago
-        | &nbsp;-&nbsp; #{@thing.updated_at}
-    - else
-      strong This is not the latest version.
-      em
-        | &nbsp;#{time_ago_in_words @thing.updated_at} ago
-        | &nbsp;-&nbsp; #{@thing.updated_at}
-      == link_to "See latest version", thing_path(@thing), :class=> "mdl-button mdl-js-button mdl-js-ripple-effect"
+    = render 'elem_last_modified'
 
   div.mdl-card__supporting-text
-    h4 Tabular data preview
-    - if @preview_tab_obj == nil
-      = @preview_text
-    - else
-      .container-scroll
-        table.mdl-data-table.mdl-js-data-table overflow="auto" style="width:100%"
-          - to = @preview_tab_obj
-          - rows = to.last_row
-          - rows = 10 if rows > 10
-          - 1.upto(rows) do |i|
-            tr
-              - 1.upto(to.last_column) do |j|
-                th = to.cell(i,j)
+    = render 'preview_table'
 
   div.mdl-card__actions

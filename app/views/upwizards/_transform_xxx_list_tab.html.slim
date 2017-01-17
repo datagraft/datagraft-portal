@@ -1,61 +1,12 @@
 div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.mdl-cell
-  = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
+  - if @thing_entries.empty?
     div.mdl-card__supporting-text
-      #upwizard-list
-        ul.sort-heading-fbox
-          li.sin-query-results-search
-            i.material-icons search
-            input.search placeholder="Search in transformations"
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-name"  Sort by name
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-user"  Sort by user
-          li
-            button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-list-hidden-time"  Sort by time
-          li
-            label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-              input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-              span.mdl-checkbox__label Include public entries
-        .sin-list-textfield__scroll
-          ul.list
-            - if @thing_entries.empty?
-              li
-                .mld-list__item-primary-content
-                  em Nothing published yet
-            - else
-              - @thing_entries.each do |thing|
-                - add_class = 'row-private'
-                - unless thing.user.username == @upwizard.user.username
-                  - add_class = 'row-public'
-                li class="#{add_class}"
-                  .sin-list-hidden-name
-                    = thing.name
-                  .sin-list-hidden-user
-                    = thing.user.username
-                  .sin-list-hidden-time
-                    = thing.updated_at.to_i
-
-                  ul.row-fbox
-                    li
-                      .sin-list
-                        = image_tag("icon--transformation.svg", height: "30")
-                    li
-                      .sin-list
-                        = f.radio_button :radio_thing_id, thing.id
-                    li
-                      .sin-list-name
-                        = thing.name
-                    li
-                      .sin-list-user
-                        = thing.user.username
-                    li
-                      .sin-list
-                        i.material-icons = thing.public ? 'lock_open' : 'lock'
-                    li
-                      .sin-list-time
-                        = time_ago_in_words thing.updated_at
-                        | ago
-    div.mdl-card__actions.sin-existing-transformation-actions
-      - unless @thing_entries.empty?
+      h2 Nothing published yet
+  - else
+    = form_for @upwizard, url: wizard_path(:transform_select_execute), method: :put do |f|
+      div.mdl-card__supporting-text
+        - list_heading = "(Select one transformation to use)"
+        = render partial: "gen_thing_list", locals: {things: @thing_entries, things_name: "transformations", show_thing_partial: "show_transformation", heading: list_heading, rparams: {form: f}}
+      div.mdl-card__actions.sin-existing-transformation-actions
         = f.submit "Next: Transform and add details", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id: "transform-and-submit"
         = f.submit "Next: Preview result of transformation", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect", id: "preview-transform-grafterizer"

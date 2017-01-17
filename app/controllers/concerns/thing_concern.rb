@@ -3,7 +3,7 @@ module ThingConcern
 
   def virtual_resource_name(underscore = false)
     name = /^(.+)Controller$/.match(self.class.name)[1].singularize
-    underscore ? name.underscore : name 
+    underscore ? name.underscore : name
   end
 
   def virtual_resources_name
@@ -29,7 +29,7 @@ module ThingConcern
 
     if params[:version_at]
       @latest_thing = @thing
-      @thing = @thing.version_at(params[:version_at]) or not_found
+      @thing = @thing.paper_trail.version_at(params[:version_at]) or not_found
     end
 
     instance_variable_set("@"+virtual_resource_name(true), @thing)

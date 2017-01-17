@@ -70,7 +70,8 @@ class Thing < ApplicationRecord
       num_assets.set({asset_type: self.type, owner: self.user.username, access_permission: old_value ? 'public' : 'private'}, curr_num_assets_metric_old_val - 1)
 
       if !new_value.in? [true, false] then
-        if new_value new_value.in? ["1", "0"] then
+        ##if new_value new_value.in? ["1", "0"] then
+        if new_value.in? ["1", "0"] then
           new_value = !new_value.to_i.zero?
         else
           # new value neither string nor boolean - should not happen
@@ -94,7 +95,7 @@ class Thing < ApplicationRecord
         # returns a default registry
         Thing.where(
           :public => true,
-          :type => ['DataPage', 'SparqlEndpoint,' 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+          :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
           )
         .order(stars_count: :desc, created_at: :desc).includes(:user)
 
@@ -114,6 +115,10 @@ class Thing < ApplicationRecord
           copy.public = false
           original.add_child copy
           increment_forks_metric(original)
+          copy.resync_keyword_list
+          if original.type == 'Filestore'
+            copy.file = original.file unless original.file == nil
+          end
         end
       end
 
@@ -124,9 +129,9 @@ class Thing < ApplicationRecord
 
           curr_num_forks = 0 if !curr_num_forks
           num_forks.set({asset_type: self.type}, curr_num_forks + 1)
-        rescue Exception => e  
+        rescue Exception => e
           puts 'Error decrementing num_forks metric'
-          puts e.message  
+          puts e.message
           puts e.backtrace.inspect
         end
       end
@@ -154,6 +159,39 @@ class Thing < ApplicationRecord
       def description=(val)
         touch_metadata!
         metadata["description"] = val
+      end
+
+      # meta_keyword_list is a string with comma separated keywords.
+      # This string is stored in the metadata and trigges update of gem paper_trail version
+      # The same string is also pushed to gem acts_as_taggable_on managing keywords
+      # The result is the same information at both places.
+      # When reading from meta_keyword_list the information is taken from the metadata
+      # The result is that rollback to older version can fetch correct keywords.
+      def meta_keyword_list
+        unless metadata.blank?
+          ret = metadata['keyword_list']
+        end
+        if ret == nil
+          ret = ''
+        end
+        puts "Has keyword_list <"+self.keyword_list.to_s+">"
+        puts "Read meta_keyword_list <"+ret+">"
+        return ret
+      end
+
+      def meta_keyword_list=(keyw_list)
+        touch_metadata!
+        #puts "Write1 meta_keyword_list <"+keyw_list+">"
+        self.keyword_list = keyw_list
+        keyw_list_2 = self.keyword_list.to_s
+        #puts "Write2 meta_keyword_list <"+keyw_list_2+">"
+        metadata['keyword_list'] = keyw_list_2
+      end
+
+      #Get the keywords from metadata and write to acts_as_taggable_on
+      #This is needed when doing fork
+      def resync_keyword_list
+        self.meta_keyword_list= self.meta_keyword_list
       end
 
       def has_children?

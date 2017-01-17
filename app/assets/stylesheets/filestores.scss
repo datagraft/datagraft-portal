@@ -40,3 +40,31 @@ table.table { width: 100%; }
 .table td, th {
   border: 0.5px solid rgba(3,3,3,0.2);
 }
+
+$primary-color: #5264AE;
+
+// Pagination
+#filestore-preview-table_paginate {
+  margin: auto;
+  text-align: center;
+  & > a {
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 8px 0;
+  }
+  & > span {
+    & > a {
+      cursor: pointer;
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+
+      &.current{
+        background-color: $primary-color;
+        color: white;
+      }
+
+    }
+  }
+}

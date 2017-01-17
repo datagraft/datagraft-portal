@@ -1,72 +1,8 @@
 #se-queries-list
-  ul.sort-heading-fbox
-    li.sin-query-results-search
-      i.material-icons search
-      input.search placeholder="Search in queries"
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-name"  Sort by name
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-date"  Sort by date
-    li
-      button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-container-hidden-user"  Sort by user
-    li
-      label.mdl-checkbox.mdl-js-checkbox for="checkbox_public"
-        input#checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateFilterPublicStyle(this, '.row-public', 'block')"
-        span.mdl-checkbox__label Include public queries
-
-  .sin-tab-label &#40;queries linked to the current endpoint are highlighted&#41;
-  .sin-list-textfield__scroll.accordion
-    ul.list
-      - queriesList = search_for_existing_queries
-      - unless queriesList.empty?
-        //- @thing.queries.order(stars_count: :desc, created_at: :desc).each do |query|
-        //- queriesList.order(stars_count: :desc, created_at: :desc).each do |query|
-        - queriesList.each do |query|
-          - if can? :read, query
-            - add_class = 'row-private'
-            - unless query.user.username == @thing.user.username
-              - add_class = 'row-public'
-            li class="#{add_class}"
-              .sin-container-hidden-name
-                = query.name
-              .sin-container-hidden-date
-                = query.updated_at.to_i
-              .sin-container-hidden-user
-                = query.user.username
-              - highlight_class = 'highlight-false'
-              - if query_links_to_sparql_endpoint(query, @thing)
-                - highlight_class = 'highlight-true'
-              div class = "container #{highlight_class}"
-                .squeezebox
-                  .squeezhead
-                    .sin-query-list-icon
-                      i.material-icons.md-48 help
-                      = display_sparql_query_type(query.query_type)
-                    .sin-query-list-meta
-                      .sin-query-list-meta-name
-                        = query.name
-                      .sin-query-list-meta-date
-                        | Last modification&nbsp;
-                        = time_ago_in_words query.updated_at
-                        | &nbsp;ago
-                        | &nbsp;-&nbsp;
-                        = query.updated_at
-                        | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        | By:&nbsp;
-                        = query.user.username
-                    .mdl-layout-spacer
-                    span.sin-execute-request-button
-                      = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => query.query}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect'
-                    .sin-execute-request-response
-                  .squeezecnt
-                    - if query.description.length > 0
-                      i.sin-tab-label Description:
-                      .sin-tab-textfield__box
-                        = query.description
-                    i.sin-tab-label
-                      | Query text:
-                    br
-                    .sin-tab-textfield__scroll
-                      = simple_format query.query
-                    i.sin-flex-center
-                      = link_to "Go to asset...", thing_path(query)
+  - queriesToShow = search_for_existing_queries
+  - if queriesToShow.empty?
+    div.mdl-card__supporting-text
+      h2 No queries found
+  - else
+    - list_heading = "(queries linked to the current endpoint are highlighted)";
+    = render partial: "gen_thing_list", locals: {things: queriesToShow, things_name: "queries", show_thing_partial: "run_query", heading: list_heading, rparams: {sparql_thing: @thing}}
