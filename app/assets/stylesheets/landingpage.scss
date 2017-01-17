@@ -17,6 +17,7 @@
 }
 
 $dapaas-color: #5264AE;
+$dapaas-color-accent: #FF609A;
 $white-not-so-white: hsl(226, 39%, 94%);
 
 .first-screen {
@@ -30,12 +31,14 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
     p {
         font-size:19px;
+        text-align: left;
     }
 
     h2 {
         font-size:57px;
         margin-bottom:32px;
         line-height: 57px;
+        text-align: left;
     }
 
     #screenshots-container {
@@ -107,6 +110,48 @@ $white-not-so-white: hsl(226, 39%, 94%);
         max-width: 1200px;
     }
 }
+
+.start-using-now {
+    text-align: center;
+    text-decoration: initial;
+
+    a.mdl-button--raised.mdl-button--colored {
+        background:$white-not-so-white;
+        color:#333;
+        padding: 10px 24px;
+    }
+
+    a.mdl-button--raised.mdl-button--colored:hover {
+        // background:rgb(103,58,183);
+        background:$dapaas-color-accent;
+        color:white;
+        text-decoration: initial;
+    }
+}
+
+.last-screen {
+    min-height:30em;
+    min-height:87vh;
+    background:#F2F2F2 image-url("bg.jpeg") no-repeat;
+    background-size: 1315px 986px;
+    //background-position: center -330.634px;
+
+    background-position: cover;
+    background-position: center center;
+    position:relative;
+
+    .photo-credits {
+        position: absolute;
+        left: 13px;
+        bottom: 12px;
+        color: rgb(202, 157, 191);
+        font-size: small;
+        &:hover, a:hover {
+            color:$white-not-so-white;
+        }
+    }
+}
+
 
 @media screen and (min-width: 960px) {
     .first-screen #screenshots-container {

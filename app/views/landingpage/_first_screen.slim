@@ -1,0 +1,27 @@
+div.max-width-container.mdl-grid
+  div.mdl-cell.mdl-cell--6-col.mdl-cell--middle.mdl-cell--12-col-tablet.mdl-cell--12-col-phone
+    h2 One-stop-shop for hosted data management
+    p Powerful data transformation and reliable data access capabilities
+    p …for data workers to manage their data in a simple, effective, and efficient way
+    .start-using-now
+      - if user_signed_in?
+        = link_to('Goto Dashboard', dashboard_path, class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored")
+      - else
+        = link_to "SIGN UP", new_user_session_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+      //= link_to "HOW IT WORKS", landingpage_index_path(anchor: "howitworks"), :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+
+  .mdl-cell.mdl-cell--1-col.mdl-cell--hide-tablet.mdl-cell--hide-phone
+
+  #screenshots-container.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.mdl-cell--middle.mdl-cell--hide-phone
+    .screenshot
+      img src=image_url("screenshots/query.png")
+    .screenshot
+      img src=image_url("screenshots/explore.png")
+    .screenshot
+      img src=image_url("screenshots/upload.png")
+    .screenshot
+      img src=image_url("screenshots/graph.png")
+    .screenshot
+      img src=image_url("screenshots/derive.png")
+    .screenshot
+      img src=image_url("screenshots/grafterizer.png")
