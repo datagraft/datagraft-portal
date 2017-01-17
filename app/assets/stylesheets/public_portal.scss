@@ -103,3 +103,11 @@ a.sin-small-card:hover {
     background-image: image-url("icon--file.svg");
   }
 }
+
+.sin-table--cookie-policy {
+  table, th, td {
+    border-collapse: collapse;
+    border: 1px solid grey;
+    padding: 2px;
+  }
+}
