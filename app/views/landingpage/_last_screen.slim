@@ -1,3 +1,9 @@
-//div.max-width-container.mdl-grid
-div.mdl-cell.mdl-cell--middle.mdl-cell--12-col.start-using-now
-  = link_to "Start using Datagraft now", new_user_session_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+div.max-width-container.mdl-grid
+  div.mdl-cell.mdl-cell--middle.mdl-cell--12-col.start-using-now
+    = link_to "Start using Datagraft now", new_user_session_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+    div.photo-credits
+      | Photo by
+      a href="https://www.flickr.com/photos/jorneriksson/" target="_blank"  Jørn Eriksson
+      | (
+      a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" > CC BY 2.0
+      | )

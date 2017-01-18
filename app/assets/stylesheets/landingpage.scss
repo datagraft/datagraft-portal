@@ -25,8 +25,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
     background: $dapaas-color linear-gradient(0deg,
         saturate(lighten($dapaas-color, 10%),12%),
         $dapaas-color 95.09%) repeat scroll 0% 0%;
-    min-height:30em;
-    min-height:87vh;
+    min-height:900px;
     color:$white-not-so-white;
 
     p {
@@ -111,6 +110,65 @@ $white-not-so-white: hsl(226, 39%, 94%);
     }
 }
 
+.second-screen {
+    background:$white-not-so-white;
+    min-height:1000px;
+
+    table {
+      border-spacing: 20px 10px;
+    }
+    td {
+      vertical-align: top;
+    }
+
+    p {
+        font-size:19px;
+        text-align: left;
+    }
+
+    h3 {
+        font-weight: 300px;
+        margin-bottom:15px;
+        line-height: 40px;
+        text-align: left;
+    }
+
+    .max-width-container {
+        max-width: 1200px;
+    }
+}
+
+.third-screen {
+    min-height:1000px;
+    background:$white-not-so-white image-url("word_cloud_1024-4.png") no-repeat;
+    //background-size: cover;
+
+    background-position: center bottom;
+    position:relative;
+
+    table {
+      border-spacing: 20px 10px;
+    }
+    td {
+      vertical-align: top;
+    }
+
+    p {
+        font-size:19px;
+        text-align: left;
+    }
+
+    h3 {
+        font-weight: 300px;
+        margin-bottom:15px;
+        line-height: 40px;
+        text-align: left;
+    }
+
+    .max-width-container {
+        max-width: 1200px;
+    }
+}
 .start-using-now {
     text-align: center;
     text-decoration: initial;
@@ -130,13 +188,11 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .last-screen {
-    min-height:30em;
-    min-height:87vh;
+    min-height:900px;
     background:#F2F2F2 image-url("bg.jpeg") no-repeat;
-    background-size: 1315px 986px;
+    background-size: cover;
     //background-position: center -330.634px;
 
-    background-position: cover;
     background-position: center center;
     position:relative;
 

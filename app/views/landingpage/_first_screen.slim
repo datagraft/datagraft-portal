@@ -5,7 +5,7 @@ div.max-width-container.mdl-grid
     p …for data workers to manage their data in a simple, effective, and efficient way
     .start-using-now
       - if user_signed_in?
-        = link_to('Goto Dashboard', dashboard_path, class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored")
+        = link_to('Go to Dashboard', dashboard_path, class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored")
       - else
         = link_to "SIGN UP", new_user_session_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
       //= link_to "HOW IT WORKS", landingpage_index_path(anchor: "howitworks"), :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
