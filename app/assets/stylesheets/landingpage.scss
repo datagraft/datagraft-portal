@@ -17,6 +17,7 @@
 }
 
 $dapaas-color: #5264AE;
+$dapaas-color-light: #a8b1d6;
 $dapaas-color-accent: #FF609A;
 $white-not-so-white: hsl(226, 39%, 94%);
 
@@ -111,14 +112,22 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .second-screen {
-    background:$white-not-so-white;
+    background:$dapaas-color-light;
     min-height:100vh;
+
+    iframe {
+      max-width: 25vw;
+      max-height: 25vh;
+    }
 
     table {
       border-spacing: 20px 10px;
     }
     td {
       vertical-align: top;
+      img {
+        max-width: 25vw;
+      }
     }
 
     p {
