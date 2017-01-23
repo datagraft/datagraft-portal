@@ -1,12 +1,13 @@
 - title "Log in"
-- setOption :colourFull
+- setOption :mdlCard
 
-div.mdl-grid
-  div.sin-login-card
-    i.material-icons person_outline
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
     h2 Log in
-    .sin-condensed-form
-      = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  .sin-condensed-form
+    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      div.mdl-card__supporting-text.sin-padding
         .mdl-grid
           .mdl-cell.mdl-cell--5-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
             = f.label :email, class: "mdl-textfield__label"
@@ -22,5 +23,5 @@ div.mdl-grid
               span.mdl-checkbox__label
                 | Remember me
         = f.submit "Log in", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-    br
-      = render "devise/shared/links"
+      div.mdl-card__actions
+        = render "devise/shared/links"
