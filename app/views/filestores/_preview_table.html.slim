@@ -21,9 +21,9 @@
           thead
             tr
               - 1.upto(to.last_column) do |j|
-                th.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(1,j)
+                th.mdl-data-table__cell--non-numeric.sin-td-wrap.sin-overflow = to.cell(1,j)
       tbody
         - 2.upto(lines_to_preview) do |i|
           tr
             - 1.upto(to.last_column) do |j|
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap = to.cell(i,j)
+              td.mdl-data-table__cell--non-numeric.sin-td-wrap.sin-overflow = to.cell(i,j)
