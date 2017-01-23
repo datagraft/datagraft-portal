@@ -32,12 +32,12 @@ gem 'acts-as-taggable-on', '~> 4.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
+group :development, :test, :staging do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 end
 
-group :development do
+group :development, :staging do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 3.3'
 
@@ -95,7 +95,7 @@ gem 'pg'
 # file upload with streaming io
 gem "refile", '~> 0.6.2',require: "refile/rails", :git => 'https://github.com/manfe/refile.git'
 #gem "refile-mini_magick"
-#gem "refile-s3"
+gem "refile-s3"
 
 # Generate funny names by default
 gem 'bazaar'

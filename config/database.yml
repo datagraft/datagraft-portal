@@ -24,6 +24,14 @@ test:
   <<: *default
   database: datagraft-test
 
+staging: &staging
+  adapter: postgresql
+  encoding: utf8
+  database: <%= ENV["DATABASE_EC2_NAME"] %>
+  username: <%= ENV["DATABASE_EC2_USERNAME"] %>
+  password: <%= ENV["DATABASE_EC2_PASSWORD"] %>
+  host: <%= ENV["DATABASE_EC2_HOST"] %>
+  timeout: 5000
+  
 production:
-  <<: *default
-  database: datagraft-prod
+  <<: *staging
