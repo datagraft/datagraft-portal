@@ -27,10 +27,10 @@ test:
 staging: &staging
   adapter: postgresql
   encoding: utf8
-  database: <%= ENV["DATABASE_EC2_NAME"] %>
-  username: <%= ENV["DATABASE_EC2_USERNAME"] %>
-  password: <%= ENV["DATABASE_EC2_PASSWORD"] %>
-  host: <%= ENV["DATABASE_EC2_HOST"] %>
+  database: <%= ENV["AWS_RDS_DB_NAME"] %>
+  username: <%= ENV["AWS_RDS_DB_USERNAME"] %>
+  password: <%= ENV["AWS_RDS_DB_PASSWORD"] %>
+  host: <%= ENV["AWS_RDS_DB_HOST"] %>
   timeout: 5000
   
 production:

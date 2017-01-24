@@ -433,8 +433,10 @@ class UpwizardsController < ApplicationController
 
     @upwizard.trace_back_step_skip
     @upwizard.save
-
-    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath'] 
+    
+    raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
+    
     # Make sure the wiz_id is an number, to prevent XSS
     @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
 
