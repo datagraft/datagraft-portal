@@ -27,12 +27,12 @@ class PublicPortalController < ApplicationController
   def cookie
     render template: 'public_portal/cookie_policy'
   end
-  
+
   # GET /faq
   def faq
     render template: 'public_portal/faq'
   end
-  
+
   # GET /:username
   # GET /:username.json
   def user
@@ -60,6 +60,17 @@ class PublicPortalController < ApplicationController
         pager.replace(things_and_catalogues[start, per_page])
 
       end
+
+    respond_to do |format|
+      format.html { if user_signed_in? && @user == current_user
+                       redirect_to edit_user_registration_path
+                    else
+                       render template: 'public_portal/user'
+                    end
+                  }
+      format.json { render template: 'public_portal/user' }
+    end
+
   end
 
   def explore
@@ -78,7 +89,7 @@ class PublicPortalController < ApplicationController
         things_and_catalogues += query_catalogues
       end
     end
-    
+
     # TODO: make this into a helper function
     things_and_catalogues.to_a.sort_by! do |thing_or_catalogue|
       -thing_or_catalogue.stars_count
