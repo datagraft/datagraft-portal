@@ -2,23 +2,15 @@
 
 h1 Your quotas
 
-h4 Data Distributions
-
-div.sin-quotas-bar
-  div.sin-quotas-bar-fill style="width:#{((@nbDataDistributions.to_f/@maxDataDistributions.to_f)*100.0).round}%"
-  div.sin-quotas-text = "#{number_to_human_size(@nbDataDistributions)}/#{number_to_human_size(@maxDataDistributions)}"
-
 h4 Filestores
 
 div.sin-quotas-bar
   div.sin-quotas-bar-fill style="width:#{((@nbFilestores.to_f/@maxFilestores.to_f)*100.0).round}%"
-  div.sin-quotas-text = "#{number_to_human_size(@nbFilestores)}/#{number_to_human_size(@maxFilestores)}"
-
-h4 Data Pages
+  div.sin-quotas-text = "#{@nbFilestores}/#{@maxFilestores}"
 
 div.sin-quotas-bar
-  div.sin-quotas-bar-fill style="width:#{((@nbDataPages.to_f/@maxDataPages.to_f)*100.0).round}%"
-  div.sin-quotas-text = "#{@nbDataPages}/#{@maxDataPages}"
+  div.sin-quotas-bar-fill style="width:#{((@nbFilestoresSize.to_f/@maxFilestoresSize.to_f)*100.0).round}%"
+  div.sin-quotas-text = "#{number_to_human_size(@nbFilestoresSize)}/#{number_to_human_size(@maxFilestoresSize)}"
 
 h4 Data Transformations
 
@@ -26,3 +18,12 @@ div.sin-quotas-bar
   div.sin-quotas-bar-fill style="width:#{((@nbTransformations.to_f/@maxTransformations.to_f)*100.0).round}%"
   div.sin-quotas-text = "#{@nbTransformations}/#{@maxTransformations}"
 
+h4 SPARQL endpoints
+
+div.sin-quotas-bar
+  div.sin-quotas-bar-fill style="width:#{((@nbSPARQLendpoints.to_f/@maxSPARQLendpoints.to_f)*100.0).round}%"
+  div.sin-quotas-text = "#{@nbSPARQLendpoints}/#{@maxSPARQLendpoints}"
+
+div.sin-quotas-bar
+  div.sin-quotas-bar-fill style="width:#{((@nbSPARQLtriples.to_f/@maxSPARQLtriples.to_f)*100.0).round}%"
+  div.sin-quotas-text = "#{number_to_human(@nbSPARQLtriples)} triples /#{number_to_human(@maxSPARQLtriples)} triples"

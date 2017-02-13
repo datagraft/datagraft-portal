@@ -8,18 +8,43 @@ class QuotasController < ApplicationController
     #  raise CanCan::AccessDenied.new("Not authorized!", :read)
     #end
 
-    @nbDataDistributions = current_user.data_distributions.sum(:file_size)
-    @maxDataDistributions = 1024*1024*1024*4
+    users_sparql = current_user.sparql_endpoints
+    @nbSPARQLendpoints = users_sparql.count
+    @maxSPARQLendpoints = 10
 
-    @nbFilestores = current_user.filestores.sum(:file_size)
-    @maxFilestores = 1024*1024*1024*4
+    total_sparql_triples = 0;
+    users_sparql.each do |se|
+      unless se.repository_size == nil
+        total_sparql_triples += se.repository_size
+      else
+        puts "se size:"+se.inspect
+      end
+    end
+    @nbSPARQLtriples = total_sparql_triples
+    @maxSPARQLtriples = 10*1024*1024
 
-    @nbDataPages = current_user.data_pages.count
-    @maxDataPages = 100
+    users_files = current_user.filestores
+    @nbFilestores = users_files.count
+    @maxFilestores = 100
+
+    total_file_size = 0;
+    users_files.each do |fs|
+      unless fs.file == nil
+        unless fs.file.size == nil
+          total_file_size += fs.file.size
+        else
+          puts "fs size:"+fs.inspect
+        end
+      else
+        puts "fs file:"+fs.inspect
+      end
+    end
+    @nbFilestoresSize = total_file_size
+    @maxFilestoresSize = 1024*1024*1024
 
     @nbTransformations = current_user.transformations.count
-    @maxTransformations = 1000
-    
+    @maxTransformations = 100
+
     respond_to do |format|
       format.html
       format.json { render template: 'quotas/index' }
