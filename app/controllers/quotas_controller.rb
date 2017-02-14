@@ -17,7 +17,7 @@ class QuotasController < ApplicationController
       unless se.repository_size == nil
         total_sparql_triples += se.repository_size
       else
-        puts "se size:"+se.inspect
+        puts "Sparql_endpoint is missing size information:"+se.inspect
       end
     end
     @nbSPARQLtriples = total_sparql_triples
@@ -30,13 +30,13 @@ class QuotasController < ApplicationController
     total_file_size = 0;
     users_files.each do |fs|
       unless fs.file == nil
-        unless fs.file.size == nil
-          total_file_size += fs.file.size
+        unless fs.file_size == nil
+          total_file_size += fs.file_size
         else
-          puts "fs size:"+fs.inspect
+          puts "Filestore is missing size information:"+fs.inspect
         end
       else
-        puts "fs file:"+fs.inspect
+        puts "Filestore is missing file object:"+fs.inspect
       end
     end
     @nbFilestoresSize = total_file_size
