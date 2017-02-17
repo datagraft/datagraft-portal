@@ -24,6 +24,14 @@ test:
   <<: *default
   database: datagraft-test
 
+staging: &staging
+  adapter: postgresql
+  encoding: utf8
+  database: <%= ENV["AWS_RDS_DB_NAME"] %>
+  username: <%= ENV["AWS_RDS_DB_USERNAME"] %>
+  password: <%= ENV["AWS_RDS_DB_PASSWORD"] %>
+  host: <%= ENV["AWS_RDS_DB_HOST"] %>
+  timeout: 5000
+  
 production:
-  <<: *default
-  database: datagraft-prod
+  <<: *staging

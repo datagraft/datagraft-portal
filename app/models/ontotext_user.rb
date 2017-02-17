@@ -34,7 +34,7 @@ module OntotextUser
         username: username+'_'+account_token.to_s,
         password: encrypted_password,
         name: name,
-        role: 'rails wrapper',
+        role: ENV['RAILS_ENV'],
         # email: self.email
         email: 'a.pultier+'+account_token.to_s+'@gmail.com'
         }.to_json
@@ -70,7 +70,7 @@ module OntotextUser
         username: username+'_'+account_token.to_s,
         password: password,
         name: name,
-        role: 'rails wrapper',
+        role: ENV['RAILS_ENV'],
         # email: self.email
         email: 'a.pultier+'+account_token.to_s+'@gmail.com'
         }.to_json

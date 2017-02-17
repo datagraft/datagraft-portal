@@ -2,46 +2,21 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-
-.filestore-array-container {
-  list-style:none;
-
-  display: flex;
-
-  -webkit-flex-flow: row wrap;
-  justify-content: flex-start;
-  flex-wrap: wrap
-}
-
-//.keyword-frame {
-//  border: 1px solid rgba(3,3,3,0.2);
-//}
-
-//.keyword-debug {
-//  border: 5px solid rgba(3,3,3,0.2);
-//}
-
-.filestore-array-item {
-  padding: 5px;
-}
-
 .container-scroll {
   overflow-x: auto;
 }
 
-table.table { width: 100%; }
-.table tr {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0.5em 0;
-  border: 1px solid rgba(3,3,3,0.2);
-}
-.table td, th {
-  border: 0.5px solid rgba(3,3,3,0.2);
-}
 
 $primary-color: #5264AE;
+
+#filestore-preview-table {
+  .sin-overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap !important;
+    max-width: 28vw;
+  }
+}
 
 // Pagination
 #filestore-preview-table_paginate {
