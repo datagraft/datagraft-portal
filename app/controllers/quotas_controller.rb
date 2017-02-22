@@ -10,7 +10,7 @@ class QuotasController < ApplicationController
 
     users_sparql = current_user.sparql_endpoints
     @nbSPARQLendpoints = users_sparql.count
-    @maxSPARQLendpoints = 10
+    @maxSPARQLendpoints = current_user.quota_sparql_count
 
     total_sparql_triples = 0;
     users_sparql.each do |se|
@@ -21,11 +21,11 @@ class QuotasController < ApplicationController
       end
     end
     @nbSPARQLtriples = total_sparql_triples
-    @maxSPARQLtriples = 10*1024*1024
+    @maxSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
     users_files = current_user.filestores
     @nbFilestores = users_files.count
-    @maxFilestores = 100
+    @maxFilestores = current_user.quota_filestore_count
 
     total_file_size = 0;
     users_files.each do |fs|
@@ -40,10 +40,10 @@ class QuotasController < ApplicationController
       end
     end
     @nbFilestoresSize = total_file_size
-    @maxFilestoresSize = 1024*1024*1024
+    @maxFilestoresSize = current_user.quota_filestore_ksize*1024
 
     @nbTransformations = current_user.transformations.count
-    @maxTransformations = 100
+    @maxTransformations = current_user.quota_transformation_count
 
     respond_to do |format|
       format.html
