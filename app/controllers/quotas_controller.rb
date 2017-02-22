@@ -1,4 +1,6 @@
 class QuotasController < ApplicationController
+  include QuotasHelper
+
   before_action :authenticate_user!
 
   # GET /quota
@@ -8,41 +10,19 @@ class QuotasController < ApplicationController
     #  raise CanCan::AccessDenied.new("Not authorized!", :read)
     #end
 
-    users_sparql = current_user.sparql_endpoints
-    @nbSPARQLendpoints = users_sparql.count
+    @nbSPARQLendpoints = quota_used_sparql_count(current_user)
     @maxSPARQLendpoints = current_user.quota_sparql_count
 
-    total_sparql_triples = 0;
-    users_sparql.each do |se|
-      unless se.repository_size == nil
-        total_sparql_triples += se.repository_size
-      else
-        puts "Sparql_endpoint is missing size information:"+se.inspect
-      end
-    end
-    @nbSPARQLtriples = total_sparql_triples
+    @nbSPARQLtriples = quota_used_sparql_triples(current_user)
     @maxSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
-    users_files = current_user.filestores
-    @nbFilestores = users_files.count
+    @nbFilestores = quota_used_file_count(current_user)
     @maxFilestores = current_user.quota_filestore_count
 
-    total_file_size = 0;
-    users_files.each do |fs|
-      unless fs.file == nil
-        unless fs.file_size == nil
-          total_file_size += fs.file_size
-        else
-          puts "Filestore is missing size information:"+fs.inspect
-        end
-      else
-        puts "Filestore is missing file object:"+fs.inspect
-      end
-    end
-    @nbFilestoresSize = total_file_size
+    @nbFilestoresSize = quota_used_file_size(current_user)
     @maxFilestoresSize = current_user.quota_filestore_ksize*1024
 
-    @nbTransformations = current_user.transformations.count
+    @nbTransformations = quota_used_transformations_count(current_user)
     @maxTransformations = current_user.quota_transformation_count
 
     respond_to do |format|

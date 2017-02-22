@@ -1,12 +1,13 @@
 class FilestoresController < ThingsController
+  include QuotasHelper
 
   # Deprecated after introduction of upwizard
   # Receive a file attachement
   # GET /publish
-  def publish
-    authorize! :create, Filestore
-    @filestore = Filestore.new
-  end
+  #def publish
+  #  authorize! :create, Filestore
+  #  @filestore = Filestore.new
+  #end
 
   # Fetch a file attached to the filestore
   # GET ':username/filestores/:id/attachment'
@@ -45,6 +46,9 @@ class FilestoresController < ThingsController
     super
 
     unless params[:wiz_id] == nil
+      # Check if quota is broken
+      redirect_to quotas_path unless quota_room_for_new_file_count?(current_user)
+
       begin
         @upwizard = Upwizard.find(params[:wiz_id])
       rescue Exception => e
@@ -54,6 +58,9 @@ class FilestoresController < ThingsController
       end
       @thing.file = @upwizard.get_current_file
       @thing.file_size = @upwizard.get_current_file.size
+
+      # Check if quota is broken
+      redirect_to quotas_path unless quota_room_for_new_file_size?(current_user, @upwizard.get_current_file.size)
       throw "Wizard corrupted - unknown file type" if !@upwizard.current_file_type
       throw "Wizard corrupted - wrong file type" if @upwizard.current_file_type == 'graph'
       @thing.file_content_type = @upwizard.current_file_type
@@ -73,11 +80,19 @@ class FilestoresController < ThingsController
     puts "************ filestore new"
     super
 
+    # Check if quota is broken
+    redirect_to quotas_path unless quota_room_for_new_file_count?(current_user)
+
     unless params[:wiz_id] == nil
       @upwizard = Upwizard.find(params[:wiz_id])
       @thing.original_filename = @upwizard.get_current_file_original_name
+
+      # Check if quota is broken
+      redirect_to quotas_path unless quota_room_for_new_file_size?(current_user, @upwizard.get_current_file.size)
     end
+
     fill_default_values_if_empty
+
   rescue ActiveRecord::RecordNotFound
     redirect_to upwizard_new_path('file')
   end

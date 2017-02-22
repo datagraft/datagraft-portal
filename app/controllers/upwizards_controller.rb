@@ -79,16 +79,15 @@ class UpwizardsController < ApplicationController
   end
 
   # Delete a given upwizard including attaced file
-  # DELETE   /:username/upwizards/:wiz_id
+  # DELETE   /upwizards/:wiz_id
   def destroy
     puts "************ upwizard destroy"
     begin
       @upwizard = Upwizard.find(params[:wiz_id])
-      @user = @upwizard.user
       authorize! :destroy, @upwizard
       @upwizard.destroy
       flash[:notice] = "Wizard #{params[:wiz_id]} is deleted"
-      redirect_to upwizard_index_path(@user)
+      redirect_to upwizard_index_path
     rescue Exception => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
@@ -433,10 +432,10 @@ class UpwizardsController < ApplicationController
 
     @upwizard.trace_back_step_skip
     @upwizard.save
-    @grafterizerPath = Rails.configuration.grafterizer['publicPath'] 
-    
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+
     raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
-    
+
     # Make sure the wiz_id is an number, to prevent XSS
     @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
 

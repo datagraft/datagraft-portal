@@ -26,7 +26,10 @@ div.mdl-card
             - @upwizard_entries.each do |wiz|
               li
                 .sin-list-hidden-user
-                  = wiz.user.username
+                  - unless wiz.user == nil
+                    = wiz.user.username
+                  - else
+                    = "nil"
                 .sin-list-hidden-time
                   = wiz.updated_at.to_i
                 ul.row-fbox
@@ -41,7 +44,10 @@ div.mdl-card
                       == link_to 'Delete', upwizard_delete_path(wiz), :method => :delete, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
                   li
                     .sin-list-user
-                      = wiz.user.username
+                      - unless wiz.user == nil
+                        = wiz.user.username
+                      - else
+                        = "nil"
                   li
                     .sin-list-time
                       = time_ago_in_words wiz.updated_at

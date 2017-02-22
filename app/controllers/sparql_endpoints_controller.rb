@@ -1,9 +1,12 @@
 class SparqlEndpointsController < ThingsController
   include UpwizardHelper
   include QueriesHelper
+  include QuotasHelper
 
   def new
     super
+    # Check if quota is broken
+    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
   end
 
   def publish
@@ -13,6 +16,9 @@ class SparqlEndpointsController < ThingsController
     authorize! :create, SparqlEndpoint
 
     if params[:wiz_id]
+      # Check if quota is broken
+      redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
+
       @thing = SparqlEndpoint.new(sparql_endpoint_params)
       @thing.uri = current_user.new_ontotext_repository(@thing)
       @thing.user = current_user
