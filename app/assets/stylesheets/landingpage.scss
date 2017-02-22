@@ -116,6 +116,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
 .second-screen {
     height:100vh;
+    padding-top:50px;
 
     iframe {
       max-width: 25vw;
@@ -154,6 +155,9 @@ $white-not-so-white: hsl(226, 39%, 94%);
     background:$dapaas-color-wordcloud image-url("wordcloud_hr9_nsw.png") no-repeat;
     background-size: cover;
 
+    h2 {
+      padding-top:100px;
+    }
     table {
       border-spacing: 20px 10px;
     }
@@ -216,7 +220,6 @@ $white-not-so-white: hsl(226, 39%, 94%);
         }
     }
 }
-
 
 @media screen and (min-width: 960px) {
     .first-screen #screenshots-container {
