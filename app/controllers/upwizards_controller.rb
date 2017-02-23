@@ -1,4 +1,5 @@
 class UpwizardsController < ApplicationController
+  include QuotasHelper
   include UpwizardHelper
   include Wicked::Wizard
   steps :publish, :transform, :create_transform, :save_transform, :transform_select_execute, :transform_select_preview, :fill_sparql_endpoint, :fill_filestore, :error, :go_sparql, :go_filestore, :file_select_transform
@@ -45,11 +46,20 @@ class UpwizardsController < ApplicationController
     #Check if known task
     task = params['task']
     known_task = false
-    known_task = true if task == 'file'
-    known_task = true if task == 'sparql'
+    quota_full = false
+    if task == 'file'
+      known_task = true
+      quota_full = true unless quota_room_for_new_file_count?(current_user)
+    end
+    if task == 'sparql'
+      known_task = true
+      quota_full = true unless quota_room_for_new_sparql_count?(current_user)
+    end
 
+    if quota_full
+      redirect_to quotas_path
 
-    if known_task
+    elsif known_task
       begin
         upwizard = Upwizard.new  # Create new wizard
         upwizard.user = current_user
