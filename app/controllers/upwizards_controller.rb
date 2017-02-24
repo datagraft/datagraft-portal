@@ -438,19 +438,22 @@ class UpwizardsController < ApplicationController
   # Create a new transformation for the file
   def handle_create_transform_and_render
     puts "************ upwizard handle_create_transform"
-    #Placeholder ... Nothing to do so far
 
-    @upwizard.trace_back_step_skip
-    @upwizard.save
-    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    unless quota_room_for_new_transformations_count?(current_user)
+      redirect_to quotas_path
+    else
+      @upwizard.trace_back_step_skip
+      @upwizard.save
+      @grafterizerPath = Rails.configuration.grafterizer['publicPath']
 
-    raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
+      raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
 
-    # Make sure the wiz_id is an number, to prevent XSS
-    @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+      # Make sure the wiz_id is an number, to prevent XSS
+      @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
 
-    @upwizard.save
-    render_wizard
+      @upwizard.save
+      render_wizard
+    end
   end
 
   def handle_save_transform_and_render

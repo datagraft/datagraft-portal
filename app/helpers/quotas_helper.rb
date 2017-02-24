@@ -1,10 +1,10 @@
 module QuotasHelper
+  # Find how many files the user has in db
   def quota_used_file_count(user)
-    users_files = user.filestores
-    current_used = users_files.count
-    return current_used
+    return user.filestores.count
   end
 
+  # Find users files and calculate total number of bytes
   def quota_used_file_size(user)
     total_file_size = 0;
     users_files = user.filestores
@@ -22,6 +22,7 @@ module QuotasHelper
     return total_file_size
   end
 
+  # Check if the user can upload another file
   def quota_room_for_new_file_count?(user)
     current_count = quota_used_file_count(user)
     limit_count = user.quota_filestore_count
@@ -34,6 +35,7 @@ module QuotasHelper
     return ret_ok
   end
 
+  # Check if the user has room for another "file_size" bytes
   def quota_room_for_new_file_size?(user, file_size)
     current_size = quota_used_file_size(user)
     limit_size = user.quota_filestore_ksize*1024
@@ -46,10 +48,12 @@ module QuotasHelper
     return ret_ok
   end
 
+  # Find how many sparql endpoints the user has
   def quota_used_sparql_count(user)
     return user.sparql_endpoints.count
   end
 
+  # Find users sparql endpoints and calculate total number of triples
   def quota_used_sparql_triples(user)
     total_sparql_triples = 0;
     users_sparql = user.sparql_endpoints
@@ -63,11 +67,12 @@ module QuotasHelper
     return total_sparql_triples
   end
 
+  # Check if the user can create another sparql endpoint
   def quota_room_for_new_sparql_count?(user)
     current_count = quota_used_sparql_count(user)
     limit_count = user.quota_sparql_count
     ret_ok = current_count < limit_count
-    
+
     unless ret_ok
       flash[:error] = "Your SPARQL endpoint count quota is exceeded"
     end
@@ -76,11 +81,22 @@ module QuotasHelper
   end
 
 
+  # Find how many transformations the user has
   def quota_used_transformations_count(user)
     return user.transformations.count
   end
 
+  # Check if the user can create another transformation
+  def quota_room_for_new_transformations_count?(user)
+    current_count = quota_used_transformations_count(user)
+    limit_count = user.quota_transformation_count
+    ret_ok = current_count < limit_count
 
+    unless ret_ok
+      flash[:error] = "Your transformation count quota is exceeded"
+    end
 
+    return ret_ok
+  end
 
 end
