@@ -14,6 +14,21 @@ class TransformationsController < ThingsController
     end
   end
 
+  # POST /:username/transformations/:id/fork
+  def fork
+    # Check if quota is broken
+    quota_ok = quota_room_for_new_transformations_count?(current_user)
+
+    if quota_ok
+      super
+    else
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    end
+  end
 
   # GET /transform
   def transform

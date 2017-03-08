@@ -9,6 +9,22 @@ class SparqlEndpointsController < ThingsController
     redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
   end
 
+  # POST /:username/sparql_endpoints/:id/fork
+  def fork
+    # Check if quota is broken
+    quota_ok = quota_room_for_new_sparql_count?(current_user)
+
+    if quota_ok
+      super
+    else
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    end
+  end
+
   def publish
   end
 

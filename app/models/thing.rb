@@ -117,7 +117,15 @@ class Thing < ApplicationRecord
           increment_forks_metric(original)
           copy.resync_keyword_list
           if original.type == 'Filestore'
-            copy.file = original.file unless original.file == nil
+            unless original.file == nil
+              begin
+                # This procedure is needed to force refile to copy the attachement
+                tmp_file = Refile.store.upload(original.file)
+                copy.update(file_id: tmp_file.id)
+              rescue Exception => e
+                puts 'Fork cannot copy attachement. Cause:<'+e.message+'>'
+              end
+            end
           end
         end
       end

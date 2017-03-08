@@ -97,6 +97,24 @@ class FilestoresController < ThingsController
     redirect_to upwizard_new_path('file')
   end
 
+  # POST /:username/filestores/:id/fork
+  def fork
+    # Check if quota is broken
+    quota_ok = true
+    quota_ok = false unless quota_room_for_new_file_count?(current_user)
+    quota_ok = false unless quota_room_for_new_file_size?(current_user, @thing.file_size)
+
+    if quota_ok
+      super
+    else
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    end
+  end
+
   # Show an existing filestore entry
   # GET ':username/filestores/:id'
   def show
