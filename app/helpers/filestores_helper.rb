@@ -5,6 +5,9 @@ module FilestoresHelper
   def filestore_preview_path(filestore_input)
     "#{filestore_path(filestore_input)}/preview"
   end
+  def filestore_attachment_path(filestore_input)
+    "#{filestore_path(filestore_input)}/attachment"
+  end
 
   def filestore_path(filestore_input)
     "/#{filestore_input.user.username}/filestores/#{filestore_input.slug}"

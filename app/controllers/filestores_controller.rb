@@ -13,7 +13,12 @@ class FilestoresController < ThingsController
   # GET ':username/filestores/:id/attachment'
   def attachment
     set_thing
-    redirect_to Refile.attachment_url(@thing, :file), status: :moved_permanently
+
+    # Update statistics
+    @thing.inc_download_count
+    @thing.save
+
+    redirect_to Refile.attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), status: :moved_permanently
   end
 
   # View the first rows of the attached file
@@ -229,6 +234,12 @@ class FilestoresController < ThingsController
       puts e.backtrace.inspect
       @preview_text = "Decode of filetype <#{format}> failed with message <#{e.message}>. Try to download the file to check content."
       @preview_tab_obj = nil
+    end
+
+    unless @preview_tab_obj == nil
+      # Update statistics
+      @thing.inc_preview_count
+      @thing.save
     end
   end
 
