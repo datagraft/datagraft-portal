@@ -13,3 +13,11 @@
       dt Size:
       dd
         = number_to_human_size @thing.file.size
+      p
+      dt Preview count:
+      dd
+        = number_to_human @thing.preview_count
+      p
+      dt Download count:
+      dd
+        = number_to_human @thing.download_count
