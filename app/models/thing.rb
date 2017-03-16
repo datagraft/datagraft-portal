@@ -6,7 +6,7 @@ class Thing < ApplicationRecord
   # friendly_id :name, :use => [:history, :scoped], :scope => :user
   # friendly_id :name, :use => :history
 
-  has_many :stars
+  has_many :stars, dependent: :destroy
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
 

@@ -1,19 +1,19 @@
 class User < ApplicationRecord
   include OntotextUser
-  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
-  has_many :stars
-  has_many :catalogue_stars
-  has_many :transformations
-  has_many :data_distributions
-  has_many :filestores
-  has_many :queriable_data_stores
-  has_many :data_pages
-  has_many :utility_functions
-  has_many :queries
-  has_many :api_keys
-  has_many :catalogues
-  has_many :sparql_endpoints
-  has_many :upwizards
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
+  has_many :stars, dependent: :destroy
+  has_many :catalogue_stars, dependent: :destroy
+  has_many :transformations, dependent: :destroy
+  has_many :data_distributions, dependent: :destroy
+  has_many :filestores, dependent: :destroy
+  has_many :queriable_data_stores, dependent: :destroy
+  has_many :data_pages, dependent: :destroy
+  has_many :utility_functions, dependent: :destroy
+  has_many :queries, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
+  has_many :catalogues, dependent: :destroy
+  has_many :sparql_endpoints, dependent: :destroy
+  has_many :upwizards, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
