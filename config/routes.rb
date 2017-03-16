@@ -28,9 +28,9 @@ Rails.application.routes.draw do
   get 'privacy-policy' => 'public_portal#privacy'
   get 'cookie-policy' => 'public_portal#cookie'
   get 'faq' => 'public_portal#faq'
-  
+
   get 'publish' => 'data_distributions#publish'
-  get 'publishfilestore' => 'filestores#publish'
+#  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
   get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
   get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information
-  delete ':username/upwizards/:wiz_id' => 'upwizards#destroy'
+  delete ':upwizards/:wiz_id' => 'upwizards#destroy'
   put    ':username/upwizards/:id/:wiz_id' => 'upwizards#update'
   patch  ':username/upwizards/:id/:wiz_id' => 'upwizards#update'
 

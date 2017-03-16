@@ -117,7 +117,15 @@ class Thing < ApplicationRecord
           increment_forks_metric(original)
           copy.resync_keyword_list
           if original.type == 'Filestore'
-            copy.file = original.file unless original.file == nil
+            unless original.file == nil
+              begin
+                # This procedure is needed to force refile to copy the attachement
+                tmp_file = Refile.store.upload(original.file)
+                copy.update(file_id: tmp_file.id)
+              rescue Exception => e
+                puts 'Fork cannot copy attachement. Cause:<'+e.message+'>'
+              end
+            end
           end
         end
       end
@@ -159,6 +167,36 @@ class Thing < ApplicationRecord
       def description=(val)
         touch_metadata!
         metadata["description"] = val
+      end
+
+      def download_count
+        unless metadata.blank?
+          ret = metadata["download_count"]
+        end
+        if ret == nil
+          ret = 0
+        end
+        return ret
+      end
+
+      def inc_download_count
+        touch_metadata!
+        metadata["download_count"] = download_count + 1
+      end
+
+      def preview_count
+        unless metadata.blank?
+          ret = metadata["preview_count"]
+        end
+        if ret == nil
+          ret = 0
+        end
+        return ret
+      end
+
+      def inc_preview_count
+        touch_metadata!
+        metadata["preview_count"] = preview_count + 1
       end
 
       # meta_keyword_list is a string with comma separated keywords.

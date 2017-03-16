@@ -1,4 +1,5 @@
 class UpwizardsController < ApplicationController
+  include QuotasHelper
   include UpwizardHelper
   include Wicked::Wizard
   steps :publish, :transform, :create_transform, :save_transform, :transform_select_execute, :transform_select_preview, :fill_sparql_endpoint, :fill_filestore, :error, :go_sparql, :go_filestore, :file_select_transform
@@ -45,11 +46,20 @@ class UpwizardsController < ApplicationController
     #Check if known task
     task = params['task']
     known_task = false
-    known_task = true if task == 'file'
-    known_task = true if task == 'sparql'
+    quota_full = false
+    if task == 'file'
+      known_task = true
+      quota_full = true unless quota_room_for_new_file_count?(current_user)
+    end
+    if task == 'sparql'
+      known_task = true
+      quota_full = true unless quota_room_for_new_sparql_count?(current_user)
+    end
 
+    if quota_full
+      redirect_to quotas_path
 
-    if known_task
+    elsif known_task
       begin
         upwizard = Upwizard.new  # Create new wizard
         upwizard.user = current_user
@@ -79,16 +89,15 @@ class UpwizardsController < ApplicationController
   end
 
   # Delete a given upwizard including attaced file
-  # DELETE   /:username/upwizards/:wiz_id
+  # DELETE   /upwizards/:wiz_id
   def destroy
     puts "************ upwizard destroy"
     begin
       @upwizard = Upwizard.find(params[:wiz_id])
-      @user = @upwizard.user
       authorize! :destroy, @upwizard
       @upwizard.destroy
       flash[:notice] = "Wizard #{params[:wiz_id]} is deleted"
-      redirect_to upwizard_index_path(@user)
+      redirect_to upwizard_index_path
     rescue Exception => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
@@ -429,19 +438,22 @@ class UpwizardsController < ApplicationController
   # Create a new transformation for the file
   def handle_create_transform_and_render
     puts "************ upwizard handle_create_transform"
-    #Placeholder ... Nothing to do so far
 
-    @upwizard.trace_back_step_skip
-    @upwizard.save
-    @grafterizerPath = Rails.configuration.grafterizer['publicPath'] 
-    
-    raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
-    
-    # Make sure the wiz_id is an number, to prevent XSS
-    @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+    unless quota_room_for_new_transformations_count?(current_user)
+      redirect_to quotas_path
+    else
+      @upwizard.trace_back_step_skip
+      @upwizard.save
+      @grafterizerPath = Rails.configuration.grafterizer['publicPath']
 
-    @upwizard.save
-    render_wizard
+      raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
+
+      # Make sure the wiz_id is an number, to prevent XSS
+      @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+
+      @upwizard.save
+      render_wizard
+    end
   end
 
   def handle_save_transform_and_render

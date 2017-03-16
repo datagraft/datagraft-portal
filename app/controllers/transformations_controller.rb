@@ -1,4 +1,34 @@
 class TransformationsController < ThingsController
+  include QuotasHelper
+
+  # POST /:username/:resource/
+  def create
+    unless quota_room_for_new_transformations_count?(current_user)
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    else
+      super
+    end
+  end
+
+  # POST /:username/transformations/:id/fork
+  def fork
+    # Check if quota is broken
+    quota_ok = quota_room_for_new_transformations_count?(current_user)
+
+    if quota_ok
+      super
+    else
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    end
+  end
 
   # GET /transform
   def transform
@@ -21,7 +51,7 @@ class TransformationsController < ThingsController
     @transformationID = @transformation.slug
     super
   end
-  
+
   def edit
     authorize! :update, @thing
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
