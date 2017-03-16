@@ -68,7 +68,7 @@ Rails.application.routes.draw do
 
   #get ':username' => 'public_portal#user'
 
-  root to: 'dashboard#index'
+  root to: 'landingpage#index'
 
   scope ':username' do
 
