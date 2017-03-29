@@ -57,13 +57,13 @@ module QuotasHelper
   def quota_used_sparql_triples(user)
     total_sparql_triples = 0;
     users_sparql = user.sparql_endpoints
-    users_sparql.each do |se|
-      unless se.repository_size == nil
-        total_sparql_triples += se.repository_size
-      else
-        puts "Sparql_endpoint is missing size information:"+se.inspect
-      end
-    end
+#    users_sparql.each do |se|
+#      unless se.repository_size == nil
+#        total_sparql_triples += se.repository_size
+#      else
+#        puts "Sparql_endpoint is missing size information:"+se.inspect
+#      end
+#    end
     return total_sparql_triples
   end
 
