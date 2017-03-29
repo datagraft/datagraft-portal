@@ -2,7 +2,7 @@ class SparqlEndpoint < Thing
   extend FriendlyId
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  has_many :sparql_endpoint_queries
+  has_many :sparql_endpoint_queries, dependent: :destroy
   has_many :queries, :through => :sparql_endpoint_queries
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
@@ -10,7 +10,7 @@ class SparqlEndpoint < Thing
   # Non-persistent attribute for storing query to be executed
   attr_accessor :execute_query
   attr_accessor :tmp_file
-  
+
   def should_generate_new_friendly_id?
     name_changed? || super
   end
@@ -40,7 +40,7 @@ class SparqlEndpoint < Thing
       old_value = self.read_attribute(attr_name)
       super
       new_value = self.read_attribute(attr_name)
-    
+
       # Update public/private property if changed
       if new_value != old_value
         self.user.update_ontotext_repository_public(self)

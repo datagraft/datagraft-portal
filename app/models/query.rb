@@ -2,10 +2,10 @@ class Query < Thing
   extend FriendlyId
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  has_many :queriable_data_store_queries
+  has_many :queriable_data_store_queries, dependent: :destroy
   has_many :queriable_data_stores, :through => :queriable_data_store_queries
 
-  has_many :sparql_endpoint_queries
+  has_many :sparql_endpoint_queries, dependent: :destroy
   has_many :sparql_endpoints, :through => :sparql_endpoint_queries
 
   validates_presence_of :query
@@ -77,7 +77,7 @@ class Query < Thing
   #          }
   #        # return result.body
   #        # throw result
-  #      else 
+  #      else
   #        raise "Only SPARQL on Ontotext backend querying is supported"
   #      end
   #    end
@@ -135,7 +135,7 @@ class Query < Thing
     return {
       headers: parsed["head"]["vars"],
       results: parsed["results"]["bindings"]
-      }    
+      }
   end
 
 end
