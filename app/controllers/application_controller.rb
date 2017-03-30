@@ -65,6 +65,10 @@ class ApplicationController < ActionController::Base
       user_signed_in? ? current_user.username : 'anonymous'
     end
 
+    def not_found
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
   private
     def doorkeeper_unauthorized_render_options(error: nil)
       { json: { error: "Not authorized connard" } }

@@ -2,6 +2,31 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$primary-color: #5264AE;
+$dirty-white: #E9ECF6;
+$accent-color: #FF609A;
+
+.sin-card-layout .mdl-card {
+  & .dataTables_length {
+    padding-bottom: 8px;
+  }
+  th {
+    font-size: 16px !important;
+  }
+  td {
+    font-size: 14px !important;
+  }
+}
+
+// Search and filtering assets
+.sin-card-layout .sin-query-results-search {
+  display: flex;
+  align-items: center;
+  i.material-icons {
+    padding-right: 8px;
+  }
+}
+
 .sin-card-layout .mdl-card__supporting-text {
   width: auto;
 }
@@ -22,13 +47,121 @@
   margin-right: 16px;
 }
 
+.sin-search-container {
+  width: 90%;
+}
+
+.sin-card-with-tabs-title {
+  background-image:
+    linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)),
+    image-url("background_blue_explore_page.jpg");
+  background-position: right;
+  background-size: cover;
+
+  .mdl-card__title {
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  h3, h4 {
+    margin:0;
+    a {
+      color: white;
+      text-decoration: none;
+      &:not(.sin-stars):hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  h3 {
+    margin-top: 2em;
+  }
+
+  h3:before {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+  }
+
+  h4 {
+    font-size: large;
+    text-align: right;
+  }
+
+  .sin-lock {
+    position:absolute;
+    top: 1em;
+    right: 1em;
+    i.material-icons {
+      font-size: 3em;
+    }
+  }
+
+  .sin-stars {
+    display: inline-block;
+    margin-left: 1em;
+    background: $primary-color;
+    border-radius: 5px;
+    padding: 0px 1em 2px 1em;
+    line-height: 26px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+    i.material-icons {
+      font-size: 16px;
+      position: relative;
+      top: 2px;
+      right: 6px;
+    }
+
+    &.sin-stared i.material-icons {
+      color: $accent-color;
+    }
+  }
+
+  & > .mdl-tabs__tab-bar {
+    padding-top: 10px;
+    align-self: stretch;
+
+    a {
+      background: rgba(0, 0, 0, 0.07);
+      width: 50%;
+      font-size: 18px !important;
+      color: $dirty-white !important;
+
+      &.is-active {
+        background: rgba(0,0,0,0.25) !important;
+      }
+    }
+  }
+
+  & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
+    background: $dirty-white;
+  }
+
+  & .mdl-tabs__tab.is-active:after {
+    background: $primary-color !important;
+    height: 6px !important;
+  }
+}
+
+.sin-img-license > img {
+  align-self: center;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  display: block;
+}
+
 .keyw-array-container {
   list-style:none;
   display: flex;
   -webkit-flex-flow: row wrap;
   justify-content: flex-start;
   flex-wrap: wrap
-} 
+}
 
 .keyword-frame {
   border: 1px solid rgba(3,3,3,0.2);
@@ -41,7 +174,343 @@
 .keyw-array-item {
   padding: 5px;
 }
- 
+
 .container-scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
+}
+
+.sin-tab-layout > .mdl-grid {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-around;
+}
+
+.sin-tab-title {
+  text-align: center;
+  margin-top: 0;
+}
+
+.sin-tab-label {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 2px;
+}
+
+.sin-tab-text {
+  padding-top: 8px;
+
+  &.center {
+    text-align: center;
+  }
+}
+
+.sin-tab-textfield__box {
+  //  border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+.sin-tab-textfield__colorbox {
+  border: 1px solid rgba(3,3,3,0.3);
+  background-color: rgba(0,0,0, 0.1);
+  padding: 4px;
+
+  & > .keyw-array-container > .keyw-array-item > .mdl-button {
+    background-color: rgba(0,0,0, 0.3);
+    color: rgba(0,0,0, 0.7);
+    box-shadow: none;
+  }
+}
+
+.sin-tab-textfield__scroll {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  padding: 4px;
+  overflow-y: auto;
+  min-height: 200px;
+  max-height: 500px;
+}
+
+.sin-tabs {
+  & > .mdl-tabs {
+    //    display: flex;
+    //    width: 100%;
+    //    flex-direction: column;
+    //    justify-content: space-between;
+    //    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
+    //    background-size: cover;
+    //  background-position: left;
+    // flex-direction: column;
+    //    align-items: center;
+    //    min-height: 8em;
+
+    & > .mdl-tabs__tab-bar {
+      padding-top: 10px;
+      align-self: stretch;
+
+      a {
+        background: rgba(0, 0, 0, 0.07);
+        width: 50%;
+        font-size: 18px !important;
+        //        color: $dirty-white;
+
+        &.is-active {
+          background: rgba(0,0,0,0.25);
+        }
+      }
+    }
+
+    & .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
+      //      background: $dirty-white;
+    }
+
+    & .mdl-tabs__tab.is-active:after {
+      background: $primary-color !important;
+      height: 6px !important;
+    }
+  }
+}
+
+.sin-endpoint-uri {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sin-endpoint-uri .sin-tab-label,
+.sin-endpoint-uri .sin-tab-text {
+  min-width: 0;
+  height: 30px;
+  line-height: 30px;
+  padding: 4px;
+}
+.sin-endpoint-uri .mdl-button {
+  min-width: 0;
+  height: 30px;
+  padding: 4px;
+  border: 1px solid rgba(3, 3, 3, 0.3);
+  margin-left: -1px;
+  background-image: linear-gradient(#fcfcfc, #eee);
+  & > i.material-icons {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.sin-endpoint-uri .sin-tab-textfield__box {
+  height: 30px;
+  line-height: 30px;
+  width: 70%;
+  overflow-x: hidden;
+  text-overflow: clip;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+}
+
+/* CSS for list.js */
+/*
+HTML  CSS  JS  Result
+Edit on
+h2 {
+font-family:sans-serif;
+}
+*/
+.list {
+  font-family:sans-serif;
+  margin:0;
+  //padding:20px 0 0;
+  padding: 0 0 0;
+}
+.list > li {
+  display:block;
+  //background-color: #eee;
+  background-color: #aaa;
+  //padding:10px;
+  padding: 2px;
+  box-shadow: inset 0 1px 0 #fff;
+}
+.avatar {
+  max-width: 150px;
+}
+/*
+img {
+max-width: 100%;
+}
+h3 {
+font-size: 16px;
+margin:0 0 0.3rem;
+font-weight: normal;
+font-weight:bold;
+}
+p {
+margin:0;
+}
+*/
+input {
+  border:solid 1px #ccc;
+  border-radius: 5px;
+  padding:7px 14px;
+}
+input:focus {
+  outline:none;
+  border-color:#aaa;
+}
+.sort {
+  padding:8px 30px;
+  border-radius: 6px;
+  border:none;
+  display:inline-block;
+  color: black;
+  text-decoration: none;
+  background-color: #28a8e0;
+  height:30px;
+}
+.sort:hover {
+  text-decoration: none;
+  background-color:#1b8aba;
+}
+.sort:focus {
+  outline:none;
+}
+.sort:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content:"";
+  position: relative;
+  top:-10px;
+  right:-5px;
+}
+.sort.asc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+  content:"";
+  position: relative;
+  top:13px;
+  right:-5px;
+}
+.sort.desc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid black;
+  content:"";
+  position: relative;
+  top:-10px;
+  right:-5px;
+}
+
+/* CSS for scrollable list */
+.sin-list-textfield__scroll {
+  //border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+  overflow-y: auto;
+  max-height: 800px;
+}
+
+/* CSS for hiding tings in list */
+.sin-container-hidden-name,
+.sin-container-hidden-date,
+.sin-container-hidden-user {
+  display: none;
+}
+
+// Pagination
+#query-results-table_paginate {
+  margin: auto;
+  text-align: center;
+  & > a {
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 8px 0;
+  }
+  & > span {
+    & > a {
+      cursor: pointer;
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+
+      &.current{
+        background-color: $primary-color;
+        color: white;
+      }
+
+    }
+  }
+}
+ul.pagination-query-results-table li {
+  display: inline-block;
+  padding: 0;
+  margin: 8px 0;
+}
+ul.pagination-query-results-table li a {
+  border: none;
+  padding: 8px 16px;
+  float: left;
+  text-decoration: none;
+}
+ul.pagination-query-results-table li.active a {
+  border: none;
+  background-color: #5264AE;
+  color: white;
+}
+ul.pagination-query-results-table li:hover:not(.active) a {
+  background-color: #ddd;
+}
+
+.sin-query-textarea  {
+  & textarea {
+    min-height: 300px;
+  }
+
+  & .mdl-card__actions {
+    justify-content: center;
+  }
+}
+i.sin-flex-center{
+  display: flex;
+  justify-content: center;
+}
+
+.sin-query-list-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: medium;
+}
+
+.sin-query-list-meta {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.sin-query-list-meta .sin-query-list-meta-name {
+  font-size: x-large;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.sin-query-list-meta .sin-query-list-meta-date {
+  font-size: small;
+}
+
+.squeezhead .sin-execute-request-button {
+  padding-top: 8px;
 }

@@ -9,5 +9,9 @@ class UtilityFunctionsController < ThingsController
     def utility_function_params
         params.require(:utility_function).permit(:public, :name, :metadata, :configuration, :code, :license, :language)
     end
+  
+    def utility_function_params_partial
+        params.permit(:utility_function, :public, :name, :metadata, :configuration, :code, :license, :language)
+    end
 
 end

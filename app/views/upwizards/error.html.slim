@@ -1,0 +1,15 @@
+- title 'This execution ended in an error'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-card__supporting-text.sin-padding
+    p = "Task = #{@upwizard.task}"
+    p = simple_format(@upwizard.trace_to_s)
+
+  div.mdl-card__actions
+    // == link_to 'Back', wizard_path(:go_back), :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Back', :back, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"

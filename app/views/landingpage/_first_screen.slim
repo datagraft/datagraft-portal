@@ -1,0 +1,36 @@
+div.max-width-container.mdl-grid
+  div.mdl-cell.mdl-cell--6-col.mdl-cell--middle.mdl-cell--12-col-tablet.mdl-cell--12-col-phone
+    h2 One-stop-shop for hosted data management
+    p Powerful data transformation and reliable data access capabilities
+    p …for data workers to manage their data in a simple, effective, and efficient way
+    .start-using-now
+      - if user_signed_in?
+        = link_to('Go to Dashboard', dashboard_path, class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored")
+      - else
+        = link_to "SIGN UP", new_user_registration_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+      //#hiw
+      //  a href="#howitworks" title="$.scrollTo('#howitworks', 800, {easing:'elasout'}); "HOW IT WORKS
+      //  a href="#howitworks" HOW IT WORKS
+      = link_to "HOW IT WORKS", "#howitworks", :class => "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+
+  .mdl-cell.mdl-cell--1-col.mdl-cell--hide-tablet.mdl-cell--hide-phone
+
+  #screenshots-container.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.mdl-cell--middle.mdl-cell--hide-phone
+    .screenshot
+      img src=image_url("screenshots/Sparql3.png")
+    .screenshot
+      img src=image_url("screenshots/Sparql2.png")
+    .screenshot
+      img src=image_url("screenshots/Sparql4.png")
+    .screenshot
+      img src=image_url("screenshots/Grafterizer1.png")
+    .screenshot
+      img src=image_url("screenshots/Grafterizer2.png")
+    .screenshot
+      img src=image_url("screenshots/Wizard1.png")
+    .screenshot
+      img src=image_url("screenshots/Wizard3.png")
+    .screenshot
+      img src=image_url("screenshots/Dashboard2.png")
+    .screenshot
+      img src=image_url("screenshots/Dashboard.png")

@@ -1,10 +1,49 @@
 - title "Dashboard"
-- setOption :flexPage
+- setOption :dashboardLayout
 - setOption :dashboardSearch
 
-div.mdl-grid.sin-dashboard
-  div.mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
+.mdl-grid.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+  .sin-dashboard-title
+    h2 DataGraft Home
+    .mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#browse-assets" Browse assets
+      a.mdl-tabs__tab href="#create-assets" Create assets
+      /a.mdl-tabs__tab href="#query-assets" Query assets
+  #current-user-name-hidden
+    = current_user.username
+  #create-assets.sin-centered.mdl-tabs__panel
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title File page
+        .mdl-card__supporting-text
+            |  Use the DataGraft wizard to create a page for accessing your file.
+            |  You can choose to directly upload a file, or use one of your already
+            |  uploaded files. Additionally, you can choose to clean up and transform
+            |  your selected files using the Grafterizer data transformation tool.
+        .mdl-card__actions
+            =link_to upwizard_new_path('file'), class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title SPARQL endpoint page
+        .mdl-card__supporting-text
+            |  Use the DataGraft wizard to dynamically provision a SPARQL endpoint
+            |  and store your data. You can directly upload your RDF dataset or use
+            |  the Grafterizer tool to transform a tabular file. Supported RDF formats:
+            |  RDF/XML, Turtle, N-Triples, N-Quads, N3, JSON-LD.
+        .mdl-card__actions
+            = link_to upwizard_new_path('sparql'), class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title SPARQL query
+        .mdl-card__supporting-text
+            |  Use the DataGraft wizard to create a new SPARQL query and execute
+            |  it against an existing endpoint. Your queries will be accessible
+            |  through the Assets access page.
+        .mdl-card__actions
+            = link_to new_query_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
+  #browse-assets.sin-centered.mdl-tabs__panel.is-active
     - if feature? :activity_feed
+      .mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
         h3 Activity feed
         ul
           - @activityFeed.each do |activity|
@@ -13,68 +52,120 @@ div.mdl-grid.sin-dashboard
                 = time_ago_in_words activity[:updated_at]
                 '&nbsp;ago
               - if activity.kind_of? Star
-                img src=image_url("60_star.png")
+                img src=image_url("icon--star.svg")
                 - if activity.user == current_user
                   | You
                 - else
                   = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  starred 
+                '  starred
                 == link_to activity.thing.name, thing_path(activity.thing)
               - elsif activity.kind_of? Thing
-                img src=image_url("60_service.png")
+                img src=image_url("icon--service.svg")
                 - if activity.user == current_user
                   | You
                 - else
                   = link_to (activity.user.name || activity.user.username), user_path(activity.user)
-                '  made 
+                '  made
                 == link_to activity.name, thing_path(activity)
                 '&nbsp;public
               - elsif activity.kind_of? CatalogueStar
-                img src=image_url("60_star.png")
-                'You starred 
+                img src=image_url("icon--star.svg")
+                'You starred
                 == link_to activity.catalogue.name, catalogue_path(activity.catalogue)
               - elsif activity.kind_of? Catalogue
                 'You made
                 == link_to activity.name, catalogue_path(activity)
-  div.mdl-cell.mdl-cell--7-col.mdl-cell--12-col-tablet.mdl-shadow--2dp.mdl-color--white
-    div.sin-projects
-      div.mdl-grid
-        h3.sin-projects-title.mdl-cell.mdl-cell--8-col My assets
-        div.mdl-cell.mdl-cell--4-col.sin-projects-button-container
-          / a.mdl-button New
-          = link_to('Publish', publish_path, class: "mdl-button")
-      div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
-        div.mdl-tabs__tab-bar
-          a class=['mdl-tabs__tab', @activeTab == 'all' ? 'is-active' : ''] href="#sin-projects-all" All
-          - if feature? :catalogues
-            a class=['mdl-tabs__tab', @activeTab == 'catalogues' ? 'is-active' : ''] href="#sin-projects-catalogues" Catalogues
-          a class=['mdl-tabs__tab', @activeTab == 'datapages' ? 'is-active' : ''] href="#sin-projects-datapages" Data pages
-          a class=['mdl-tabs__tab', @activeTab == 'transformations' ? 'is-active' : ''] href="#sin-projects-transformations" Transformations
-          a class=['mdl-tabs__tab', @activeTab == 'queriable_data_stores' ? 'is-active' : ''] href="#sin-projects-queriable_data_stores" Queriable Data Stores
-          a class=['mdl-tabs__tab', @activeTab == 'other' ? 'is-active' : ''] href="#sin-projects-other" Other
-        - ['all', 'catalogues', 'datapages', 'transformations', 'queriable_data_stores', 'other'].each do |type|
-          div class=["mdl-tabs__panel", type == @activeTab ? "is-active" : ''] id="sin-projects-#{type}"
-            table.mdl-data-table.mdl-js-data-table.sin-projects-table
-              tbody
-                - @things[type].each do |thing|
-                  tr
-                    td.sin-small-name.mdl-data-table__cell--non-numeric
-                      = link_to thing.name, thing_path(thing)
-                      / - if thing.respond_to? :file
-                      /   = link_to thing.name, attachment_url(thing, :file)
-                      / - else
-                      /   = thing.name
-                    td.sin-stars-count
-                      span
-                        = thing.stars_count 
-                        ' 
-                        i.material-icons star
-              - if @things[type].empty?
-                tfoot 
-                  tr
-                    td.mdl-data-table__cell--non-numeric[colspan=2]
-                      em Nothing published yet
-            == will_paginate @things[type], :param_name => 'projects_page_' + type, :params => { :projects_active_tab => type }
-        div.mdl-tabs__panel id="sin-projects-loading"
-          span loading
+    .mdl-card.mdl-color--white
+      .mdl-textfield.mdl-js-textfield.sin-dashboard-search
+        i.material-icons search
+        .mdl-textfield.mdl-js-textfield
+          input#dashboard-assets-search.mdl-textfield__input type="text" /
+          label.mdl-textfield__label for="dashboard-assets-search"  Search
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--public"
+          input#dashboard-filter--public.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Include other users' public assets
+      .sin-dashboard-asset-filters
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--all"
+          input#dashboard-filter--all.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | All
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--files"
+          input#dashboard-filter--files.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Files
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--sparql"
+          input#dashboard-filter--sparql.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | SPARQL endpoints
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--transformations"
+          input#dashboard-filter--transformations.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Data Transformations
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--queries"
+          input#dashboard-filter--queries.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | Queries
+      table#dashboard-user-assets-table.mdl-data-table.cell-border
+        thead
+          tr
+            th.mdl-data-table__cell--non-numeric Type
+            th.mdl-data-table__cell--non-numeric Name
+            th.mdl-data-table__cell--non-numeric Owner
+            th.mdl-data-table__cell--non-numeric Last modified
+            th.mdl-data-table__cell--non-numeric Created on
+            th.mdl-data-table__cell--non-numeric Public
+        tbody.dashboard-asset-table-body
+          - @things["all"].each do |thing|
+            tr
+              td class=("mdl-data-table__cell--non-numeric sin-icon__#{thing.class.model_name.param_key}") id=("icon-#{thing.id}")
+                .mdl-tooltip for=("icon-#{thing.id}")
+                  = thing.class.model_name.human.titleize
 
+              td.sin-short-name.sin-zero-padding href=thing_path(thing)
+                = link_to thing.name, thing_path(thing), style: "text-decoration: none;", class: "mdl-button mdl-js-button mdl-js-ripple-effect sin-dashboard-table-asset-name"
+
+              td.sin-short-name.sin-zero-padding style="text-align: left;"
+                = link_to thing.user == current_user ? 'You' : thing.user.username, user_path(thing.user), style: "text-decoration: none; ", class: "mdl-button mdl-js-button mdl-js-ripple-effect"
+
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__last-modified-cell id=("last-modified-#{thing.id}")
+                = time_ago_in_words thing.updated_at
+                '&nbsp;ago
+                .mdl-tooltip for=("last-modified-#{thing.id}")
+                  = thing.updated_at
+
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__created-on-cell id=("created-at-#{thing.id}")
+                = time_ago_in_words thing.created_at
+                '&nbsp;ago
+                .mdl-tooltip for=("created-at-#{thing.id}")
+                  = thing.created_at
+
+              td.sin-short-name.mdl-data-table__cell--non-numeric.dashboard-user-assets__is-public-cell
+                label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for=("switch-#{thing.id}")
+                  - if thing.user == current_user
+                    input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) )
+                    = link_to '', thing_path(thing, :format => :json, :public => !thing.public), remote: true, :method => 'patch', :id => "toggle-public-#{thing.id}"
+                  - else
+                    input.mdl-switch__input (id=("switch-#{thing.id}") type="checkbox" checked=(thing.public ? true : false) disabled)
+                  span.mdl-switch__label style="font-size: 0"
+                    = thing.public
+                button.mdl-button.mdl-js-button.mdl-button--icon id=("menu-#{thing.id}")
+                  i.material-icons more_vert
+                ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
+                  li.mdl-menu__item 
+                    i.material-icons content_copy
+                    == link_to 'Copy', thing_fork_path(thing), :method => 'post', style: "text-decoration: none; color: black; width: 100%;"
+                  - if thing.user == current_user  
+                    li.mdl-menu__item
+                      i.material-icons mode_edit
+                      == link_to 'Edit', thing_edit_path(thing), style: "text-decoration: none; color: black; width: 100%;"
+                  - if thing.user == current_user
+                    li.mdl-menu__item.sin-delete-asset-text
+                      i.material-icons delete
+                      = link_to 'Delete', thing_path(thing), method: :delete, data: { confirm: 'Are you sure you want to delete this asset?' }, style: "text-decoration: none; color: firebrick; width: 100%;"
+
+        - if @things.empty?
+          tfoot
+            tr
+              td.mdl-data-table__cell--non-numeric[colspan=2]
+                em Nothing published yet

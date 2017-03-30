@@ -34,6 +34,42 @@ module ApplicationHelper
     return COMMON_LICENSES
   end
 
+  def get_license_info(license)
+    ret = {}
+    ret[:path] = ""
+    ret[:tip] = ""
+
+    if license == "CC0"
+      ret[:path] = "https://creativecommons.org/publicdomain/zero/1.0/"
+      ret[:tip] = "Creative Commons: Universal - Public Domain Dedication"
+    elsif license == "CC-BY"
+      ret[:path] = "https://creativecommons.org/licenses/by/4.0/"
+      ret[:tip] = "Creative Commons: Attribution"
+    elsif license == "CC-BY-SA"
+      ret[:path] = "https://creativecommons.org/licenses/by-sa/4.0"
+      ret[:tip] = "Creative Commons: Attribution-ShareAlike"
+    elsif license == "CC-BY-ND"
+      ret[:path] = "https://creativecommons.org/licenses/by-nd/4.0"
+      ret[:tip] = "Creative Commons: Attribution-NoDerivs"
+    elsif license == "CC-BY-NC"
+      ret[:path] = "https://creativecommons.org/licenses/by-nc/4.0"
+      ret[:tip] = "Creative Commons: Attribution-NonCommercial"
+    elsif license == "CC-BY-NC-SA"
+      ret[:path] = "https://creativecommons.org/licenses/by-nc-sa/4.0"
+      ret[:tip] = "Creative Commons: Attribution-NonCommercial-ShareAlike"
+    elsif license == "CC-BY-NC-ND"
+      ret[:path] = "https://creativecommons.org/licenses/by-nc-nd/4.0"
+      ret[:tip] = "Creative Commons: Attribution-NonCommercial-NonDerivs"
+    elsif license == "WTFPL"
+      ret[:path] = "http://www.wtfpl.net/about"
+      ret[:tip] = "WTFPL – Do What the Fuck You Want to Public License"
+    elsif license == "MIT"
+      ret[:path] = "https://opensource.org/licenses/MIT"
+      ret[:tip] = "The MIT License"
+    end
+    return ret
+  end
+
   private
 
 end

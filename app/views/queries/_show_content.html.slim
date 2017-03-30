@@ -1,8 +1,22 @@
-h3 #{@thing.language} query
-pre
+.mdl-grid
+  = render 'elem_description'
+
+  hr.mdl-cell--12-col
+  h3.sin-title__centered.mdl-cell--12-col Query text
+  hr.mdl-cell--12-col
+
+  .sin-query-execute-form.mdl-cell--12-col#query-show-execute-form
+    = render 'query_execute_form'
+
+.mdl-grid#query-show-execute-result
+
+
+
+//h3 #{@thing.language} query
+//pre
   code = @thing.query
 
-- unless @thing.queriable_data_stores.blank?
+//- unless @thing.queriable_data_stores.blank?
   h3 Linked queriable data stores
   table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--4dp
     thead
@@ -13,7 +27,7 @@ pre
     tbody
       - @thing.queriable_data_stores.includes(:user).each do |qds|
         - if can? :read, qds
-          tr 
+          tr
             td.mdl-data-table__cell--non-numeric
               = link_to qds.name, thing_path(qds), class: 'mdl-button mdl-js-button mdl-js-ripple-effect'
             td.mdl-data-table__cell--non-numeric.sin-td-wrap = qds.uri

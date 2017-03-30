@@ -1,0 +1,21 @@
+- title "Create a file page:"
+- setOption :mdlCard
+
+.mdl-card
+  .sin-card-with-tabs-layout.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    .sin-card-with-tabs-title
+      .mdl-card__title.mdl-color-text--grey-50
+        h3 Create a file page: <br> Upload or select a file
+
+      .mdl-tabs__tab-bar
+        a.mdl-tabs__tab.is-active href="#upload-panel" Upload file
+        a.mdl-tabs__tab href="#file-list-panel"  Choose existing file
+
+    /! MDL tab panels, is-active to denote currently active
+    #upload-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_xxx_upload_tab'
+    /! MDL Tab panel 2
+    #file-list-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_xxx_list_tab'

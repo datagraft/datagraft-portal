@@ -1,45 +1,23 @@
-- title "Publish filestore(s)"
-- setOption :noShadow
+- title "Create a file page: upload or select a file"
+- setOption :mdlCard
 
-h1 Publish
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
 
-/div.mdl-grid
-/  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-publish-card
-/    div.mdl-card__title.mdl-card--expand
-/      h2.mdl-card__title-text Data store
-/    div.mdl-card__supporting-text
-/      | Some stuff where you can store an query data
-/    div.mdl-card__actions
-/      == link_to 'Publish', publish_queriable_data_store_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
+  /! MDL Tabs container
+  div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    /! Tab bars
+    div.mdl-tabs__tab-bar
+      a.mdl-tabs__tab.is-active href="#upload-panel" Upload file
+      a.mdl-tabs__tab href="#file-list-panel"  Choose existing file
 
-/  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-publish-card.sin-bg-alt-1
-/    div.mdl-card__title.mdl-card--expand
-/      h2.mdl-card__title-text Data page
-/    div.mdl-card__supporting-text
-/      | Create pages to visualize your fancy data, using existing data store
-/    div.mdl-card__actions
-/      == link_to 'Publish', new_data_page_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
-
-/  div.mdl-card.mdl-shadow--2dp.mdl-cell--4-col.mdl-cell.sin-publish-card.sin-bg-alt-2
-/    div.mdl-card__title.mdl-card--expand
-/      h2.mdl-card__title-text Data collection
-/    div.mdl-card__supporting-text
-/      br
-/      |Create collections of data pages.
-/    div.mdl-card__actions
-/      == link_to 'Publish', catalogues_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect"
-
-div.mdl-grid
-  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
-    div.mdl-card__title.mdl-card--expand
-      h2.mdl-card__title-text Files
-    div.mdl-card__supporting-text
-      == form_for(@filestore, html: {class: "dropzone sin-dropzone", id: "filestoreDropZone"}, url: filestores_path(true)) do 
-    div.mdl-card__actions
-      == link_to 'Transform', transform_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true
-      == link_to 'Host', filestores_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true
-      == link_to 'Cancel', publishfilestore_path, :class => "mdl-button sin-button--danger mdl-js-button mdl-js-ripple-effect sin-drop-switchable-disabled", :disabled => true, :id => "sin-cancel-upload"
-
-/div.mdl-grid
-/  == link_to 'New Query', new_query_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-cell mdl-cell--4-col"
-/  == link_to 'New utility function', new_utility_function_path, :class => "mdl-button mdl-button--icolored mdl-js-button mdl-js-ripple-effect mdl-cell mdl-cell--4-col"
+    /! MDL tab panels, is-active to denote currently active
+    #upload-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_upload_tab'
+    /! MDL Tab panel 2
+    #file-list-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'publish_file_list_tab'

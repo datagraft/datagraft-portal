@@ -1,0 +1,27 @@
+// This partial shows details about a transformaton thing
+// Input params:
+//   thing              - The thing to render
+//   rparams {form}     - The form embracing the list
+
+- form = rparams[:form]
+.sin-gen-squeeze
+  .sin-gs-head
+    .sin-query-list-icon
+      .sin-gl-stop-propagate
+        = form.radio_button :radio_thing_id, thing.id, :required => ''
+      = image_tag(thing_icon_name(thing), height: "48")
+    .sin-query-list-meta
+      .sin-query-list-meta-name
+        = thing.name
+      .sin-query-list-meta-date
+        | Last modification&nbsp;
+        = time_ago_in_words thing.updated_at
+        | &nbsp;ago
+        | &nbsp;-&nbsp;
+        = thing.updated_at
+        | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        | By:&nbsp;
+        = thing.user.username
+    .mdl-layout-spacer
+    .sin-gs-right
+      i.material-icons = thing.public ? 'lock_open' : 'lock'

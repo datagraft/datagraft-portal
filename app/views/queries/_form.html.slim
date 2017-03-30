@@ -1,16 +1,48 @@
-= simple_form_for @thing, url: thing_path(@thing) do |f|
+= simple_form_for @thing, url: thing_path(@thing), method: :post do |f|
   .mdl-grid
     h4.mdl-cell--12-col Properties
-    = f.input :name
-    = f.input :description, as: :text
-    = f.input :public, wrapper: :switch
-  .mdl-grid.sin-query-form
-    h4.mdl-cell--12-col The query
-    = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false
-    = f.input :query, as: :text, input_html: { rows: 5 }
-  .mdl-grid
-    h4.mdl-cell--12-col Linked queriable data stores
-    = f.association :queriable_data_stores, collection: current_user.queriable_data_stores.order(stars_count: :desc, created_at: :desc), wrapper: :select
+    .sin-input-with-help-icon
+      = f.input :name, placeholder: "Enter a SPARQL query name", wrapper: :default
+      .sin-help-icon-with-tooltip
+        #tooltip-name.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the SPARQL query, which will appear on the asset browsing table.
+    .sin-input-with-help-icon
+      = f.input :description, placeholder: "Enter a description for the SPARQL query", as: :text, input_html: { rows: 5 }
+      .sin-help-icon-with-tooltip
+        #tooltip-description.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the SPARQL query. You can use Markdown to format the description.
+    .sin-input-with-help-icon
+      = f.input :public, wrapper: :switch
+      .sin-help-icon-with-tooltip__switch
+        #tooltip-public.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the SPARQL query will be visible to other users of DataGraft.
+    h4.mdl-cell--12-col
+    .sin-input-with-help-icon
+      = f.input :query_type, prompt: "Choose a query type...", collection: get_sparql_query_types, wrapper: :select
+      .sin-help-icon-with-tooltip__select
+        #tooltip-type.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-type" Choose the type of query. The result of the query will be determined by its type.
+    //.sin-input-with-help-icon
+    //  = f.association :sparql_endpoints, collection: current_user.sparql_endpoints.order(stars_count: :desc, created_at: :desc), wrapper: :select
+    //  .sin-help-icon-with-tooltip__select
+    //    #tooltip-endpoints.icon.material-icons help
+    //    .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
+
+    .sin-input-with-help-icon
+      .mdl-cell.mdl-cell--12-col
+        .sin-info-label
+          = 'SPARQL endpoints'
+        .sin-info-frame
+          = render partial: "gen_thing_list", locals: {things: @sparql_endpoint_entries, things_name: "endpoints", show_thing_partial: "select_sparql_endpoint",  rparams: {form: f, query: @thing}}
+      .sin-help-icon-with-tooltip__select
+        #tooltip-endpoints.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
+
+    = f.input :query, label: "SPARQL query", as: :text, input_html: { rows: 10 }
   hr.sin-invisible-form-separator
-  .mdl-grid
-    = f.button :submit
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    - unless @thing.new_record?
+      = link_to 'Delete query', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to delete query?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
+    = f.button :submit, "Save and show query page", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

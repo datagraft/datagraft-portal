@@ -1,4 +1,14 @@
+hr.mdl-cell--12-col
 - if not @transformation.paper_trail.live?
   h3  Diff
   div
     == Diffy::Diff.new(@latest_thing.metadata["description"], @thing.metadata["description"]).to_s(:html)
+div#transformation-preview
+
+script
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
+    $('#transformation-preview').get(0))
+    .go('transformations.readonly', {
+      publisher: "#{@publisherId}",
+      id: "#{@transformationID}"
+    }, false);

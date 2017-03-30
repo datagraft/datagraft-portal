@@ -1,0 +1,4 @@
+= simple_form_for @thing, url: thing_path(@thing) do |se|
+  .links.sin-nested-links
+    = link_to_add_association se, :queries, class: 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored' do
+      i.material-icons add

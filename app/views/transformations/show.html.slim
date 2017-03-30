@@ -1,0 +1,28 @@
+- title @thing.name
+- setOption :mdlCard
+
+div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
+  div.mdl-card__title.mdl-color-text--grey-50
+    = render 'thing_header'
+  div.sin-date-infos
+    = render 'elem_last_modified'
+  div.mdl-card__supporting-text.sin-padding.sin-transformation-content
+    - unless @thing.description.blank?
+      .sin-description
+        = render_markdown(@thing.description)
+    = render 'show_content'
+
+  div.mdl-card__actions
+    //== link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    - if can? :edit, @thing
+      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    - if user_signed_in?
+      == link_to 'Copy', thing_version_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    //- if user_signed_in?
+    //  -if current_user.has_star(@thing)
+    //    == link_to "Unstar (#{@thing.stars_count})", thing_unstar_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    //  -else
+    //    == link_to "Star (#{@thing.stars_count})", thing_star_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    == link_to 'Back to Dashboard', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

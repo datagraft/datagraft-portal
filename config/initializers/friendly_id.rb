@@ -18,6 +18,9 @@ FriendlyId.defaults do |config|
 
   config.reserved_words = %w(
     datagraft
+    upwizard upwizards
+    filestore filestores
+    sparql_endpoint sparql_endpoints
     data_distribution data_distributions
     queriable_data_store queriable_data_stores
     data_page data_pages
@@ -30,7 +33,11 @@ FriendlyId.defaults do |config|
     session logout login user users admin oauth
     stylesheets assets javascripts images
     configuration metadata
-    myasset myassets public_asset public_assets)
+    myasset myassets public_asset public_assets 
+    you 
+    filestore filestores 
+    sparql_endpoint sparql_endpoints)
+  
 
   #  ## Friendly Finders
   #

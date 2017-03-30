@@ -7,4 +7,5 @@ div.mdl-card
   div.mdl-card__supporting-text
     = render 'form'
   div.mdl-card__actions
-    = link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect" 
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    //= link_to 'List', things_path(@thing), :class => "mdl-button mdl-js-button mdl-js-ripple-effect"

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  query: one
+  sparql_endpoint: one
+
+two:
+  query: two
+  sparql_endpoint: two

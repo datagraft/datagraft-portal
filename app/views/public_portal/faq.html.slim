@@ -1,0 +1,200 @@
+- title "FAQ"
+
+h2 FAQ
+h4 What is DataGraft?
+p 
+  | DataGraft is a cloud-based service for data transformation and data access.
+
+h4 Who are DataGraft's target users?
+p 
+  | DataGraft is aimed at data workers and data developers interested in 
+  | simplified and cost-effective solutions for managing their data, with a 
+  | focus on data transformation, data hosting, and data access. Example users 
+  | include open data publishers, linked data developers, data scientists.
+
+h4 Why DataGraft?
+p 
+  | DataGraft was developed to provide better and easier to use tools for data 
+  | workers and developers who consider existing approaches to data transformation, 
+  | hosting, and access too costly and technically complex.
+
+h4 Why is DataGraft special?
+p 
+  | DataGraft offers an integrated, flexible, and reliable cloud-based solution 
+  | for data transformation and data access. Key features include flexible management 
+  | of data transformations (e.g. interactive creation, execution, sharing, reuse) 
+  | and reliable data services. DataGraft offers GUI and API access to data 
+  | transformations and data services.
+
+h4 Are all my data and/or transformations on DataGraft public?
+p 
+  | When creating transformations or publishing data you are hosting them on 
+  | DataGraft. You can choose whether you want to make them public (i.e. visible 
+  | on the DataGraft portal) or private (i.e. only you have access to them).
+
+h4 What can I do with DataGraft?
+p 
+| The current version of DataGraft allows you to:
+p
+li 
+  | Transform tabular data and share transformations: edit, host, execute, and share data 
+  | transformations
+li 
+  | Publish, share, and access data: Scalable data hosting and reliable data access / data 
+  | querying
+
+h4 What data formats does DataGraft support?
+p 
+  | The current version of DataGraft handles tabular data (CSV) and RDF data 
+  | (i.e. you can upload CSV and RDF data to DataGraft). Data transformations 
+  | (e.g. data cleaning) can be performed on tabular data, which in turn can be 
+  | transformed to RDF data. For RDF data, live data services are created that 
+  | allow programmatic querying. More data formats are expected to be supported 
+  | in the future.
+
+h4 What querying languages does DataGraft support?
+p 
+ |  The current version of DataGraft allows querying the hosted RDF data via SPARQL.
+
+h4 What skills do I need to have to use DataGraft?
+p
+li
+  | If you are interested in tabular data transformations (e.g. cleaning of tabular data, 
+  | sharing of transformations, etc.), no special skills are required, depending on the 
+  | complexity of the transformations you want to perform. Currently DataGraft supports a 
+  | number of predefined data transformations, with more to be added in the near future.
+li 
+  | If you are interested in publication of RDF data and access to RDF data, familiarity with 
+  | RDF and SPARQL are needed.
+
+h4 Is there any documentation for DataGraft?
+p
+  | Yes, draft documentation is available 
+  a href="https://github.com/datagraft/datagraft-reference/blob/master/documentation.md" here
+  |. 
+  | Documentation will be further improved in the upcoming period.
+p
+  | For background materials on technical aspects related to DataGraft you can check out the 
+  a href="http://blog.prodatamarket.eu/about/deliverables/" proDataMarket technical reports
+  | . Useful presentations can be found 
+  a href="http://www.slideshare.net/dapaasproject/datagraft-dataasaservice-for-open-data" here
+  |  and 
+  a href="http://www.slideshare.net/ruleml2012/industryruleml2015-datagraft" here
+  | .
+
+h4 I am a developer and interested to transform and host my transformations and data with DataGraft. Do I have API access to DataGraft capabilities?
+p 
+  | Yes, DataGraft capabilities are accessible at the API level. These include 
+  | programmatic access to datasets and data transformation catalogues (adding, 
+  | removing datasets and transformations), querying data, and executing data 
+  | transformations. The capabilities offered through the DataGrat.net portal are 
+  | a subset of capabilities offered at the API level. If you want to benefit from 
+  | all the features of DataGraft, API level access is recommended. See the 
+  a href="https://prodatamarket.github.io/datagraft-api-documentation/#!/default" API documentation
+  |  for further details.
+
+h4 Who developed DataGraft?
+p
+  | The initial release of DataGraft was primarily developed by a 
+  a href="http://project.dapaas.eu/dapaas-partners" consortium of 6 companies as
+  |  part of the 
+  a href="http://project.dapaas.eu/" DaPaaS project
+  | , but others have also contributed (see next question).
+
+h4 Who funded DataGraft?
+p
+  | The initial release of DataGraft was primarily funded by the European Commission (EC) | through the 
+  a href="http://project.dapaas.eu/" DaPaaS project
+  |  under the Grant Agreement 610988. Other EC-funded projects such as 
+  a href="http://www.smartopendata.eu/" SmartOpenData
+  | , 
+  a href="http://opencube-project.eu/" OpenCube
+  | , and 
+  a href="http://blog.prodatamarket.eu/" proDataMarket 
+  |  contributed to the development of some components.
+
+h4 Who maintains and operates DataGraft?
+p
+  | Currently DataGraft is maintained and operated by the 
+  a href="http://blog.prodatamarket.eu/about/partners/" proDataMarket consortium
+  | . The DataGraft Platform will be enhanced with new innovative features through 
+  | contribution with the 
+  a href="http://cordis.europa.eu/project/rcn/206353_en.html" euBusinessGraph
+  |  and
+  |  
+  a href="http://cordis.europa.eu/project/rcn/207028_en.html" EW-Shopp
+  |  EC-funded projects that starts in 2017 
+
+h4 Is it free to use DataGraft?
+p 
+  | For now, yes. With the following limitations per account:
+  li 
+    b Data upload: 
+    | You can upload CSV files of up to 10MB each, and RDF files of up to 100MB each;
+  li 
+    b Datapages: 
+    | You can have up to 10 RDF datapages;
+  li 
+    b Persistent storage: 
+    | You can host up to 2 GB of CSV data, and 1 Million RDF triples for RDF data.
+p 
+  | If you find DataGraft useful and you are interested to use it beyond its current 
+  | limitations please 
+  a href="mailto:datagraft@sintef.no?Subject=DataGraft.io" target="_top" get in touch with us
+  | . As the development progresses these 
+  | limitations may be relaxed for all accounts.
+
+h4 What is a datapage?
+p
+  | A datapage is a way to organize data. You can think of a datapage as a Web page with 
+  | information about a dataset (e.g. metadata, link to download data). Currently we 
+  | support two types of datapages: CSV datapages and RDF datapages. For technical 
+  | reasons, at this stage, a CSV datapage can accomodate one input CSV file, however an 
+  | RDF datapage may accomodate more than one input RDF file (within the limintations 
+  | mentioned in the previous question).
+
+h4 What is the status of the DataGraft development?
+p
+  | DataGraft is currently under iterative development. The current version of DataGraft
+  | represents a second alpha release.
+
+h4 Where can I report issues/bugs?
+p 
+  | Since DataGraft is currently in beta, it contains bugs. There are 
+  a href="https://github.com/datagraft/datagraft-platform/issues" issues we know of
+  | , and likely others that we don’t yet know of. You can report issues 
+  a href="https://github.com/datagraft/datagraft-platform/issues/new" here
+  | .
+
+h4 What features are planned for future releases?
+p
+  | Future releases of DataGraft will focus on improving or extending existing features. 
+  | An unordered list of future feature enhancements includes:
+  li Read-only transformations
+  li Transformation history with undo/redo options
+  li Support for various data formats: e.g., JSON, geospatial (GML, Shapefile)
+  li Support for multiple files / join datasets
+  li Push/pull services for updating outputs in different frequency
+  li Better error reporting in transformations
+  li Improving functions on tables (vs in pipeline)
+  li Dynamic deployment of transformations (cloud-based)
+  li &#40;Public/Private&#41; sharing of utility function
+  li JavaScript transformation code
+  li Predictive transformations, i.e. learn from previous transformations
+  li Dealing with streams of data vs static files
+  li Better traceability: files, data pages, transformations
+  li Geospatial processing of data: radius around point, radius around polygon, data within polygon, squares, areas
+p
+  | Interested in any of the above issues? 
+  a href="mailto:datagraft@sintef.no?Subject=DataGraft.io" target="_top" Get in touch with us!
+
+h4 I need feature XYZ but it is not supported by DataGraft. What can I do?
+p 
+  a href="mailto:datagraft@sintef.no?Subject=DataGraft.io" target="_top" Contact us
+  |  and we’ll be glad to assist!
+ 
+h4 Whom can I contact if I have further comments and questions about DataGraft?
+p 
+  | Please 
+  a href="mailto:datagraft@sintef.no?Subject=DataGraft.io" target="_top" contact us
+  |  by email and we'll answer your questions as soon as possible!

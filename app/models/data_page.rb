@@ -5,7 +5,7 @@ class DataPage < Thing
 
   # Relations
   has_many :data_page_widgets
-  has_many :widgets, :through => :data_page_widgets
+  has_many :widgets, :through => :data_page_widgets, dependent: :destroy
 
   has_many :data_page_queriable_data_stores
   has_many :queriable_data_stores, :through => :data_page_queriable_data_stores
@@ -63,11 +63,11 @@ class DataPage < Thing
 
   def layout=(val)
     touch_metadata!
-    
+
     if val.is_a? String
       val = JSON.parse(val) rescue val
     end
-     
+
     metadata["datagraft-layout"] = val
   end
 

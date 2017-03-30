@@ -1,4 +1,6 @@
 class QuotasController < ApplicationController
+  include QuotasHelper
+
   before_action :authenticate_user!
 
   # GET /quota
@@ -8,18 +10,21 @@ class QuotasController < ApplicationController
     #  raise CanCan::AccessDenied.new("Not authorized!", :read)
     #end
 
-    @nbDataDistributions = current_user.data_distributions.sum(:file_size)
-    @maxDataDistributions = 1024*1024*1024*4
+    @nbSPARQLendpoints = quota_used_sparql_count(current_user)
+    @maxSPARQLendpoints = current_user.quota_sparql_count
 
-    @nbFilestores = current_user.filestores.sum(:file_size)
-    @maxFilestores = 1024*1024*1024*4
+    @nbSPARQLtriples = quota_used_sparql_triples(current_user)
+    @maxSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
-    @nbDataPages = current_user.data_pages.count
-    @maxDataPages = 100
+    @nbFilestores = quota_used_file_count(current_user)
+    @maxFilestores = current_user.quota_filestore_count
 
-    @nbTransformations = current_user.transformations.count
-    @maxTransformations = 1000
-    
+    @nbFilestoresSize = quota_used_file_size(current_user)
+    @maxFilestoresSize = current_user.quota_filestore_ksize*1024
+
+    @nbTransformations = quota_used_transformations_count(current_user)
+    @maxTransformations = current_user.quota_transformation_count
+
     respond_to do |format|
       format.html
       format.json { render template: 'quotas/index' }

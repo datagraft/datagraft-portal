@@ -1,6 +1,6 @@
 
 div.sin-datapage-widgets
-  == show_the_fucking_layout(@data_page.layout(false), 4, 250, 'mdl-grid--no-spacing') do |box|
+  == show_datapage_widgets_layout(@data_page.layout(false), 4, 250, 'mdl-grid--no-spacing') do |box|
     div.mdl-card.mdl-shadow--4dp
       - widget = @widgets[box["index"]]
       - unless widget.nil?

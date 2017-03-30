@@ -1,0 +1,18 @@
+// This partial show current keywords and allows add and delete.
+// It interacts with list.js
+// Should be used by all things having keywords
+// Input params:
+//   form               - The form embracing the list
+
+.keyword_edit_list
+  = form.hidden_field :meta_keyword_list
+.mdl-cell.mdl-cell--12-col.mdl-textfield
+  .mdl-textfield__label Keywords
+  .mdl-textfield__input
+    #keyword-list
+      ul.kwd-list.sin-info-array-container
+    input#keyword-name-field placeholder="Type new keyword" type="text"
+    button#add-keyword-btn type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   Add keyword
+.sin-help-icon-with-tooltip
+  #tooltip-keywords.icon.material-icons help
+  .mdl-tooltip.mdl-tooltip--left for="tooltip-keywords"Add keyword by typing in the text box and click ADD. Delete by clicking on the keyword icon.

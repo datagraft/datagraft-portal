@@ -2,7 +2,7 @@ module ThingHelper
   def thing_url(thing, parameters = {})
     return root_url[0...-1] + thing_path(thing, parameters)
   end
-  
+
   def thing_path(thing, parameters = {})
     thing_generic_path(thing, '', parameters)
   end
@@ -27,6 +27,14 @@ module ThingHelper
     thing_generic_path(thing, '/versions', parameters)
   end
 
+  def thing_version_fork_path(thing)
+    if thing.paper_trail.live?
+      thing_fork_path(@thing)
+    else
+      thing_fork_path(@thing, { version_at: @thing.updated_at+1})
+    end
+  end
+
   def thing_fork_path(thing, parameters = {})
     thing_generic_path(thing, '/fork', parameters)
   end
@@ -42,18 +50,84 @@ module ThingHelper
     username = current_user.username
     "/#{username}/#{params[:controller]}/new"
   end
-  
+
+
+  def update_asset_version_metric(asset_type_string)
+
+    begin
+      num_assets = 0
+      case asset_type_string
+      when "DataPage"
+        Thing.includes(:versions).where(type: "DataPage").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Transformation"
+        Thing.includes(:versions).where(type: "Transformation").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "QueriableDataStore"
+        Thing.includes(:versions).where(type: "QueriableDataStore").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Query"
+        Thing.includes(:versions).where(type: "Query").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "SparqlEndpoint"
+        Thing.includes(:versions).where(type: "SparqlEndpoint").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "Filestore"
+        Thing.includes(:versions).where(type: "Filestore").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "DataDistribution"
+        Thing.includes(:versions).where(type: "DataDistribution").each do |thing|
+          num_assets += thing.versions.count
+        end
+      else
+        throw "unknown asset type"
+      end
+      num_versions = Prometheus::Client.registry.get(:num_versions)
+      num_versions.set({asset_type: asset_type_string}, num_assets)
+    rescue Exception => e
+      puts 'Error updating num_versions metric: '
+      puts e.message
+      puts e.backtrace
+    end
+
+  end
+
   private
 
-    def thing_generic_path(thing, method, parameters = {})
+  def thing_generic_path(thing, method, parameters = {})
+    user = thing.nil? ? current_user : thing.user
+    return "" if user.nil?
 
-      user = thing.nil? ? current_user : thing.user
-      return "" if user.nil?
+    classname = thing.class.name
 
-      classname = thing.class.name
+    slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
 
-      slug = (thing.nil? || thing.new_record?) ? '' : thing.slug
+    "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
 
-      "/#{user.username}/#{classname.underscore.pluralize}/#{slug}#{method}#{ "?#{parameters.to_query}" if parameters.present? }"
+  def thing_icon_name(thing)
+    ret = "help"
+    thing_type = thing.class.model_name.param_key
+    if thing_type == "data_page"
+      ret = "icon--data_page.svg"
+    elsif thing_type == "filestore"
+      ret = "icon--data_page.svg"
+    elsif thing_type == "query"
+      ret = "icon--query.svg"
+    elsif thing_type == "transformation"
+      ret = "icon--transformation.svg"
+    elsif thing_type == "data_store"
+      ret = "icon--queriable_data_store.svg"
+    elsif thing_type == "sparql_endpoint"
+      ret = "icon--queriable_data_store.svg"
     end
+    return ret
+  end
+
 end

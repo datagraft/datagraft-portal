@@ -8,7 +8,7 @@ module DataPagesHelper
   end
 
 
-  def show_the_fucking_layout(layout, ratioGrid = 1, unitHeight = 50, gridClasses = '', cellClasses = '', &block)
+  def show_datapage_widgets_layout(layout, ratioGrid = 1, unitHeight = 50, gridClasses = '', cellClasses = '', &block)
     return if layout.blank?
 
     layout = layout.each_with_index do |box,index|
@@ -35,7 +35,7 @@ module DataPagesHelper
 
     content_tag :div, style: "min-height:#{maxRowHeight}px" do
       groupedBoxes.each do |row, boxes|
-        concat(fuck_you_row(boxes, ratioGrid, unitHeight, gridClasses, cellClasses, block))
+        concat(datapage_widgets_layout_row(boxes, ratioGrid, unitHeight, gridClasses, cellClasses, block))
       end
     end
 
@@ -43,14 +43,14 @@ module DataPagesHelper
 
   private
 
-  def fuck_you_row(boxes, ratioGrid, unitHeight, gridClasses, cellClasses, block)
+  def datapage_widgets_layout_row(boxes, ratioGrid, unitHeight, gridClasses, cellClasses, block)
     maxBox = boxes.max_by do |box|
       box["size_y"]
     end
 
     maxRowHeight = maxBox["size_y"] * unitHeight
 
-    content_tag(:div, class: "mdl-grid #{gridClasses} sin-fucking-layout-row--#{maxRowHeight}") do
+    content_tag(:div, class: "mdl-grid #{gridClasses} sin-datapage-widgets-row--#{maxRowHeight}") do
       [nil, *boxes].each_cons(2) do |immediateLeftBox,box|
         offset = 0
 
@@ -60,12 +60,12 @@ module DataPagesHelper
           offset = box["col"] - 1
         end
 
-        concat(fuck_you_cell(box, offset, ratioGrid, unitHeight, cellClasses, block))
+        concat(datapage_widgets_layout_cell(box, offset, ratioGrid, unitHeight, cellClasses, block))
       end
     end
   end
 
-  def fuck_you_cell(box, offset, ratioGrid, unitHeight, cellClasses, block)
+  def datapage_widgets_layout_cell(box, offset, ratioGrid, unitHeight, cellClasses, block)
     width = box["size_x"]
     height = box["size_y"]
 

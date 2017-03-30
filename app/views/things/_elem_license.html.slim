@@ -1,0 +1,16 @@
+.mdl-cell--6-col
+  .sin-info-label License
+  .sin-info-frame
+    - unless @thing.license.blank?
+      .sin-img-license
+        = render 'license_logo_div'
+      .sin-info-text.center
+        = @thing.name
+        | &nbsp;
+        | is licensed under:
+      .sin-info-text.center
+        - lic = get_license_info @thing.license
+        = link_to lic[:tip], lic[:path], :target => "_blank"
+    - else
+      .sin-info-text.center
+        = 'No license specified'

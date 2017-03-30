@@ -1,0 +1,45 @@
+// Place all the styles related to the Filestores controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.container-scroll {
+  overflow-x: auto;
+}
+
+
+$primary-color: #5264AE;
+
+#filestore-preview-table {
+  .sin-overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap !important;
+    max-width: 28vw;
+  }
+}
+
+// Pagination
+#filestore-preview-table_paginate {
+  margin: auto;
+  text-align: center;
+  & > a {
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 8px 0;
+  }
+  & > span {
+    & > a {
+      cursor: pointer;
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+
+      &.current{
+        background-color: $primary-color;
+        color: white;
+      }
+
+    }
+  }
+}

@@ -4,50 +4,41 @@ class DashboardController < ApplicationController
 
   # TODO: there is an intense amount of requests coming to this function - we might want to think to optimise it or throttle the requests
   def index
+    # TODO: change or remove the if-part of this statement - it is never called (no more search through the DB)
     if params[:search]
       query_things = current_user.search_dashboard_things(params[:search])
       query_catalogues = current_user.search_dashboard_catalogues(params[:search])
+      other_user_public_things = Thing.where(public: true).where.not(user: current_user).basic_search(name: params[:search])
     else
       query_things = current_user.dashboard_things
       query_catalogues = current_user.dashboard_catalogues
+      other_user_public_things = Thing.where(public: true).where.not(user: current_user)
     end
 
     query_things = query_things.includes(:user)
     query_catalogues = query_catalogues.includes(:user)
-
+    
     @things = {
       'all' => query_things,
       'catalogues' => query_catalogues,
       'datapages' => query_things.where(type: 'DataPage'),
       'transformations' => query_things.where(type: 'Transformation'),
       'queriable_data_stores' => query_things.where(type: 'QueriableDataStore'),
+      'queries' => query_things.where(type: 'Query'),
       'other' => query_things.where.not(type: ['DataPage', 'Transformation', 'QueriableDataStore'])
       }
 
     # get active tab
     @activeTab = @things.has_key?(params[:projects_active_tab]) ? params[:projects_active_tab] : 'all'
 
-    # add pagination; TODO: This code is very slow because it always retrieves everything from the DB
     @things.each do |key, query|
       if key == 'all'
-        things_and_catalogues = query_catalogues + query_things
-
-        # so this is how the magic happens...
-        things_and_catalogues.sort_by! do |thing|
-          -thing.stars_count
-        end
-
-        current_page = params['projects_page_'+key] ? Integer(params['projects_page_'+key]) : 1;
-        per_page = params['per_page'] ? Integer(params['per_page']) : 12;
-
-        @things[key] = WillPaginate::Collection.create(current_page, per_page, things_and_catalogues.length) do |pager|
-          start = start = (current_page-1)*per_page
-          pager.replace(things_and_catalogues[start, per_page])
-        end
+        things_and_catalogues = query_catalogues + query_things + other_user_public_things
+        @things[key] = things_and_catalogues
+        
       else
-        @things[key] = query.paginate(:page => params['projects_page_'+key], :per_page => 12)
+        @things[key] = query
       end
-
     end
 
     # get user stars

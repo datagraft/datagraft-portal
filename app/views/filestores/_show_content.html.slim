@@ -1,19 +1,8 @@
-- unless @thing.description.blank?
-  hr
-dl
-  dt Size
-  dd = number_to_human_size @thing.file_size
-  dt Content-type
-  dd = @thing.file_content_type
-  - if @thing.file_content_type.start_with? 'image/'
-    dt Preview
-    dd
-      br
-      = link_to attachment_url(@thing, :file) do
-        = image_tag attachment_url(@thing, :file, :fill, 128, 128, format: "jpg"), class: 'mdl-shadow--4dp'
-br
+.sin-info-layout
+  .mdl-grid
+    = render 'elem_description'
+    = render 'elem_keywords'
+    = render 'elem_download'
 
-.mdl-grid
-  = link_to "Transform", 'perdu.com', class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-cell mdl-cell--3-col"
-
-  = link_to "Download", attachment_url(@thing, :file), class: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored mdl-cell mdl-cell--3-col"
+    = render 'elem_license'
+    = render 'elem_file_metadata'

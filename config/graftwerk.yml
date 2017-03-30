@@ -1,0 +1,8 @@
+development:
+  publicPath: <%= ENV["GRAFTWERK_URI"] %>
+
+test:
+  publicPath: <%= ENV["GRAFTWERK_URI"] %>
+
+production:
+  publicPath: <%= ENV["GRAFTWERK_URI"] %>

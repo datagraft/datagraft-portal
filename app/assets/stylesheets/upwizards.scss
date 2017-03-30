@@ -1,0 +1,134 @@
+// Place all the styles related to the upwizard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+/* CSS for scrollable list */
+.sort-heading-fbox {
+  font-family:sans-serif;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  list-style:none;
+  margin:0;
+  //padding:20px 0 0;
+  padding: 0 0 0;
+  width: 100%;
+}
+.sort-heading-fbox > li {
+}
+
+.sin-list-textfield__scroll {
+  //border: 1px solid rgba(3,3,3,0.3);
+  padding: 4px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.sin-supporting-textfield{
+  font-size: 16px;
+}
+
+.list {
+  font-family:sans-serif;
+  margin:0;
+  //padding:20px 0 0;
+  padding: 0 0 0;
+  width: 100%;
+}
+.list > li {
+  display:block;
+  //background-color: #aaa;
+  //padding:10px;
+  background: #FFFFFF;
+  padding: 2px;
+  box-shadow: inset 0 1px 0 rgba(3,3,3,0.3);
+}
+
+
+.row-fbox {
+  font-family:sans-serif;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-start;
+  list-style:none;
+  margin:0;
+  //padding:20px 0 0;
+  padding: 0 0 0;
+  width: 100%;
+}
+.row-fbox > li {
+}
+
+.row-public {
+}
+.row-private {
+}
+
+.sin-list-hidden-name,
+.sin-list-hidden-time,
+.sin-list-hidden-user {
+  display: none;
+}
+
+.sin-list {
+  margin: 10px;
+}
+
+.sin-list-name {
+  width: 400px;
+  margin: 10px;
+}
+
+.sin-list-user {
+  width: 200px;
+  margin: 10px;
+}
+
+.sin-list-time {
+  margin: 10px;
+}
+
+.sin-align-center {
+  text-align: center;
+}
+.mdl-layout .sin-vertical-card.sin-upwizard-card {
+  & > .mdl-card__title {
+    background-image: image-url("squairy_light.png");
+    background-size: auto;
+    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.5em;
+    padding: 0;
+    min-height: 2.5em;
+    flex: 1 100%;
+    height: 40px;
+  }
+  width: 70%;
+  & > .mdl-card__title {
+    justify-content: center;
+  }
+  & > .mdl-card__actions {
+    flex: 1 0px;
+    order: 2;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: none;
+    button.sin-grafterizer-launch {
+      min-width: 120px;
+      font-size: medium;
+      min-height: 40px;
+    }
+  }
+}
+
+.mdl-layout .sin-centered {
+  margin: 0px auto;
+  width: calc(66vw + 6em);
+}
+
+.mdl-card__actions.sin-existing-transformation-actions {
+  justify-content: space-between;
+}

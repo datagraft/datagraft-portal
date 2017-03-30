@@ -1,8 +1,37 @@
 class PublicPortalController < ApplicationController
   before_action :set_user, only: [:user]
-  skip_authorize_resource only: [:user, :explore]
+  skip_authorize_resource only: [:user, :explore, :terms, :privacy, :faq]
   skip_authorization_check
 
+  # GET /feedback
+  def feedback
+    render template: 'public_portal/feedback'
+  end
+
+  # GET /documentation
+  def documentation
+    render template: 'public_portal/documentation'
+  end
+
+  # GET /terms-of-use
+  def terms
+    render template: 'public_portal/terms_of_use'
+  end
+
+  # GET /privacy-policy
+  def privacy
+    render template: 'public_portal/privacy_policy'
+  end
+
+  # GET /cookie-policy
+  def cookie
+    render template: 'public_portal/cookie_policy'
+  end
+
+  # GET /faq
+  def faq
+    render template: 'public_portal/faq'
+  end
 
   # GET /:username
   # GET /:username.json
@@ -31,6 +60,17 @@ class PublicPortalController < ApplicationController
         pager.replace(things_and_catalogues[start, per_page])
 
       end
+
+    respond_to do |format|
+      format.html { if user_signed_in? && @user == current_user
+                       redirect_to edit_user_registration_path
+                    else
+                       render template: 'public_portal/user'
+                    end
+                  }
+      format.json { render template: 'public_portal/user' }
+    end
+
   end
 
   def explore
@@ -49,6 +89,7 @@ class PublicPortalController < ApplicationController
         things_and_catalogues += query_catalogues
       end
     end
+
     # TODO: make this into a helper function
     things_and_catalogues.to_a.sort_by! do |thing_or_catalogue|
       -thing_or_catalogue.stars_count
@@ -72,6 +113,7 @@ class PublicPortalController < ApplicationController
     end
     # render layout: "explore"
   end
+
 
   private
 

@@ -29,28 +29,21 @@ gem 'acts-as-taggable-on', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Unicorn as the app server
-# gem 'unicorn'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
+group :development, :test, :staging do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 end
 
-group :development do
+group :development, :staging do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 3.3'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
-# Use unicornkaosj
-gem 'unicorn'
-gem 'unicorn-rails'
 
 gem 'rack-cors', :require => 'rack/cors'
 
@@ -100,9 +93,9 @@ gem 'textacular', '~> 4.0'
 gem 'pg'
 
 # file upload with streaming io
-gem "refile", require: "refile/rails"
+gem "refile", '~> 0.6.2',require: "refile/rails", :git => 'https://github.com/manfe/refile.git'
 #gem "refile-mini_magick"
-#gem "refile-s3"
+gem "refile-s3"
 
 # Generate funny names by default
 gem 'bazaar'
@@ -158,5 +151,27 @@ gem 'deep_cloneable', '~> 2.2.0'
 # Feature flippin'
 gem 'flip'
 
+# This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
+gem 'jquery-datatables-rails', '~> 3.4.0'
+# Read Excel files
+gem 'roo', '~> 2.4.0'
+gem 'roo-xls'
+gem 'roo-google'
+
 # brings back assigns to controller tests as well as assert_template to both controller and integration tests
 gem 'rails-controller-testing'
+
+#clipboard-rails gem is the integration of clipboard.js javascript library for your Rails 4 application.
+gem 'clipboard-rails'
+
+# Prometheus metrics framework
+gem 'prometheus-client'
+
+# Gem installation of javascript framework for list and table manipulation, List.js
+# https://github.com/arturhoo/listjs-rails
+gem 'listjs-rails'
+#Use wicked to make your Rails controllers into step-by-step wizards.
+gem 'wicked'
+gem 'puma'
+
+gem 'rest-client'

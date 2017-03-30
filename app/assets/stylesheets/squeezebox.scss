@@ -1,0 +1,66 @@
+
+// Font
+$text-color: #404040 !default;
+
+// Colors
+$white: #fff !default;
+$blue: #3372df !default;
+$red: #cb4437 !default;
+$orange: #eea236 !default;
+$yellow: #f4b400 !default;
+$green: #0f9d58 !default;
+
+$light-gray: #eee;
+$mid-gray: #777;
+$dark-gray: #333 !default;
+
+
+.squeezebox {
+  background-color: $white;
+  border-bottom: 1px solid $light-gray;
+  cursor: pointer;
+  color: $mid-gray;
+  //padding: 1rem;
+  padding: 4px;
+
+  .squeezhead {
+    display: flex;
+    font-size: 1rem;
+    line-height: 1.8rem;
+    i {
+      float: left;
+    }
+    span {
+      float: right;
+      margin-left: 1rem;
+    }
+    strong {
+      display: block;
+      margin-left: 4rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &::after {
+        color: $text-color;
+        font-family: 'FontAwesome';
+        padding-left: .4rem;
+        font-size: 1rem;
+        line-height: 1.49rem; // 1.49rem < 1.5rem standard font-height
+      }
+    }
+  }
+
+  .squeezecnt {
+    cursor: auto;
+    padding: 1rem;
+    display: none;
+  }
+}
+
+.highlight-true .squeezebox {
+  background-color: lightgrey;
+}
+
+.highlight-false {
+
+}

@@ -2,6 +2,14 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'roo' #Used for viewing Excel files
+
+# tracing of HTTP requests
+require 'prometheus/client/rack/collector'
+
+# HTTP endpoint to be scraped by a prometheus server 
+require 'prometheus/client/rack/exporter'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -41,7 +49,8 @@ module Datagraft
         MultiJson.use :yajl
     end
     
-    Refile.store ||= Refile::Backend::FileSystem.new("/tmp/uploads/store".to_s)
-    Refile.cache ||= Refile::Backend::FileSystem.new("/tmp/uploads/cache".to_s)
+    config.grafterizer = config_for(:grafterizer)
+    config.graftwerk = config_for(:graftwerk)
+    
   end
 end

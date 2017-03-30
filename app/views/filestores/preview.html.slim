@@ -1,0 +1,10 @@
+- title "Preview file"
+- setOption :mdlCard
+
+div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
+  div.mdl-card__title.mdl-color-text--grey-50
+    = render 'thing_header'
+  div.sin-date-infos
+    = render 'elem_last_modified'
+  div.mdl-card__supporting-text
+    = render 'preview_table'

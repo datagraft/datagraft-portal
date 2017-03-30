@@ -27,4 +27,8 @@ class Feature < ActiveRecord::Base
   default: false,
   description: "Widgets APIs and UI features shown in the UI."
 
+  feature :stars,
+  default: false,
+  description: "Stars APIs and UI features shown in the UI."
+
 end

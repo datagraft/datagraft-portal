@@ -1,0 +1,57 @@
+- title 'Listing of all wizards'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-card__supporting-text.sin-padding
+    #upwizard-list
+      ul.sort-heading-fbox
+        li
+          i.material-icons search
+          input.search placeholder="Search in wizards"
+        li
+          button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-user"  Sort by user
+        li
+          button.sort type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" data-sort="sin-list-hidden-time"  Sort by time
+      .sin-list-textfield__scroll
+        ul.list
+          - if @upwizard_entries.empty?
+            li
+              .mld-list__item-primary-content
+                em No upwizards found
+          - else
+            - @upwizard_entries.each do |wiz|
+              li
+                .sin-list-hidden-user
+                  - unless wiz.user == nil
+                    = wiz.user.username
+                  - else
+                    = "nil"
+                .sin-list-hidden-time
+                  = wiz.updated_at.to_i
+                ul.row-fbox
+                  li
+                    .sin-list
+                      = wiz.id
+                  li
+                    .sin-list
+                      = wiz.task
+                  li
+                    .sin-list
+                      == link_to 'Delete', upwizard_delete_path(wiz), :method => :delete, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+                  li
+                    .sin-list-user
+                      - unless wiz.user == nil
+                        = wiz.user.username
+                      - else
+                        = "nil"
+                  li
+                    .sin-list-time
+                      = time_ago_in_words wiz.updated_at
+                      | ago
+                  li
+                    .sin-list
+                      = wiz.original_filename

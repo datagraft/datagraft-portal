@@ -2,13 +2,13 @@ class Catalogue < ApplicationRecord
   extend FriendlyId
   friendly_id :name, :use => :history
   belongs_to :user
-  has_many :catalogue_stars
+  has_many :catalogue_stars, dependent: :destroy
   has_many :things, :through => :catalogue_records
-  
+
   validates :name, presence: true
-  
+
   has_paper_trail
-  
+
   def self.public_list
     Catalogue.where(:public => true).order(stars_count: :desc, created_at: :desc).includes(:user)
   end

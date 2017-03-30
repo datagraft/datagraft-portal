@@ -1,4 +1,34 @@
 class TransformationsController < ThingsController
+  include QuotasHelper
+
+  # POST /:username/:resource/
+  def create
+    unless quota_room_for_new_transformations_count?(current_user)
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    else
+      super
+    end
+  end
+
+  # POST /:username/transformations/:id/fork
+  def fork
+    # Check if quota is broken
+    quota_ok = quota_room_for_new_transformations_count?(current_user)
+
+    if quota_ok
+      super
+    else
+      respond_to do |format|
+        format.html { redirect_to quotas_path}
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: flash[:error]}, status: :insufficient_storage}
+      end
+    end
+  end
 
   # GET /transform
   def transform
@@ -9,23 +39,39 @@ class TransformationsController < ThingsController
       session[:tmp_api_key] = {
         'key' => api_result['api_key'] + ':' + api_result['secret'],
         'date' => DateTime.now
-      }
+        }
     end
 
     @key = session[:tmp_api_key]['key']
   end
 
-  private
-    def destroyNotice
-      "The transformation was successfully destroyed"
-    end
+  def show
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @publisherId = @transformation.user.username
+    @transformationID = @transformation.slug
+    super
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def transformation_params
-      params.require(:transformation).permit(
-       :name, :public, :code, :description)
-       # :name, :public, :name, :code, :description).permit!
-       # :name, :public, :name, :code, :description, metadata => [:description, 'dcat:keywords'], :configuration)
-    end
+  def edit
+    authorize! :update, @thing
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @publisherId = current_user.username
+    @transformationID = @transformation.id
+  end
+
+
+  private
+  def destroyNotice
+    "The transformation was successfully destroyed"
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def transformation_params
+    params.require(:transformation).permit(:name, :public, :code, :description)
+  end
+
+  def transformation_params_partial
+    params.permit(:transformation, :name, :public, :code, :description)
+  end
 
 end

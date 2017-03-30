@@ -1,12 +1,43 @@
-= simple_form_for @thing, url: thing_path(@thing) do |f|
+= simple_form_for @thing, url: thing_path(@thing), method: :post do |f|
+  = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
+    = render 'elem_download'
     h4.mdl-cell--12-col Properties
-    = f.input :name, wrapper: :default
-    = f.input :description, as: :text, input_html: { rows: 5 }
-  .mdl-grid
-    = f.input :public, wrapper: :switch
-  .mdl-grid
-    = f.input :file, as: :file, wrapper: :select
+    - unless @thing.file == nil
+    .sin-input-with-help-icon
+      = f.input :name, placeholder: "Enter a file page name", wrapper: :default
+      .sin-help-icon-with-tooltip
+        #tooltip-name.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the file which will appear on the asset browsing table. File name by default.
+    .sin-input-with-help-icon
+      = f.input :description, placeholder: "Enter a description for the file page", as: :text, input_html: { rows: 5 }
+      .sin-help-icon-with-tooltip
+        #tooltip-description.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Enter a description for the file page, which will appear on the file details page. You can use Markdown to format the description.
+    .sin-input-with-help-icon
+      = f.input :public, wrapper: :switch
+      .sin-help-icon-with-tooltip__switch
+        #tooltip-public.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the file page will be visible to other users of DataGraft.
+    .sin-input-with-help-icon
+      = render partial: "elem_edit_keywords", locals: {form: f}
+    .sin-input-with-help-icon
+      = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
+      .sin-help-icon-with-tooltip__select
+        #tooltip-license.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-license" Choose a license for use of the data in your file. You can find more details about data licensing on the Creative Commons web page (link), or at Open Data Commons web page (link).
+    .sin-input-with-help-icon
+      = f.input :separator, prompt: "Choose a CSV separator...", collection: get_separator_list, wrapper: :select
+      .sin-help-icon-with-tooltip__select
+        #tooltip-separator.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-separator" Choose different separator if your file preview fails to detect correct columns.
+
   hr.sin-invisible-form-separator
-  .mdl-grid
-    = f.button :submit
+
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
+    - unless @thing.new_record?
+      = link_to 'Delete file page', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
+    = f.submit "Save and show file page", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

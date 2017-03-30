@@ -5,6 +5,7 @@
 
     function Grafterizer(origin, htmlElement) {
         this._stuffToDo = [];
+        this._stuffToDoAtEveryConnection = [];
 
         this.origin = origin;
         this._createIframe(htmlElement);
@@ -45,15 +46,24 @@
 
     Grafterizer.prototype._onReady = function() {
         this.setAuthorization(this._savedAuthorization);
+        for (a = this._stuffToDoAtEveryConnection, i = 0, l = a.length; i < l; ++i) {
+            this.sendMessage(a[i]);
+        }
         for (var a = this._stuffToDo, i = 0, l = a.length; i < l; ++i) {
             this.sendMessage(a[i]);
         }
         this._stuffToDo = [];
     };
 
-    Grafterizer.prototype.sendMessage = function(message) {
+    Grafterizer.prototype.sendMessage = function(message, everyConnection) {
+        if (everyConnection) {
+            this._stuffToDoAtEveryConnection.push(message);
+        }
+
         if (!this.connected) {
-            this._stuffToDo.push(message);
+            if (!everyConnection) {
+                this._stuffToDo.push(message);
+            }
             return this;
         }
 
@@ -66,12 +76,12 @@
         return this;
     };
 
-    Grafterizer.prototype.go = function(state, toParams) {
+    Grafterizer.prototype.go = function(state, toParams, everyConnection) {
         return this.sendMessage({
             message: 'state.go',
             state: state,
             toParams: toParams
-        });
+        }, everyConnection);
     };
 
     Grafterizer.prototype.setAuthorization = function(keypass) {

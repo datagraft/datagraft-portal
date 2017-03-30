@@ -8,7 +8,7 @@
   text-align: right;
 }
 .sin-stars-count, .sin-private-indicator {
-    i.material-icons {
+  i.material-icons {
     font-size:16px;
     line-height: 13px;
     position:relative;
@@ -26,12 +26,12 @@
   min-height: 8em;
 
   form {
-        background: rgba(82, 100, 174, 0.53);
+    background: rgba(82, 100, 174, 0.53);
     padding: 0.3em 5em 1em 5em;
     /* box-shadow: 1px 1px 1px black inset; */
     border-radius: 4px;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
 
     i.material-icons {
       color: rgba(255,255,255,0.87);
@@ -89,25 +89,25 @@ a.sin-small-card:hover {
   }
 
   .sin-card--transformation .mdl-card__title {
-    background-image:
-      image-url("60_utility.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--transformation.svg");
   }
 
   .sin-card--datapage .mdl-card__title {
-    background-image:
-      image-url("60_page.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--data_page.svg");
   }
 
   .sin-card--datadistribution .mdl-card__title {
-    background-image:
-      image-url("60_file.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--file.svg");
   }
   .sin-card--filestore .mdl-card__title {
-    background-image:
-      image-url("60_file.png");
-      // image-url("background_blue_explore_page.jpg");
+    background-image: image-url("icon--file.svg");
+  }
+}
+
+.sin-table--cookie-policy {
+  table, th, td {
+    border-collapse: collapse;
+    border: 1px solid grey;
+    padding: 2px;
   }
 }

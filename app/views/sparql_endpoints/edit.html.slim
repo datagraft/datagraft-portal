@@ -4,5 +4,7 @@
 div.mdl-card
   div.mdl-card__title.mdl-color-text--grey-50
     h3 = yield(:title)
+  div.sin-date-infos
+    = render 'elem_last_modified'
   div.mdl-card__supporting-text
-    = render 'edit_form'
+    = render 'form_edit'

@@ -1,0 +1,57 @@
+// This partial lists a collection of things with sorting and filtering.
+// Input params:
+//   things             - A collection of things to be shown
+//   things_name        - Name of the things type to be used in the heading
+//   heading            - Text to be shown in the heading
+//   rparams (optional) - Render params hash object to be forwarded as local to show_thing_partial
+//   show_thing_partial - Partial used to show the the thing instance
+//
+//   The show_thing_partial will be called to render each thing.
+//   It will be passed following parameters:
+//     thing              - The thing to render
+//     rparams (optional) - Render params hash object with parameters to show_thing_partial
+//     count              - Count the collection iteration from 1..n
+
+- if things == nil
+  .sin-gl-label
+    = "The list of #{things_name} is nil"
+- elsif things.empty?
+  .sin-gl-label
+    = "The list of #{things_name} is empty"
+- else
+  #gen-list
+    ul.sin-gl-heading-fbox
+      li.sin-gl-search
+        i.material-icons search
+        input.search placeholder="Search in #{things_name}"
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-date"  Sort by date
+      li
+        button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-user"  Sort by user
+      li
+        label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_public"
+          input#gen_checkbox_public.mdl-checkbox__input  type="checkbox" onClick="updateGlPublicStyle(this, 'block')"
+          span.mdl-checkbox__label Include public #{things_name}
+
+    - if defined? heading
+      .sin-gl-label
+        = heading
+    .sin-gl-textfield__scroll
+      ul.sin-gl-list
+        - count = 0
+        - things.each do |thing|
+          - count = count + 1
+          - if can? :read, thing
+            - add_class = 'sin-gl-row-private'
+            - unless thing.user.name == current_user.name
+              - add_class = 'sin-gl-row-public'
+            li class="#{add_class}"
+              .sin-gl-hidden-name
+                = thing.name
+              .sin-gl-hidden-date
+                = thing.updated_at.to_i
+              .sin-gl-hidden-user
+                = thing.user.username
+              = render partial: show_thing_partial, locals: {thing: thing, count: count, rparams: defined?(rparams) ? rparams : nil}

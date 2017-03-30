@@ -1,64 +1,58 @@
 class QueriesController < ThingsController
 
-  def execute
+  def new
+    search_for_existing_sparql_endpoints
+    super
+  end
 
+  def edit
+    search_for_existing_sparql_endpoints
+    super
+  end
+
+  def create
+    search_for_existing_sparql_endpoints
+    super
+  end
+
+  def execute_query
     if !params[:id].blank? && !params[:username].blank?
       set_thing
       authorize! :read, @thing
-
-      if user_signed_in? && (current_user.username == params[:qds_username] || params[:qds_username] == 'myassets')
-        qds_user = current_user
+      if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+        se_user = current_user
       else
-        raise CanCan::AccessDenied.new("Not authorized!") if params[:qds_username] == 'myassets'
-        qds_user = User.find_by_username(params[:qds_username]) or not_found
+        raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+        se_user = User.find_by_username(params[:username]) or not_found
       end
 
-      @queriable_data_store = qds_user.queriable_data_stores.friendly.find(params[:qds_id])
-      # throw @queriable_data_store
-    elsif user_signed_in?
-      querying = params["querying"] || {}
-      @query = @thing = Query.new
-      @query.name = 'Unsaved query'
-      @query.query = querying["query"]
-      @query.language = querying["language"]
-      @unsaved_query = true
-
-      unless querying["queriable_data_store"].blank?
-        @queriable_data_store = QueriableDataStore.friendly.find(querying["queriable_data_store"])
-      end
-    else
-      raise CanCan::AccessDenied.new("Not authorized!")
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:execute_query][:sparql_endpoints])
     end
 
-
-    if @queriable_data_store.nil?
-      @query_result = {
-        headers: [],
-        results: []
-      }
+    # Go to selected endpoint page button_to
+    #if params[:goto_sparql_endpoint_button]
+    if params[:commit] == "Go to selected endpoint page"
+      redirect_to thing_path(@sparql_endpoint)
+    # Execute query button_to
     else
-      authorize! :read, @queriable_data_store
-
-      # HERE IS THE FUN PART
       begin
-        @query_result = @query.execute(@queriable_data_store)
-      rescue => error
+        @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
+      rescue Execption => error
         flash[:error] = error.message
-        # redirect_to thing_path(@query)
-        # @results_list = []
         @query_result = {
           headers: [],
           results: []
         }
       end
-    end
 
-    if @query_result.blank?
-      @results_list = []
-    else
-      @results_list = @query_result[:results].paginate(:page => params[:page], :per_page => 25)
+      if @query_result.blank?
+        @results_list = []
+      else
+        @results_list = @query_result[:results]
+      end
+
+      render :partial => 'execute_query_results' if request.xhr?
     end
-    # throw @query_result
   end
 
   private
@@ -68,7 +62,20 @@ class QueriesController < ThingsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-        params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :language, :description,
+        from_params = params.require(:query).permit(:public, :name, :metadata, :configuration, :query, :query_type, :language, :description,
+          queriable_data_store_ids: [],
+          sparql_endpoint_ids: [])
+
+        # If no checkboxes are ticked no array is present. Add an empty array to fix this
+        unless from_params.has_key?('sparql_endpoint_ids')
+          from_params = from_params.merge({'sparql_endpoint_ids' => []})
+        end
+        return from_params
+    end
+
+  # It may be scary, but you should sometimes trust parameters from the internet!
+    def query_params_partial
+        params.permit(:query, :public, :name, :metadata, :configuration, :language, :description,
           queriable_data_store_ids: [])
     end
 
@@ -82,5 +89,25 @@ class QueriesController < ThingsController
         end
       end
       # throw query.queriable_data_stores
+
+      query.sparql_endpoints.to_a.each do |se|
+        if se.user != query.user && !se.public
+          query.sparql_endpoints.delete(se)
+        end
+      end
+      # throw query.sparql_endpoints
+
     end
+
+  # Make a list of existing sparql_endpoints. Used by view
+  def search_for_existing_sparql_endpoints
+    user = current_user
+    tmp_user = user.sparql_endpoints.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%").sort_by(&:updated_at).reverse
+    tmp_pub = Thing.public_list.includes(:user).where(:type => ['SparqlEndpoint']).where.not("name LIKE ?", "%previewed_dataset_%")
+    @sparql_endpoint_entries =  tmp_user + tmp_pub
+    puts "******************* search_for_existing_sparql_endpoints"
+    puts "@sparql_endpoint_entries: <#{@sparql_endpoint_entries.size}>"
+  end
+
+
 end
