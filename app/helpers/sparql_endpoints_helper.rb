@@ -5,7 +5,7 @@ module SparqlEndpointsHelper
   end
 
 
-  # Get repository size for SPARQL endpoint
+  # Get repository size for SPARQL endpoint DEPRECATED
   def repository_size
     if @thing.public
       # Create a tmp user (public SPARQL endpoint)
@@ -15,6 +15,11 @@ module SparqlEndpointsHelper
       # Use current user (private SPARQL endpoint)
       current_user.get_ontotext_repository_size(@thing)
     end
+  end
+
+  # Get repository size for SPARQL endpoint
+  def repository_size_param (user, se)
+    user.get_ontotext_repository_size(se)
   end
 
 
@@ -32,8 +37,8 @@ module SparqlEndpointsHelper
 
     return tmp_user + tmp_pub
   end
-  
-  
+
+
   # Check if query links to sparql endpoint
   def query_links_to_sparql_endpoint(query, sparql_endpoint)
     return SparqlEndpointQuery.exists?({query_id: query.id, sparql_endpoint_id: sparql_endpoint.id})

@@ -1,4 +1,6 @@
 module QuotasHelper
+  include SparqlEndpointsHelper
+
   # Find how many files the user has in db
   def quota_used_file_count(user)
     return user.filestores.count
@@ -57,13 +59,16 @@ module QuotasHelper
   def quota_used_sparql_triples(user)
     total_sparql_triples = 0;
     users_sparql = user.sparql_endpoints
-#    users_sparql.each do |se|
-#      unless se.repository_size == nil
-#        total_sparql_triples += se.repository_size
-#      else
-#        puts "Sparql_endpoint is missing size information:"+se.inspect
-#      end
-#    end
+    users_sparql.each do |se|
+      size = repository_size_param(user, se)
+      puts 'Quota triples:'+size
+      unless size == nil
+        total_sparql_triples += size.to_i
+      else
+        puts "Sparql_endpoint is missing size information:"+se.inspect
+      end
+    end
+    puts 'Quota triples sum:'+total_sparql_triples.to_s
     return total_sparql_triples
   end
 
