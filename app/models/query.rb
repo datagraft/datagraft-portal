@@ -83,7 +83,7 @@ class Query < Thing
   #    end
   #    =end
 
-  def execute(sparql_endpoint)
+  def execute(sparql_endpoint, timeout = 180)
     conn = Faraday.new(sparql_endpoint.uri) do |c|
       # c.response :json
       c.request :url_encoded
@@ -93,7 +93,7 @@ class Query < Thing
     result = conn.get do |req|
       req.params['query'] = query
       req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
-      req.options.timeout = 180
+      req.options.timeout = timeout
     end
 
     if result.status != 200
@@ -109,7 +109,7 @@ class Query < Thing
   end
 
   
-  def execute_on_sparql_endpoint(sparql_endpoint, user)
+  def execute_on_sparql_endpoint(sparql_endpoint, user, timeout = 180)
     return {
       headers: [],
       results: []
@@ -129,13 +129,14 @@ class Query < Thing
     result = conn.get do |req|
       req.params['query'] = query
       req.headers['Accept'] = 'application/sparql-results+json'
-      req.options.timeout = 180
+      req.options.timeout = timeout
     end
+    
     if result.status != 200
       puts "Unable to execute query. Error " + result.status.to_s + ". Response: " + result.body
       raise "Unable to execute query. Error " + result.status.to_s
     end
-
+    
     parsed = JSON.parse(result.body)
 
     return {
