@@ -13,7 +13,10 @@ class QuotasController < ApplicationController
     @nbSPARQLendpoints = quota_used_sparql_count(current_user)
     @maxSPARQLendpoints = current_user.quota_sparql_count
 
-    @nbSPARQLtriples = quota_used_sparql_triples(current_user)
+    triple_info_hash = quota_used_sparql_triples(current_user)
+    @nbSPARQLtriples = triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples]
+    @nbSPARQLcached = triple_info_hash[:cached_req]
+    @nbSPARQLfailed = triple_info_hash[:failed_req]
     @maxSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
     @nbFilestores = quota_used_file_count(current_user)

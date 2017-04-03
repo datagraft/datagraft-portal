@@ -55,21 +55,44 @@ module QuotasHelper
     return user.sparql_endpoints.count
   end
 
+  def string_to_int_or_nil(str)
+    Integer(str) rescue nil
+  end
+
   # Find users sparql endpoints and calculate total number of triples
   def quota_used_sparql_triples(user)
-    total_sparql_triples = 0;
+    total_repo_sparql_triples = 0
+    failed_sparql_requests = 0
+    total_cached_sparql_triples = 0
+    cached_sparql_requests = 0
+
     users_sparql = user.sparql_endpoints
     users_sparql.each do |se|
-      size = repository_size_param(user, se)
-      puts 'Quota triples:'+size
-      unless size == nil
-        total_sparql_triples += size.to_i
-      else
-        puts "Sparql_endpoint is missing size information:"+se.inspect
+      begin
+        str = repository_size_param(user, se)
+        size = string_to_int_or_nil (str)
+        puts 'Quota triples:'+str
+        unless (size == nil)
+          total_repo_sparql_triples += size
+        else
+          failed_sparql_requests += 1
+        end
+      rescue Exception => e
+        puts 'Exception when reading triple size :' + e.message
+        str = repository_cached_size_param(user, se)
+        size = string_to_int_or_nil (str)
+        puts 'Cached quota triples:'+str
+        unless (size == nil)
+          cached_sparql_requests += 1
+          total_cached_sparql_triples += size
+        else
+          failed_sparql_requests += 1
+        end
       end
     end
-    puts 'Quota triples sum:'+total_sparql_triples.to_s
-    return total_sparql_triples
+    ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests, failed_req: failed_sparql_requests}
+    puts 'Ret:'+ret.to_s
+    return ret
   end
 
   # Check if the user can create another sparql endpoint

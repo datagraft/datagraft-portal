@@ -22,6 +22,10 @@ module SparqlEndpointsHelper
     user.get_ontotext_repository_size(se)
   end
 
+  # Get cached repository size for SPARQL endpoint
+  def repository_cached_size_param (user, se)
+    return "0" ## ToDo replace with real code when model is updated
+  end
 
   # Return all queries
   def all_queries
