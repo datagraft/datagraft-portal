@@ -44,9 +44,10 @@
         - things.each do |thing|
           - count = count + 1
           - if can? :read, thing
-            - add_class = 'sin-gl-row-private'
-            - unless thing.user.name == current_user.name
-              - add_class = 'sin-gl-row-public'
+            - add_class = 'sin-gl-row-public'
+            - if !!current_user
+              - if thing.user.username == current_user.username
+                - add_class = 'sin-gl-row-private'
             li class="#{add_class}"
               .sin-gl-hidden-name
                 = thing.name
