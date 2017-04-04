@@ -18,70 +18,44 @@ class Query < Thing
   accepts_nested_attributes_for :queriable_data_stores
   accepts_nested_attributes_for :sparql_endpoints
 
+  
   def should_generate_new_friendly_id?
     name_changed? || super
   end
 
+  
   def query
     configuration["query"] unless configuration.blank?
   end
 
+  
   def query=(val)
     touch_configuration!
     configuration["query"] = val
   end
 
+  
   def query_type
     configuration["query_type"] unless configuration.blank?
   end
 
+  
   def query_type=(val)
     touch_configuration!
     configuration["query_type"] = val
   end
 
+  
   def language
     configuration["language"] unless configuration.blank?
   end
 
+  
   def language=(val)
     touch_configuration!
     configuration["language"] = val
   end
 
-  # Old execute method on queriable data stores replaced with sparql endpoints
-  #  =begin
-  #    def execute(queriable_data_store)
-  #      # HERE IS UGLY CODE LOL
-  #      if language == 'SPARQL' && queriable_data_store.hosting_provider = 'ontotext'
-  #        conn = Faraday.new(queriable_data_store.uri) do |c|
-  #          # c.response :json
-  #          c.request :url_encoded
-  #          c.adapter Faraday.default_adapter
-  #        end
-  #
-  #        result = conn.get do |req|
-  #          req.params['query'] = query
-  #          req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
-  #        end
-  #
-  #        if result.status != 200
-  #          raise result.body
-  #        end
-  #
-  #        parsed = JSON.parse(result.body)
-  #
-  #        return {
-  #          headers: parsed["head"]["vars"],
-  #          results: parsed["results"]["bindings"]
-  #          }
-  #        # return result.body
-  #        # throw result
-  #      else
-  #        raise "Only SPARQL on Ontotext backend querying is supported"
-  #      end
-  #    end
-  #    =end
 
   def execute(sparql_endpoint, timeout = 180)
     conn = Faraday.new(sparql_endpoint.uri) do |c|

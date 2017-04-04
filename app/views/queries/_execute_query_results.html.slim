@@ -9,21 +9,18 @@ h3.sin-tab-title.mdl-cell--12-col
       label.mdl-textfield__label for="query-results-search"  Search
 
 - unless @results_list.empty?
-  - if @results_list[0].eql?("Faraday::TimeoutError")
-    em.mdl-cell--12-col No rows returned due to timeout error.
-  - else 
-    table#query-results-table.mdl-data-table.cell-border
-      thead
+  table#query-results-table.mdl-data-table.cell-border
+    thead
+      tr
+        - @query_result[:headers].each do |header|
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
+    tbody
+      - @results_list.each do |result|
         tr
           - @query_result[:headers].each do |header|
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
-      tbody
-        - @results_list.each do |result|
-          tr
-            - @query_result[:headers].each do |header|
-              - if result[header]["value"].is_a? Numeric
-                td = result[header]["value"]
-              - else
-                td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+            - if result[header]["value"].is_a? Numeric
+              td = result[header]["value"]
+            - else
+              td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
 - else
   em.mdl-cell--12-col No rows returned
