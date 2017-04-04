@@ -11,6 +11,19 @@ class SparqlEndpoint < Thing
   attr_accessor :execute_query
   attr_accessor :tmp_file
 
+  def initialize(*params)
+    if params.length == 0
+      super()
+    elsif params.length == 1
+      super(params[0])
+    else
+      throw ("Initialize called with more than 1 params")
+    end
+      
+    touch_metadata!
+    metadata["cached_size"] = 0
+  end
+  
   def should_generate_new_friendly_id?
     name_changed? || super
   end

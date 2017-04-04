@@ -288,7 +288,7 @@ module OntotextUser
       puts resp_size.inspect
       
       # Update cached size of Sparql Endpoint
-      se.cached_size = resp_size.body
+      se.cached_size = resp_size.body ||= 0
       se.save
       
       return resp_size.body
