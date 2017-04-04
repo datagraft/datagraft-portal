@@ -33,6 +33,15 @@ class SparqlEndpoint < Thing
     attribute_will_change!('uri') if uri != val
     metadata["uri"] = val
   end
+  
+  def cached_size
+    return metadata["cached_size"] if metadata
+  end
+  
+  def cached_size=(val)
+    touch_metadata!
+    metadata["cached_size"] = val ||= 0
+  end    
 
   def write_attribute(attr_name, value)
     # Check if new (no user) or update (existing user)
