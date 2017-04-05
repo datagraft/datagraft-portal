@@ -35,23 +35,32 @@ class QueriesController < ThingsController
       redirect_to thing_path(@sparql_endpoint)
     # Execute query button_to
     else
+      timeout_error = false
+      
       begin
         @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
-      rescue Execption => error
+      rescue Exception => error
+        if error.class.to_s.eql?("Faraday::TimeoutError")
+          timeout_error = true
+        end
         flash[:error] = error.message
         @query_result = {
           headers: [],
           results: []
         }
       end
-
+      
       if @query_result.blank?
         @results_list = []
       else
         @results_list = @query_result[:results]
       end
-
-      render :partial => 'execute_query_results' if request.xhr?
+      
+      if timeout_error
+        render :partial => 'execute_query_timeout' if request.xhr?
+      else
+        render :partial => 'execute_query_results' if request.xhr?
+      end
     end
   end
 

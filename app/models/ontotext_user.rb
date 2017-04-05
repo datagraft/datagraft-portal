@@ -279,21 +279,27 @@ module OntotextUser
       resp_size = connect.get do |req|
         req.url se.uri+'/size'
         req.headers['Content-Type'] = 'application/ld+json'
-        req.options.timeout = 720
+        req.options.timeout = 10
       end
 
-      throw ("Unable to get size of the Ontotext repository - " + resp_size.body + " - " + resp_size.status) unless
+      throw ("Unable to get size of the Ontotext repository - " + resp_size.body.to_s + " - " + resp_size.status.to_s) unless
       resp_size.status.between?(200, 299)
 
       puts resp_size.inspect
+      
+      # Update cached size of Sparql Endpoint
+      se.cached_size = resp_size.body ||= 0
+      se.save
+      
       return resp_size.body
 
-    rescue Exception => e
-      puts 'Error getting Ontotext repository size'
-      puts e.message
-      puts e.backtrace.inspect
+#    rescue Exception => e
+#      puts 'Error getting Ontotext repository size'
+#      puts e.message
+#      puts e.backtrace.inspect
+#      throw e
 
-      return 'unknown size of'
+#      return 'unknown size of'
     end
   end
 
@@ -326,7 +332,7 @@ module OntotextUser
           req.options.timeout = 720
         end
 
-        throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status.to_s) unless
+        throw ("Unable to upload file to the Ontotext repository - " + resp.body.to_s + " - " + resp.status.to_s) unless
         resp.status.between?(200, 299)
 
       rescue Exception => e

@@ -45,7 +45,7 @@ class ApiKey < ApplicationRecord
       key.save
 
       # TODO : Check if this definitely removes the bad credentials bug…
-      sleep 3
+      sleep 5
     end
 
     key
