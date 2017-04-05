@@ -17,6 +17,16 @@ class QuotasController < ApplicationController
     @nbSPARQLtriples = triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples]
     @nbSPARQLcached = triple_info_hash[:cached_req]
     @nbSPARQLfailed = triple_info_hash[:failed_req]
+
+    error_txt = ""
+    if @nbSPARQLcached != 0
+      error_txt += "#{@nbSPARQLcached} unreachable SPARQL endpoints, using last known size of triples. <br>"
+    end
+    if @nbSPARQLfailed != 0
+      error_txt += "#{@nbSPARQLfailed} unreachable SPARQL endpoints, no size available. <br>"
+    end
+    flash[:error] = error_txt if error_txt != ""
+
     @maxSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
     @nbFilestores = quota_used_file_count(current_user)
