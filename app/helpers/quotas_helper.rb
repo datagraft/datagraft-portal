@@ -54,11 +54,7 @@ module QuotasHelper
   def quota_used_sparql_count(user)
     return user.sparql_endpoints.count
   end
-
-  def string_to_int_or_nil(str)
-    Integer(str) rescue nil
-  end
-
+  
   # Find users sparql endpoints and calculate total number of triples
   def quota_used_sparql_triples(user)
     total_repo_sparql_triples = 0
@@ -69,22 +65,26 @@ module QuotasHelper
     users_sparql = user.sparql_endpoints
     users_sparql.each do |se|
       begin
-        str = repository_size_param(user, se)
-        size = string_to_int_or_nil (str)
+        #str = repository_size_param(user, se)
+        str = user.get_ontotext_repository_size(se)
+        #size = string_to_int_or_nil (str)
         puts 'Quota triples:'+str
-        unless (size == nil)
-          total_repo_sparql_triples += size
-        else
-          failed_sparql_requests += 1
-        end
+        total_repo_sparql_triples += Integer(str)
+        #unless (size == nil)
+        #  total_repo_sparql_triples += size
+        #else
+        #  failed_sparql_requests += 1
+        #end
       rescue Exception => e
         puts 'Exception when reading triple size :' + e.message
-        str = repository_cached_size_param(user, se)
-        size = string_to_int_or_nil (str)
+        #str = repository_cached_size_param(user, se)
+        str = se.cached_size
+        #size = string_to_int_or_nil (str)
         puts 'Cached quota triples:'+str
         unless (size == nil)
           cached_sparql_requests += 1
-          total_cached_sparql_triples += size
+          #total_cached_sparql_triples += size
+          total_cached_sparql_triples += Integer(str)
         else
           failed_sparql_requests += 1
         end

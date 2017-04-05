@@ -18,7 +18,7 @@
         p
         dt Size:
         dd
-          = repository_size + ' triples'
+          = repository_size_param(current_user, @thing).to_s + ' triples'
 
   hr.sin-invisible-form-separator
   div.mdl-card__actions
