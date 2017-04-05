@@ -6,26 +6,9 @@ module SparqlEndpointsHelper
 
 
   # Get repository size for SPARQL endpoint
-#  def repository_size
-#    result = nil
-#    
-#    if @thing.public
-#      # Create a tmp user (public SPARQL endpoint)
-#      tmpuser = User.new;
-#      tmpuser.get_ontotext_repository_size(@thing)
-#    else
-#      # Use current user (private SPARQL endpoint)
-#      current_user.get_ontotext_repository_size(@thing)
-#    end
-#    
-#    return result
-#  end
-
-  
-  # Get repository size for SPARQL endpoint
   def repository_size_param(user, se)
     raise CanCan::AccessDenied.new("Not allowed to access Sparql Endpoint", :read, se) unless can? :read, se
-    
+
     begin
       return user.get_ontotext_repository_size(se)
 
@@ -39,14 +22,7 @@ module SparqlEndpointsHelper
     end
   end
 
-  
-  # Get cached repository size for SPARQL endpoint
-  # Do not think is needed!
-  def repository_cached_size_param (user, se)
-    return "0" ## ToDo replace with real code when model is updated
-  end
 
-  
   # Return all queries
   def all_queries
     return Thing.where(type: 'Query')

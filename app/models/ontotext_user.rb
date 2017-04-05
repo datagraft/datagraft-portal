@@ -267,7 +267,7 @@ module OntotextUser
   # Get the size of the repository
   def get_ontotext_repository_size(se)
     begin
-      return 'unknown size of' if not se.uri
+      return '0' if not se.uri
 
       # No user authentication required for public SPARQL endpoints
       connect = Faraday.new
@@ -286,20 +286,13 @@ module OntotextUser
       resp_size.status.between?(200, 299)
 
       puts resp_size.inspect
-      
+
       # Update cached size of Sparql Endpoint
-      se.cached_size = resp_size.body ||= 0
+      se.cached_size = resp_size.body ||= se.cached_size
       se.save
-      
+
       return resp_size.body
 
-#    rescue Exception => e
-#      puts 'Error getting Ontotext repository size'
-#      puts e.message
-#      puts e.backtrace.inspect
-#      throw e
-
-#      return 'unknown size of'
     end
   end
 

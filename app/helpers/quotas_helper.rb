@@ -1,5 +1,4 @@
 module QuotasHelper
-  include SparqlEndpointsHelper
 
   # Find how many files the user has in db
   def quota_used_file_count(user)
@@ -54,43 +53,28 @@ module QuotasHelper
   def quota_used_sparql_count(user)
     return user.sparql_endpoints.count
   end
-  
+
   # Find users sparql endpoints and calculate total number of triples
   def quota_used_sparql_triples(user)
     total_repo_sparql_triples = 0
-    failed_sparql_requests = 0
     total_cached_sparql_triples = 0
     cached_sparql_requests = 0
 
     users_sparql = user.sparql_endpoints
     users_sparql.each do |se|
       begin
-        #str = repository_size_param(user, se)
         str = user.get_ontotext_repository_size(se)
-        #size = string_to_int_or_nil (str)
         puts 'Quota triples:'+str
         total_repo_sparql_triples += Integer(str)
-        #unless (size == nil)
-        #  total_repo_sparql_triples += size
-        #else
-        #  failed_sparql_requests += 1
-        #end
       rescue Exception => e
         puts 'Exception when reading triple size :' + e.message
-        #str = repository_cached_size_param(user, se)
         str = se.cached_size
-        #size = string_to_int_or_nil (str)
         puts 'Cached quota triples:'+str
-        unless (size == nil)
-          cached_sparql_requests += 1
-          #total_cached_sparql_triples += size
-          total_cached_sparql_triples += Integer(str)
-        else
-          failed_sparql_requests += 1
-        end
+        cached_sparql_requests += 1
+        total_cached_sparql_triples += Integer(str)
       end
     end
-    ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests, failed_req: failed_sparql_requests}
+    ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
     puts 'Ret:'+ret.to_s
     return ret
   end

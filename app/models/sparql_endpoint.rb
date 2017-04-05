@@ -11,19 +11,7 @@ class SparqlEndpoint < Thing
   attr_accessor :execute_query
   attr_accessor :tmp_file
 
-  def initialize(*params)
-    if params.length == 0
-      super()
-    elsif params.length == 1
-      super(params[0])
-    else
-      throw ("Initialize called with more than 1 params")
-    end
-      
-    touch_metadata!
-    metadata["cached_size"] = 0
-  end
-  
+
   def should_generate_new_friendly_id?
     name_changed? || super
   end
@@ -46,15 +34,17 @@ class SparqlEndpoint < Thing
     attribute_will_change!('uri') if uri != val
     metadata["uri"] = val
   end
-  
+
   def cached_size
-    return metadata["cached_size"] if metadata
+    result = nil
+    result = metadata["cached_size"] if metadata
+    return (result ||= '0')
   end
-  
+
   def cached_size=(val)
     touch_metadata!
     metadata["cached_size"] = val ||= 0
-  end    
+  end
 
   def write_attribute(attr_name, value)
     # Check if new (no user) or update (existing user)
