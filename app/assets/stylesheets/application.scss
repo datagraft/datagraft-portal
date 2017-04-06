@@ -380,6 +380,13 @@ iframe.grafterizer {
   width: 100%;
 }
 
+.sin-input-with-help-icon-direction-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+
 .sin-input-with-help-icon .mdl-switch {
   width: 100px;
   margin-right: 30px;
@@ -397,8 +404,21 @@ iframe.grafterizer {
   color: rgba(0,0,0,0.6);
 }
 
+.sin-help-icon-with-tooltip-direction-column__select:hover {
+  color: rgba(0,0,0,0.6);
+}
+
 .sin-help-icon-with-tooltip__select {
   margin-left: -30px;
+  padding-top: 0px;
+  color: rgba(0,0,0,0.3);
+  z-index: 1;
+  cursor: default;
+}
+
+.sin-help-icon-with-tooltip-direction-column__select {
+  margin-bottom: -30px;
+  align-self: flex-end;
   padding-top: 0px;
   color: rgba(0,0,0,0.3);
   z-index: 1;
