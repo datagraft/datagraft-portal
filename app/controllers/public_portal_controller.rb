@@ -8,6 +8,11 @@ class PublicPortalController < ApplicationController
     render template: 'public_portal/feedback'
   end
 
+  # GET /about-us
+  def feedback
+    render template: 'public_portal/about_us'
+  end
+
   # GET /documentation
   def documentation
     render template: 'public_portal/documentation'

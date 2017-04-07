@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get 'documentation' => 'public_portal#documentation'
   get 'api' => 'public_portal#api'
   get 'feedback' => 'public_portal#feedback'
+  get 'about-us' => 'public_portal#about'
   get 'terms-of-use' => 'public_portal#terms'
   get 'privacy-policy' => 'public_portal#privacy'
   get 'cookie-policy' => 'public_portal#cookie'
