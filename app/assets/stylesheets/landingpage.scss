@@ -149,7 +149,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .third-screen {
-    height:50vh;
+    height:40vh;
     background:$dapaas-color-wordcloud image-url("wordcloud_hr9_nsw.png") no-repeat;
     background-size: cover;
 
@@ -199,7 +199,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .last-screen {
-    height:50vh;
+    height:40vh;
     background:#F2F2F2 image-url("bg.jpeg") no-repeat;
     background-size: cover;
     //background-position: center -330.634px;
@@ -222,5 +222,51 @@ $white-not-so-white: hsl(226, 39%, 94%);
 @media screen and (min-width: 960px) {
     .first-screen #screenshots-container {
         transform: scale(1.2,1.2) translateX(10px);
+    }
+}
+
+/* The Overlay (background) */
+.overlay {
+    /* Height & width depends on how you want to reveal the overlay (see JS below) */
+    height: 80vh;
+    width: 90%;
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    left: 5vw;
+    top: 10vh;
+    color: $white-not-so-white;
+    background-color: rgb(0,0,0); /* Black fallback color */
+    background-color: rgba(0,0,0, 0.7); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    //overflow-y: hidden; /* Disable vertical scroll */
+    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+
+    /* Position the image inside the overlay */
+    img {
+        position: relative;
+        //max-height: 100%;
+        max-width: 100%;
+        text-align: center; /* Centered text/links */
+    }
+
+    /* Position the close button (top right corner) */
+    .closebtn {
+        z-index: 100;
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+        color: $white-not-so-white;
+        background-color: inherit;
+    }
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
     }
 }

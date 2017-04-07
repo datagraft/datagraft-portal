@@ -18,29 +18,27 @@ div.max-width-container.mdl-grid
               p Programmatically across the data catalogue
           tr
             td
-              = image_tag(image_url("screenshots/Grafterizer1.png"), id: 'show-dialog1')
+              = image_tag(image_url("screenshots/Grafterizer1.png"), id: 'show-ovl1')
             td
-              = image_tag(image_url("screenshots/Dashboard.png"), id: 'show-dialog2')
+              = image_tag(image_url("screenshots/Dashboard.png"), id: 'show-ovl2')
             td
-              = image_tag(image_url("screenshots/Sparql3.png"), id: 'show-dialog3')
+              = image_tag(image_url("screenshots/Sparql3.png"), id: 'show-ovl3')
   //.mdl-grid
   //  .mdl-cell.mdl-cell-4-col.mdl-cell--middle
   //    iframe allowfullscreen="" height="315" src="https://www.youtube.com/embed/zAruS4cEmvk"
 
-dialog.mdl-dialog.sin-pict-modal#dialog1
-  .mdl-dialog__content
-        = image_tag(image_url("screenshots/Grafterizer1.png"))
-  .mdl-dialog__actions
-    button.mdl-button.close type="button"  Close
+  #ovl1.overlay
+    /! Button to close the overlay navigation
+    button.closebtn#close-ovl1 href="javascript:void(0)" X
+    = image_tag(image_url("screenshots/Grafterizer1.png"))
 
-dialog.mdl-dialog.sin-pict-modal#dialog2
-  .mdl-dialog__content
-        = image_tag(image_url("screenshots/Dashboard.png"))
-  .mdl-dialog__actions
-    button.mdl-button.close type="button"  Close
+  #ovl2.overlay
+    /! Button to close the overlay navigation
+    button.closebtn#close-ovl2 href="javascript:void(0)" X
+    = image_tag(image_url("screenshots/Dashboard.png"))
 
-dialog.mdl-dialog.sin-pict-modal#dialog3
-  .mdl-dialog__content
-        = image_tag(image_url("screenshots/Sparql3.png"))
-  .mdl-dialog__actions
-    button.mdl-button.close type="button"  Close
+  #ovl3.overlay
+    /! Button to close the overlay navigation
+    button.closebtn#close-ovl3 href="javascript:void(0)" X
+    .overlay-content
+      = image_tag(image_url("screenshots/Sparql3.png"))
