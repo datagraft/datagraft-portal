@@ -154,11 +154,14 @@ $white-not-so-white: hsl(226, 39%, 94%);
     background-size: cover;
 
     h2 {
-      //padding-top:100px;
+      margin-top:0;
+      margin-bottom:0;
     }
+
     table {
       border-spacing: 20px 10px;
     }
+
     td {
       vertical-align: top;
     }
@@ -170,6 +173,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
     h3 {
         font-weight: 300px;
+        margin-top:15px;
         margin-bottom:15px;
         line-height: 40px;
         text-align: left;
@@ -258,7 +262,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
         right: 45px;
         font-size: 60px;
         color: $white-not-so-white;
-        background-color: inherit;
+        background-color: $dapaas-color-accent;
     }
 }
 
