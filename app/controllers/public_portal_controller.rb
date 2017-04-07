@@ -9,7 +9,7 @@ class PublicPortalController < ApplicationController
   end
 
   # GET /about-us
-  def feedback
+  def about
     render template: 'public_portal/about_us'
   end
 
