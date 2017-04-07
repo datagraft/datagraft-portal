@@ -59,7 +59,8 @@ $white-not-so-white: hsl(226, 39%, 94%);
         transition: all 0.5s ease-in-out 0s;
         height:300px;
         width:100%;
-        left: 50%;
+        left:25%;
+        z-index: 6;
 
         img {
             border-radius:3px;
@@ -68,44 +69,35 @@ $white-not-so-white: hsl(226, 39%, 94%);
             max-width:90%;
             max-height:100%;
             transition: all 0.5s ease 0s;
-            transform: scale(1,1) perspective(275px) rotateY(-3deg);
+            transform: scale(0.728,0.728) perspective(300px) rotateY(-2deg);
         }
 
         &:first-child {
-            left:50%;
+            left:0%;
+            z-index: 10;
             img {
-                transform: scale(0.66,0.66) perspective(300px) rotateY(-2deg);
+                transform: scale(1,1) perspective(250px) rotateY(-4deg);
             }
         }
         &:nth-child(2) {
-            left:41%;
-            img {
-                transform: scale(0.728,0.728) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(3) {
-            left:32%;
-            img {
-                transform: scale(0.796,0.796) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(4) {
-            left:23%;
-            img {
-                transform: scale(0.864,0.864) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(5) {
-            left:14%;
+            left:10%;
+            z-index: 9;
             img {
                 transform: scale(0.932,0.932) perspective(300px) rotateY(-2deg);
             }
         }
-        &:last-child {
-            left:-10px;
-
+        &:nth-child(3) {
+            left:15%;
+            z-index: 8;
             img {
-                transform: scale(1,1) perspective(250px) rotateY(-4deg);
+                transform: scale(0.864,0.864) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(4) {
+            left:20%;
+            z-index: 7;
+            img {
+                transform: scale(0.796,0.796) perspective(300px) rotateY(-2deg);
             }
         }
     }
@@ -114,6 +106,12 @@ $white-not-so-white: hsl(226, 39%, 94%);
     }
 }
 
+.sin-pict-modal {
+  //width: 90%; // This is moved to js to override MDL classes
+  img {
+    width: 100%;
+  }
+}
 .second-screen {
     height:100vh;
     padding-top:50px;
@@ -156,7 +154,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
     background-size: cover;
 
     h2 {
-      padding-top:100px;
+      //padding-top:100px;
     }
     table {
       border-spacing: 20px 10px;

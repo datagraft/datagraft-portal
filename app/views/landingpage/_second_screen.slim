@@ -18,11 +18,29 @@ div.max-width-container.mdl-grid
               p Programmatically across the data catalogue
           tr
             td
-              = image_tag(image_url("screenshots/Grafterizer1.png"))
+              = image_tag(image_url("screenshots/Grafterizer1.png"), id: 'show-dialog1')
             td
-              = image_tag(image_url("screenshots/Dashboard.png"))
+              = image_tag(image_url("screenshots/Dashboard.png"), id: 'show-dialog2')
             td
-              = image_tag(image_url("screenshots/Sparql3.png"))
-  .mdl-grid
-    .mdl-cell.mdl-cell-4-col.mdl-cell--middle
-      iframe allowfullscreen="" height="315" src="https://www.youtube.com/embed/zAruS4cEmvk"
+              = image_tag(image_url("screenshots/Sparql3.png"), id: 'show-dialog3')
+  //.mdl-grid
+  //  .mdl-cell.mdl-cell-4-col.mdl-cell--middle
+  //    iframe allowfullscreen="" height="315" src="https://www.youtube.com/embed/zAruS4cEmvk"
+
+dialog.mdl-dialog.sin-pict-modal#dialog1
+  .mdl-dialog__content
+        = image_tag(image_url("screenshots/Grafterizer1.png"))
+  .mdl-dialog__actions
+    button.mdl-button.close type="button"  Close
+
+dialog.mdl-dialog.sin-pict-modal#dialog2
+  .mdl-dialog__content
+        = image_tag(image_url("screenshots/Dashboard.png"))
+  .mdl-dialog__actions
+    button.mdl-button.close type="button"  Close
+
+dialog.mdl-dialog.sin-pict-modal#dialog3
+  .mdl-dialog__content
+        = image_tag(image_url("screenshots/Sparql3.png"))
+  .mdl-dialog__actions
+    button.mdl-button.close type="button"  Close
