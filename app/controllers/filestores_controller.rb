@@ -17,8 +17,8 @@ class FilestoresController < ThingsController
     # Update statistics
     @thing.inc_download_count
     @thing.save
-
-    redirect_to Refile.attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), status: :moved_permanently
+    
+    redirect_to Refile.attachment_url(@thing, :file, filename: @thing.upload_filename.empty? ? 'file' : @thing.upload_filename, format: @thing.upload_format.empty? ? 'csv' :  @thing.upload_format), status: :moved_permanently
   end
 
   # View the first rows of the attached file
