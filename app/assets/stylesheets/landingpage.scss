@@ -59,7 +59,8 @@ $white-not-so-white: hsl(226, 39%, 94%);
         transition: all 0.5s ease-in-out 0s;
         height:300px;
         width:100%;
-        left: 50%;
+        left:25%;
+        z-index: 6;
 
         img {
             border-radius:3px;
@@ -68,44 +69,35 @@ $white-not-so-white: hsl(226, 39%, 94%);
             max-width:90%;
             max-height:100%;
             transition: all 0.5s ease 0s;
-            transform: scale(1,1) perspective(275px) rotateY(-3deg);
+            transform: scale(0.728,0.728) perspective(300px) rotateY(-2deg);
         }
 
         &:first-child {
-            left:50%;
+            left:0%;
+            z-index: 10;
             img {
-                transform: scale(0.66,0.66) perspective(300px) rotateY(-2deg);
+                transform: scale(1,1) perspective(250px) rotateY(-4deg);
             }
         }
         &:nth-child(2) {
-            left:41%;
-            img {
-                transform: scale(0.728,0.728) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(3) {
-            left:32%;
-            img {
-                transform: scale(0.796,0.796) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(4) {
-            left:23%;
-            img {
-                transform: scale(0.864,0.864) perspective(300px) rotateY(-2deg);
-            }
-        }
-        &:nth-child(5) {
-            left:14%;
+            left:10%;
+            z-index: 9;
             img {
                 transform: scale(0.932,0.932) perspective(300px) rotateY(-2deg);
             }
         }
-        &:last-child {
-            left:-10px;
-
+        &:nth-child(3) {
+            left:15%;
+            z-index: 8;
             img {
-                transform: scale(1,1) perspective(250px) rotateY(-4deg);
+                transform: scale(0.864,0.864) perspective(300px) rotateY(-2deg);
+            }
+        }
+        &:nth-child(4) {
+            left:20%;
+            z-index: 7;
+            img {
+                transform: scale(0.796,0.796) perspective(300px) rotateY(-2deg);
             }
         }
     }
@@ -114,6 +106,12 @@ $white-not-so-white: hsl(226, 39%, 94%);
     }
 }
 
+.sin-pict-modal {
+  //width: 90%; // This is moved to js to override MDL classes
+  img {
+    width: 100%;
+  }
+}
 .second-screen {
     height:100vh;
     padding-top:50px;
@@ -151,16 +149,19 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .third-screen {
-    height:50vh;
+    height:40vh;
     background:$dapaas-color-wordcloud image-url("wordcloud_hr9_nsw.png") no-repeat;
     background-size: cover;
 
     h2 {
-      padding-top:100px;
+      margin-top:0;
+      margin-bottom:0;
     }
+
     table {
       border-spacing: 20px 10px;
     }
+
     td {
       vertical-align: top;
     }
@@ -172,6 +173,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
     h3 {
         font-weight: 300px;
+        margin-top:15px;
         margin-bottom:15px;
         line-height: 40px;
         text-align: left;
@@ -201,7 +203,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 }
 
 .last-screen {
-    height:50vh;
+    height:40vh;
     background:#F2F2F2 image-url("bg.jpeg") no-repeat;
     background-size: cover;
     //background-position: center -330.634px;
@@ -224,5 +226,51 @@ $white-not-so-white: hsl(226, 39%, 94%);
 @media screen and (min-width: 960px) {
     .first-screen #screenshots-container {
         transform: scale(1.2,1.2) translateX(10px);
+    }
+}
+
+/* The Overlay (background) */
+.overlay {
+    /* Height & width depends on how you want to reveal the overlay (see JS below) */
+    height: 80vh;
+    width: 90%;
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    left: 5vw;
+    top: 10vh;
+    color: $white-not-so-white;
+    background-color: rgb(0,0,0); /* Black fallback color */
+    background-color: rgba(0,0,0, 0.7); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    //overflow-y: hidden; /* Disable vertical scroll */
+    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+
+    /* Position the image inside the overlay */
+    img {
+        position: relative;
+        //max-height: 100%;
+        max-width: 100%;
+        text-align: center; /* Centered text/links */
+    }
+
+    /* Position the close button (top right corner) */
+    .closebtn {
+        z-index: 100;
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+        color: $white-not-so-white;
+        background-color: $dapaas-color-accent;
+    }
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
     }
 }
