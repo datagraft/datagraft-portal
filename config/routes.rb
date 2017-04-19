@@ -30,14 +30,14 @@ Rails.application.routes.draw do
   get 'cookie-policy' => 'public_portal#cookie'
   get 'faq' => 'public_portal#faq'
 
-  get 'publish' => 'data_distributions#publish'
+#  get 'publish' => 'data_distributions#publish'
 #  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
-  get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
+#  get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
-  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
+#  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
@@ -108,8 +108,8 @@ Rails.application.routes.draw do
       end
     end
 
-    datagraft_resources :data_distributions
-    datagraft_resources :data_pages
+#    datagraft_resources :data_distributions
+#    datagraft_resources :data_pages
     datagraft_resources :transformations
     datagraft_resources :queries
     datagraft_resources :filestores
@@ -117,24 +117,24 @@ Rails.application.routes.draw do
 
     # TODO fix me : Flip crashes on migration
     begin
-      if Flip.on? :catalogues
-        resources :catalogues do
-          member do
-            get 'versions'
-            post 'star'
-            post 'unstar'
-          end
-        end
-      end
+#      if Flip.on? :catalogues
+#        resources :catalogues do
+#          member do
+#            get 'versions'
+#            post 'star'
+#            post 'unstar'
+#          end
+#        end
+#      end
 
-      if Flip.on? :queriable_data_stores
-        datagraft_resources :queriable_data_stores
-      end
+#      if Flip.on? :queriable_data_stores
+#        datagraft_resources :queriable_data_stores
+#      end
 
 
-      if Flip.on? :utility_functions
-        datagraft_resources :utility_functions
-      end
+#      if Flip.on? :utility_functions
+#        datagraft_resources :utility_functions
+#      end
     rescue
       puts "No Flip"
     end

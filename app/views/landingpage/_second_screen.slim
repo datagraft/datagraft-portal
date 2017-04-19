@@ -18,11 +18,27 @@ div.max-width-container.mdl-grid
               p Programmatically across the data catalogue
           tr
             td
-              = image_tag(image_url("screenshots/Grafterizer1.png"))
+              = image_tag(image_url("screenshots/Grafterizer1.png"), id: 'show-ovl1')
             td
-              = image_tag(image_url("screenshots/Dashboard.png"))
+              = image_tag(image_url("screenshots/Dashboard.png"), id: 'show-ovl2')
             td
-              = image_tag(image_url("screenshots/Sparql3.png"))
-  .mdl-grid
-    .mdl-cell.mdl-cell-4-col.mdl-cell--middle
-      iframe allowfullscreen="" height="315" src="https://www.youtube.com/embed/zAruS4cEmvk"
+              = image_tag(image_url("screenshots/Sparql3.png"), id: 'show-ovl3')
+  //.mdl-grid
+  //  .mdl-cell.mdl-cell-4-col.mdl-cell--middle
+  //    iframe allowfullscreen="" height="315" src="https://www.youtube.com/embed/zAruS4cEmvk"
+
+  #ovl1.overlay
+    /! Button to close the overlay navigation
+    i.material-icons.closebtn#close-ovl1 clear
+    = image_tag(image_url("screenshots/Grafterizer1.png"))
+
+  #ovl2.overlay
+    /! Button to close the overlay navigation
+    i.material-icons.closebtn#close-ovl2 clear
+    = image_tag(image_url("screenshots/Dashboard.png"))
+
+  #ovl3.overlay
+    /! Button to close the overlay navigation
+    i.material-icons.closebtn#close-ovl3 clear
+    .overlay-content
+      = image_tag(image_url("screenshots/Sparql3.png"))
