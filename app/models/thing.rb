@@ -71,13 +71,13 @@ class Thing < ApplicationRecord
 
       if !new_value.in? [true, false] then
         ##if new_value new_value.in? ["1", "0"] then
-        if new_value.in? ["1", "0"] then
+        if new_value.in? ["1", "0", "true", "false"] then
           new_value = !new_value.to_i.zero?
         else
           # new value neither string nor boolean - should not happen
           throw "Invalid value for user access attribute"
         end
-        end
+      end
 
         # increment metric for new value - for some reason we don't receive a boolean here...
         curr_num_assets_metric_val = num_assets.get({asset_type: self.type, owner: self.user.username, access_permission: new_value ? 'public' : 'private'});
