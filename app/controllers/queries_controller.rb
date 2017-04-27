@@ -36,7 +36,7 @@ class QueriesController < ThingsController
     # Execute query button_to
     else
       timeout_error = false
-      
+
       begin
         @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
       rescue Exception => error
@@ -49,13 +49,13 @@ class QueriesController < ThingsController
           results: []
         }
       end
-      
+
       if @query_result.blank?
         @results_list = []
       else
         @results_list = @query_result[:results]
       end
-      
+
       if timeout_error
         render :partial => 'execute_query_timeout' if request.xhr?
       else
@@ -85,7 +85,7 @@ class QueriesController < ThingsController
   # It may be scary, but you should sometimes trust parameters from the internet!
     def query_params_partial
         params.permit(:query, :public, :name, :metadata, :configuration, :language, :description,
-          queriable_data_store_ids: [])
+          queriable_data_store_ids: [], sparql_endpoint_ids: [] )
     end
 
     def query_set_relations(query)
@@ -111,7 +111,11 @@ class QueriesController < ThingsController
   # Make a list of existing sparql_endpoints. Used by view
   def search_for_existing_sparql_endpoints
     user = current_user
-    tmp_user = user.sparql_endpoints.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%").sort_by(&:updated_at).reverse
+    if user != nil
+      tmp_user = user.sparql_endpoints.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%").sort_by(&:updated_at).reverse
+    else
+      tmp_user = []
+    end
     tmp_pub = Thing.public_list.includes(:user).where(:type => ['SparqlEndpoint']).where.not("name LIKE ?", "%previewed_dataset_%")
     @sparql_endpoint_entries =  tmp_user + tmp_pub
     puts "******************* search_for_existing_sparql_endpoints"
