@@ -13,7 +13,10 @@ json.set! 'dct:description', @thing.description
 json.set! 'dct:issued', @thing.created_at
 json.set! 'dct:modified', @thing.updated_at
 
-json.set! 'dcat:keyword', @thing.keywords
+json.set! 'dcat:keyword' do
+  kwd_list = @thing.keywords.collect {|kwd| kwd.name}
+  json.array! kwd_list
+end
 json.set! 'query_text', @thing.query
 json.set! 'query_type', @thing.query_type
 json.set! 'sparql_endpoints', @thing.sparql_endpoints, :id
