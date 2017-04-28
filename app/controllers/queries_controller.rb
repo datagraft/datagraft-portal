@@ -56,11 +56,24 @@ class QueriesController < ThingsController
         @results_list = @query_result[:results]
       end
 
-      if timeout_error
-        render :partial => 'execute_query_timeout' if request.xhr?
-      else
-        render :partial => 'execute_query_results' if request.xhr?
+      #if timeout_error
+      #  render :partial => 'execute_query_timeout' if request.xhr?
+      #else
+      #  render :partial => 'execute_query_results' if request.xhr?
+      #end
+
+      respond_to do |format|
+        if timeout_error
+          format.html { render :partial => 'execute_query_timeout' if request.xhr?}
+          format.json { render 'execute_query_results' }
+        else
+          format.html { render :partial => 'execute_query_results' if request.xhr? }
+          format.json { render 'execute_query_results' }
+        end
       end
+
+
+
     end
   end
 

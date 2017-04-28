@@ -8,6 +8,7 @@ json.set! "@context" do
 end
 
 json.id @thing.slug
+json.id_num @thing.id
 
 json.set! 'dct:title', @thing.name
 json.set! 'dct:issued', @thing.created_at

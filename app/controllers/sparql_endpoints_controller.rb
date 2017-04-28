@@ -121,7 +121,15 @@ class SparqlEndpointsController < ThingsController
     else
       @results_list = @query_result[:results]
     end
-    render :partial => 'execute_query_results' if request.xhr?
+
+    #render :partial => 'execute_query_results' if request.xhr?
+    respond_to do |format|
+      format.html { render :partial => 'execute_query_results' if request.xhr? }
+      format.json { render 'execute_query_results' }
+    end
+
+
+
   end
 
 

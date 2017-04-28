@@ -19,4 +19,8 @@ json.set! 'dcat:keyword' do
 end
 json.set! 'query_text', @thing.query
 json.set! 'query_type', @thing.query_type
-json.set! 'sparql_endpoints', @thing.sparql_endpoints, :id
+
+json.set! 'sparql_endpoint_ids' do
+  idnum_list = @thing.sparql_endpoints.collect {|sep| sep.id}
+  json.array! idnum_list
+end
