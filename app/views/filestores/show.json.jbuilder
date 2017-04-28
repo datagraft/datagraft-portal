@@ -16,4 +16,4 @@ json.set! 'dcat:accessURL', request.protocol+request.host_with_port+filestore_at
 json.set! 'dcat:mediaType', @filestore.file_content_type
 json.set! 'dcat:byteSize', @filestore.file_size
 
-json.set! 'sin:extension', Rack::Mime::MIME_TYPES.invert[@filestore.file_content_type].to_s[1..-1]
+json.set! 'sin:extension', @filestore.upload_format
