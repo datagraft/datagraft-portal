@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   get    ':username/upwizards/:wiz_id/attachment' => 'upwizards#attachment' #Download attachment
   post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
   get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
+  get    ':username/upwizards/:wiz_id' => 'upwizards#show_json'    #Show content in wizard
   get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information
   delete ':upwizards/:wiz_id' => 'upwizards#destroy'
   put    ':username/upwizards/:id/:wiz_id' => 'upwizards#update'

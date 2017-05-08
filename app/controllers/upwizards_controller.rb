@@ -43,49 +43,60 @@ class UpwizardsController < ApplicationController
   def new
     puts "************ upwizard new"
 
-    #Check if known task
-    task = params['task']
-    known_task = false
-    quota_full = false
-    if task == 'file'
-      known_task = true
-      quota_full = true unless quota_room_for_new_file_count?(current_user)
-    end
-    if task == 'sparql'
-      known_task = true
-      quota_full = true unless quota_room_for_new_sparql_count?(current_user)
-    end
+    if user_signed_in?
+      #Check if known task
+      task = params['task']
+      known_task = false
+      quota_full = false
+      if task == 'file'
+        known_task = true
+        quota_full = true unless quota_room_for_new_file_count?(current_user)
+      end
+      if task == 'sparql'
+        known_task = true
+        quota_full = true unless quota_room_for_new_sparql_count?(current_user)
+      end
 
-    if quota_full
-      redirect_to quotas_path
+      if quota_full
+        redirect_to quotas_path
 
-    elsif known_task
-      begin
-        upwizard = Upwizard.new  # Create new wizard
-        upwizard.user = current_user
+      elsif known_task
+        begin
+          @upwizard = Upwizard.new  # Create new wizard
+          @upwizard.user = current_user
 
-        authorize! :create, upwizard
-        upwizard.update_attributes(params.permit([:task]))
-        upwizard.save
+          authorize! :create, @upwizard
+          @upwizard.update_attributes(params.permit([:task]))
+          @upwizard.save
 
-        goto_step = steps.first
-        options = request.query_parameters
+          respond_to do |format|
+            format.html {
+              goto_step = steps.first
+              options = request.query_parameters
 
-        options = options.respond_to?(:to_h) ? options.to_h : options
-        options = { :controller => wicked_controller,
-          :action     => 'show',
-          :id         => goto_step || params[:id],
-          :wiz_id     => upwizard.id,
-          :only_path  => true
-          }.merge options
-        flash[:notice] = "New wizard is started"
-        redirect_to url_for(options)
-      rescue Exception => e
-        redirect_error_to_dashboard("Wizard create failed.", e)
+              options = options.respond_to?(:to_h) ? options.to_h : options
+              options = { :controller => wicked_controller,
+                :action     => 'show',
+                :id         => goto_step || params[:id],
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+                }.merge options
+              flash[:notice] = "New wizard is started"
+              redirect_to url_for(options)
+            }
+            format.json { render :show_json, status: :ok }
+          end
+
+        rescue Exception => e
+          redirect_error_to_dashboard("Wizard create failed.", e)
+        end
+      else
+        redirect_error_to_dashboard("Wizard cannot be created with task = "+task)
       end
     else
-      redirect_error_to_dashboard("Wizard cannot be created with task = "+task)
+      redirect_error_to_dashboard('Error user not signed in')
     end
+
   end
 
   # Delete a given upwizard including attaced file
@@ -116,6 +127,26 @@ class UpwizardsController < ApplicationController
       @upwizard = Upwizard.find(params[:wiz_id])
       authorize! :read, @upwizard
       process_state
+    rescue Exception => e
+      unless (@upwizard)
+        puts "Wizard #{params[:wiz_id]} does not exist!"
+      end
+      redirect_error_to_dashboard('Error showing wizard.', e)
+    end
+  end
+
+  # Show the content of the wizard
+  # GET      /:username/upwizards/:wiz_id
+  def show_json
+    puts "************ upwizard show_json"
+    begin
+      @upwizard = Upwizard.find(params[:wiz_id])
+      authorize! :read, @upwizard
+
+      respond_to do |format|
+        format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
+        format.json { render :show_json, status: :ok }
+      end
     rescue Exception => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
@@ -205,7 +236,11 @@ class UpwizardsController < ApplicationController
         puts e.backtrace.inspect
         flash[:error] = txt + ' Cause: ' + e.message
       end
-      redirect_to dashboard_path
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.json { render :json => { :errors => flash[:error]}, status: :unprocessable_entity }
+      end
+
   end
 
   def jump_error_to_state_and_render(txt, state, e=nil)
@@ -217,8 +252,13 @@ class UpwizardsController < ApplicationController
         puts e.backtrace.inspect
         flash[:error] = txt + ' Cause: ' + e.message
       end
-      jump_to state
-      render_wizard
+      respond_to do |format|
+        format.html {
+          jump_to state
+          render_wizard
+        }
+        format.json { render :json => { :errors => flash[:error]}, status: :unprocessable_entity }
+      end
   end
 
   # Copy additional fileinformation from form
