@@ -1,7 +1,7 @@
 
 json.query do
   json.name @query.name
-  json.query @query.query
+  json.query_string @query.query_string
   json.language @query.language
 end
 

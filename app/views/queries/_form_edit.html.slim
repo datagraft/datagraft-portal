@@ -37,7 +37,7 @@
       .sin-info-frame
         = render partial: "gen_thing_list", locals: {things: @sparql_endpoint_entries, things_name: "endpoints", show_thing_partial: "select_sparql_endpoint",  rparams: {form: f, query: @thing}}
 
-    = f.input :query, label: "SPARQL query", as: :text, input_html: { rows: 10 }
+    = f.input :query_string, label: "SPARQL query", as: :text, input_html: { rows: 10 }
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
