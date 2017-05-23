@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   post ':username/queries/:id/execute_query' => 'queries#execute_query'
   get ':username/sparql_endpoints/new/:wiz_id' => 'sparql_endpoints#new'
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
+  post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
