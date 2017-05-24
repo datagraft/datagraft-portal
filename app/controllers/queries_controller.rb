@@ -1,4 +1,6 @@
 class QueriesController < ThingsController
+  wrap_parameters :query, include: [:public, :name, :description, :meta_keyword_list, :license, :query_string, :query_type, :language,
+    sparql_endpoint_ids: []]
 
   def new
     search_for_existing_sparql_endpoints

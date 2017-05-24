@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
+ post ':username/filestores/:id/publish' => 'filestores#publish'
   get ':username/filestores/new/:wiz_id' => 'filestores#new'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'

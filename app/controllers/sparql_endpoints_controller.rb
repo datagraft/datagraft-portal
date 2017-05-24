@@ -2,6 +2,7 @@ class SparqlEndpointsController < ThingsController
   include UpwizardHelper
   include QueriesHelper
   include QuotasHelper
+  wrap_parameters :sparql_endpoint, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file]
 
   def new
     super
@@ -28,38 +29,25 @@ class SparqlEndpointsController < ThingsController
   # Receive file to be pushed to ontotext
   # POST     /:username/sparql_endpoints/:id/publish
   def publish
+    ok = false
     set_thing
     authorize! :update, @thing
 
-    if @thing.publish_file != nil
-      rdfFile = filestore_params[:publish_file]
+    if params["publish_file"] != nil
+      rdfFile = params["publish_file"]
       rdfType = file_ext(rdfFile.original_filename)
-
-      ok = true
-      begin
+    begin
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+        ok = true
       rescue Exception => e
-        ok = false
-        flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
-      end
-      respond_to do |format|
-        if ok
-          format.html { redirect_to thing_path(@thing), notice: update_notice }
-          format.json { render :show, status: :updated, location: thing_path(@thing) }
-        else
-          format.html { redirect_to thing_path(@thing) }
-          format.json { render json: @thing.errors, status: :unprocessable_entity }
-        end
-      end
-
-    else
-      flash[:error] = "No triple file provided."
-      respond_to do |format|
-        format.html { redirect_to redirect_to thing_path(@thing) }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
+        puts "Could not upload to SPARQL endpoint."
       end
     end
-
+    if ok
+      return head(:ok)
+    else
+      return head(:unprocessable_entity)
+    end
   end
 
   def create
