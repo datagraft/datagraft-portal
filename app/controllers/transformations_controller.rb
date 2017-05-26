@@ -45,6 +45,52 @@ class TransformationsController < ThingsController
     @key = session[:tmp_api_key]['key']
   end
 
+  # POST ':username/transformations/:id/execute/:type/' => 'transformations#execute'
+  # GET ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
+  def execute
+    ok = false
+    set_thing
+    authorize! :read, @thing
+    type = params['type']
+
+    known_type = false
+    if type == 'pipe'
+      known_type = true
+      ret_type = 'application/csv'
+    elsif type == 'graft'
+      known_type = true
+      ret_type = 'application/n-triples'
+    else
+      puts "Transformation cannot execute type #{type}"
+      return head(:unprocessable_entity)
+    end
+
+    if params["publish_file"] != nil
+      @thing.file = params["publish_file"]
+      begin
+        out_file = @thing.transform(@thing.file, type)
+        ok = true
+      rescue Exception => e
+        puts "Could transform uploaded file ... #{e}"
+      end
+    elsif params["file_id"] != nil
+      begin
+        in_file = current_user.filestores.friendly.find(params['file_id'])
+        out_file = @thing.transform(in_file.file, type)
+        ok = true
+      rescue Exception => e
+        puts "Could transform file_id ... #{e}"
+      end
+    end
+
+    if ok
+      send_file out_file.download.path, type: ret_type
+    else
+      return head(:unprocessable_entity)
+    end
+
+  end
+
   def show
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     @publisherId = @transformation.user.username

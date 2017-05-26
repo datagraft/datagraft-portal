@@ -450,11 +450,11 @@ class UpwizardsController < ApplicationController
         @upwizard.current_file_type = @thing.file_content_type
         @upwizard.original_filename = @thing.original_filename
       else
-        ret.error_txt = "Selected filestore with no file attached"
+        ret[:error_txt] = "Selected filestore with no file attached"
       end
     rescue Exception => e
-      ret.error_txt = 'Error fetching file with ID ' + thing_id.to_s
-      ret.e = e
+      ret[:error_txt] = 'Error fetching file with ID ' + thing_id.to_s
+      ret[:e] = e
     end
     return ret
   end
@@ -464,14 +464,14 @@ class UpwizardsController < ApplicationController
     if @upwizard.radio_thing_id
       # Copy file information from the selected thing
       res = fetch_file_select @upwizard.radio_thing_id
-      if res.error_txt == nil
+      if res[:error_txt] == nil
         # Update state and process the new state
         @upwizard.trace_back_step_skip
         puts "Test printout: "+@thing.inspect
         jump_to :transform
         render_wizard
       else
-        jump_error_to_state_and_render(res.error_txt, :publish, res.e)
+        jump_error_to_state_and_render(res[:error_txt], :publish, res[:e])
       end
     else
       jump_error_to_state_and_render("No file is selected for transformation", :publish)
@@ -626,11 +626,11 @@ class UpwizardsController < ApplicationController
     if params[:filestore_id]
       # Copy file information from the selected filestore
       res = fetch_file_select params[:filestore_id]
-      if res.error_txt == nil
+      if res[:error_txt] == nil
         @upwizard.save
         do_transform_direct
       else
-        jump_error_to_state_and_render(res.error_txt, :publish, res.e)
+        jump_error_to_state_and_render(res[:error_txt], :publish, res[:e])
       end
     else
       unless @upwizard.file == nil
