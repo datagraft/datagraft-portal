@@ -42,7 +42,6 @@ document.addEventListener('turbolinks:load', function() {
       },
     });
     oTable = $('#query-results-table').DataTable();
-    console.log($('.mdl-textfield'))
     $('.mdl-textfield').each(function (index, element) {
       componentHandler.upgradeElement(element);  
     });
