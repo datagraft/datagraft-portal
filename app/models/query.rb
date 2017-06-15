@@ -73,7 +73,10 @@ class Query < Thing
     if result.status != 200
       raise result.body
     end
-
+    
+    # update the metric for number of query executions
+    increment_query_execution_metric(self)
+    
     parsed = JSON.parse(result.body)
     
     return {
@@ -110,6 +113,9 @@ class Query < Thing
       puts "Unable to execute query. Error " + result.status.to_s + ". Response: " + result.body
       raise "Unable to execute query. Error " + result.status.to_s
     end
+    
+    # update the metric for number of query executions
+    increment_query_execution_metric(self)
     
     parsed = JSON.parse(result.body)
 

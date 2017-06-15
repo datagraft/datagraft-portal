@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include OntotextUser
+  include UserHelper
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
   has_many :stars, dependent: :destroy
   has_many :catalogue_stars, dependent: :destroy
@@ -53,6 +54,12 @@ class User < ApplicationRecord
 
   validates :website, :url => {:allow_blank => true}
 
+  # register the decrease in number of users
+  after_destroy :reset_num_users_metric
+  
+  # register the increase in number of users
+  after_create :reset_num_users_metric
+  
   def to_param
     self.username
   end
