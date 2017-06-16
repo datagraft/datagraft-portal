@@ -62,7 +62,6 @@ document.addEventListener('turbolinks:load', function() {
 
   $('.sin-execute-request-button').click(function(event) {
     // execute form but do not unfold 
-    $(this).children().first().submit();
     event.stopPropagation();
   });
 
