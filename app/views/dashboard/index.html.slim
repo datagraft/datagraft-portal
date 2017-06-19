@@ -1,7 +1,8 @@
 - title "Dashboard"
 - setOption :dashboardLayout
 - setOption :dashboardSearch
-
+- content_for :head do
+  meta[name="turbolinks-cache-control" content="no-cache"]
 .mdl-grid.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
   .sin-dashboard-title
     h2 DataGraft Home
