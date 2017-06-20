@@ -3,6 +3,8 @@ class ApiKeysController < ApplicationController
   before_action :set_api_key, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
 
+  wrap_parameters :api_key, include: [:name, :enabled]
+
   # GET /api_keys
   # GET /api_keys.json
   def index

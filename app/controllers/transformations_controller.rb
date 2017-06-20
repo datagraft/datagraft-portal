@@ -1,5 +1,6 @@
 class TransformationsController < ThingsController
   include QuotasHelper
+  wrap_parameters :transformation, include: [:name, :public, :code, :description]
 
   # POST /:username/:resource/
   def create
@@ -46,7 +47,7 @@ class TransformationsController < ThingsController
   end
 
   # POST ':username/transformations/:id/execute/:type/' => 'transformations#execute'
-  # GET ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
+  # POST ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
   def execute
     ok = false
     set_thing

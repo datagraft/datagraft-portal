@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   get ':username/filestores/new/:wiz_id' => 'filestores#new'
 
  post ':username/transformations/:id/execute/:type/' => 'transformations#execute'
-  get ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
+ post ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
