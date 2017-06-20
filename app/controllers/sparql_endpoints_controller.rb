@@ -127,7 +127,11 @@ class SparqlEndpointsController < ThingsController
     if params[:existing_query] != nil
       params[:existing_query]
     else
-      params["execute_query"]["query_string"]
+      if params["query_string"] != nil
+        params["query_string"]
+      else
+        params["execute_query"]["query_string"]
+      end
     end
     @query.language = 'SPARQL'
 

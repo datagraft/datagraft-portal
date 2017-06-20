@@ -21,6 +21,7 @@ json.set! 'foaf:primaryTopic', thing_url(@thing)
 json.set! 'dcat:public', @thing.public
 json.set! 'foaf:publisher', @thing.user.username
 json.set! 'dct:description', @thing.description
+json.set! 'dct:license', get_license_info(@thing.license)[:path]
 
 json.set! 'dcat:keyword' do
   kwd_list = @thing.keywords.collect {|kwd| kwd.name}

@@ -28,7 +28,10 @@ class QueriesController < ThingsController
         se_user = User.find_by_username(params[:username]) or not_found
       end
 
-      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(params[:sparql_endpoint_id])
+      ## Special hack because "wrap_params" doesnt support both :query and :execute_query
+      endpoint = params[:sparql_endpoints]
+      endpoint = params[:execute_query][:sparql_endpoints]  if endpoint == nil
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(endpoint)
     end
 
     # Go to selected endpoint page button_to
