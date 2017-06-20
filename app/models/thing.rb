@@ -24,6 +24,7 @@ class Thing < ApplicationRecord
   # Update metrics
   before_destroy :update_asset_metrics_destroy
   after_create_commit :update_asset_metric
+  after_update :update_public_private_metrics
 
   def update_asset_metrics_destroy
     begin
@@ -39,7 +40,7 @@ class Thing < ApplicationRecord
   # increments number of assets metric
   def update_asset_metric
     begin
-      reset_num_assets(self)
+      reset_num_assets(self, 0)
       update_asset_version_metric(self.type)
     rescue Exception => e
       puts 'Error incrementing num_assets metric'
@@ -47,13 +48,10 @@ class Thing < ApplicationRecord
       puts e.backtrace.inspect
     end
   end
-
-  # We overload the write_attribute function to correctly update attribute-related metrics
-  def write_attribute(attr_name, value)
-    if attr_name == 'public'
-      reset_num_assets_public_private(self)
-    end
-    super
+  
+  # on each asset update we update the number of private/public assets
+  def update_public_private_metrics
+    reset_num_assets_public_private(self)
   end
 
   def self.public_list
