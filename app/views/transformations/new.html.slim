@@ -1,0 +1,6 @@
+- title "Create new transformation"
+- setOption :flexPage
+script
+  | var graftInstance = new Grafterizer("#{@grafterizerPath}",
+    $('main > section').get(0))
+    .go('transformations.new', {}, false);

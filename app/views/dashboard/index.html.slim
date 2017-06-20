@@ -42,6 +42,15 @@
         .mdl-card__actions
             = link_to new_query_path, class: "mdl-navigation__link"
                 button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title Transformation
+        .mdl-card__supporting-text
+            |  Use the DataGraft wizard to create a new data transformation using
+            |  the Grafterizer tool. You can store the result of your transformation 
+            |  in one of your SPARQL endpoints or download its result.
+        .mdl-card__actions
+            = link_to new_transformation_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
   #browse-assets.sin-centered.mdl-tabs__panel.is-active
     - if feature? :activity_feed
       .mdl-cell.mdl-cell--5-col.mdl-cell--12-col-tablet.sin-dashboard-activity-feed
@@ -114,7 +123,7 @@
             th.mdl-data-table__cell--non-numeric Name
             th.mdl-data-table__cell--non-numeric Owner
             th.mdl-data-table__cell--non-numeric Last modified
-            th.mdl-data-table__cell--non-numeric Created on
+            th.mdl-data-table__cell--non-numeric Created
             th.mdl-data-table__cell--non-numeric Public
         tbody.dashboard-asset-table-body
           - @things["all"].each do |thing|
