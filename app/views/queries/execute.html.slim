@@ -13,8 +13,8 @@
             dt Name
             dd = link_to @query.name, thing_url(@query)
           - if user_signed_in?
-            / dd = @query.query
-            = f.input :query, as: :text, input_html: {value: @query.query, rows: 5}
+            / dd = @query.query_string
+            = f.input :query_string, as: :text, input_html: {value: @query.query_string, rows: 5}
             = f.input :language, collection: Query.allowed_languages, wrapper: :select, include_blank: false, selected: @query.language
             / # = f.input :query2, collection: current_user.queries, wrapper: :select
             = f.button :submit, "Execute"
@@ -22,7 +22,7 @@
             dt Query
             dd.sin-query-block
               pre
-                code = @query.query
+                code = @query.query_string
             dt Language
             dd = @query.language
 

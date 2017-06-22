@@ -17,3 +17,10 @@ json.set! 'dcat:keyword' do
   kwd_list = @thing.keywords.collect {|kwd| kwd.name}
   json.array! kwd_list
 end
+json.set! 'query_string', @thing.query_string
+json.set! 'query_type', @thing.query_type
+
+json.set! 'sparql_endpoint_ids' do
+  idnum_list = @thing.sparql_endpoints.collect {|sep| sep.id}
+  json.array! idnum_list
+end

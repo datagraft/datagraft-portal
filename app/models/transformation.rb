@@ -7,6 +7,8 @@ class Transformation < Thing
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
   # friendly_id :name, :use => :history
 
+  attachment :file
+
   #  def new_graftwerk_connection
   #    Faraday.new(:url => Rails.configuration.graftwerk['publicPath']) do |faraday|
   #      faraday.request :multipart
@@ -21,7 +23,6 @@ class Transformation < Thing
     temp_data = data_file.download
     temp_pipeline_io = data_file.backend.upload(StringIO.new(self.code))
     temp_pipeline = temp_pipeline_io.download
-
     request = RestClient::Request.new(
       :method => :post,
       :url => Rails.configuration.graftwerk['publicPath'] + '/evaluate/' + transform_type,

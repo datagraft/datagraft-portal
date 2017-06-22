@@ -41,7 +41,11 @@ Rails.application.routes.draw do
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
+ post ':username/filestores/:id/publish' => 'filestores#publish'
   get ':username/filestores/new/:wiz_id' => 'filestores#new'
+
+ post ':username/transformations/:id/execute/:type/' => 'transformations#execute'
+ post ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
@@ -50,6 +54,7 @@ Rails.application.routes.draw do
   post ':username/queries/:id/execute_query' => 'queries#execute_query'
   get ':username/sparql_endpoints/new/:wiz_id' => 'sparql_endpoints#new'
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
+  post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
@@ -57,6 +62,7 @@ Rails.application.routes.draw do
   get    ':username/upwizards/:wiz_id/attachment' => 'upwizards#attachment' #Download attachment
   post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
   get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
+  get    ':username/upwizards/:wiz_id' => 'upwizards#show_json'    #Show content in wizard
   get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information
   delete ':upwizards/:wiz_id' => 'upwizards#destroy'
   put    ':username/upwizards/:id/:wiz_id' => 'upwizards#update'

@@ -5,7 +5,7 @@ json.set! "@context" do
   json.foaf 'http://xmlns.com/foaf/0.1/'
   json.dct 'http://purl.org/dc/terms/'
   json.xsd 'http://www.w3.org/2001/XMLSchema#'
-  
+
   json.set! 'dct:issued' do
     json.set! '@type', 'xsd:date'
   end
@@ -26,6 +26,7 @@ end
 json.set! 'dcat:record' do
   json.array!(@sparql_endpoints) do |sparql_endpoint|
     json.id sparql_endpoint.slug
+    json.id_num sparql_endpoint.id
     json.type 'sparql_endpoint'
     json.set! 'dct:title', sparql_endpoint.name
     json.set! 'foaf:primaryTopic', thing_url(sparql_endpoint)

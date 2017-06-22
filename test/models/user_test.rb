@@ -53,7 +53,7 @@ class UserTest < ActiveSupport::TestCase
     new_query = Query.new
     new_query.user = new_test_user
     new_query.name = 'new_query'
-    new_query.query = 'xxx'
+    new_query.query_string = 'xxx'
     puts new_query.save!
 
     #Check that we got one more query

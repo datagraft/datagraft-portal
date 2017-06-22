@@ -3,6 +3,6 @@
     div.mdl-card__title.mdl-color-text--grey-50
       | Execute a query on this SPARQL endpoint
     div.mdl-card__supporting-text.sin-query-textarea
-      = f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
+      = f.input :query_string, :label => "Query", as: :text, input_html: { rows: 5 }
     div.mdl-card__actions
       = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'

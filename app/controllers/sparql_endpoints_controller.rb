@@ -2,6 +2,7 @@ class SparqlEndpointsController < ThingsController
   include UpwizardHelper
   include QueriesHelper
   include QuotasHelper
+  wrap_parameters :sparql_endpoint, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file]
 
   def new
     super
@@ -25,19 +26,42 @@ class SparqlEndpointsController < ThingsController
     end
   end
 
+  # Receive file to be pushed to ontotext
+  # POST     /:username/sparql_endpoints/:id/publish
   def publish
+    ok = false
+    set_thing
+    authorize! :update, @thing
+
+    if params["publish_file"] != nil
+      rdfFile = params["publish_file"]
+      rdfType = file_ext(rdfFile.original_filename)
+    begin
+        current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+        ok = true
+      rescue Exception => e
+        puts "Could not upload to SPARQL endpoint."
+      end
+    end
+    if ok
+      return head(:ok)
+    else
+      return head(:unprocessable_entity)
+    end
   end
 
   def create
     authorize! :create, SparqlEndpoint
 
-    if params[:wiz_id]
-      # Check if quota is broken
-      redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
+    # Check if quota is broken
+    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
 
-      @thing = SparqlEndpoint.new(sparql_endpoint_params)
-      @thing.uri = current_user.new_ontotext_repository(@thing)
-      @thing.user = current_user
+    @thing = SparqlEndpoint.new(sparql_endpoint_params)
+    @thing.uri = current_user.new_ontotext_repository(@thing)
+    @thing.user = current_user
+
+    @upwizard = nil
+    if params[:wiz_id]
       @upwizard = Upwizard.find(params[:wiz_id])
       throw "Wizard object not found!" if !@upwizard
       # Get file from wizard
@@ -46,31 +70,32 @@ class SparqlEndpointsController < ThingsController
         rdfFile = @upwizard.get_current_file
         rdfType = file_ext(@upwizard.get_current_file_original_name)
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-        respond_to do |format|
-          if @thing.save
-            @upwizard.destroy
-            format.html { redirect_to thing_path(@thing), notice: create_notice }
-            format.json { render :show, status: :created, location: thing_path(@thing) }
-          else
-            flash[:error] = "Could not create SPARQL endpoint. Please try again."
-            format.html { redirect_to upwizard_new_path('sparql') }
-            format.json { render json: @thing.errors, status: :unprocessable_entity }
-          end
-        end
       rescue Exception => error
         flash[:error] = error.message
       end
     else
-      redirect_to upwizard_new_path('sparql')
+      flash[:warning] = "No triple file provided."
+    end
+
+    respond_to do |format|
+      if @thing.save
+        @upwizard.destroy if @upwizard
+        format.html { redirect_to thing_path(@thing), notice: create_notice }
+        format.json { render :show, status: :created, location: thing_path(@thing) }
+      else
+        flash[:error] = "Could not create SPARQL endpoint. Please try again."
+        format.html { redirect_to upwizard_new_path('sparql') }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def update
     super
 
-    if @thing.tmp_file != nil
-      rdfFile = @thing.tmp_file
-      rdfType = file_ext(@thing.tmp_file.original_filename)
+    if @thing.publish_file != nil
+      rdfFile = @thing.publish_file
+      rdfType = file_ext(@thing.publish_file.original_filename)
 
       begin
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
@@ -98,11 +123,15 @@ class SparqlEndpointsController < ThingsController
 
     @query = Query.new
     @query.name = 'Unsaved query'
-    @query.query =
+    @query.query_string =
     if params[:existing_query] != nil
       params[:existing_query]
     else
-      params["execute_query"]["query"]
+      if params["query_string"] != nil
+        params["query_string"]
+      else
+        params["execute_query"]["query_string"]
+      end
     end
     @query.language = 'SPARQL'
 
@@ -121,15 +150,23 @@ class SparqlEndpointsController < ThingsController
     else
       @results_list = @query_result[:results]
     end
-    render :partial => 'execute_query_results' if request.xhr?
+
+    #render :partial => 'execute_query_results' if request.xhr?
+    respond_to do |format|
+      format.html { render :partial => 'execute_query_results' if request.xhr? }
+      format.json { render 'execute_query_results' }
+    end
+
+
+
   end
 
 
   private
   def sparql_endpoint_params
     params.require(:sparql_endpoint).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :tmp_file,
-      queries_attributes: [:id, :name, :query, :description, :language, :_destroy]) ## Rails 4 strong params usage
+      :meta_keyword_list, :publish_file,
+      queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
   def sparql_endpoint_set_relations(se)

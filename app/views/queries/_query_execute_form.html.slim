@@ -11,8 +11,8 @@
   p
   .mdl-cell--12-col
     .sin-tab-textfield__scroll
-      = simple_format h(@thing.query)
-      //= f.input :query, :label => "Query", as: :text, input_html: { rows: 5 }
+      = simple_format h(@thing.query_string)
+      //= f.input :query_string, :label => "Query", as: :text, input_html: { rows: 5 }
 
   p
   .mdl-cell--12-col
