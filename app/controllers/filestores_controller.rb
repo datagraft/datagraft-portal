@@ -189,7 +189,7 @@ class FilestoresController < ThingsController
     unless @thing.original_filename == nil
       @thing.name = @thing.original_filename if @thing.name.blank?
 
-      if @thing.upload_filename.blank?
+      if @thing.upload_filename == "__blank__"
         # Store the original filename sections to use for upload
         #tmp_name = filestore_params[:file].original_filename
         tmp_name = @thing.original_filename
@@ -198,7 +198,7 @@ class FilestoresController < ThingsController
         @thing.upload_filename = filename_base
 
         format_no_dot = format_with_dot.slice(1, format_with_dot.length)
-        @thing.upload_format = format_no_dot  if  @thing.upload_format.blank?
+        @thing.upload_format = format_no_dot  if  @thing.upload_format == "__blank__"
       end
       @ext = @thing.upload_format
     end
