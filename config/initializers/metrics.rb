@@ -18,7 +18,7 @@ begin
   num_assets = Prometheus::Client::Gauge.new(:num_assets, 'number of assets - per user, public or private')
   num_versions = Prometheus::Client::Gauge.new(:num_versions, 'number of versions of assets (including original) - per asset type')
   num_forks = Prometheus::Client::Gauge.new(:num_forks, 'number of forks of assets - per asset type')
-  things = Thing.includes(:user, :versions)
+  things = Thing.includes(:user, :versions).where.not("name LIKE ?", "%previewed_dataset_%")
   things.each do |thing|
     # public/private assets of a type for the user
     number = num_assets.get({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}) ? num_assets.get({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}) : 0

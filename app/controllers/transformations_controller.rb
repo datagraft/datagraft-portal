@@ -92,6 +92,11 @@ class TransformationsController < ThingsController
 
   end
 
+  def new
+    @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    super
+  end
+  
   def show
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     @publisherId = @transformation.user.username

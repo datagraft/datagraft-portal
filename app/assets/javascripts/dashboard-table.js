@@ -123,12 +123,17 @@ document.addEventListener('turbolinks:load', function () {
       $(".mdl-data-table").css({"width":"100%"});
     },
     'columnDefs': [
+      
+      { orderData: [6], targets: [4] },
+      { orderData: [7], targets: [3] },
       { 'width': '10%', 'targets': 0 },
       { 'width': '35%', 'targets': 1 },
       { 'width': '15%', searchable: true, 'targets': 2 },
       { 'width': '15%', searchable: false, 'targets': 3 },
       { 'width': '15%', searchable: false, 'targets': 4 },
-      { 'width': '10%', searchable: false, 'targets': 5 }
+      { 'width': '10%', searchable: false, 'targets': 5 },
+      { visible: false, searchable: false, 'targets': 6 },
+      { visible: false, searchable: false, 'targets': 7 },
     ]
   });
 
