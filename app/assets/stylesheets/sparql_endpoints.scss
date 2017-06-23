@@ -6,6 +6,25 @@ $primary-color: #5264AE;
 $dirty-white: #E9ECF6;
 $accent-color: #FF609A;
 
+.sin-new-label {
+  &:after {
+    content: " NEW";
+    color: $accent-color;
+    font-weight: 400;
+    position: relative;
+    bottom: 9px;
+    font-size: 12px;
+  }
+}
+
+.sin-surveyor-iframe {
+  width: 100%;
+//  height: 44em;
+  min-height: 300px;
+  border-width: 0px;
+  border-style: none;
+}
+
 .sin-card-layout .mdl-card {
   & .dataTables_length {
     padding-bottom: 8px;
@@ -122,6 +141,7 @@ $accent-color: #FF609A;
   }
 
   & > .mdl-tabs__tab-bar {
+    border-bottom: none; 
     padding-top: 10px;
     align-self: stretch;
 

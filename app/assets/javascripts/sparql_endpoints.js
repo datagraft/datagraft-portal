@@ -73,12 +73,50 @@ document.addEventListener('turbolinks:load', function() {
     $('#query-panel-result').html(xhr.responseText);
   });
 
-  var seQueriesListOptions = {
-    valueNames: [ 'sin-container-hidden-name', 'sin-container-hidden-date', 'sin-container-hidden-user' ]
+  // ==================================
+  //          Query list code
+  // ==================================
+
+  var genListOptions = {
+    valueNames: [ 'sin-gl-hidden-name', 'sin-gl-hidden-user', 'sin-gl-hidden-date', 'sin-gl-hidden-linked-to-endpoint' ],
+    listClass: 'sin-gl-list'
   };
 
-  var seQueriesList = new List('se-queries-list', seQueriesListOptions);
-  $('.row-public').each(function () {
-    !$('#checkbox_public')[0].checked ? $(this).css("display", 'none') : $(this).css("display", '');
+  var genList = new List('sparql-gen-list', genListOptions);
+  // Avoid error message when sorting empty list
+  if (genList.size() > 0) genList.sort('sin-gl-hidden-date', { order: "desc" });
+
+  $('.sin-gen-squeeze').squeezebox({
+    headers: '.sin-gs-head',
+    folders: '.sin-gs-cnt',
+    closeOthers: false,
+    closedOnStart: true,
+    animated : true
   });
+
+  $('.sin-gl-stop-propagate').click(function(event) {
+    // execute form but do not unfold squeezebox
+    event.stopPropagation();
+  });
+  updateGlAssociatedStyle();
 });
+
+
+var updateGlAssociatedStyle = function(){
+  var include_public_queries = !$('#gen_checkbox_public')[0].checked;
+  var display_only_linked_queries = $('#gen_checkbox_associated')[0].checked;
+  
+  var allRows = $('.sin-gl-list > li');
+  
+  allRows.each(function (index, row) {
+    var is_linked_subelement = $(row).find('.sin-gl-hidden-linked-to-endpoint')[0],
+        is_linked_query_row = $(is_linked_subelement).text() === "true",
+        is_public_row = $(row).hasClass('sin-gl-row-public');
+    // we hide the row if a query is NOT linked and the filter 'display only linked queries' is checked OR if the query is public (other user) and the 'include public queries' option is NOT checked
+    if ((display_only_linked_queries && !is_linked_query_row) || (is_public_row && !include_public_queries)) {
+      row.style.display = 'none';
+    } else {
+      row.style.display = 'block';
+    }
+  });
+}
