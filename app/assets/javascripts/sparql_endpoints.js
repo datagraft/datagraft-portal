@@ -1,5 +1,24 @@
 document.addEventListener('turbolinks:load', function() {
 
+  updateGlAssociatedStyle = function(){
+    var include_public_queries = !$('#gen_checkbox_public')[0].checked;
+    var display_only_linked_queries = $('#gen_checkbox_associated')[0].checked;
+
+    var allRows = $('.sin-gl-list > li');
+
+    allRows.each(function (index, row) {
+      var is_linked_subelement = $(row).find('.sin-gl-hidden-linked-to-endpoint')[0],
+          is_linked_query_row = $(is_linked_subelement).text() === "true",
+          is_public_row = $(row).hasClass('sin-gl-row-public');
+      // we hide the row if a query is NOT linked and the filter 'display only linked queries' is checked OR if the query is public (other user) and the 'include public queries' option is NOT checked
+      if ((display_only_linked_queries && !is_linked_query_row) || (is_public_row && !include_public_queries)) {
+        row.style.display = 'none';
+      } else {
+        row.style.display = 'block';
+      }
+    });
+  }
+
   $('.accordion').squeezebox({
     headers: '.squeezhead',
     folders: '.squeezecnt',
@@ -101,22 +120,5 @@ document.addEventListener('turbolinks:load', function() {
   updateGlAssociatedStyle();
 });
 
+var updateGlAssociatedStyle = function(){}
 
-var updateGlAssociatedStyle = function(){
-  var include_public_queries = !$('#gen_checkbox_public')[0].checked;
-  var display_only_linked_queries = $('#gen_checkbox_associated')[0].checked;
-  
-  var allRows = $('.sin-gl-list > li');
-  
-  allRows.each(function (index, row) {
-    var is_linked_subelement = $(row).find('.sin-gl-hidden-linked-to-endpoint')[0],
-        is_linked_query_row = $(is_linked_subelement).text() === "true",
-        is_public_row = $(row).hasClass('sin-gl-row-public');
-    // we hide the row if a query is NOT linked and the filter 'display only linked queries' is checked OR if the query is public (other user) and the 'include public queries' option is NOT checked
-    if ((display_only_linked_queries && !is_linked_query_row) || (is_public_row && !include_public_queries)) {
-      row.style.display = 'none';
-    } else {
-      row.style.display = 'block';
-    }
-  });
-}
