@@ -107,7 +107,6 @@ class SparqlEndpointsController < ThingsController
 
   def destroy
     super
-
     # Do not delete backend datastores that exist in other sparql endpoints
     return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
 
@@ -156,9 +155,6 @@ class SparqlEndpointsController < ThingsController
       format.html { render :partial => 'execute_query_results' if request.xhr? }
       format.json { render 'execute_query_results' }
     end
-
-
-
   end
 
 
