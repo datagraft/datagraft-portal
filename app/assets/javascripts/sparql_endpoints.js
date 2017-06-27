@@ -1,8 +1,10 @@
 document.addEventListener('turbolinks:load', function() {
 
   updateGlAssociatedStyle = function(){
-    var include_public_queries = !$('#gen_checkbox_public')[0].checked;
-    var display_only_linked_queries = $('#gen_checkbox_associated')[0].checked;
+    if ($('#gen_checkbox_public')[0])
+      var include_public_queries = !$('#gen_checkbox_public')[0].checked;
+    if ($('#gen_checkbox_associated')[0])
+      var display_only_linked_queries = $('#gen_checkbox_associated')[0].checked;
 
     var allRows = $('.sin-gl-list > li');
 
