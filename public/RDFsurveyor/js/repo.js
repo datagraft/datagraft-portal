@@ -42,8 +42,7 @@ function configRepo() {
 			<div class="row"> \
 				<div class="col-sm-2"></div> \
 				<div class="col-xs-5"><button id="survey_button" class="btn btn-primary">'+getLiteral(dict.survey)+'</button></div> \
-				<div class="col-xs-2"><button id="examples_button" class="btn btn-default" \
-					data-toggle="modal" data-target="#myModal">'+getLiteral(dict.importconfig)+'</button></div> \
+				<div class="col-xs-2"></div> \
 			</div> \
 			<p><br></p> \
 			<div id="alerta" class="alert alert-danger esconder" role="alert"></div> \
