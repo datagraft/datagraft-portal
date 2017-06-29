@@ -1,8 +1,58 @@
-#se-queries-list
-  - queriesToShow = search_for_existing_queries
-  - if queriesToShow.empty?
-    div.mdl-card__supporting-text
-      h2 No queries found
+- queriesToShow = search_for_existing_queries
+- if queriesToShow.empty?
+  div.mdl-card__supporting-text
+    h2 No existing queries found
+- else
+  - if queriesToShow == nil
+    .sin-gl-label
+      = "The list of queries is nil"
+  - elsif queriesToShow.empty?
+    .sin-gl-label
+      = "The list of queries is empty"
   - else
-    - list_heading = "(queries linked to the current endpoint are highlighted)";
-    = render partial: "gen_thing_list", locals: {things: queriesToShow, things_name: "queries", show_thing_partial: "run_query", heading: list_heading, rparams: {sparql_thing: @thing}}
+    #sparql-gen-list
+      .sin-gl-heading-fbox
+        .mdl-textfield.mdl-js-textfield.sin-gl-search
+          i.material-icons search
+          .mdl-textfield.mdl-js-textfield
+            input.search.mdl-textfield__input type="text" /
+            label.mdl-textfield__label for="dashboard-assets-search"  Search in queries
+      .sin-gl-heading-fbox
+        div
+          button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
+        div
+          button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-date"  Sort by date
+        div
+          button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-user"  Sort by user
+        div
+          label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_public"
+            input#gen_checkbox_public.mdl-checkbox__input type="checkbox" onClick="updateGlAssociatedStyle()"
+            span.mdl-checkbox__label Show only your queries
+        div style="padding-left: 20px"
+          label.mdl-checkbox.mdl-js-checkbox for="gen_checkbox_associated"
+            input#gen_checkbox_associated.mdl-checkbox__input type="checkbox" onClick="updateGlAssociatedStyle()"
+            span.mdl-checkbox__label Show only linked queries
+
+      - if defined? (queries linked to the current endpoint are highlighted)
+        .sin-gl-label
+          = (queries linked to the current endpoint are highlighted)
+      .sin-gl-textfield__scroll
+        ul.sin-gl-list
+          - count = 0
+          - queriesToShow.each do |query|
+            - count = count + 1
+            - if can? :read, query
+              - public_private_class = 'sin-gl-row-public'
+              - if !!current_user
+                - if query.user.username == current_user.username
+                  - public_private_class = 'sin-gl-row-private'
+              li class="#{public_private_class}"
+                .sin-gl-hidden-name
+                  = query.name
+                .sin-gl-hidden-date
+                  = query.updated_at.to_i
+                .sin-gl-hidden-user
+                  = query.user.username
+                .sin-gl-hidden-linked-to-endpoint
+                  = query_links_to_sparql_endpoint(query, @thing)
+                = render partial: "run_query", locals: {thing: query, count: count, rparams: {sparql_thing: @thing}}

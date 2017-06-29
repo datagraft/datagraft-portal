@@ -102,8 +102,7 @@ class QueriesController < ThingsController
 
   # It may be scary, but you should sometimes trust parameters from the internet!
     def query_params_partial
-        params.permit(:query, :public, :name, :metadata, :configuration, :language, :description,
-          queriable_data_store_ids: [], sparql_endpoint_ids: [] )
+        params.permit(:query, :public, :name, :metadata, :configuration, :language, :description, :query_string, queriable_data_store_ids: [], sparql_endpoint_ids: [] )
     end
 
     def query_set_relations(query)

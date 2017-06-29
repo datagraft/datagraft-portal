@@ -29,7 +29,7 @@ module ApplicationHelper
     @markdown.render(markdown).html_safe
   end
 
-  COMMON_LICENSES = %w(CC0 CC-BY CC-BY-SA CC-BY-ND CC-BY-NC CC-BY-NC-SA CC-BY-NC-ND WTFPL MIT)
+  COMMON_LICENSES = %w(CC0 CC-BY CC-BY-SA CC-BY-ND CC-BY-NC CC-BY-NC-SA CC-BY-NC-ND WTFPL MIT NLOD)
   def get_common_licenses
     return COMMON_LICENSES
   end
@@ -66,6 +66,9 @@ module ApplicationHelper
     elsif license == "MIT"
       ret[:path] = "https://opensource.org/licenses/MIT"
       ret[:tip] = "The MIT License"
+    elsif license == "NLOD"
+      ret[:path] = "https://data.norge.no/nlod/en/1.0"
+      ret[:tip] = "Norwegian Licence for Open Government Data (NLOD)"
     end
     return ret
   end

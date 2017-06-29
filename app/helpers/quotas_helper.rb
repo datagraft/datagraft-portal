@@ -2,13 +2,13 @@ module QuotasHelper
 
   # Find how many files the user has in db
   def quota_used_file_count(user)
-    return user.filestores.count
+    return Filestore.where(:user => user).where.not("name LIKE ?", "%previewed_dataset_%").count
   end
 
   # Find users files and calculate total number of bytes
   def quota_used_file_size(user)
     total_file_size = 0;
-    users_files = user.filestores
+    users_files = Filestore.where(:user => user).where.not("name LIKE ?", "%previewed_dataset_%")
     users_files.each do |fs|
       unless fs.file == nil
         unless fs.file_size == nil

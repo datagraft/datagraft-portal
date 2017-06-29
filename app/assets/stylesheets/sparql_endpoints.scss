@@ -6,6 +6,24 @@ $primary-color: #5264AE;
 $dirty-white: #E9ECF6;
 $accent-color: #FF609A;
 
+.sin-new-label {
+  &:after {
+    content: " NEW";
+    color: $accent-color;
+    font-weight: 400;
+    position: relative;
+    bottom: 9px;
+    font-size: 12px;
+  }
+}
+
+.sin-surveyor-iframe {
+  width: 100%;
+  min-height: 300px;
+  border-width: 0px;
+  border-style: none;
+}
+
 .sin-card-layout .mdl-card {
   & .dataTables_length {
     padding-bottom: 8px;
@@ -122,6 +140,7 @@ $accent-color: #FF609A;
   }
 
   & > .mdl-tabs__tab-bar {
+    border-bottom: none; 
     padding-top: 10px;
     align-self: stretch;
 
@@ -208,7 +227,6 @@ $accent-color: #FF609A;
 }
 
 .sin-tab-textfield__box {
-  //  border: 1px solid rgba(3,3,3,0.3);
   padding: 4px;
   border: 1px solid #ddd;
   border-radius: 3px;
@@ -239,16 +257,6 @@ $accent-color: #FF609A;
 
 .sin-tabs {
   & > .mdl-tabs {
-    //    display: flex;
-    //    width: 100%;
-    //    flex-direction: column;
-    //    justify-content: space-between;
-    //    background-image: linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.25)), image-url("background_blue_grafterizer.jpg");
-    //    background-size: cover;
-    //  background-position: left;
-    // flex-direction: column;
-    //    align-items: center;
-    //    min-height: 8em;
 
     & > .mdl-tabs__tab-bar {
       padding-top: 10px;
@@ -326,34 +334,17 @@ font-family:sans-serif;
 .list {
   font-family:sans-serif;
   margin:0;
-  //padding:20px 0 0;
   padding: 0 0 0;
 }
 .list > li {
   display:block;
-  //background-color: #eee;
   background-color: #aaa;
-  //padding:10px;
   padding: 2px;
   box-shadow: inset 0 1px 0 #fff;
 }
 .avatar {
   max-width: 150px;
 }
-/*
-img {
-max-width: 100%;
-}
-h3 {
-font-size: 16px;
-margin:0 0 0.3rem;
-font-weight: normal;
-font-weight:bold;
-}
-p {
-margin:0;
-}
-*/
 input {
   border:solid 1px #ccc;
   border-radius: 5px;
@@ -416,7 +407,6 @@ input:focus {
 
 /* CSS for scrollable list */
 .sin-list-textfield__scroll {
-  //border: 1px solid rgba(3,3,3,0.3);
   padding: 4px;
   overflow-y: auto;
   max-height: 800px;
@@ -513,4 +503,10 @@ i.sin-flex-center{
 
 .squeezhead .sin-execute-request-button {
   padding-top: 8px;
+}
+
+.sin-feature-unavailable-notification-message {
+  text-align: center;
+  padding: 30px;
+  font-size: x-large;
 }

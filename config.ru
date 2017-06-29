@@ -7,12 +7,12 @@ require ::File.expand_path('../config/environment', __FILE__)
 require 'rack'
 
 # tracing of HTTP requests
-require 'prometheus/client/rack/collector'
+require 'prometheus/middleware/collector'
 
 # HTTP endpoint to be scraped by a prometheus server 
-require 'prometheus/client/rack/exporter'
+require 'prometheus/middleware/exporter'
 
-use Prometheus::Client::Rack::Collector
+use Prometheus::Middleware::Collector
 use MetricsExporter
 
 run Proc.new { |env| [200, {'Content-Type' => 'text/html'}, ['OK']] }
