@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170214124345) do
+ActiveRecord::Schema.define(version: 20170629141719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,25 @@ ActiveRecord::Schema.define(version: 20170214124345) do
     t.datetime "updated_at",   null: false
     t.index ["data_page_id"], name: "index_data_page_widgets_on_data_page_id", using: :btree
     t.index ["widget_id"], name: "index_data_page_widgets_on_widget_id", using: :btree
+  end
+
+  create_table "db_accounts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.jsonb    "configuration"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "type"
+    t.index ["user_id"], name: "index_db_accounts_on_user_id", using: :btree
+  end
+
+  create_table "db_keys", force: :cascade do |t|
+    t.integer  "db_account_id"
+    t.boolean  "enabled",       default: false, null: false
+    t.string   "name"
+    t.string   "key"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.index ["db_account_id"], name: "index_db_keys_on_db_account_id", using: :btree
   end
 
   create_table "features", force: :cascade do |t|
@@ -284,4 +303,6 @@ ActiveRecord::Schema.define(version: 20170214124345) do
   end
 
   add_foreign_key "catalogues", "users"
+  add_foreign_key "db_accounts", "users"
+  add_foreign_key "db_keys", "db_accounts"
 end

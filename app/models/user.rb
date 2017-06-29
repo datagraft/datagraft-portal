@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :catalogues, dependent: :destroy
   has_many :sparql_endpoints, dependent: :destroy
   has_many :upwizards, dependent: :destroy
+  has_many :db_accounts, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -56,10 +57,10 @@ class User < ApplicationRecord
 
   # register the decrease in number of users
   after_destroy :reset_num_users_metric
-  
+
   # register the increase in number of users
   after_create :reset_num_users_metric
-  
+
   def to_param
     self.username
   end
