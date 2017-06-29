@@ -27,7 +27,6 @@ document.addEventListener('turbolinks:load', function() {
   var new_val = 'none';
   var x = document.querySelectorAll(className);
   var i;
-  //debugger;
   for (i = 0; i < x.length; i++) {
     x[i].style.display = new_val;
   }

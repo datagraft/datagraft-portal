@@ -75,7 +75,8 @@ $dark-gray: #333 !default;
 
 
 
-.sin-gen-squeeze {
+.sin-gen-squeeze,
+.sin-gen-squeeze-sparql {
   background-color: $white;
   border-bottom: 1px solid $light-gray;
   cursor: pointer;

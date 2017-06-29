@@ -107,7 +107,7 @@ document.addEventListener('turbolinks:load', function() {
   // Avoid error message when sorting empty list
   if (genList.size() > 0) genList.sort('sin-gl-hidden-date', { order: "desc" });
 
-  $('.sin-gen-squeeze').squeezebox({
+  $('.sin-gen-squeeze-sparql').squeezebox({
     headers: '.sin-gs-head',
     folders: '.sin-gs-cnt',
     closeOthers: false,
