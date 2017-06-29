@@ -17,16 +17,16 @@ var config = {
 	],
 	
 	// geo widget - Leaflet: http://leafletjs.com/
-	geoenabled: false, // activate if needed
+	geoenabled: true, // activate if needed
 	geotemplate: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
 	geooptions: {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18,
 		id: 'mapbox.streets',
-		accessToken: '' // include your own token
+		accessToken: 'pk.eyJ1Ijoibm5pa29sb3YiLCJhIjoiY2o0aWU1am9mMDhnYTMybXFmMnZiYWlkbyJ9.mxumVa5xmq8DoMXCWZLegA' // include your own token
 	},
 	
 	// google analytics
-	gaenabled: false, // activate if needed
-	gaproperty: '' // include your own property
+	gaenabled: true, // activate if needed
+	gaproperty: 'UA-101880150-1' // include your own property
 };
