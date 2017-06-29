@@ -1,7 +1,3 @@
-- if @thing.public
-  iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(@thing.uri)}"]
-  script
-    | iFrameResize({log:false}, '#surveyor-iframe')
-- else
-  .sin-feature-unavailable-notification-message
-    = "Sorry! Browsing is currently only available for public endpoints."
+iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(@thing.uri)}"]
+javascript:
+ iFrameResize({log:false}, '#surveyor-iframe')
