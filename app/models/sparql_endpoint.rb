@@ -47,9 +47,6 @@ class SparqlEndpoint < Thing
       def uri
         "Initialise first."
       end
-      def uri=(val)
-        "Adding a URI possible only after creating a repo"
-      end
       def cached_size
         return '0'
       end
@@ -59,9 +56,6 @@ class SparqlEndpoint < Thing
     state :initialised do
       def uri
         "No URI yet."
-      end
-      def uri=(val)
-        "You haven't started creating a repository yet!"
       end
       def cached_size
         return '0'
@@ -73,9 +67,6 @@ class SparqlEndpoint < Thing
       def uri
         "Creating repository. Please wait..."
       end
-      def uri=(val)
-        puts "You are not supposed to do that! Please don't!"
-      end
       def cached_size
         return '0'
       end
@@ -86,9 +77,6 @@ class SparqlEndpoint < Thing
       def uri
         "No URI yet."
       end
-      def uri=(val)
-        puts "You haven't started creating a repository yet!"
-      end
       def cached_size
         return '0'
       end
@@ -98,12 +86,6 @@ class SparqlEndpoint < Thing
     state :repo_created do
       def uri
         metadata["uri"] if metadata
-      end
-
-      def uri=(val)
-        touch_metadata!
-        attribute_will_change!('uri') if uri != val
-        metadata["uri"] = val
       end
 
       def cached_size
@@ -117,6 +99,12 @@ class SparqlEndpoint < Thing
         metadata["cached_size"] = val ||= 0
       end
     end
+  end
+
+  def uri=(val)
+    touch_metadata!
+    attribute_will_change!('uri') if uri != val
+    metadata["uri"] = val
   end
 
   def initialised_sparql_endpoint
