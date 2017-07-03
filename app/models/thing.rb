@@ -76,6 +76,7 @@ class Thing < ApplicationRecord
       copy.user = newuser
       copy.stars_count = 0
       copy.public = false
+      copy.state = :created
       original.add_child copy
       increment_forks_metric(original)
       copy.resync_keyword_list

@@ -510,3 +510,26 @@ i.sin-flex-center{
   padding: 30px;
   font-size: x-large;
 }
+.sin-loading-bar-container {
+  display: flex;
+  justify-content: space-around;
+  width: 330px;
+}
+.sin-loading-bar-label {
+  align-self: center;
+  font-style: italic;
+}
+#sparql-loading-error-container i.material-icons {
+  color: indianred;
+}
+
+.sin-error-message {
+  font-style: italic;
+  align-self: center;
+}
+
+#sparql-loading-error-container {
+  display: flex;
+  justify-content: space-around;
+  min-width: 390px;
+}

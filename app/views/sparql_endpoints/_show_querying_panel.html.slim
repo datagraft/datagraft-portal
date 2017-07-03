@@ -4,8 +4,18 @@
     h3.sin-tab-title.mdl-cell--12-col Query SPARQL endpoint
 
     .sin-endpoint-uri.mdl-cell--12-col
-      .sin-tab-label SPARQL endpoint:
-      .sin-tab-textfield__box
+      .sin-tab-label 
+        | SPARQL endpoint:
+      - if @thing.state != 'repo_created'
+        .sin-loading-bar-container
+          #sparql-loading-bar.mdl-spinner.mdl-spinner--single-color.mdl-js-spinner.is-active
+          #sparql-loading-bar-label.sin-loading-bar-label
+            | Provisioning SPARQL endpoint - please wait...
+      #sparql-loading-error-container
+        i.material-icons error
+        .sin-error-message
+          | Error occured while creating SPARQL endpoint!
+      #sparql-endpoint-address.sin-tab-textfield__box
         - unless @thing.uri.blank?
           = link_to @thing.uri
       #tooltip-clipboard.mdl-button.mdl-js-button.mdl-js-ripple-effect.button.clipboard_btn data-clipboard-action="copy" data-clipboard-text="#{@thing.uri}"

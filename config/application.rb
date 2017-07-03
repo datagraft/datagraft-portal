@@ -2,6 +2,8 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'uri'
+
 require 'roo' #Used for viewing Excel files
 
 # tracing of HTTP requests

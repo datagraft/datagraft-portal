@@ -1,3 +1,5 @@
 iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(@thing.uri)}"]
 javascript:
- iFrameResize({log:false}, '#surveyor-iframe')
+  if ($('#surveyor-iframe').length) {
+    iFrameResize({log:false}, '#surveyor-iframe') 
+  }
