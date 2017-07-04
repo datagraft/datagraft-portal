@@ -101,6 +101,10 @@ class TransformationsController < ThingsController
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     @publisherId = @transformation.user.username
     @transformationID = @transformation.slug
+    @transformationJSON = @transformation.configuration.to_json
+    @transformationMeta = @transformation.to_json(:except => [:configuration])
+#    render_to_string(template: 'things/show.json.jbuilder', locals: {thing: @transformation})
+    byebug
     super
   end
 
