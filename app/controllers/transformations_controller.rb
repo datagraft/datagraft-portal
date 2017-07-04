@@ -104,7 +104,6 @@ class TransformationsController < ThingsController
     @transformationJSON = @transformation.configuration.to_json
     @transformationMeta = @transformation.to_json(:except => [:configuration])
 #    render_to_string(template: 'things/show.json.jbuilder', locals: {thing: @transformation})
-    byebug
     super
   end
 
