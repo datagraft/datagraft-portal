@@ -27,15 +27,12 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
 .landing-gradient {
   height: calc(102vh - 64px);
-  background: $dapaas-color linear-gradient(0deg,
-    $dapaas-color-wordcloud,
-    $dapaas-color ) repeat scroll 0% 0%;
+  background: $dapaas-color linear-gradient(0deg, $dapaas-color-wordcloud, $dapaas-color) repeat scroll 0% 0%;
 }
 
 .first-screen {
-  height: 100vh;
-  color:$white-not-so-white;
-  height:100vh;
+  color: $white-not-so-white;
+  height: 97vh;
   padding: 0px !important;
   display: flex;
   align-items: center;
@@ -213,7 +210,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
   h3 {
     font-weight: 300px;
-    margin-top:15px;
+    margin-top: 15px;
     margin-bottom:15px;
     line-height: 40px;
     text-align: left;
@@ -243,7 +240,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
 @media screen and (min-width: 960px) {
   .first-screen #screenshots-container {
-    transform: scale(1.1,1.1) translateX(10px);
+    transform: scale(1.1, 1.1) translateX(10px);
   }
 }
 
@@ -258,6 +255,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 .sin-how-it-works {
   display: flex;
   background-color: rgba(0,0,0,0.07);
+  padding: 0px !important;
   .mdl-cell.mdl-cell--4-col {
     display: flex;
     flex-direction: column;
@@ -314,6 +312,7 @@ $white-not-so-white: hsl(226, 39%, 94%);
 
 .sin-half-screen-vh {
   max-height: 57vh;
+  padding: 0px;
 }
 
 .sin-start-using-now {
