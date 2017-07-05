@@ -2,7 +2,7 @@ class UpwizardsController < ApplicationController
   include QuotasHelper
   include UpwizardHelper
   include Wicked::Wizard
-  steps :publish, :transform, :create_transform, :save_transform, :transform_select_execute, :transform_select_preview, :fill_sparql_endpoint, :fill_filestore, :error, :go_sparql, :go_filestore, :file_select_transform
+  steps :publish, :transform, :create_transform, :save_transform, :transform_select_execute, :transform_select_preview, :transform_direct, :fill_sparql_endpoint, :fill_filestore, :error, :go_sparql, :go_filestore, :file_select_transform
 
   # Receive new file attacement from form
   # Step in the wizard is indicated by :id. Not used by this method
@@ -43,49 +43,60 @@ class UpwizardsController < ApplicationController
   def new
     puts "************ upwizard new"
 
-    #Check if known task
-    task = params['task']
-    known_task = false
-    quota_full = false
-    if task == 'file'
-      known_task = true
-      quota_full = true unless quota_room_for_new_file_count?(current_user)
-    end
-    if task == 'sparql'
-      known_task = true
-      quota_full = true unless quota_room_for_new_sparql_count?(current_user)
-    end
+    if user_signed_in?
+      #Check if known task
+      task = params['task']
+      known_task = false
+      quota_full = false
+      if task == 'file'
+        known_task = true
+        quota_full = true unless quota_room_for_new_file_count?(current_user)
+      end
+      if task == 'sparql'
+        known_task = true
+        quota_full = true unless quota_room_for_new_sparql_count?(current_user)
+      end
 
-    if quota_full
-      redirect_to quotas_path
+      if quota_full
+        redirect_to quotas_path
 
-    elsif known_task
-      begin
-        upwizard = Upwizard.new  # Create new wizard
-        upwizard.user = current_user
+      elsif known_task
+        begin
+          @upwizard = Upwizard.new  # Create new wizard
+          @upwizard.user = current_user
 
-        authorize! :create, upwizard
-        upwizard.update_attributes(params.permit([:task]))
-        upwizard.save
+          authorize! :create, @upwizard
+          @upwizard.update_attributes(params.permit([:task]))
+          @upwizard.save
 
-        goto_step = steps.first
-        options = request.query_parameters
+          respond_to do |format|
+            format.html {
+              goto_step = steps.first
+              options = request.query_parameters
 
-        options = options.respond_to?(:to_h) ? options.to_h : options
-        options = { :controller => wicked_controller,
-          :action     => 'show',
-          :id         => goto_step || params[:id],
-          :wiz_id     => upwizard.id,
-          :only_path  => true
-          }.merge options
-        flash[:notice] = "New wizard is started"
-        redirect_to url_for(options)
-      rescue Exception => e
-        redirect_error_to_dashboard("Wizard create failed.", e)
+              options = options.respond_to?(:to_h) ? options.to_h : options
+              options = { :controller => wicked_controller,
+                :action     => 'show',
+                :id         => goto_step || params[:id],
+                :wiz_id     => @upwizard.id,
+                :only_path  => true
+                }.merge options
+              flash[:notice] = "New wizard is started"
+              redirect_to url_for(options)
+            }
+            format.json { render :show_json, status: :ok }
+          end
+
+        rescue Exception => e
+          redirect_error_to_dashboard("Wizard create failed.", e)
+        end
+      else
+        redirect_error_to_dashboard("Wizard cannot be created with task = "+task)
       end
     else
-      redirect_error_to_dashboard("Wizard cannot be created with task = "+task)
+      redirect_error_to_dashboard('Error user not signed in')
     end
+
   end
 
   # Delete a given upwizard including attaced file
@@ -116,6 +127,26 @@ class UpwizardsController < ApplicationController
       @upwizard = Upwizard.find(params[:wiz_id])
       authorize! :read, @upwizard
       process_state
+    rescue Exception => e
+      unless (@upwizard)
+        puts "Wizard #{params[:wiz_id]} does not exist!"
+      end
+      redirect_error_to_dashboard('Error showing wizard.', e)
+    end
+  end
+
+  # Show the content of the wizard
+  # GET      /:username/upwizards/:wiz_id
+  def show_json
+    puts "************ upwizard show_json"
+    begin
+      @upwizard = Upwizard.find(params[:wiz_id])
+      authorize! :read, @upwizard
+
+      respond_to do |format|
+        format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
+        format.json { render :show_json, status: :ok }
+      end
     rescue Exception => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
@@ -205,7 +236,11 @@ class UpwizardsController < ApplicationController
         puts e.backtrace.inspect
         flash[:error] = txt + ' Cause: ' + e.message
       end
-      redirect_to dashboard_path
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.json { render :json => { :errors => flash[:error]}, status: :unprocessable_entity }
+      end
+
   end
 
   def jump_error_to_state_and_render(txt, state, e=nil)
@@ -217,8 +252,13 @@ class UpwizardsController < ApplicationController
         puts e.backtrace.inspect
         flash[:error] = txt + ' Cause: ' + e.message
       end
-      jump_to state
-      render_wizard
+      respond_to do |format|
+        format.html {
+          jump_to state
+          render_wizard
+        }
+        format.json { render :json => { :errors => flash[:error]}, status: :unprocessable_entity }
+      end
   end
 
   # Copy additional fileinformation from form
@@ -357,6 +397,8 @@ class UpwizardsController < ApplicationController
       handle_transform_select_execute_and_render
     when :transform_select_preview
       handle_transform_select_preview_and_render
+    when :transform_direct
+      handle_transform_direct
     when :fill_sparql_endpoint
       handle_fill_sparql_endpoint_and_render
     when :fill_filestore
@@ -394,32 +436,42 @@ class UpwizardsController < ApplicationController
   ##  render_wizard
   ##end
 
+  def fetch_file_select thing_id
+    ret = {error_txt: nil, e: nil}
+    begin
+      @thing = Thing.find(thing_id)
+      unless @thing.file == nil
+        unless @upwizard.file == nil
+          @upwizard.file.delete
+        end
+        @upwizard.file = @thing.file
+        @upwizard.file_size = @thing.file_size
+        # BEWARE: We presume that the file type of the thing has been correctly set by the model/controller!
+        @upwizard.current_file_type = @thing.file_content_type
+        @upwizard.original_filename = @thing.original_filename
+      else
+        ret[:error_txt] = "Selected filestore with no file attached"
+      end
+    rescue Exception => e
+      ret[:error_txt] = 'Error fetching file with ID ' + thing_id.to_s
+      ret[:e] = e
+    end
+    return ret
+  end
+
   def handle_file_select_transform_and_render
     puts "************ upwizard handle_file_select_transform"
     if @upwizard.radio_thing_id
       # Copy file information from the selected thing
-      begin
-        @thing = Thing.find(@upwizard.radio_thing_id)
-        unless @thing.file == nil
-          unless @upwizard.file == nil
-            @upwizard.file.delete
-          end
-          @upwizard.file = @thing.file
-          @upwizard.file_size = @thing.file_size
-          # BEWARE: We presume that the file type of the thing has been correctly set by the model/controller!
-          @upwizard.current_file_type = @thing.file_content_type
-          @upwizard.original_filename = @thing.original_filename
-
-          # Update state and process the new state
-          @upwizard.trace_back_step_skip
-          puts "Test printout: "+@thing.inspect
-          jump_to :transform
-          render_wizard
-        else
-          jump_error_to_state_and_render("Selected filestore with no file attached", :publish)
-        end
-      rescue Exception => e
-        jump_error_to_state_and_render('Error fetching file with ID ' + @upwizard.radio_thing_id.to_s, :publish, e)
+      res = fetch_file_select @upwizard.radio_thing_id
+      if res[:error_txt] == nil
+        # Update state and process the new state
+        @upwizard.trace_back_step_skip
+        puts "Test printout: "+@thing.inspect
+        jump_to :transform
+        render_wizard
+      else
+        jump_error_to_state_and_render(res[:error_txt], :publish, res[:e])
       end
     else
       jump_error_to_state_and_render("No file is selected for transformation", :publish)
@@ -569,6 +621,75 @@ class UpwizardsController < ApplicationController
     end
   end
 
+  def handle_transform_direct
+    puts "************ upwizard handle_transform_direct"
+    if params[:filestore_id]
+      # Copy file information from the selected filestore
+      res = fetch_file_select params[:filestore_id]
+      if res[:error_txt] == nil
+        @upwizard.save
+        do_transform_direct
+      else
+        jump_error_to_state_and_render(res[:error_txt], :publish, res[:e])
+      end
+    else
+      unless @upwizard.file == nil
+        # Use uploaded file
+        do_transform_direct
+      else
+        jump_error_to_state_and_render("No file is selected for transformation", :publish)
+      end
+    end
+  end
+
+  def do_transform_direct
+    transformation_id = params[:transformation_id]
+    if transformation_id
+      begin
+        transformation = Transformation.find(transformation_id)
+
+        if (@upwizard.task == 'file')
+          begin
+            @upwizard.transformed_file = transformation.transform(@upwizard.file, 'pipe')
+            @upwizard.current_file_type = 'tabular'
+            @upwizard.save
+            respond_to do |format|
+              format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
+              format.json { render :show_json, status: :ok }
+            end
+          rescue Exception => e
+            puts 'Error transforming file ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(pipe)'  if @upwizard.get_current_file && transformation
+            jump_error_to_state_and_render("Error transforming file.", :transform, e)
+          end
+        elsif (@upwizard.task == 'sparql')
+          begin
+            @upwizard.transformed_file = transformation.transform(@upwizard.file, 'graft')
+            @upwizard.current_file_type = 'graph'
+            @upwizard.save
+            respond_to do |format|
+              format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
+              format.json { render :show_json, status: :ok }
+            end
+          rescue Exception => e
+            puts 'Error transforming file with ID ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(graft)' if @upwizard.get_current_file && transformation
+            jump_error_to_state_and_render("Error transforming file.", :transform, e)
+          end
+        else
+          redirect_error_to_dashboard('This wizard does not support <'+@upwizard.task+'>')
+        end
+      rescue Exception => e
+        puts 'Error retrieving transformation'
+        if (@upwizard)
+          puts 'Transformation ID: ' + transformation_id.to_s if transformation_id
+        else
+          puts 'Wizard does not exist!'
+        end
+        jump_error_to_state_and_render("Error retrieving transformation.", :transform, e)
+      end
+    else
+      jump_error_to_state_and_render("Error transformation is not selected.", :transform)
+    end
+  end
 
   # Pass the transformed tabular object over to a new filestore object
   def handle_fill_filestore_and_render

@@ -24,23 +24,27 @@ Rails.application.routes.draw do
   get 'documentation' => 'public_portal#documentation'
   get 'api' => 'public_portal#api'
   get 'feedback' => 'public_portal#feedback'
+  get 'about-us' => 'public_portal#about'
   get 'terms-of-use' => 'public_portal#terms'
   get 'privacy-policy' => 'public_portal#privacy'
   get 'cookie-policy' => 'public_portal#cookie'
   get 'faq' => 'public_portal#faq'
 
-  get 'publish' => 'data_distributions#publish'
-#  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
-  get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
-  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
+  get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
+  get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'
+  
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
+ post ':username/filestores/:id/publish' => 'filestores#publish'
   get ':username/filestores/new/:wiz_id' => 'filestores#new'
+
+ post ':username/transformations/:id/execute/:type/' => 'transformations#execute'
+ post ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
@@ -49,6 +53,7 @@ Rails.application.routes.draw do
   post ':username/queries/:id/execute_query' => 'queries#execute_query'
   get ':username/sparql_endpoints/new/:wiz_id' => 'sparql_endpoints#new'
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
+  post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
@@ -56,6 +61,7 @@ Rails.application.routes.draw do
   get    ':username/upwizards/:wiz_id/attachment' => 'upwizards#attachment' #Download attachment
   post   ':username/upwizards/:id/:wiz_id' => 'upwizards#create'  #Upload a file
   get    ':username/upwizards/:id/:wiz_id' => 'upwizards#show'    #Show the current step
+  get    ':username/upwizards/:wiz_id' => 'upwizards#show_json'    #Show content in wizard
   get    ':username/upwizards/:id/:wiz_id/debug' => 'upwizards#debug'    #Show debug information
   delete ':upwizards/:wiz_id' => 'upwizards#destroy'
   put    ':username/upwizards/:id/:wiz_id' => 'upwizards#update'
@@ -107,8 +113,8 @@ Rails.application.routes.draw do
       end
     end
 
-    datagraft_resources :data_distributions
-    datagraft_resources :data_pages
+#    datagraft_resources :data_distributions
+#    datagraft_resources :data_pages
     datagraft_resources :transformations
     datagraft_resources :queries
     datagraft_resources :filestores
@@ -116,24 +122,24 @@ Rails.application.routes.draw do
 
     # TODO fix me : Flip crashes on migration
     begin
-      if Flip.on? :catalogues
-        resources :catalogues do
-          member do
-            get 'versions'
-            post 'star'
-            post 'unstar'
-          end
-        end
-      end
+#      if Flip.on? :catalogues
+#        resources :catalogues do
+#          member do
+#            get 'versions'
+#            post 'star'
+#            post 'unstar'
+#          end
+#        end
+#      end
 
-      if Flip.on? :queriable_data_stores
-        datagraft_resources :queriable_data_stores
-      end
+#      if Flip.on? :queriable_data_stores
+#        datagraft_resources :queriable_data_stores
+#      end
 
 
-      if Flip.on? :utility_functions
-        datagraft_resources :utility_functions
-      end
+#      if Flip.on? :utility_functions
+#        datagraft_resources :utility_functions
+#      end
     rescue
       puts "No Flip"
     end

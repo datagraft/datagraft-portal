@@ -1,5 +1,5 @@
 # extends the default Prometheus metrics exporter by adding security
-class MetricsExporter < Prometheus::Client::Rack::Exporter
+class MetricsExporter < Prometheus::Middleware::Exporter
   def call(env)
     super(env)
   end

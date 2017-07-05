@@ -21,9 +21,11 @@
 - else
   #gen-list
     ul.sin-gl-heading-fbox
-      li.sin-gl-search
+      li.mdl-textfield.mdl-js-textfield.sin-gl-search
         i.material-icons search
-        input.search placeholder="Search in #{things_name}"
+        .mdl-textfield.mdl-js-textfield
+          input.search.mdl-textfield__input type="text" /
+          label.mdl-textfield__label for="dashboard-assets-search" Search in #{things_name}
       li
         button.sort type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-sort="sin-gl-hidden-name"  Sort by name
       li
@@ -44,9 +46,10 @@
         - things.each do |thing|
           - count = count + 1
           - if can? :read, thing
-            - add_class = 'sin-gl-row-private'
-            - unless thing.user.name == current_user.name
-              - add_class = 'sin-gl-row-public'
+            - add_class = 'sin-gl-row-public'
+            - if !!current_user
+              - if thing.user.username == current_user.username
+                - add_class = 'sin-gl-row-private'
             li class="#{add_class}"
               .sin-gl-hidden-name
                 = thing.name

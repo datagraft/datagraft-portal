@@ -10,7 +10,7 @@
   - highlight_class = 'highlight-true'
 
 div class = "#{highlight_class}"
-  .sin-gen-squeeze
+  .sin-gen-squeeze-sparql
     .sin-gs-head
       .sin-query-list-icon
         = image_tag(thing_icon_name(thing), height: "48")
@@ -29,7 +29,7 @@ div class = "#{highlight_class}"
           = thing.user.username
       .mdl-layout-spacer
       span.sin-execute-request-button
-        = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => thing.query}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect'
+        = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => thing.query_string}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect'
       .sin-execute-request-response
     .sin-gs-cnt
       - unless thing.description.blank?
@@ -40,6 +40,6 @@ div class = "#{highlight_class}"
         | Query text:
       br
       .sin-tab-textfield__scroll
-        = simple_format thing.query
+        = simple_format thing.query_string
       i.sin-flex-center
         = link_to "Go to asset...", thing_path(thing)

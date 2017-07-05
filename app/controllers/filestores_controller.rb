@@ -1,5 +1,6 @@
 class FilestoresController < ThingsController
   include QuotasHelper
+  wrap_parameters :filestore, include: [:public, :name, :description, :meta_keyword_list, :separator, :license, :file]
 
   # Deprecated after introduction of upwizard
   # Receive a file attachement
@@ -9,16 +10,44 @@ class FilestoresController < ThingsController
   #  @filestore = Filestore.new
   #end
 
+  # Receive file to be pushed to filestore
+  # POST     /:username/filestores/:id/publish
+  def publish
+    ok = false
+    set_thing
+    authorize! :update, @thing
+
+    if params["publish_file"] != nil
+      if @thing.file == nil  # Only allow file once per filestore
+        if quota_room_for_new_file_size?(current_user, params["publish_file"].size) # Check if quota is broken
+          @thing.file = params["publish_file"]
+          @thing.original_filename = params["publish_file"].original_filename
+          @thing.file_size = params["publish_file"].size
+          fill_default_values_if_empty
+          ok = @thing.save
+        end
+      end
+    end
+
+    if ok
+      return head(:ok)
+    else
+      return head(:unprocessable_entity)
+    end
+  end
+
+
+
   # Fetch a file attached to the filestore
   # GET ':username/filestores/:id/attachment'
   def attachment
     set_thing
-
+    throw "No file associated to this filestore" if (@thing.file == nil)
     # Update statistics
     @thing.inc_download_count
     @thing.save
 
-    redirect_to Refile.attachment_url(@thing, :file, filename: @thing.upload_filename, format: @thing.upload_format), status: :moved_permanently
+    redirect_to Refile.attachment_url(@thing, :file, filename: @thing.upload_filename.empty? ? 'file' : @thing.upload_filename, format: @thing.upload_format.empty? ? 'csv' :  @thing.upload_format), status: :moved_permanently
   end
 
   # View the first rows of the attached file
@@ -50,10 +79,9 @@ class FilestoresController < ThingsController
     puts "************ filestore create"
     super
 
+    # Check if quota is broken
+    redirect_to quotas_path unless quota_room_for_new_file_count?(current_user)
     unless params[:wiz_id] == nil
-      # Check if quota is broken
-      redirect_to quotas_path unless quota_room_for_new_file_count?(current_user)
-
       begin
         @upwizard = Upwizard.find(params[:wiz_id])
       rescue Exception => e

@@ -22,6 +22,7 @@
 //= require list
 //= require list.pagination.min
 //= require list.fuzzysearch.min
+//= require iframeResizer.min
 
 document.addEventListener('turbolinks:load', function() {
   componentHandler.upgradeDom();

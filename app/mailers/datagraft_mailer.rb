@@ -1,0 +1,2 @@
+class DatagraftMailer < ApplicationMailer
+end

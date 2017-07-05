@@ -11,14 +11,20 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
       .mdl-tabs__tab-bar
         a.mdl-tabs__tab.is-active href="#endpoint-info-panel" Endpoint info
         a.mdl-tabs__tab href="#endpoint-querying-panel"  Querying
-    /! Date infos
-    div.sin-date-infos
-      = render 'elem_last_modified'
+        a.mdl-tabs__tab.sin-new-label href="#endpoint-browsing-panel"  Browsing
     /! MDL tab panels, is-active to denote currently active
     #endpoint-info-panel.mdl-tabs__panel.is-active
+      /! Date infos
+      div.sin-date-infos
+        = render 'elem_last_modified'
       .mdl-card__supporting-text.sin-padding
         = render 'show_info_panel'
     /! MDL Tab panel 2
     #endpoint-querying-panel.mdl-tabs__panel
+      /! Date infos
+      div.sin-date-infos
+        = render 'elem_last_modified'
       .mdl-card__supporting-text.sin-padding
         = render 'show_querying_panel'
+    #endpoint-browsing-panel.mdl-tabs__panel
+      = render 'show_browsing_panel'

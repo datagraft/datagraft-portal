@@ -6,14 +6,19 @@ module SparqlEndpointsHelper
 
 
   # Get repository size for SPARQL endpoint
-  def repository_size
-    if @thing.public
-      # Create a tmp user (public SPARQL endpoint)
-      tmpuser = User.new;
-      tmpuser.get_ontotext_repository_size(@thing)
-    else
-      # Use current user (private SPARQL endpoint)
-      current_user.get_ontotext_repository_size(@thing)
+  def repository_size_param(user, se)
+    raise CanCan::AccessDenied.new("Not allowed to access Sparql Endpoint", :read, se) unless can? :read, se
+
+    begin
+      return user.get_ontotext_repository_size(se)
+
+    rescue Exception => e
+      puts 'Error getting repository size'
+      puts e.message
+      puts e.backtrace.inspect
+
+      # Use cached size
+      return se.cached_size
     end
   end
 
@@ -32,8 +37,8 @@ module SparqlEndpointsHelper
 
     return tmp_user + tmp_pub
   end
-  
-  
+
+
   # Check if query links to sparql endpoint
   def query_links_to_sparql_endpoint(query, sparql_endpoint)
     return SparqlEndpointQuery.exists?({query_id: query.id, sparql_endpoint_id: sparql_endpoint.id})

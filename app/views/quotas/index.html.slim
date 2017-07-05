@@ -26,5 +26,5 @@ div.sin-quotas-bar
 
 div.sin-quotas-bar
   div.sin-quotas-bar-fill style="width:#{((@nbSPARQLtriples.to_f/@maxSPARQLtriples.to_f)*100.0).round}%"
-  div.sin-quotas-text = "Coming soon"
-  /div.sin-quotas-text = "#{number_to_human(@nbSPARQLtriples)}/#{number_to_human(@maxSPARQLtriples)} triples"
+  div.sin-quotas-text
+    = "#{number_to_human(@nbSPARQLtriples)}/#{number_to_human(@maxSPARQLtriples)} triples "

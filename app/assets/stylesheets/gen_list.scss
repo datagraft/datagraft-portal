@@ -4,16 +4,18 @@
 .sin-gl-row-private {
 }
 
+.sin-hidden,
 .sin-gl-hidden-name,
 .sin-gl-hidden-date,
-.sin-gl-hidden-user {
+.sin-gl-hidden-user,
+.sin-gl-hidden-linked-to-endpoint {
   display: none;
 }
 
 // Search and filtering assets
 .sin-gl-search {
-  //display: flex;
-  //align-items: center;
+  display: flex !important;
+  align-items: center;
   i.material-icons {
     padding-right: 8px;
   }
@@ -39,7 +41,7 @@
 
 .sin-gl-heading-fbox {
   font-family:sans-serif;
-  display: flex;
+  display: flex; 
   flex-direction: row;
   align-content: center;
   align-items: center;
@@ -49,12 +51,7 @@
   //padding:20px 0 0;
   padding: 0 0 0;
   width: 100%;
-}
-.sin-gl-heading-fbox > li {
-}
-
-
-
+} 
 
 // Font
 $text-color: #404040 !default;
@@ -79,7 +76,8 @@ $dark-gray: #333 !default;
 
 
 
-.sin-gen-squeeze {
+.sin-gen-squeeze,
+.sin-gen-squeeze-sparql {
   background-color: $white;
   border-bottom: 1px solid $light-gray;
   cursor: pointer;

@@ -1,15 +1,8 @@
-- title "Landing page"
+- title "DataGraft Home Page"
 - setOption :landingpageLayout
 
-.landing-gradient
-  .first-screen.mdl-grid
-    = render 'first_screen'
+.first-screen.mdl-grid.landing-gradient
+  = render 'first_screen'
 
-  .second-screen.mdl.grid#howitworks
-    = render 'second_screen'
-
-.third-screen.mdl.grid
+.third-screen.mdl-grid
   = render 'third_screen'
-
-.last-screen.mdl-grid
-  = render 'last_screen'

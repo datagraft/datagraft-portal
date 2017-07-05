@@ -2,7 +2,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
   after_filter :update_metrics 
-
+  
   # GET /resource/sign_up
   def new
     fill_infos_from_omniauth
@@ -41,24 +41,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  # GET /resource/edit
-  # def edit
-  #   super
-  # end
-
-  # PUT /resource
-  # def update
-  #   super
-  # end
-
-  # DELETE /resource  
-  def destroy  
-    num_platform_users = Prometheus::Client.registry.get(:num_platform_users)
-
-    num_platform_users.set({}, num_platform_users.get - 1)
-    super
-  end  
-
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
   # in to be expired now. This is useful if the user wants to
@@ -96,20 +78,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   end
 
-  # The path used after sign up.
-  def after_sign_up_path_for(resource)
-    if resource.persisted? # user is created successfuly
-      num_platform_users = Prometheus::Client.registry.get(:num_platform_users)
-
-      curr_num_users = num_platform_users.get ? num_platform_users.get : 0
-
-      num_platform_users.set({}, curr_num_users + 1)
-    end
-    super(resource)
-  end
-
-  # The path used after sign up for inactive accounts.
-  # def after_inactive_sign_up_path_for(resource)
-  #   super(resource)
-  # end
 end

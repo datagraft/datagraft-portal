@@ -2,13 +2,15 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'uri'
+
 require 'roo' #Used for viewing Excel files
 
 # tracing of HTTP requests
-require 'prometheus/client/rack/collector'
+require 'prometheus/middleware/collector'
 
 # HTTP endpoint to be scraped by a prometheus server 
-require 'prometheus/client/rack/exporter'
+require 'prometheus/middleware/exporter'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

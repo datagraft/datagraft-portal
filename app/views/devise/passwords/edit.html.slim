@@ -1,0 +1,29 @@
+- title "Change your password"
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h2 Change your password
+  .sin-condensed-form
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
+      .mdl-card__supporting-text.sin-padding
+        = devise_error_messages!
+        = f.hidden_field :reset_password_token
+        .mdl-grid
+          .mdl-cell.mdl-cell--5-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.field
+            = f.label :password, "New password", class: "mdl-textfield__label"
+            = f.password_field :password, autofocus: true, autocomplete: "off", class: "mdl-textfield__input"
+          - if @minimum_password_length
+            .mdl-cell.mdl-cell--5-col.sin-flex-center.sin-padding-left
+              em
+                | (#{@minimum_password_length} characters minimum)
+            br/
+        .mdl-grid
+          .mdl-cell.mdl-cell--5-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+            = f.label :password_confirmation, "Confirm new password", class: "mdl-textfield__label"
+            = f.password_field :password_confirmation, autocomplete: "off", class: "mdl-textfield__input"
+        br/
+        = f.submit "Change my password", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+      div.mdl-card__actions
+        = render "devise/shared/links"

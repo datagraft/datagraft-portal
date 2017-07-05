@@ -9,6 +9,7 @@ end
 json.id @thing.slug
 
 json.set! 'dct:title', @filestore.name
+json.set! 'dct:description', @filestore.description
 json.set! 'dct:issued', @filestore.created_at
 json.set! 'dct:modified', @filestore.updated_at
 
@@ -16,4 +17,5 @@ json.set! 'dcat:accessURL', request.protocol+request.host_with_port+filestore_at
 json.set! 'dcat:mediaType', @filestore.file_content_type
 json.set! 'dcat:byteSize', @filestore.file_size
 
-json.set! 'sin:extension', Rack::Mime::MIME_TYPES.invert[@filestore.file_content_type].to_s[1..-1]
+json.set! 'sin:extension', @filestore.upload_format
+json.set! 'dct:license', get_license_info(@filestore.license)[:path]

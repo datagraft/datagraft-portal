@@ -27,7 +27,7 @@ module OntotextUser
 
     conn = new_api_connexion
     resp = conn.post do |req|
-      req.options[:timeout] = 5 
+      req.options[:timeout] = 5
       req.url '/dapaas-management-services/api/accounts'
       req.headers['Content-Type'] = 'application/json'
       req.body = {
@@ -44,7 +44,7 @@ module OntotextUser
     if resp.status.between?(200, 299)
       self.ontotext_account = account_token
       save!
-    else 
+    else
       puts resp.body
       throw "Unable to register an Ontotext user"
     end
@@ -57,13 +57,13 @@ module OntotextUser
     return if has_ontotext_account
 
     # The Ontotext db requires both usernames and emails to be unique.
-    # In the register ontotext account method we generate a random token 
+    # In the register ontotext account method we generate a random token
     # to ensure uniqueness of these. For the test user we set a fixed token.
     account_token = 100000003
 
     conn = new_api_connexion
     resp = conn.post do |req|
-      req.options[:timeout] = 5 
+      req.options[:timeout] = 5
       req.url '/dapaas-management-services/api/accounts'
       req.headers['Content-Type'] = 'application/json'
       req.body = {
@@ -135,7 +135,7 @@ module OntotextUser
   end
 
   public
-  # Get ontotext api keys 
+  # Get ontotext api keys
   def ontotext_api_keys
     lol = ontotext_connexion.get do |req|
       req.url '/dapaas-management-services/api/api_keys'
@@ -226,7 +226,7 @@ module OntotextUser
             'dcat:mediaType' => 'text/csv'
             }.to_json), 'application/ld+json'),
           }
-      end 
+      end
 
       throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
 
@@ -245,15 +245,20 @@ module OntotextUser
 
       throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
 
-      json_repository = JSON.parse(resp_repository.body)
-
+      json_repository = JSON.parse(resp_repository.body);
+      
+      # issue event for sucessful creation of repository
+      qds.repo_successfully_created
+      qds.uri = json_repository['access-url']
+      
       return json_repository['access-url']
 
     rescue Exception => e
+      qds.error_occured_creating_repo
       puts 'Error creating Ontotext repository'
       puts e.message
       puts e.backtrace.inspect
-    end  
+    end
   end
 
 
@@ -267,7 +272,7 @@ module OntotextUser
   # Get the size of the repository
   def get_ontotext_repository_size(se)
     begin
-      return 'unknown size of' if not se.uri
+      return '0' if not se.uri
 
       # No user authentication required for public SPARQL endpoints
       connect = Faraday.new
@@ -279,20 +284,20 @@ module OntotextUser
       resp_size = connect.get do |req|
         req.url se.uri+'/size'
         req.headers['Content-Type'] = 'application/ld+json'
-        req.options.timeout = 720
-      end  
+        req.options.timeout = 10
+      end
 
-      throw ("Unable to get size of the Ontotext repository - " + resp_size.body + " - " + resp_size.status) unless 
+      throw ("Unable to get size of the Ontotext repository - " + resp_size.body.to_s + " - " + resp_size.status.to_s) unless
       resp_size.status.between?(200, 299)
+
+      puts resp_size.inspect
+
+      # Update cached size of Sparql Endpoint
+      se.cached_size = resp_size.body ||= se.cached_size
+      se.save
 
       return resp_size.body
 
-    rescue Exception => e
-      puts 'Error getting Ontotext repository size'
-      puts e.message
-      puts e.backtrace.inspect
-
-      return 'unknown size of'
     end
   end
 
@@ -304,7 +309,7 @@ module OntotextUser
       when 'rdf' then
         'application/rdf+xml'
       when 'nt' then
-        'text/plain'    
+        'text/plain'
       when 'ttl' then
         'application/x-turtle'
       when 'n3' then
@@ -325,7 +330,7 @@ module OntotextUser
           req.options.timeout = 720
         end
 
-        throw ("Unable to upload file to the Ontotext repository - " + resp.body + " - " + resp.status.to_s) unless 
+        throw ("Unable to upload file to the Ontotext repository - " + resp.body.to_s + " - " + resp.status.to_s) unless
         resp.status.between?(200, 299)
 
       rescue Exception => e
@@ -387,7 +392,7 @@ module OntotextUser
           begin
             user_id = decode_ontotext_user_id(se)
             db_id = get_ontotext_db_id(user_id)
-            repository_id = se.uri.split('/')[6]    
+            repository_id = se.uri.split('/')[6]
             url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+db_id+'/repository/'+repository_id
             body = '{"public": ' + '"' + se.public.to_s + '"}'
 
@@ -399,7 +404,7 @@ module OntotextUser
               req.options.timeout = 720
             end
 
-            throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless 
+            throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless
             resp.status.between?(200, 299)
 
             return resp.body
@@ -408,7 +413,7 @@ module OntotextUser
             puts 'Error updating Ontotext repository public property'
             puts e.message
             puts e.backtrace.inspect
-          end  
+          end
         end
 
 
@@ -458,7 +463,7 @@ module OntotextUser
 
           throw ("Unable to delete Ontotext account - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
 
-          return resp.body    
+          return resp.body
         end
 
       end

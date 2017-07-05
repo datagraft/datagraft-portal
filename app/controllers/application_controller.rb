@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
     def store_location!
       return if current_user
       return unless request.get?
-      return if request.path =~ /^\/users\// 
+      return if request.path =~ /^\/users\//
       store_location_for(:user, request.fullpath)
     end
 
@@ -98,17 +98,20 @@ class ApplicationController < ActionController::Base
           request.headers['X-user-token']
         params[:user_token] = token
       end
-      
+
       user_token = params[:user_token].presence
 
       if user_token
-        token = ApiKey.where(key: user_token, enabled: true).first
-        # This is maybe not safe for timing attacks but who cares?
-        if token
-          request.env['devise.skip_trackable'] = true
-          sign_in token.user, store: false
-          request.env.delete('devise.skip_trackable')
-        end
+        # Disabled code
+        # API access shall use OAUTH2 and not APIKeys.
+        puts "************* APIKey authentication is disabled!"
+        #token = ApiKey.where(key: user_token, enabled: true).first
+        ## This is maybe not safe for timing attacks but who cares?
+        #if token
+        #  request.env['devise.skip_trackable'] = true
+        #  sign_in token.user, store: false
+        #  request.env.delete('devise.skip_trackable')
+        #end
       end
     end
 end
