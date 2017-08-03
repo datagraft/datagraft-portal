@@ -18,4 +18,20 @@ class DbAccount < ApplicationRecord
   end
 
   def add_key(key, name)
+  end
+
+  def generate_key(db_key)
+  end
+
+  def delete_key(db_key)
+  end
+
+  def update_key(db_key)
+  end
+
+  protected
+  def touch_configuration!
+    self.configuration = {} if not configuration.is_a?(Hash)
+  end
+
 end
