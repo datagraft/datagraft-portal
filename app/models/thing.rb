@@ -9,6 +9,8 @@ class Thing < ApplicationRecord
   has_many :stars, dependent: :destroy
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
+  belongs_to :db_account
+
 
   validates :name, presence: true
   validates :user, presence: true
@@ -48,7 +50,7 @@ class Thing < ApplicationRecord
       puts e.backtrace.inspect
     end
   end
-  
+
   # on each asset update we update the number of private/public assets
   def update_public_private_metrics
     reset_num_assets_public_private(self)

@@ -35,6 +35,18 @@ class SparqlEndpoint < Thing
     metadata["uri"] = val
   end
 
+  def db_repository
+    result = nil
+    result = metadata["db_repository"] if metadata
+    return (result ||= {'ontotext_uri' => uri})
+  end
+
+  def db_repository=(val)
+    touch_metadata!
+    attribute_will_change!('db_repository') if db_repository != val
+    metadata["db_repository"] = val
+  end
+
   def cached_size
     result = nil
     result = metadata["cached_size"] if metadata

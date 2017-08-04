@@ -1,20 +1,21 @@
 class DbAccount < ApplicationRecord
   belongs_to :user
   has_many :db_keys, dependent: :destroy
+  has_many :things, dependent: :destroy
 
   def delete()
   end
 
-  def new_repo()
+  def new_repository(thing)
   end
 
-  def upload_file_to_repo(repo_hash, file)
+  def upload_file_to_repository(db_repository, file, file_type)
   end
 
-  def query_repo(repo_hash, query_string)
+  def query_repository(repo_hash, query_string)
   end
 
-  def delete_repo(repo_hash)
+  def delete_repository(repo_hash)
   end
 
   def add_key(key, name)

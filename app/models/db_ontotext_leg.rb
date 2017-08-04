@@ -6,16 +6,18 @@ class DbOntotextLeg < DbAccount
   def delete()
   end
 
-  def new_repo()
+  def new_repository(thing)
+    new_ontotext_repository(thing)
   end
 
-  def upload_file_to_repo(repo_hash, file)
+  def upload_file_to_repository(db_repository, file, file_type)
+    upload_file_ontotext_repository(db_repository, file, file_type)
   end
 
-  def query_repo(repo_hash, query_string)
+  def query_repository(repo_hash, query_string)
   end
 
-  def delete_repo(repo_hash)
+  def delete_repository(repo_hash)
   end
 
   def add_key(key, name)
@@ -95,10 +97,15 @@ class DbOntotextLeg < DbAccount
     ontotext_account != 0
   end
 
+  #Transfer account stored in thing to account storage in ontotext_user
+  def migrate_ontotext_account(user)     #Checked
+    ontotext_account = user.ontotext_account
+  end
+
   # Create new ontotext repository
-  def new_ontotext_repository(qds)     #Checked
+  def new_ontotext_repository(thing)     #Checked
     begin
-      pname = qds[:name].parameterize
+      pname = thing[:name].parameterize
       today = Time.now.to_s.slice(0,10)
 
       connect = ontotext_connexion(true)
@@ -107,9 +114,9 @@ class DbOntotextLeg < DbAccount
         req.headers['Content-Type'] = 'application/ld+json'
         req.body = {
           '@context' => ontotext_declaration,
-          'dct:title' => qds[:name].parameterize,
-          'dct:description' => qds[:description].to_s,
-          'dcat:public' => qds[:public].to_s,
+          'dct:title' => thing[:name].parameterize,
+          'dct:description' => thing[:description].to_s,
+          'dcat:public' => thing[:public].to_s,
           'dct:modified'=> today,
           'dct:issued' => today
           }.to_json
@@ -128,7 +135,7 @@ class DbOntotextLeg < DbAccount
           meta: Faraday::UploadIO.new(StringIO.new({
             '@context' => ontotext_declaration,
             '@type' => 'dcat:Distribution',
-            'dct:title' => qds[:name].parameterize + '-distribution',
+            'dct:title' => thing[:name].parameterize + '-distribution',
             'dct:description' => 'temporary empty file',
             'dcat:fileName' => 'empty.csv',
             'dcat:mediaType' => 'text/csv'
@@ -155,7 +162,7 @@ class DbOntotextLeg < DbAccount
 
       json_repository = JSON.parse(resp_repository.body)
 
-      return json_repository['access-url']
+      return { 'ontotext_uri' => json_repository['access-url']}
 
     rescue Exception => e
       puts 'Error creating Ontotext repository'
@@ -205,7 +212,7 @@ class DbOntotextLeg < DbAccount
 
 
   # Upload file to the repository
-  def upload_file_ontotext_repository(rdfFile, rdfType, sparql_endpoint)    #Checked
+  def upload_file_ontotext_repository(db_repository, rdfFile, rdfType)    #Checked
     begin
       mime_type = case rdfType
       when 'rdf' then
@@ -226,7 +233,7 @@ class DbOntotextLeg < DbAccount
 
       connect = ontotext_connexion(true)
       resp = connect.post do |req|
-        req.url sparql_endpoint.uri+'/statements'
+        req.url db_repository['ontotext_uri']+'/statements'
         req.headers['Content-Type'] = mime_type
         req.body = rdfFile.read
         req.options.timeout = 720
