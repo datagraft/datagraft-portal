@@ -245,11 +245,16 @@ module OntotextUser
 
       throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
 
-      json_repository = JSON.parse(resp_repository.body)
-
+      json_repository = JSON.parse(resp_repository.body);
+      
+      # issue event for sucessful creation of repository
+      qds.repo_successfully_created
+      qds.uri = json_repository['access-url']
+      
       return json_repository['access-url']
 
     rescue Exception => e
+      qds.error_occured_creating_repo
       puts 'Error creating Ontotext repository'
       puts e.message
       puts e.backtrace.inspect

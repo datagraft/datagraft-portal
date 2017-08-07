@@ -12,3 +12,10 @@ script
       publisher: "#{@publisherId}",
       id: "#{@transformationID}"
     }, false);
+    
+    graftInstance.sendMessage({
+            message: 'set-read-only-transformation',
+            meta: $('<div>').html('#{@transformationMeta}').text(),
+            json: $('<div>').html('#{@transformationJSON}').text()
+        }, false);
+    

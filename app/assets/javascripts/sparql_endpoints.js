@@ -1,5 +1,131 @@
 document.addEventListener('turbolinks:load', function() {
 
+  var setEndpointURL = function () {
+    $.ajax({
+      url: window.location.pathname + '/url.json',
+      type: 'GET',
+      timeout: 5000,
+      error: function (xhr, textStatus, thrownError) {
+        if(textStatus === "timeout") {
+          console.log("Server took too long to respond when asking for URL!");
+          console.log(xhr.status);
+          console.log(thrownError);
+          $('#sparql-loading-error-container > .sin-error-message').text('Server took too long to respond! Try refreshing this page...');
+          $('#sparql-endpoint-address').hide();
+          $('#sparql-loading-error-container').show();
+          $('#tooltip-clipboard').hide();
+          $('.sin-loading-bar-container').hide();
+        } else {
+          console.log("Error fetching SPARQL endpoint URL!");
+          console.log(xhr.status);
+          console.log(thrownError);
+          $('#sparql-loading-error-container > .sin-error-message').text('Error fetching URL for endpoint! Try refreshing this page...');
+          $('#sparql-endpoint-address').hide();
+          $('#sparql-loading-error-container').show();
+          $('#tooltip-clipboard').hide();
+          $('.sin-loading-bar-container').hide();
+        }
+        return false;
+      },
+      success: function (res) {
+        if (res.url) {
+          $('#sparql-endpoint-address > a').text(res.url);
+          $('#sparql-endpoint-address').show();
+          $('#tooltip-clipboard').show();
+          $('#tooltip-clipboard').attr('data-clipboard-text', res.url);
+          $('.sin-loading-bar-container').hide();
+          $('#surveyor-iframe').attr('src', '/RDFsurveyor/index.html?repo=' + res.url);
+        } else {
+          // could not get URL?? Should not happen but just in case 
+          console.log('URL not found! Please try again later;');
+          $('#sparql-loading-error-container > .sin-error-message').text('Error fetching URL for endpoint! Try refreshing this page...');
+          $('#sparql-endpoint-address').hide();
+          $('#sparql-loading-error-container').show();
+          $('#tooltip-clipboard').hide();
+          $('.sin-loading-bar-container').hide();
+        }
+      }
+    })
+  }
+
+  var pollEndpointState = async function() {
+    var endpointState = $('#endpoint-state').text();
+    // repository not yet created
+    if(endpointState !== 'repo_created') {
+      // hide the address field and show the loading bar
+      $('#sparql-endpoint-address').hide();
+      $('#sparql-loading-error-container').hide();
+      $('#tooltip-clipboard').hide();
+      $('.sin-loading-bar-container').show();
+
+      // after four seconds - issue a request for the state of the endpoint
+      setTimeout(() => {
+        $.ajax({
+          url: window.location.pathname + '/state.json',
+          type: 'GET',
+          timeout: 5000,
+          error: function (xhr, textStatus, thrownError) {
+            if(textStatus === "timeout") {
+              console.log("Server took too long to respond when asking for URL!");
+              console.log(xhr.status);
+              console.log(thrownError);
+              $('#sparql-loading-error-container > .sin-error-message').text('Server took too long to respond! Try refreshing this page...');
+              $('#sparql-endpoint-address').hide();
+              $('#sparql-loading-error-container').show();
+              $('#tooltip-clipboard').hide();
+              $('.sin-loading-bar-container').hide();
+            } else {
+              console.log("Error polling server for SPARQL endpoint state!");
+              console.log(xhr.status);
+              console.log(thrownError);
+              $('#sparql-loading-error-container > .sin-error-message').text('Error fetching endpoint state! Try refreshing this page...');
+              $('#sparql-endpoint-address').hide();
+              $('#sparql-loading-error-container').show();
+              $('#tooltip-clipboard').hide();
+              $('.sin-loading-bar-container').hide();
+            }
+          },
+          success: function (res) {
+            // null safety first
+            if (res.state) {
+              $('#endpoint-state').text(res.state);
+              if (res.state === 'repo_created') {
+                // SPARQL endpoint successfully created - we can now get the URL
+                $('#sparql-loading-bar-label').text('Success! Getting URL of endpoint...');
+                setTimeout(() => {
+                  setEndpointURL();
+                }, 2000)
+              } else if (res.state === 'error_creating_repo') {
+                // Something went wrong creating the repository
+                $('#sparql-endpoint-address').hide();
+                $('#sparql-loading-error-container').show();
+                $('#tooltip-clipboard').hide();
+                $('.sin-loading-bar-container').hide();
+              } else if (res.state === 'creating_repo') {
+                // Repo still not created and no error has occured - time to try again
+                console.log("Repo still not created - time to try again");
+                pollEndpointState();
+              } else {
+                // Repo state inconsistent...maybe it will change? Should not happen, but maybe we would like to do something in the future?
+                console.log("Repo still not created - state inconsistent");
+                pollEndpointState();
+              }
+            } else {
+              // Response is empty or null? Something went wrong!
+              console.log("Error getting state of the SPARQL endpoint! Please try again later.");
+            }
+          }
+        })
+      }, 4000);
+    }
+  }
+  
+  if($('#endpoint-state').length) {
+    pollEndpointState();
+  }
+  if($('#sparql-loading-error-container').length) {
+    $('#sparql-loading-error-container').hide();
+  }
   updateGlAssociatedStyle = function(){
     if ($('#gen_checkbox_public')[0])
       var include_public_queries = !$('#gen_checkbox_public')[0].checked;

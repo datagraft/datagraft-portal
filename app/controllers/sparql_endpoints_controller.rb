@@ -36,7 +36,7 @@ class SparqlEndpointsController < ThingsController
     if params["publish_file"] != nil
       rdfFile = params["publish_file"]
       rdfType = file_ext(rdfFile.original_filename)
-    begin
+      begin
         current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
         ok = true
       rescue Exception => e
@@ -55,28 +55,31 @@ class SparqlEndpointsController < ThingsController
 
     # Check if quota is broken
     redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
-
     @thing = SparqlEndpoint.new(sparql_endpoint_params)
-    @thing.uri = current_user.new_ontotext_repository(@thing)
     @thing.user = current_user
-
-    @upwizard = nil
-    if params[:wiz_id]
-      @upwizard = Upwizard.find(params[:wiz_id])
-      throw "Wizard object not found!" if !@upwizard
-      # Get file from wizard
-      begin
-        fill_default_values_if_empty
-        rdfFile = @upwizard.get_current_file
-        rdfType = file_ext(@upwizard.get_current_file_original_name)
-        current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-      rescue Exception => error
-        flash[:error] = error.message
+    @thing.pass_parameters
+    Thread.new do
+      @thing.issue_create_repo
+      @thing.uri = current_user.new_ontotext_repository(@thing)
+      @thing.save
+      @upwizard = nil
+      if params[:wiz_id]
+        @upwizard = Upwizard.find(params[:wiz_id])
+        throw "Wizard object not found!" if !@upwizard
+        # Get file from wizard
+        begin
+          fill_default_values_if_empty
+          rdfFile = @upwizard.get_current_file
+          rdfType = file_ext(@upwizard.get_current_file_original_name)
+          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+        rescue Exception => error
+          flash[:error] = error.message
+        end
+      else
+        flash[:warning] = "No triple file provided."
       end
-    else
-      flash[:warning] = "No triple file provided."
+      ActiveRecord::Base.connection.close
     end
-
     respond_to do |format|
       if @thing.save
         @upwizard.destroy if @upwizard
@@ -91,6 +94,7 @@ class SparqlEndpointsController < ThingsController
   end
 
   def update
+    authorize! :update, @thing
     super
 
     if @thing.publish_file != nil
@@ -106,6 +110,7 @@ class SparqlEndpointsController < ThingsController
   end
 
   def destroy
+    authorize! :destroy, @thing
     super
     # Do not delete backend datastores that exist in other sparql endpoints
     return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
@@ -123,15 +128,15 @@ class SparqlEndpointsController < ThingsController
     @query = Query.new
     @query.name = 'Unsaved query'
     @query.query_string =
-    if params[:existing_query] != nil
-      params[:existing_query]
-    else
-      if params["query_string"] != nil
-        params["query_string"]
+      if params[:existing_query] != nil
+        params[:existing_query]
       else
-        params["execute_query"]["query_string"]
+        if params["query_string"] != nil
+          params["query_string"]
+        else
+          params["execute_query"]["query_string"]
+        end
       end
-    end
     @query.language = 'SPARQL'
 
     begin
@@ -157,6 +162,23 @@ class SparqlEndpointsController < ThingsController
     end
   end
 
+  def state
+    usr = User.find_by(username: params[:username])
+    @thing = SparqlEndpoint.find_by(slug: params[:slug], user: usr)
+    authorize! :read, @thing
+    respond_to do |format|
+      format.json { render :state, status: :ok }
+    end
+  end
+
+  def url
+    usr = User.find_by(username: params[:username])
+    @thing = SparqlEndpoint.find_by(slug: params[:slug], user: usr)
+    authorize! :read, @thing
+    respond_to do |format|
+      format.json { render :url, status: :ok }
+    end
+  end
 
   private
   def sparql_endpoint_params

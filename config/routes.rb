@@ -30,14 +30,13 @@ Rails.application.routes.draw do
   get 'cookie-policy' => 'public_portal#cookie'
   get 'faq' => 'public_portal#faq'
 
-#  get 'publish' => 'data_distributions#publish'
-#  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
-#  get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
-#  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
+  get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
+  get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'
+  
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
