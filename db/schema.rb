@@ -214,12 +214,12 @@ ActiveRecord::Schema.define(version: 20170804082400) do
 
   create_table "things", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "public",            default: false, null: false
+    t.boolean  "public",            default: false,          null: false
     t.integer  "stars_count",       default: 0
     t.string   "name"
     t.string   "type"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "slug"
     t.string   "file_id"
     t.integer  "file_size"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.integer  "parent_id"
     t.string   "original_filename"
     t.integer  "db_account_id"
+    t.string   "state",             default: "repo_created"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree
