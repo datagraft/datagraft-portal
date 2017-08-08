@@ -97,11 +97,6 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.datetime "updated_at",                 null: false
   end
 
-  create_table "file_wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -228,8 +223,8 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.jsonb    "configuration"
     t.integer  "parent_id"
     t.string   "original_filename"
-    t.integer  "db_account_id"
     t.string   "state",             default: "repo_created"
+    t.integer  "db_account_id"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree
@@ -296,12 +291,6 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.text     "object"
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
-  end
-
-  create_table "wizards", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "task"
   end
 
   add_foreign_key "catalogues", "users"
