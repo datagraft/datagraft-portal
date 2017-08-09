@@ -75,7 +75,7 @@ class Thing < ApplicationRecord
 
   def fork(newuser)
     self.deep_clone do |original, copy|
-      copy.user = newuser
+      copy.user = newuser   ## TODO Will this work if cloning sparql_EP with new user when DB_USER is stored in user.ontotext_account?
       copy.stars_count = 0
       copy.public = false
       copy.state = :created
