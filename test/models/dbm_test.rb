@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DbAccountTest < ActiveSupport::TestCase
+class DbmTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

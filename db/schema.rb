@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170804082400) do
+ActiveRecord::Schema.define(version: 20170810131001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,23 +71,32 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.index ["widget_id"], name: "index_data_page_widgets_on_widget_id", using: :btree
   end
 
-  create_table "db_accounts", force: :cascade do |t|
+  create_table "dbm_accounts", force: :cascade do |t|
+    t.string   "name"
+    t.string   "encrypted_password"
+    t.integer  "dbm_id"
     t.integer  "user_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["dbm_id"], name: "index_dbm_accounts_on_dbm_id", using: :btree
+    t.index ["user_id"], name: "index_dbm_accounts_on_user_id", using: :btree
+  end
+
+  create_table "dbm_keys", force: :cascade do |t|
+    t.boolean  "enabled"
+    t.string   "name"
+    t.string   "key"
+    t.integer  "dbm_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dbm_id"], name: "index_dbm_keys_on_dbm_id", using: :btree
+  end
+
+  create_table "dbms", force: :cascade do |t|
+    t.string   "type"
     t.jsonb    "configuration"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
-    t.string   "type"
-    t.index ["user_id"], name: "index_db_accounts_on_user_id", using: :btree
-  end
-
-  create_table "db_keys", force: :cascade do |t|
-    t.integer  "db_account_id"
-    t.boolean  "enabled",       default: false, null: false
-    t.string   "name"
-    t.string   "key"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.index ["db_account_id"], name: "index_db_keys_on_db_account_id", using: :btree
   end
 
   create_table "features", force: :cascade do |t|
@@ -163,6 +172,14 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.index ["query_id"], name: "index_queriable_data_store_queries_on_query_id", using: :btree
   end
 
+  create_table "rdf_repos", force: :cascade do |t|
+    t.jsonb    "configuration"
+    t.integer  "dbm_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["dbm_id"], name: "index_rdf_repos_on_dbm_id", using: :btree
+  end
+
   create_table "sparql_endpoint_queries", force: :cascade do |t|
     t.integer  "query_id"
     t.integer  "sparql_endpoint_id"
@@ -228,8 +245,8 @@ ActiveRecord::Schema.define(version: 20170804082400) do
     t.jsonb    "configuration"
     t.integer  "parent_id"
     t.string   "original_filename"
-    t.integer  "db_account_id"
     t.string   "state",             default: "repo_created"
+    t.integer  "rdf_repo_id"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree
@@ -305,6 +322,4 @@ ActiveRecord::Schema.define(version: 20170804082400) do
   end
 
   add_foreign_key "catalogues", "users"
-  add_foreign_key "db_accounts", "users"
-  add_foreign_key "db_keys", "db_accounts"
 end

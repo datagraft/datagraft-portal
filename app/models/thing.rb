@@ -9,7 +9,7 @@ class Thing < ApplicationRecord
   has_many :stars, dependent: :destroy
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
-  belongs_to :db_account
+  belongs_to :rdf_repo
 
 
   validates :name, presence: true
