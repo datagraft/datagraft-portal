@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170810131001) do
+ActiveRecord::Schema.define(version: 20170814130900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20170810131001) do
     t.string   "key"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.integer  "dbm_id"
     t.index ["key"], name: "index_api_keys_on_key", using: :btree
   end
 
@@ -80,16 +81,6 @@ ActiveRecord::Schema.define(version: 20170810131001) do
     t.datetime "updated_at",         null: false
     t.index ["dbm_id"], name: "index_dbm_accounts_on_dbm_id", using: :btree
     t.index ["user_id"], name: "index_dbm_accounts_on_user_id", using: :btree
-  end
-
-  create_table "dbm_keys", force: :cascade do |t|
-    t.boolean  "enabled"
-    t.string   "name"
-    t.string   "key"
-    t.integer  "dbm_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["dbm_id"], name: "index_dbm_keys_on_dbm_id", using: :btree
   end
 
   create_table "dbms", force: :cascade do |t|

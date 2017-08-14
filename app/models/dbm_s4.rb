@@ -1,6 +1,4 @@
-class RdfRepo < ApplicationRecord
-  belongs_to :dbm
-  has_many :things
+class DbmS4 < Dbm
 
   def create_repository()
   end
