@@ -1,13 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  db_account: one
+  dbm: one
   enabled: false
   name: MyString
   key: MyString
+  dbm_id: 1
 
 two:
-  db_account: two
+  dbm: two
   enabled: false
   name: MyString
   key: MyString
+  dbm_id: 1

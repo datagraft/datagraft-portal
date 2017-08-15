@@ -1,11 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user: one
-  db_type: MyString
-  configuration: 
+  name: MyString
+  encrypted_password: MyString
 
 two:
-  user: two
-  db_type: MyString
-  configuration: 
+  name: MyString
+  encrypted_password: MyString

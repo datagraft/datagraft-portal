@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DbKeyTest < ActiveSupport::TestCase
+class RdfRepoTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

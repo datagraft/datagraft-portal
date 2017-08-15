@@ -7,16 +7,16 @@ class SparqlEndpointsController < ThingsController
   def new
     super
     # Check if quota is broken
-    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
+    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
   end
 
   # POST /:username/sparql_endpoints/:id/fork
   def fork
     # Check if quota is broken
-    quota_ok = quota_room_for_new_sparql_count?(current_user)
+    quota_ok = quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
 
     if quota_ok
-      super
+      super                                 ## TODO add db_account in thing.fork
     else
       respond_to do |format|
         format.html { redirect_to quotas_path}
@@ -37,8 +37,14 @@ class SparqlEndpointsController < ThingsController
       rdfFile = params["publish_file"]
       rdfType = file_ext(rdfFile.original_filename)
       begin
-        current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-        ok = true
+        if @thing.has_db_account
+          dba = @thing.db_account
+          dba.upload_file_to_repository(@thing.db_repository, file, file_type)
+          ok = true
+        else
+          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+          ok = true
+        end
       rescue Exception => e
         puts "Could not upload to SPARQL endpoint."
       end
@@ -54,31 +60,54 @@ class SparqlEndpointsController < ThingsController
     authorize! :create, SparqlEndpoint
 
     # Check if quota is broken
-    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)
+    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
     @thing = SparqlEndpoint.new(sparql_endpoint_params)
     @thing.user = current_user
     @thing.pass_parameters
-    Thread.new do
-      @thing.issue_create_repo
-      @thing.uri = current_user.new_ontotext_repository(@thing)
-      @thing.save
-      @upwizard = nil
-      if params[:wiz_id]
-        @upwizard = Upwizard.find(params[:wiz_id])
-        throw "Wizard object not found!" if !@upwizard
-        # Get file from wizard
-        begin
-          fill_default_values_if_empty
-          rdfFile = @upwizard.get_current_file
-          rdfType = file_ext(@upwizard.get_current_file_original_name)
-          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-        rescue Exception => error
-          flash[:error] = error.message
+
+    if @thing.has_db_account
+      dba = @thing.db_account
+      dba.new_repository(@thing) do ||    ## This method will start a new thread if needed
+        @upwizard = nil
+        if params[:wiz_id]
+          @upwizard = Upwizard.find(params[:wiz_id])
+          throw "Wizard object not found!" if !@upwizard
+          # Get file from wizard
+          begin
+            fill_default_values_if_empty
+            rdfFile = @upwizard.get_current_file
+            rdfType = file_ext(@upwizard.get_current_file_original_name)
+            dba.new_repository_and_upload_file(@thing, rdfFile, rdfType)   ## This method will start a new thread if needed
+          rescue Exception => error
+            flash[:error] = error.message
+          end
+        else
+          flash[:warning] = "No triple file provided."
         end
-      else
-        flash[:warning] = "No triple file provided."
       end
-      ActiveRecord::Base.connection.close
+    else
+      Thread.new do
+        @thing.issue_create_repo
+        @thing.uri = current_user.new_ontotext_repository(@thing)
+        @thing.save
+        @upwizard = nil
+        if params[:wiz_id]
+          @upwizard = Upwizard.find(params[:wiz_id])
+          throw "Wizard object not found!" if !@upwizard
+          # Get file from wizard
+          begin
+            fill_default_values_if_empty
+            rdfFile = @upwizard.get_current_file
+            rdfType = file_ext(@upwizard.get_current_file_original_name)
+            current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+          rescue Exception => error
+            flash[:error] = error.message
+          end
+        else
+          flash[:warning] = "No triple file provided."
+        end
+        ActiveRecord::Base.connection.close
+      end
     end
     respond_to do |format|
       if @thing.save

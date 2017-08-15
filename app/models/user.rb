@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :catalogues, dependent: :destroy
   has_many :sparql_endpoints, dependent: :destroy
   has_many :upwizards, dependent: :destroy
-  has_many :db_accounts, dependent: :destroy
+  has_many :dbm_accounts
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
