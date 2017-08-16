@@ -2,19 +2,19 @@ class RdfRepo < ApplicationRecord
   belongs_to :dbm
   has_many :things
 
-  def create_repository()
+  def create_repository(dbm)
   end
 
-  def upload_file_to_repository(db_repository, file, file_type)
+  def upload_file_to_repository(file, file_type)
   end
 
-  def query_repository(db_repository, query_string)
+  def query_repository(query_string)
   end
 
-  def get_repository_size(db_repository)
+  def get_repository_size()
   end
 
-  def delete_repository(db_repository)
+  def delete_repository()
   end
 
 end

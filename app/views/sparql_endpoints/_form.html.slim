@@ -2,6 +2,9 @@
   = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
     h4.mdl-cell--12-col Properties
+    .sin-form-collection-select
+      = f.collection_select :dbm_entries, @dbm_entries, :id, :name
+
     .sin-input-with-help-icon
       = f.input :name, placeholder: "Enter a SPARQL endpoint name", wrapper: :default
       .sin-help-icon-with-tooltip

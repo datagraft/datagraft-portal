@@ -18,8 +18,8 @@ class SparqlEndpoint < Thing
   end
 
   # Check if user has db account
-  def has_db_account
-    db_account != nil
+  def has_rdf_repo
+    rdf_repo != nil
   end
 
   def license
