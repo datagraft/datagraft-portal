@@ -15,4 +15,5 @@ class DbmS4 < Dbm
   def delete_repository(db_repository)
   end
 
+  @@supported_repository_types = %w(RDF)
 end
