@@ -40,7 +40,7 @@ class SparqlEndpointsController < ThingsController
       rdfFile = params["publish_file"]
       rdfType = file_ext(rdfFile.original_filename)
       begin
-        if @thing.has_rdf_repo
+        if @thing.has_rdf_repo?
           rr = @thing.rdf_repo
           rr.upload_file_to_repository(file, file_type)
           ok = true
@@ -63,49 +63,61 @@ class SparqlEndpointsController < ThingsController
     authorize! :create, SparqlEndpoint
 
     # Check if quota is broken
-    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
-    @thing = SparqlEndpoint.new(sparql_endpoint_params)
-    @thing.user = current_user
-    @thing.pass_parameters
+    unless quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
+      redirect_to quotas_path
+    else
+      @thing = SparqlEndpoint.new(sparql_endpoint_params)
+      @thing.user = current_user
+      @thing.pass_parameters
 
-    Thread.new do
-      #@thing.issue_create_repo
-      #@thing.uri = current_user.new_ontotext_repository(@thing)
+byebug
       dbm_id = params[:sparql_endpoint][:dbm_entries]
-      dbm = dbms.where(:id dbm_id)
-      throw 'Error DBM with different user' unless dbm.user == user
-      begin
-        rr = Rdf_repo.new
-        rr.create_repository(dbm)
-        @thing.rdf_repo = rr
-        @thing.save
-        @upwizard = nil
-        if params[:wiz_id]
-          @upwizard = Upwizard.find(params[:wiz_id])
-          throw "Wizard object not found!" if !@upwizard
-          # Get file from wizard
-          fill_default_values_if_empty
-          rdfFile = @upwizard.get_current_file
-          rdfType = file_ext(@upwizard.get_current_file_original_name)
-          #current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-          @thing.rdf_repo.upload_file_to_repository(rdfFile, rdfType)
-        else
-          flash[:warning] = "No triple file provided."
+      dbm = Dbm.where(id: dbm_id).first
+
+      throw 'Error DBM with different user' unless dbm.user == current_user
+      rr = RdfRepo.new
+      rr.dbm_id = dbm
+      rr.name = "RR #{@thing.name}"
+      rr.save
+      @thing.rdf_repo = rr
+
+      Thread.new do
+        puts "Thread...start"
+        # @thing.issue_create_repo
+        # @thing.uri = current_user.new_ontotext_repository(@thing)
+        begin
+          byebug
+          rr.create_repository(@thing)
+          rr.save
+          @upwizard = nil
+          if params[:wiz_id]
+            @upwizard = Upwizard.find(params[:wiz_id])
+            throw "Wizard object not found!" if !@upwizard
+            # Get file from wizard
+            fill_default_values_if_empty
+            rdfFile = @upwizard.get_current_file
+            rdfType = file_ext(@upwizard.get_current_file_original_name)
+            #current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+            @thing.rdf_repo.upload_file_to_repository(rdfFile, rdfType)
+          else
+            flash[:warning] = "No triple file provided."
+          end
+        rescue Exception => error
+          flash[:error] = error.message
         end
-      rescue Exception => error
-        flash[:error] = error.message
-      end
-      ActiveRecord::Base.connection.close
-    end
-    respond_to do |format|
-      if @thing.save
         @upwizard.destroy if @upwizard
-        format.html { redirect_to thing_path(@thing), notice: create_notice }
-        format.json { render :show, status: :created, location: thing_path(@thing) }
-      else
-        flash[:error] = "Could not create SPARQL endpoint. Please try again."
-        format.html { redirect_to upwizard_new_path('sparql') }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
+        ActiveRecord::Base.connection.close
+        puts "Thread...end"
+      end
+      respond_to do |format|
+        if @thing.save
+          format.html { redirect_to thing_path(@thing), notice: create_notice }
+          format.json { render :show, status: :created, location: thing_path(@thing) }
+        else
+          flash[:error] = "Could not create SPARQL endpoint. Please try again."
+          format.html { redirect_to upwizard_new_path('sparql') }
+          format.json { render json: @thing.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -119,7 +131,12 @@ class SparqlEndpointsController < ThingsController
       rdfType = file_ext(@thing.publish_file.original_filename)
 
       begin
-        current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+        if @thing.has_rdf_repo?
+          rr = @thing.rdf_repo
+          rr.upload_file_to_repository(rdfFile, rdfType)
+        else
+          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+        end
       rescue Exception => e
         flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
       end
@@ -129,11 +146,19 @@ class SparqlEndpointsController < ThingsController
   def destroy
     authorize! :destroy, @thing
     super
-    # Do not delete backend datastores that exist in other sparql endpoints
-    return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
+    if @thing.has_rdf_repo?
+      rr = @thing.rdf_repo
+      # Do not delete backend datastores that exist in other sparql endpoint
+      return if rr.things.all.size > 1
+      rr.delete_repository()
+      rr.destroy
+    else
+      # Do not delete backend datastores that exist in other sparql endpoints
+      return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
 
-    if not @thing.uri.blank?
-      current_user.delete_ontotext_repository(@thing)
+      if not @thing.uri.blank?
+        current_user.delete_ontotext_repository(@thing)
+      end
     end
   end
 
@@ -200,7 +225,7 @@ class SparqlEndpointsController < ThingsController
   private
   def sparql_endpoint_params
     params.require(:sparql_endpoint).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :publish_file,
+      :meta_keyword_list, :publish_file, :dbm_entries,
       queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 

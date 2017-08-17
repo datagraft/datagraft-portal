@@ -170,15 +170,15 @@ class User < ApplicationRecord
   end
 
 def search_for_existing_dbms(rep_type)
-  ret = []
-  da_list = dbm_accounts.where(user: self)
-  unless da_list == nil
-    da_list.foreach do |da|
+  res = []
+  da_list = self.dbm_accounts.all
+  da_list.each do |da|
+    unless da.dbm.type == nil ## Only check specialisations
       srt = da.dbm.supported_repository_types
-      ret << da.dbm if srt.has? rep_type
+      res << da.dbm if srt.include? rep_type
     end
   end
-  return ret
+  return res.to_set.to_a  ## Convert through set to avoid duplicates
 end
 
 
