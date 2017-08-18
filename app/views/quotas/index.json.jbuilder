@@ -1,8 +1,4 @@
-json.current_sparql_endpoints @nbSPARQLendpoints
-json.max_num_sparql_endpoints @maxSPARQLendpoints
-
-json.current_sparql_triples @nbSPARQLtriples
-json.max_sparql_triples @maxSPARQLtriples
+json.dbinfo @SPARQLdbArr
 
 json.current_files @nbFilestores
 json.max_num_files @maxFilestores

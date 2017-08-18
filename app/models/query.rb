@@ -58,71 +58,102 @@ class Query < Thing
 
 
   def execute(sparql_endpoint, timeout = 180)
-    conn = Faraday.new(sparql_endpoint.uri) do |c|
-      # c.response :json
-      c.request :url_encoded
-      c.adapter Faraday.default_adapter
-    end
-
-    result = conn.get do |req|
-      req.params['query'] = query_string
-      req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
-      req.options.timeout = timeout
-    end
-
-    if result.status != 200
-      raise result.body
-    end
-    
-    # update the metric for number of query executions
-    increment_query_execution_metric(self)
-    
-    parsed = JSON.parse(result.body)
-
-    return {
-      headers: parsed["head"]["vars"],
-      results: parsed["results"]["bindings"]
+    if sparql_endpoint.has_rdf_repo?
+      res = sparql_endpoint.rdf_repo.query_repository(query_string)
+      return {
+        headers: [],
+        results: []
+      } if res == nil
+      return {
+        headers: res["head"]["vars"],
+        results: res["results"]["bindings"]
       }
+    else
+      return {
+        headers: [],
+        results: []
+      } if not sparql_endpoint.uri
+
+      conn = Faraday.new(sparql_endpoint.uri) do |c|
+        # c.response :json
+        c.request :url_encoded
+        c.adapter Faraday.default_adapter
+      end
+
+      result = conn.get do |req|
+        req.params['query'] = query_string
+        req.headers['Accept'] = 'application/sparql-results+json'#application/rdf+json'
+        req.options.timeout = timeout
+      end
+
+      if result.status != 200
+        raise result.body
+      end
+
+      # update the metric for number of query executions
+      increment_query_execution_metric(self)
+
+      parsed = JSON.parse(result.body)
+
+      return {
+        headers: parsed["head"]["vars"],
+        results: parsed["results"]["bindings"]
+        }
+    end
   end
 
 
   def execute_on_sparql_endpoint(sparql_endpoint, user, timeout = 180)
-    return {
-      headers: [],
-      results: []
+    if sparql_endpoint.has_rdf_repo?
+      res = sparql_endpoint.rdf_repo.query_repository(query_string)
+      return {
+        headers: [],
+        results: []
+      } if res == nil
+
+      return {
+        headers: res["head"]["vars"],
+        results: res["results"]["bindings"]
+      }
+    else
+      return {
+        headers: [],
+        results: []
       } if not sparql_endpoint.uri
 
-    conn = Faraday.new(sparql_endpoint.uri) do |c|
-      c.request :url_encoded
-      c.adapter Faraday.default_adapter
-    end
+      conn = Faraday.new(sparql_endpoint.uri) do |c|
+        c.request :url_encoded
+        c.adapter Faraday.default_adapter
+      end
 
-    if !sparql_endpoint.public
-      key = ApiKey.first_or_create(user)
-      basicToken = Base64.strict_encode64(key.key)
-      conn.authorization :Basic, basicToken
-    end
+      if !sparql_endpoint.public
+        key = ApiKey.first_or_create(user)
+        basicToken = Base64.strict_encode64(key.key)
+        conn.authorization :Basic, basicToken
+      end
 
-    result = conn.get do |req|
-      req.params['query'] = query_string
-      req.headers['Accept'] = 'application/sparql-results+json'
-      req.options.timeout = timeout
-    end
+      result = conn.get do |req|
+        req.params['query'] = query_string
+        req.headers['Accept'] = 'application/sparql-results+json'
+        req.options.timeout = timeout
+      end
 
-    if result.status != 200
-      puts "Unable to execute query. Error " + result.status.to_s + ". Response: " + result.body
-      raise "Unable to execute query. Error " + result.status.to_s
-    end
-    
-    # update the metric for number of query executions
-    increment_query_execution_metric(self)
+      if result.status != 200
+        puts "Unable to execute query. Error " + result.status.to_s + ". Response: " + result.body
+        raise "Unable to execute query. Error " + result.status.to_s
+      end
 
-    parsed = JSON.parse(result.body)
+      # update the metric for number of query executions
+      increment_query_execution_metric(self)
 
-    return {
-      headers: parsed["head"]["vars"],
-      results: parsed["results"]["bindings"]
+      parsed = JSON.parse(result.body)
+
+
+      return {
+        headers: parsed["head"]["vars"],
+        results: parsed["results"]["bindings"]
       }
+    end
   end
 
 end

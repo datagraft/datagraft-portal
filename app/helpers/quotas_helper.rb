@@ -49,40 +49,60 @@ module QuotasHelper
     return ret_ok
   end
 
-  # Find how many sparql endpoints the user has
-  def quota_used_sparql_count(user)
-    return user.sparql_endpoints.count
+  # Find how many sparql endpoints the user has or a dbm has
+  def quota_used_sparql_count(user, dbm = nil)
+    res = 0
+    if dbm == nil
+      eps =  user.sparql_endpoints
+      eps.each do |ep|
+        res = res + 1 unless ep.has_rdf_repo?
+      end
+    else
+      res = dbm.used_sparql_count
+    end
+    return res
   end
 
   # Find users sparql endpoints and calculate total number of triples
-  def quota_used_sparql_triples(user)
+  def quota_used_sparql_triples(user, dbm=nil)
     total_repo_sparql_triples = 0
     total_cached_sparql_triples = 0
     cached_sparql_requests = 0
 
-    users_sparql = user.sparql_endpoints
-    users_sparql.each do |se|
-      begin
-        str = user.get_ontotext_repository_size(se)
-        puts 'Quota triples:'+str
-        total_repo_sparql_triples += Integer(str)
-      rescue Exception => e
-        puts 'Exception when reading triple size :' + e.message
-        str = se.cached_size
-        puts 'Cached quota triples:'+str
-        cached_sparql_requests += 1
-        total_cached_sparql_triples += Integer(str)
+    if dbm == nil
+      users_sparql = user.sparql_endpoints
+      users_sparql.each do |se|
+        begin
+          str = nil
+          str = user.get_ontotext_repository_size(se) unless se.has_rdf_repo?
+          unless str==nil
+            puts 'Quota triples:'+str
+            total_repo_sparql_triples += Integer(str)
+          end
+        rescue Exception => e
+          puts 'Exception when reading triple size :' + e.message
+          str = se.cached_size
+          puts 'Cached quota triples:'+str
+          cached_sparql_requests += 1
+          total_cached_sparql_triples += Integer(str)
+        end
       end
+      ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
+    else
+      ret = dbm.used_sparql_triples
     end
-    ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
     puts 'Ret:'+ret.to_s
     return ret
   end
 
   # Check if the user can create another sparql endpoint
-  def quota_room_for_new_sparql_count?(user)
-    current_count = quota_used_sparql_count(user)
-    limit_count = user.quota_sparql_count
+  def quota_room_for_new_sparql_count?(user, dbm=nil)
+    current_count = quota_used_sparql_count(user, dbm)
+    if dbm == nil
+      limit_count = user.quota_sparql_count
+    else
+      limit_count = dbm.quota_sparql_count
+    end
     ret_ok = current_count < limit_count
 
     unless ret_ok

@@ -28,6 +28,11 @@ class DbmS4 < Dbm
   end
 
   def query_repository(db_repository, query_string)
+    puts "***** Enter DbmS4.query_repository(#{name})"
+    puts query_string
+    res = {"head" => {"vars" => ["s", "p", "o"]}, "results" => {"bindings"=>[{"p"=>{"type"=>"uri", "value"=>"p-dummy"}, "s"=>{"type"=>"uri", "value"=>"s-dummy"}, "o"=>{"type"=>"uri", "value"=>"o-dummy"}}]}}
+    puts "***** Exit DbmS4.query_repository()"
+    return res
   end
 
   def update_ontotext_repository_public(rdf_repo, public)
@@ -37,10 +42,44 @@ class DbmS4 < Dbm
     puts "***** Exit DbmS4.update_ontotext_repository_public()"
   end
 
+  def used_sparql_count
+    rdf_repo_list = self.rdf_repos.all
+    return rdf_repo_list.size
+  end
+
+  def used_sparql_triples
+    puts "***** Enter DbmS4.quota_used_sparql_triples(#{name})"
+    total_repo_sparql_triples = 0
+    total_cached_sparql_triples = 0
+    cached_sparql_requests = 0
+
+    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list.each do |rr|
+      total_repo_sparql_triples += rr.get_repository_size
+    end
+    res = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
+    puts "***** Exit DbmS4.quota_used_sparql_triples()"
+    return res
+  end
+
   def get_repository_size(rdf_repo)
     puts "***** Enter DbmS4.get_repository_size(#{name})"
-    res = 42
+    res = 100*rdf_repo.id
     puts "***** Exit DbmS4.get_repository_size()"
+    return res
+  end
+
+  def quota_sparql_count()
+    puts "***** Enter DbmS4.quota_sparql_count(#{name})"
+    res = id
+    puts "***** Exit DbmS4.quota_sparql_count()"
+    return res
+  end
+
+  def quota_sparql_ktriples()
+    puts "***** Enter DbmS4.quota_sparql_ktriples(#{name})"
+    res = id
+    puts "***** Exit DbmS4.quota_sparql_ktriples()"
     return res
   end
 

@@ -54,7 +54,7 @@ class UpwizardsController < ApplicationController
       end
       if task == 'sparql'
         known_task = true
-        quota_full = true unless quota_room_for_new_sparql_count?(current_user)
+        quota_full = true unless quota_room_for_new_sparql_count?(current_user)  ## TODO which DBM to test?
       end
 
       if quota_full

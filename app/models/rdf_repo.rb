@@ -11,29 +11,37 @@ class RdfRepo < ApplicationRecord
 
   def upload_file_to_repository(file, file_type)
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
-    self.dbm.upload_file_to_repository(self, file, file_type)
+    dbm.upload_file_to_repository(self, file, file_type)
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
 
   def query_repository(query_string)
+    puts "***** Enter RdfRepo.query_repository(#{name})"
+    res = dbm.query_repository(self, query_string)
+    puts "***** Exit RdfRepo.query_repository()"
+    return res
   end
 
   def update_ontotext_repository_public(public)
     puts "***** Enter RdfRepo.update_ontotext_repository_public(#{name})"
-    self.dbm.update_ontotext_repository_public(self, public)
+    dbm.update_ontotext_repository_public(self, public)
     puts "***** Exit RdfRepo.update_ontotext_repository_public()"
   end
 
   def get_repository_size()
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
-    res = self.dbm.get_repository_size(dbm)
+    res = dbm.get_repository_size(self)
+
+    # TODO fix cached size
+    #ep.cached_size = resp_size.body ||= ep.cached_size
+    #ep.save
     puts "***** Exit RdfRepo.get_repository_size()"
     return res
   end
 
   def delete_repository()
     puts "***** Enter RdfRepo.delete_repository(#{name})"
-    self.dbm.delete_repository(self)
+    dbm.delete_repository(self)
     puts "***** Exit RdfRepo.delete_repository()"
   end
 

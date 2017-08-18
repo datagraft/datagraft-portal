@@ -10,13 +10,14 @@ class SparqlEndpointsController < ThingsController
     @dbm_entries = current_user.search_for_existing_dbms('RDF')
 
     # Check if quota is broken
-    redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)  ## TODO add rdf_repo in QuotasHelper
+    # This cannot know which db to check .... redirect_to quotas_path unless quota_room_for_new_sparql_count?(current_user)  ## TODO add rdf_repo in QuotasHelper
   end
 
   # POST /:username/sparql_endpoints/:id/fork
   def fork
     # Check if quota is broken
     quota_ok = quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
+    ## TODO Which db_account to choose?
 
     if quota_ok
       super                                 ## TODO add db_account in thing.fork
@@ -62,18 +63,19 @@ class SparqlEndpointsController < ThingsController
   def create
     authorize! :create, SparqlEndpoint
 
+    dbm_id = params[:sparql_endpoint][:dbm_entries]
+    dbm = Dbm.where(id: dbm_id).first
+
+    throw 'Error DBM with different user' unless dbm.user == current_user
+
     # Check if quota is broken
-    unless quota_room_for_new_sparql_count?(current_user)  ## TODO add db_account in QuotasHelper
+    unless quota_room_for_new_sparql_count?(current_user, dbm)  
       redirect_to quotas_path
     else
       @thing = SparqlEndpoint.new(sparql_endpoint_params)
       @thing.user = current_user
       @thing.pass_parameters
 
-      dbm_id = params[:sparql_endpoint][:dbm_entries]
-      dbm = Dbm.where(id: dbm_id).first
-
-      throw 'Error DBM with different user' unless dbm.user == current_user
       rr = RdfRepo.new
       rr.dbm = dbm
       rr.name = "RR:#{@thing.name}"
