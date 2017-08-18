@@ -70,23 +70,21 @@ class SparqlEndpointsController < ThingsController
       @thing.user = current_user
       @thing.pass_parameters
 
-byebug
       dbm_id = params[:sparql_endpoint][:dbm_entries]
       dbm = Dbm.where(id: dbm_id).first
 
       throw 'Error DBM with different user' unless dbm.user == current_user
       rr = RdfRepo.new
-      rr.dbm_id = dbm
-      rr.name = "RR #{@thing.name}"
+      rr.dbm = dbm
+      rr.name = "RR:#{@thing.name}"
       rr.save
       @thing.rdf_repo = rr
 
       Thread.new do
-        puts "Thread...start"
-        # @thing.issue_create_repo
+        puts "***** Create thread...start"
+        @thing.issue_create_repo
         # @thing.uri = current_user.new_ontotext_repository(@thing)
         begin
-          byebug
           rr.create_repository(@thing)
           rr.save
           @upwizard = nil
@@ -107,7 +105,7 @@ byebug
         end
         @upwizard.destroy if @upwizard
         ActiveRecord::Base.connection.close
-        puts "Thread...end"
+        puts "***** Create thread...end"
       end
       respond_to do |format|
         if @thing.save
@@ -208,6 +206,7 @@ byebug
     usr = User.find_by(username: params[:username])
     @thing = SparqlEndpoint.find_by(slug: params[:slug], user: usr)
     authorize! :read, @thing
+    puts @thing.state
     respond_to do |format|
       format.json { render :state, status: :ok }
     end
