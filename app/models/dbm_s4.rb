@@ -121,4 +121,5 @@ class DbmS4 < Dbm
     conn = s4_connection(true)    
   end
 
+  @@supported_repository_types = %w(RDF)
 end

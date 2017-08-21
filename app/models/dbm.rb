@@ -1,8 +1,9 @@
 class Dbm < ApplicationRecord
-  has_many :dbm_account, dependent: :destroy
-  has_many :api_key, dependent: :destroy
-  has_many :rdf_repo, dependent: :destroy
+  has_many :dbm_accounts, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
+  has_many :rdf_repos, dependent: :destroy
 
+  cattr_accessor :supported_repository_types
 
   def delete_dbm()
   end
@@ -22,4 +23,5 @@ class Dbm < ApplicationRecord
   def update_key(api_key)
   end
 
+  @@supported_repository_types = %w(BASE)
 end
