@@ -1,5 +1,6 @@
 class QuotasController < ApplicationController
   include QuotasHelper
+  include DbmsHelper
 
   before_action :authenticate_user!
 
@@ -19,7 +20,7 @@ class QuotasController < ApplicationController
 
     @SPARQLdbArr = []
 
-    entry = {name: "Old OntoText SPARQL endpoints",
+    entry = {name: "#{dbms_descriptive_name(nil)} endpoints",
              nb_ep: quota_used_sparql_count(current_user),
              max_ep: current_user.quota_sparql_count,
              nb_triples: triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples],
@@ -31,7 +32,7 @@ class QuotasController < ApplicationController
     rdf_dbms = current_user.search_for_existing_dbms('RDF')
     rdf_dbms.each do |dbm|
       triple_info_hash = quota_used_sparql_triples(current_user, dbm)
-      entry = {name: "DBMS(#{dbm.name}) SPARQL endpoints",
+      entry = {name: "#{dbms_descriptive_name(dbm)} endpoints",
                nb_ep: quota_used_sparql_count(current_user, dbm),
                max_ep: dbm.quota_sparql_count,
                nb_triples: triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples],
