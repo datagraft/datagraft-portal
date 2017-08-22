@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :catalogues, dependent: :destroy
   has_many :sparql_endpoints, dependent: :destroy
   has_many :upwizards, dependent: :destroy
-  has_many :dbm_accounts
+  has_many :dbms, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -171,14 +171,14 @@ class User < ApplicationRecord
 
 def search_for_existing_dbms(rep_type)
   res = []
-  da_list = self.dbm_accounts.all
-  da_list.each do |da|
-    unless da.dbm.type == nil ## Only check specialisations
-      srt = da.dbm.supported_repository_types
-      res << da.dbm if srt.include? rep_type
+  dbm_list = self.dbms.all
+  dbm_list.each do |dbm|
+    unless dbm.type == nil ## Only check specialisations
+      srt = dbm.supported_repository_types
+      res << dbm if srt.include? rep_type
     end
   end
-  return res.to_set.to_a  ## Convert through set to avoid duplicates
+  return res
 end
 
 

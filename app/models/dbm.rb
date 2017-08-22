@@ -1,4 +1,5 @@
 class Dbm < ApplicationRecord
+  belongs_to :user
   has_many :dbm_accounts, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :rdf_repos, dependent: :destroy
@@ -24,7 +25,6 @@ class Dbm < ApplicationRecord
   def update_key(api_key)
   end
 
-
   def has_configuration?(key)
     !get_configuration(key).nil?
   end
@@ -32,10 +32,6 @@ class Dbm < ApplicationRecord
   def get_configuration(key)
     # throw configuration
     Rodash.get(configuration, key)
-  end
-
-  def user
-    return dbm_accounts.first.user
   end
 
   def name
