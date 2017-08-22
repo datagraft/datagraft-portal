@@ -95,15 +95,27 @@ module QuotasHelper
     return ret
   end
 
-  # Check if the user can create another sparql endpoint
-  def quota_room_for_new_sparql_count?(user, dbm=nil)
-    current_count = quota_used_sparql_count(user, dbm)
-    if dbm == nil
-      limit_count = user.quota_sparql_count
-    else
+  # Check if it is room for another sparql endpoint in dbm
+  def quota_dbm_room_for_new_sparql_count?(dbm)
+    ret_ok = false
+    unless dbm == nil  #Check for specific dbm
+      current_count = dbm.used_sparql_count
       limit_count = dbm.quota_sparql_count
+      ret_ok = current_count < limit_count
     end
-    ret_ok = current_count < limit_count
+    return ret_ok
+  end
+
+  # Check if the user can create another sparql endpoint
+  def quota_user_room_for_new_sparql_count?(user)
+    ret_ok = false
+    unless user == nil #Check for room in any dbm
+      dbm_list = user.search_for_existing_dbms('RDF')
+      res = []
+      dbm_list.each do |dbm|
+        ret_ok = true if quota_dbm_room_for_new_sparql_count?(dbm)
+      end
+    end
 
     unless ret_ok
       flash[:error] = "Your SPARQL endpoint count quota is exceeded"
@@ -112,6 +124,14 @@ module QuotasHelper
     return ret_ok
   end
 
+  # Filter out the Dbms without room for another sparql endpoint
+  def quota_filter_dbm_sparql_count?(dbm_list)
+    res = []
+    dbm_list.each do |dbm|
+      res << dbm if quota_dbm_room_for_new_sparql_count?(dbm)
+    end
+    return res
+  end
 
   # Find how many transformations the user has
   def quota_used_transformations_count(user)
