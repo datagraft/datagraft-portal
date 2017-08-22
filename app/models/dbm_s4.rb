@@ -1,124 +1,93 @@
-# For test development purposes, assign the following environment variables
-# *************************************************************************
-# ENV['S4_DBM_ACCOUNT_NAME']
-# ENV['S4_DBM_ACCOUNT_ENCRYPTED_PASSWORD']
-# ENV['S4_DBM_API_ENDPOINT']
-# ENV['S4_DBM_API_KEY_KEY1']
-# ENV['S4_DBM_API_KEY_SECRET1']
-
 class DbmS4 < Dbm
-  private
-    
-  # Create Faraday RESTful API connection
-  def new_api_connection
-    Faraday.new(:url => 'https://api.datagraft.net') do |faraday|
-      faraday.request :multipart
-      faraday.request :url_encoded
 
-      faraday.response :logger                  # log requests to STDOUT
-      faraday.use :cookie_jar                   # yes we do use cookies
-      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
-    end
-  end
-    
-  # Create an Ontotext S4 API connection
-  def database_connection(use_api_key = true)
-    conn = new_api_connection
-    
-    if use_api_key
-      key = ENV['S4_DBM_API_KEY_KEY1']+':'+ENV['S4_DBM_API_KEY_SECRET1']
-      basicToken = Base64.strict_encode64(key)
-      conn.authorization :Basic, basicToken      
-    else
-      resp = conn.put do |req|
-        req.url ENV['S4_DBM_API_ENDPOINT']
-        req.headers['Content-Type'] = 'application/json'
-      end
-      
-      throw self.ontotext_account unless resp.status.between?(200, 299)
-    end
-    
-    conn  
-  end
-    
-  
-  public
+  def create_repository(rdf_repo, ep)
+    puts "***** Enter DbmS4.create_repository(#{name})"
 
-  # Create a new S4 repository
-  # curl -X PUT -H "Content-Type:application/json" -d "{\"repositoryID\" : \"test_repo_3\", \"label\" : \"Just a repo description.\", \"ruleset\" : \"owl-horst-optimized\",\"base-URL\" : \"http://example.org/graphdb#\"}" http://s4dsviqmqrg5:6vc2u1r1pjpp3f5@awseb-e-q-AWSEBLoa-1F3R7SVGQAWRO-1629925049.eu-west-1.elb.amazonaws.com:8080/4038446398/brian_test_db/repositories
-  def create_repository()
     begin
-      pname = qds[:name].parameterize
-      today = Time.now.to_s.slice(0,10)
+      ## TODO
 
-      connect = ontotext_connection_s4
-      
-      resp_dataset = connect.post do |req|
-        req.url ENV['ONTOTEXT_S4_DATABASE_ENDPOINT']+'/repositories'
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.body = {
-          '@context' => ontotext_declaration,
-          'dct:title' => qds[:name].parameterize,
-          'dct:description' => qds[:description].to_s,
-          'dcat:public' => qds[:public].to_s,
-          'dct:modified'=> today,
-          'dct:issued' => today
-          }.to_json
-      end
+      rdf_repo.repo_hash = {repo_id: "Dummy repo_id #{type}:#{name}:#{rdf_repo.name}" }
+      rdf_repo.uri = "Dummy URI #{type}:#{name}:#{rdf_repo.name}"
+      ep.repo_successfully_created
+    rescue Exception => e
+      se.error_occured_creating_repo
+      puts 'Error creating S4 repository'
+      puts e.message
+      puts e.backtrace.inspect
     end
+
+    puts "***** Exit DbmS4.create_repository()"
   end
 
-  def upload_file_to_repository(db_repository, file, file_type)
+  def upload_file_to_repository(rdf_repo, file, file_type)
+    puts "***** Enter DbmS4.upload_file_to_repository(#{name})"
+    puts rdf_repo.inspect
+    puts file.inspect
+    puts file_type.inspect
+    puts "***** Exit DbmS4.upload_file_to_repository()"
   end
-  
+
   def query_repository(db_repository, query_string)
+    puts "***** Enter DbmS4.query_repository(#{name})"
+    puts query_string
+    res = {"head" => {"vars" => ["s", "p", "o"]}, "results" => {"bindings"=>[{"p"=>{"type"=>"uri", "value"=>"p-dummy"}, "s"=>{"type"=>"uri", "value"=>"s-dummy"}, "o"=>{"type"=>"uri", "value"=>"o-dummy"}}]}}
+    puts "***** Exit DbmS4.query_repository()"
+    return res
   end
 
-  # Get the size of the S4 repository
-  def get_repository_size(db_repository)
-    begin
-      return '0' if not se.uri
+  def update_ontotext_repository_public(rdf_repo, public)
+    puts "***** Enter DbmS4.update_ontotext_repository_public(#{name})"
+    puts rdf_repo.inspect
+    puts public
+    puts "***** Exit DbmS4.update_ontotext_repository_public()"
+  end
 
-      # No user authentication required for public SPARQL endpoints
-      connect = Faraday.new
-      if not se.public
-        # User authentication required for private SPARQL endpoints
-        connect = ontotext_connexion(true)
-      end
+  def used_sparql_count
+    rdf_repo_list = self.rdf_repos.all
+    return rdf_repo_list.size
+  end
 
-      resp_size = connect.get do |req|
-        req.url se.uri+'/size'
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.options.timeout = 10
-      end
+  def used_sparql_triples
+    puts "***** Enter DbmS4.quota_used_sparql_triples(#{name})"
+    total_repo_sparql_triples = 0
+    total_cached_sparql_triples = 0
+    cached_sparql_requests = 0
 
-      throw ("Unable to get size of the Ontotext repository - " + resp_size.body.to_s + " - " + resp_size.status.to_s) unless
-      resp_size.status.between?(200, 299)
-
-      puts resp_size.inspect
-
-      # Update cached size of Sparql Endpoint
-      se.cached_size = resp_size.body ||= se.cached_size
-      se.save
-
-      return resp_size.body
-
+    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list.each do |rr|
+      total_repo_sparql_triples += rr.get_repository_size
     end
-    
-  end
-  
-  # Set the public setting of the S4 repository
-  # curl -X POST http://awseb-e-q-awsebloa-1f3r7svgqawro-1629925049.eu-west-1.elb.amazonaws.com:8080/4037539600/<db_name>/repositories/<repo_name>
-  # -H 'Authorization: Basic czQ3N2diM3EzcG51OjNsNzk2NTBpZXFoZGw'
-  # -H 'Cache-Control: no-cache'
-  # -H 'Content-type: application/json' -d '{ "public": "false" }'
-  def set_repository_public(db_repository)
+    res = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
+    puts "***** Exit DbmS4.quota_used_sparql_triples()"
+    return res
   end
 
-  # Delete an existing S4 repository
-  # curl -X DELETE -H "Content-Type:application/json" http://s4dsviqmqrg5:6vc2u1r1pjpp3f5@awseb-e-q-AWSEBLoa-1F3R7SVGQAWRO-1629925049.eu-west-1.elb.amazonaws.com:8080/4038446398/brian_test_db/repositories/test_repo_3
-  def delete_repository(db_repository)
-    conn = s4_connection(true)    
+  def get_repository_size(rdf_repo)
+    puts "***** Enter DbmS4.get_repository_size(#{name})"
+    res = 100*rdf_repo.id
+    puts "***** Exit DbmS4.get_repository_size()"
+    return res
+  end
+
+  def quota_sparql_count()
+    puts "***** Enter DbmS4.quota_sparql_count(#{name})"
+    res = id
+    puts "***** Exit DbmS4.quota_sparql_count()"
+    return res
+  end
+
+  def quota_sparql_ktriples()
+    puts "***** Enter DbmS4.quota_sparql_ktriples(#{name})"
+    res = id
+    puts "***** Exit DbmS4.quota_sparql_ktriples()"
+    return res
+  end
+
+  def delete_repository(rdf_repo)
+    puts "***** Enter DbmS4.delete_repository(#{name})"
+      rdf_repo.repo_hash = {repo_id: 'deleted' }
+      rdf_repo.uri = 'Deleted URI...'
+    puts "***** Exit DbmS4.delete_repository()"
   end
 
   @@supported_repository_types = %w(RDF)

@@ -18,8 +18,8 @@ class SparqlEndpoint < Thing
   end
 
   # Check if user has db account
-  def has_db_account
-    db_account != nil
+  def has_rdf_repo?
+    rdf_repo != nil
   end
 
   def license
@@ -44,13 +44,25 @@ class SparqlEndpoint < Thing
 
       # Update public/private property if changed
       if new_value != old_value
-        self.user.update_ontotext_repository_public(self)
+        if self.has_rdf_repo?
+          self.rdf_repo.update_ontotext_repository_public(self.public)
+        else
+          self.user.update_ontotext_repository_public(self)
+        end
       end
     else
       super
     end
   end
 
+  def dbm_entries=(val)
+    #Do nothing...
+  end
+
+  def dbm_entries
+    #Return Dummy
+    return 1001
+  end
 
 
   state_machine :initial => :created do
@@ -124,7 +136,11 @@ class SparqlEndpoint < Thing
     # repository successfully created and attached
     state :repo_created do
       def uri
-        metadata["uri"] if metadata
+        if self.has_rdf_repo?
+          self.rdf_repo.uri
+        else
+          metadata["uri"] if metadata
+        end
       end
 
       def cached_size

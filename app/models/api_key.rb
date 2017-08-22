@@ -1,5 +1,6 @@
 class ApiKey < ApplicationRecord
   belongs_to :user
+  belongs_to :dbm
 
   def new_ontotext_api_key(user)
     #Devise.friendly_token(32)
@@ -16,7 +17,7 @@ class ApiKey < ApplicationRecord
 
 
 
-  def delete_from_ontotext(user) 
+  def delete_from_ontotext(user)
     tmp_key = get_key_without_secret
     user.delete_ontotext_api_key(tmp_key) unless tmp_key.nil?
   end
