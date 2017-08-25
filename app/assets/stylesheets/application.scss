@@ -59,7 +59,7 @@ html, body.mdl-base {
   }
 
   &:after {
-    content: " alpha";
+    content: " beta2";
     color: $accent-color;
     font-weight: 400;
     position: relative;
@@ -69,8 +69,6 @@ html, body.mdl-base {
 }
 
 .sin-padding {
-  /*padding: 0.1em 1em 1em 1em;*/
-  /*padding: 0.1em 2em 2em 2.1em;*/
   padding: 2em;
 }
 
