@@ -83,6 +83,12 @@ class DbmS4 < Dbm
       rdf_repo.is_public = ep.public
       rdf_repo.uri = url + '/' + ep.name
       ep.uri = rdf_repo.uri
+      
+      # By default all newly created S4 repositories are private
+      if rdf_repo.is_public
+        set_repository_public(rdf_repo)
+      end
+
       ep.repo_successfully_created
     rescue Exception => e
       ep.error_occured_creating_repo
@@ -117,6 +123,10 @@ class DbmS4 < Dbm
     puts "***** Enter DbmS4.update_ontotext_repository_public(#{name})"
     puts rdf_repo.inspect
     puts public
+    
+    rdf_repo.is_public = public
+    set_repository_public(rdf_repo)
+    
     puts "***** Exit DbmS4.update_ontotext_repository_public()"
   end
 
@@ -154,16 +164,15 @@ class DbmS4 < Dbm
     basicToken = Base64.strict_encode64(key)
 
     # No user authentication required for public SPARQL endpoints
-#    request = nil
-#    if rdf_repo.is_public
-#      request = RestClient::Request.new(
-#        :method => :get,
-#        :url => url,
-#        :headers => {
-#          'Content-Type' => 'application/json'
-#        }
-#      )
-#    else
+    if rdf_repo.is_public
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => {
+          'Content-Type' => 'application/json'
+        }
+      )
+    else
       request = RestClient::Request.new(
         :method => :get,
         :url => url,
@@ -172,8 +181,7 @@ class DbmS4 < Dbm
           'Content-Type' => 'application/json'
         }
       )
-#    end
-#byebug
+    end
 
     begin
       response = request.execute
@@ -208,17 +216,13 @@ class DbmS4 < Dbm
   end
 
 
-  # curl -X POST http://awseb-e-q-awsebloa-1f3r7svgqawro-1629925049.eu-west-1.elb.amazonaws.com:8080/4037539600/<db_name>/repositories/<repo_name> 
-  # -H 'Authorization: Basic czQ3N2diM3EzcG51OjNsNzk2NTBpZXFoZGw'
-  # -H 'Cache-Control: no-cache'
-  # -H 'Content-type: application/json' -d '{ "public": "false" }'
   # Set S4 repository public property
   def set_repository_public(rdf_repo)
     puts "***** Enter DbmS4.set_repository_public(#{name})"
     
     today = Time.now.to_s.slice(0,10)
 
-    url = rdf_repo.endpoint
+    url = rdf_repo.uri
     key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
     basicToken = Base64.strict_encode64(key)
   
@@ -226,7 +230,7 @@ class DbmS4 < Dbm
       :method => :post,
       :url => url,
       :payload => {
-        'public' => rdf_repo.public.to_s
+        'public' => rdf_repo.is_public.to_s
       }.to_json,
       :headers => {
         'Authorization' => 'Basic' + ' ' + basicToken,
@@ -237,7 +241,7 @@ class DbmS4 < Dbm
 
     begin
       response = request.execute
-      throw "Error setting repository public"
+      throw "Error setting repository public" unless response.code.between?(200, 299)
     
     rescue Exception => e
       puts 'Error setting S4 repository public'
