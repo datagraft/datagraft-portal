@@ -2,9 +2,13 @@
   = hidden_field_tag 'wiz_id', params[:wiz_id]
   .mdl-grid
     h4.mdl-cell--12-col Properties
-    .sin-form-collection-select
+    .sin-input-with-help-icon
+      = f.input :dbm_entries, label: "Database", prompt: "Choose a database...", collection: @dbm_entries, wrapper: :select
+      .sin-help-icon-with-tooltip__select
+        #tooltip-license.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-license" Select the database for the SPARQL endpoint
+    //.sin-form-collection-select
       = f.collection_select :dbm_entries, @dbm_entries, :id, :name
-
     .sin-input-with-help-icon
       = f.input :name, placeholder: "Enter a SPARQL endpoint name", wrapper: :default
       .sin-help-icon-with-tooltip

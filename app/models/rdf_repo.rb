@@ -1,7 +1,20 @@
 class RdfRepo < ApplicationRecord
   belongs_to :dbm
   has_many :things
+  
+  ######
+  public
+  ######
+  
+  def is_public
+    configuration["is_public"] if configuration
+  end
 
+  def is_public=(val)
+    touch_configuration!
+    configuration["is_public"] = val
+  end
+  
   def create_repository(ep)
     puts "***** Enter RdfRepo.create_repository(#{name})"
     dbm.create_repository(self, ep)
@@ -80,6 +93,15 @@ class RdfRepo < ApplicationRecord
   def name=(val)
     touch_configuration!
     self.configuration["name"] = val
+  end
+
+  def cached_size
+    get_configuration("cached_size")
+  end
+
+  def cached_size=(val)
+    touch_configuration!
+    self.configuration["cached_size"] = val
   end
 
   protected

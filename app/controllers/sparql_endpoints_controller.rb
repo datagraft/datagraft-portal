@@ -79,9 +79,9 @@ class SparqlEndpointsController < ThingsController
     throw 'Error DBM with different user' unless dbm.user == current_user
 
     # Check if quota is broken
-    unless quota_room_for_new_sparql_count?(current_user, dbm)
-      redirect_to quotas_path
-    else
+#    unless quota_room_for_new_sparql_count?(current_user, dbm)
+#      redirect_to quotas_path
+#    else
       @thing = SparqlEndpoint.new(sparql_endpoint_params)
       @thing.user = current_user
       @thing.pass_parameters
@@ -92,7 +92,7 @@ class SparqlEndpointsController < ThingsController
       rr.save
       @thing.rdf_repo = rr
 
-      Thread.new do
+      #Thread.new do
         puts "***** Create thread...start"
         @thing.issue_create_repo
         # @thing.uri = current_user.new_ontotext_repository(@thing)
@@ -118,7 +118,7 @@ class SparqlEndpointsController < ThingsController
         @upwizard.destroy if @upwizard
         ActiveRecord::Base.connection.close
         puts "***** Create thread...end"
-      end
+      #end
       respond_to do |format|
         if @thing.save
           format.html { redirect_to thing_path(@thing), notice: create_notice }
@@ -129,7 +129,7 @@ class SparqlEndpointsController < ThingsController
           format.json { render json: @thing.errors, status: :unprocessable_entity }
         end
       end
-    end
+#    end
   end
 
   def update

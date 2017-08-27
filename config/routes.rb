@@ -33,6 +33,10 @@ Rails.application.routes.draw do
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
+  
+  get 'dbms/index'
+  #resources :dbms
+  resources :dbm_s4s
 
   get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
   get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'

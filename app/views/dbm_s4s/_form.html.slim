@@ -1,0 +1,19 @@
+div.mdl-card.mdl-shadow--2dp
+  = form_for(@dbm_s4) do |f|
+    .mdl-grid
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.label :database_name, class: "mdl-textfield__label"
+        = f.text_field :name, class: "mdl-textfield__input"
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.label :database_endpoint, class: "mdl-textfield__label"
+        = f.text_field :endpoint, class: "mdl-textfield__input"
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.label :Api_key, class: "mdl-textfield__label"
+        = f.text_field :key, class: "mdl-textfield__input"
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.label :Api_key_secret, class: "mdl-textfield__label"
+        = f.text_field :secret, class: "mdl-textfield__input"
+      .mdl-cell
+    .mdl-card__actions
+      div style="margin:auto"
+        = f.submit class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
