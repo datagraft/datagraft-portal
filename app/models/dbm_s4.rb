@@ -101,6 +101,8 @@ class DbmS4 < Dbm
   end
 
   
+  # Upload file to S4 repository (TO-BE-DELETED)
+  # Since this code is not S4-specific it has been moved to the rdf_repo.rb model
   def upload_file_to_repository(rdf_repo, file, file_type)
     puts "***** Enter DbmS4.upload_file_to_repository(#{name})"
     

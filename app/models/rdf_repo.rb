@@ -1,3 +1,5 @@
+require 'rest-client'
+
 class RdfRepo < ApplicationRecord
   belongs_to :dbm
   has_many :things
@@ -22,12 +24,60 @@ class RdfRepo < ApplicationRecord
     puts "***** Exit RdfRepo.create_repository()"
   end
 
+  
+  # Upload file to RDF repository
   def upload_file_to_repository(file, file_type)
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
-    dbm.upload_file_to_repository(self, file, file_type)
+    #dbm.upload_file_to_repository(self, file, file_type)
+    
+    url = self.uri + '/statements'
+    key = self.dbm.key + ':' + self.dbm.secret
+    basicToken = Base64.strict_encode64(key)
+
+    mime_type = case file_type
+    when 'rdf' then
+      'application/rdf+xml'
+    when 'nt' then
+      'text/plain'
+    when 'ttl' then
+      'application/x-turtle'
+    when 'n3' then
+      'text/rdf+n3'
+    when 'trix' then
+      'application/trix'
+    when 'trig' then
+      'application/x-trix'
+    else
+      'text/plain'
+    end
+
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => file.read,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => mime_type
+      }
+    )
+
+    begin
+      response = request.execute
+      throw "Error uploading file to RDF repository" unless response.code.between?(200, 299)
+    
+      puts rdf_repo.inspect
+      puts file.inspect
+      puts file_type.inspect
+    rescue Exception => e
+      puts 'Error uploading file to RDF repository'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+    
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
 
+      
   def query_repository(query_string)
     puts "***** Enter RdfRepo.query_repository(#{name})"
     res = dbm.query_repository(self, query_string)
