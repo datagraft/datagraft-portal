@@ -103,9 +103,51 @@ class DbmS4 < Dbm
   
   def upload_file_to_repository(rdf_repo, file, file_type)
     puts "***** Enter DbmS4.upload_file_to_repository(#{name})"
-    puts rdf_repo.inspect
-    puts file.inspect
-    puts file_type.inspect
+    
+    url = rdf_repo.uri + '/statements'
+    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
+    basicToken = Base64.strict_encode64(key)
+
+    mime_type = case file_type
+    when 'rdf' then
+      'application/rdf+xml'
+    when 'nt' then
+      'text/plain'
+    when 'ttl' then
+      'application/x-turtle'
+    when 'n3' then
+      'text/rdf+n3'
+    when 'trix' then
+      'application/trix'
+    when 'trig' then
+      'application/x-trix'
+    else
+      'text/plain'
+    end
+
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => file.read,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => mime_type
+      }
+    )
+
+    begin
+      response = request.execute
+      throw "Error uploading file to S4 repository" unless response.code.between?(200, 299)
+    
+      puts rdf_repo.inspect
+      puts file.inspect
+      puts file_type.inspect
+    rescue Exception => e
+      puts 'Error uploading file to S4 repository'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+
     puts "***** Exit DbmS4.upload_file_to_repository()"
   end
 
