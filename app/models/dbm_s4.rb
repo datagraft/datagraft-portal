@@ -154,6 +154,8 @@ class DbmS4 < Dbm
   end
 
   
+  # Query S4 repository (TO-BE-DELETED)
+  # Since this code is not S4-specific it has been moved to the rdf_repo.rb model
   def query_repository(db_repository, query_string)
     puts "***** Enter DbmS4.query_repository(#{name})"
     puts query_string
@@ -163,6 +165,9 @@ class DbmS4 < Dbm
   end
 
   
+  # Update public property of S4 repository (TO-BE-DELETED)
+  # This method overlaps with set_repository_public and can be merged
+  # Be sure to update the reference to this method from SPARQL endpoint when refactoring
   def update_ontotext_repository_public(rdf_repo, public)
     puts "***** Enter DbmS4.update_ontotext_repository_public(#{name})"
     puts rdf_repo.inspect

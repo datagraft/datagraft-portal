@@ -64,9 +64,11 @@ class Query < Thing
         headers: [],
         results: []
       } if res == nil
+
+      query_res = JSON.parse(res.body)
       return {
-        headers: res["head"]["vars"],
-        results: res["results"]["bindings"]
+        headers: query_res["head"]["vars"],
+        results: query_res["results"]["bindings"]
       }
     else
       return {
@@ -111,9 +113,10 @@ class Query < Thing
         results: []
       } if res == nil
 
+      query_res = JSON.parse(res.body)
       return {
-        headers: res["head"]["vars"],
-        results: res["results"]["bindings"]
+        headers: query_res["head"]["vars"],
+        results: query_res["results"]["bindings"]
       }
     else
       return {

@@ -17,6 +17,8 @@ class RdfRepo < ApplicationRecord
     configuration["is_public"] = val
   end
   
+
+  # Create RDF repository
   def create_repository(ep)
     puts "***** Enter RdfRepo.create_repository(#{name})"
     dbm.create_repository(self, ep)
@@ -77,20 +79,67 @@ class RdfRepo < ApplicationRecord
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
 
-      
+
+  # Query RDF repository
   def query_repository(query_string)
     puts "***** Enter RdfRepo.query_repository(#{name})"
-    res = dbm.query_repository(self, query_string)
+#    res = dbm.query_repository(self, query_string)
+    
+    url = self.uri
+    key = self.dbm.key + ':' + self.dbm.secret
+    basicToken = Base64.strict_encode64(key)
+    
+    # No user authentication required for public SPARQL endpoints
+    if self.is_public
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => {
+          :params => {
+            'query' => query_string
+          },
+          'Accept' => 'application/sparql-results+json'
+        }
+      )
+    else
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => {
+          :params => {
+            'query' => query_string
+          },
+          'Authorization' => 'Basic ' + basicToken,
+          'Accept' => 'application/sparql-results+json'
+        }
+      )
+    end
+  
+    begin
+      response = request.execute
+      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+
+      puts response.inspect
+    rescue Exception => e
+      puts 'Error querying RDF repository'
+      puts e.message
+      puts e.backtrace.inspect    
+    end
+    
     puts "***** Exit RdfRepo.query_repository()"
-    return res
+    return response
   end
 
+  
+  # Update public property of RDF property
   def update_ontotext_repository_public(public)
     puts "***** Enter RdfRepo.update_ontotext_repository_public(#{name})"
     dbm.update_ontotext_repository_public(self, public)
     puts "***** Exit RdfRepo.update_ontotext_repository_public()"
   end
+      
 
+  # Get RDF repository size
   def get_repository_size()
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
     res = dbm.get_repository_size(self)
@@ -102,6 +151,8 @@ class RdfRepo < ApplicationRecord
     return res
   end
 
+  
+  # Delete RDF repository
   def delete_repository()
     puts "***** Enter RdfRepo.delete_repository(#{name})"
     dbm.delete_repository(self)
