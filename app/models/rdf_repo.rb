@@ -144,11 +144,60 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
     res = dbm.get_repository_size(self)
 
+    url = self.uri
+    key = self.dbm.key + ':' + self.dbm.secret
+    basicToken = Base64.strict_encode64(key)
+    
+    query_string = "SELECT (count(*) as ?count) WHERE { ?s ?p ?o . }"
+    
+    # No user authentication required for public SPARQL endpoints
+    if self.is_public
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => {
+          :params => {
+            'query' => query_string
+          },
+          'Accept' => 'application/sparql-results+json'
+        }
+      )
+    else
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => {
+          :params => {
+            'query' => query_string
+          },
+          'Authorization' => 'Basic ' + basicToken,
+          'Accept' => 'application/sparql-results+json'
+        }
+      )
+    end
+  
+    begin
+      response = request.execute
+      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+
+      puts response.inspect
+    rescue Exception => e
+      puts 'Error querying RDF repository'
+      puts e.message
+      puts e.backtrace.inspect    
+    end
+    
+    triples_count = JSON.parse(response.body)["results"]["bindings"].first["count"]["value"].to_i
+    
+    self.cached_size = triples_count ||= self.cached_size
+    self.save
+    
     # TODO fix cached size
     #ep.cached_size = resp_size.body ||= ep.cached_size
     #ep.save
+    
     puts "***** Exit RdfRepo.get_repository_size()"
-    return res
+    return triples_count
   end
 
   
