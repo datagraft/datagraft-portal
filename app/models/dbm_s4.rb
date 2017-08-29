@@ -12,7 +12,7 @@ class DbmS4 < Dbm
   
   # Rails 4 strong params usage
   def dbm_s4_params
-    params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :endpoint, :key, :secret)
+    params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
   end
   
 
@@ -21,6 +21,23 @@ class DbmS4 < Dbm
   ######
   
   @@supported_repository_types = %w(RDF)
+  def get_supported_repository_types
+    return @@supported_repository_types
+  end
+  
+  @@supported_db_plans = %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
+  def get_supported_db_plans
+    return @@supported_db_plans
+  end
+  
+  def db_plan
+    configuration["db_plan"] if configuration
+  end
+  
+  def db_plan=(val)
+    touch_configuration!
+    configuration["db_plan"] = val
+  end
   
   def endpoint
     configuration["endpoint"] if configuration
@@ -103,6 +120,7 @@ class DbmS4 < Dbm
   
   # Upload file to S4 repository (TO-BE-DELETED)
   # Since this code is not S4-specific it has been moved to the rdf_repo.rb model
+=begin
   def upload_file_to_repository(rdf_repo, file, file_type)
     puts "***** Enter DbmS4.upload_file_to_repository(#{name})"
     
@@ -152,10 +170,11 @@ class DbmS4 < Dbm
 
     puts "***** Exit DbmS4.upload_file_to_repository()"
   end
-
+=end
   
   # Query S4 repository (TO-BE-DELETED)
   # Since this code is not S4-specific it has been moved to the rdf_repo.rb model
+=begin
   def query_repository(db_repository, query_string)
     puts "***** Enter DbmS4.query_repository(#{name})"
     puts query_string
@@ -163,7 +182,7 @@ class DbmS4 < Dbm
     puts "***** Exit DbmS4.query_repository()"
     return res
   end
-
+=end
   
   # Update public property of S4 repository (TO-BE-DELETED)
   # This method overlaps with set_repository_public and can be merged
@@ -249,17 +268,57 @@ class DbmS4 < Dbm
   end
 
   
+  # Get S4 database quota count for max repositories
   def quota_sparql_count()
     puts "***** Enter DbmS4.quota_sparql_count(#{name})"
-    res = id
-    puts "***** Exit DbmS4.quota_sparql_count()"
+    
+    res = case self.db_plan
+    when 'BL1' then 
+      1
+    when 'BL2' then 
+      1
+    when 'SL1' then 
+      2
+    when 'SL2' then 
+      4
+    when 'EL1' then 
+      8
+    when 'EL2' then 
+      10
+    when 'EL3' then 
+      16
+    else 
+      1
+    end
+
+    puts "***** Exit DbmS4.quota_sparql_count()"    
     return res
   end
 
-  
+
+  # Get S4 database quota count for max triples
   def quota_sparql_ktriples()
     puts "***** Enter DbmS4.quota_sparql_ktriples(#{name})"
-    res = id
+    
+    res = case self.db_plan
+    when 'BL1' then 
+      100000
+    when 'BL2' then 
+      1000000
+    when 'SL1' then 
+      5000000
+    when 'SL2' then 
+      10000000
+    when 'EL1' then 
+      50000000
+    when 'EL2' then 
+      250000000
+    when 'EL3' then 
+      1000000000
+    else 
+      100000
+    end
+
     puts "***** Exit DbmS4.quota_sparql_ktriples()"
     return res
   end
@@ -333,6 +392,6 @@ class DbmS4 < Dbm
       puts e.backtrace.inspect
     end
     puts "***** Exit DbmS4.delete_repository()"
-  end
+  end    
 
 end

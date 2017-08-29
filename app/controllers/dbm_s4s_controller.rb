@@ -1,9 +1,10 @@
 class DbmS4sController < ApplicationController
-  
+  include DbmS4Helper
+
   before_action :set_dbm_s4, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   
-  wrap_parameters :api_key, include: [:dbm_account_username, :dbm_account_password, :name, :endpoint, :key, :secret]
+  wrap_parameters :api_key, include: [:dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret]
 
   ######
   public
@@ -43,7 +44,14 @@ class DbmS4sController < ApplicationController
     @dbm_s4.key = dbm_s4_params[:key]
     @dbm_s4.secret = dbm_s4_params[:secret]
     
-    key = ApiKey.new
+    # Create and add new API Key to DBM
+    api_key = ApiKey.new
+    api_key.name = "Manually registered S4 API Key"
+    api_key.key = dbm_s4_params[:key] + ':' + dbm_s4_params[:secret]
+    api_key.enabled = true
+    api_key.dbm = @dbm_s4
+    api_key.user = current_user
+    api_key.save
     @dbm_s4.api_keys
     
     respond_to do |format|
@@ -95,7 +103,7 @@ class DbmS4sController < ApplicationController
   # Only allow white listed paramters
   def dbm_s4_params
     #params.require(:dbm_s4).permit(:public, :name, :dbm_account_username, :dbm_account_password, :dbm_endpoint, :dbm_public, :dbm_api_key_key1, :dbm_api_key_secret1)
-    params.require(:dbm_s4).permit(:dbm_account_username, :dbm_account_password, :name, :endpoint, :key, :secret)
+    params.require(:dbm_s4).permit(:dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
   end
-  
+      
 end

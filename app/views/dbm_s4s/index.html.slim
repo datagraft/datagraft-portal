@@ -12,6 +12,7 @@ div.mdl-card
         thead
           tr
             th.mdl-data-table__cell--non-numeric Name
+            th.mdl-data-table__cell--non-numeric Plan
             th.mdl-data-table__cell--non-numeric Endpoint
             th.mdl-data-table__cell--non-numeric API Key (Key:Secret)
             th.mdl-data-table__cell--non-numeric Edit
@@ -20,6 +21,7 @@ div.mdl-card
           - @dbm_s4s.each do |dbm_s4|
             tr
               td.mdl-data-table__cell--non-numeric = dbm_s4.name
+              td.mdl-data-table__cell--non-numeric = dbm_s4.db_plan
               td.mdl-data-table__cell--non-numeric = dbm_s4.endpoint
               td.mdl-data-table__cell--non-numeric = dbm_s4.key + ':' + dbm_s4.secret
               td.sin-action-table

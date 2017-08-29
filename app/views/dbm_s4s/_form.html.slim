@@ -5,6 +5,10 @@ div.mdl-card.mdl-shadow--2dp
         = f.label :database_name, class: "mdl-textfield__label"
         = f.text_field :name, class: "mdl-textfield__input"
       .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.label :database_plan, class: "mdl-textfield__label"
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+        = f.select :db_plan, options_for_select(get_supported_db_plans(@dbm_s4))
+      .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
         = f.label :database_endpoint, class: "mdl-textfield__label"
         = f.text_field :endpoint, class: "mdl-textfield__input"
       .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
