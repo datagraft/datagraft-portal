@@ -155,53 +155,6 @@ class DbmS4 < Dbm
   end
 
   
-  # Get S4 repository size
-  def get_repository_size(rdf_repo)
-    puts "***** Enter DbmS4.get_repository_size(#{name})"
-    
-    return '0' if not rdf_repo.uri
-
-    url = rdf_repo.uri + '/size'
-    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
-    basicToken = Base64.strict_encode64(key)
-
-    # No user authentication required for public SPARQL endpoints
-    if rdf_repo.is_public
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          'Content-Type' => 'application/json'
-        }
-      )
-    else
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          'Authorization' => 'Basic ' + basicToken,
-          'Content-Type' => 'application/json'
-        }
-      )
-    end
-
-    begin
-      response = request.execute
-      throw "Error getting repository size" unless response.code.between?(200, 299)
-
-      puts response.inspect
-
-      # Update cached size of RDF repository
-      rdf_repo.cached_size = response.body ||= rdf_repo.cached_size
-      rdf_repo.save
-
-      return response.body
-    end
-    
-    puts "***** Exit DbmS4.get_repository_size()"
-  end
-
-  
   # Get S4 database quota count for max repositories
   def quota_sparql_count()
     puts "***** Enter DbmS4.quota_sparql_count(#{name})"
@@ -262,7 +215,7 @@ class DbmS4 < Dbm
   def set_repository_public(rdf_repo)
     puts "***** Enter DbmS4.set_repository_public(#{name})"
     
-    today = Time.now.to_s.slice(0,10)
+#    today = Time.now.to_s.slice(0,10)
 
     url = rdf_repo.uri
     key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
@@ -299,7 +252,7 @@ class DbmS4 < Dbm
   def delete_repository(rdf_repo)
     puts "***** Enter DbmS4.delete_repository(#{name})"
 
-    today = Time.now.to_s.slice(0,10)
+#    today = Time.now.to_s.slice(0,10)
     
     url = rdf_repo.uri.to_s.gsub("RR:", "")
     key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret

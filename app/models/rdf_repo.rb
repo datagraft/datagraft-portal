@@ -142,7 +142,6 @@ class RdfRepo < ApplicationRecord
   # Get RDF repository size
   def get_repository_size()
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
-    res = dbm.get_repository_size(self)
 
     url = self.uri
     key = self.dbm.key + ':' + self.dbm.secret
@@ -191,10 +190,6 @@ class RdfRepo < ApplicationRecord
     
     self.cached_size = triples_count ||= self.cached_size
     self.save
-    
-    # TODO fix cached size
-    #ep.cached_size = resp_size.body ||= ep.cached_size
-    #ep.save
     
     puts "***** Exit RdfRepo.get_repository_size()"
     return triples_count
