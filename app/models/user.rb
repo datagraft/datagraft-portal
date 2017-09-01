@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include OntotextUser
   include UserHelper
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
   has_many :stars, dependent: :destroy
