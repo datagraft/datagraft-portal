@@ -45,9 +45,7 @@ class SparqlEndpoint < Thing
       # Update public/private property if changed
       if new_value != old_value
         if self.has_rdf_repo?
-          self.rdf_repo.update_ontotext_repository_public(self.public)
-        else
-          self.user.update_ontotext_repository_public(self)
+          self.rdf_repo.update_repository_public(self.public)
         end
       end
     else

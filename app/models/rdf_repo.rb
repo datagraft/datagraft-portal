@@ -83,7 +83,6 @@ class RdfRepo < ApplicationRecord
   # Query RDF repository
   def query_repository(query_string)
     puts "***** Enter RdfRepo.query_repository(#{name})"
-#    res = dbm.query_repository(self, query_string)
     
     url = self.uri
     key = self.dbm.key + ':' + self.dbm.secret
@@ -132,9 +131,9 @@ class RdfRepo < ApplicationRecord
 
   
   # Update public property of RDF property
-  def update_ontotext_repository_public(public)
+  def update_repository_public(public)
     puts "***** Enter RdfRepo.update_ontotext_repository_public(#{name})"
-    dbm.update_ontotext_repository_public(self, public)
+    dbm.update_repository_public(self, public)
     puts "***** Exit RdfRepo.update_ontotext_repository_public()"
   end
       

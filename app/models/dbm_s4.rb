@@ -103,7 +103,7 @@ class DbmS4 < Dbm
       
       # By default all newly created S4 repositories are private
       if rdf_repo.is_public
-        set_repository_public(rdf_repo)
+        update_repository_public(rdf_repo, rdf_repo.is_public)
       end
 
       ep.repo_successfully_created
@@ -118,19 +118,44 @@ class DbmS4 < Dbm
   end
 
   
-  # Update public property of S4 repository (TO-BE-DELETED)
-  # This method overlaps with set_repository_public and can be merged
-  # Be sure to update the reference to this method from SPARQL endpoint when refactoring
-  def update_ontotext_repository_public(rdf_repo, public)
-    puts "***** Enter DbmS4.update_ontotext_repository_public(#{name})"
+  # Update S4 repository public property
+  def update_repository_public(rdf_repo, public)
+    puts "***** Enter DbmS4.set_repository_public(#{name})"
     puts rdf_repo.inspect
     puts public
-    
+
     rdf_repo.is_public = public
-    set_repository_public(rdf_repo)
     
-    puts "***** Exit DbmS4.update_ontotext_repository_public()"
+    url = rdf_repo.uri
+    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
+    basicToken = Base64.strict_encode64(key)
+  
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => {
+        'public' => rdf_repo.is_public.to_s
+      }.to_json,
+      :headers => {
+        'Authorization' => 'Basic' + ' ' + basicToken,
+        'Cache-Control' => 'no-cache',
+        'Content-Type' => 'application/json'
+      }
+    )
+
+    begin
+      response = request.execute
+      throw "Error updating S4 repository public property" unless response.code.between?(200, 299)
+    
+    rescue Exception => e
+      puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+    
+    puts "***** Exit DbmS4.set_repository_public()"
   end
+
 
   
   def used_sparql_count
@@ -210,50 +235,11 @@ class DbmS4 < Dbm
     return res
   end
 
-
-  # Set S4 repository public property
-  def set_repository_public(rdf_repo)
-    puts "***** Enter DbmS4.set_repository_public(#{name})"
-    
-#    today = Time.now.to_s.slice(0,10)
-
-    url = rdf_repo.uri
-    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
-    basicToken = Base64.strict_encode64(key)
-  
-    request = RestClient::Request.new(
-      :method => :post,
-      :url => url,
-      :payload => {
-        'public' => rdf_repo.is_public.to_s
-      }.to_json,
-      :headers => {
-        'Authorization' => 'Basic' + ' ' + basicToken,
-        'Cache-Control' => 'no-cache',
-        'Content-Type' => 'application/json'
-      }
-    )
-
-    begin
-      response = request.execute
-      throw "Error setting repository public" unless response.code.between?(200, 299)
-    
-    rescue Exception => e
-      puts 'Error setting S4 repository public'
-      puts e.message
-      puts e.backtrace.inspect
-    end
-    
-    puts "***** Exit DbmS4.set_repository_public()"
-  end
-  
   
   # Delete S4 repository
   def delete_repository(rdf_repo)
     puts "***** Enter DbmS4.delete_repository(#{name})"
 
-#    today = Time.now.to_s.slice(0,10)
-    
     url = rdf_repo.uri.to_s.gsub("RR:", "")
     key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
     basicToken = Base64.strict_encode64(key)
