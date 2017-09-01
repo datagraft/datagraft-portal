@@ -144,8 +144,6 @@ class SparqlEndpointsController < ThingsController
         if @thing.has_rdf_repo?
           rr = @thing.rdf_repo
           rr.upload_file_to_repository(rdfFile, rdfType)
-        else
-          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
         end
       rescue Exception => e
         flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
