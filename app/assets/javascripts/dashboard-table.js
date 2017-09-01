@@ -17,7 +17,7 @@ document.addEventListener('turbolinks:load', function () {
 
     //    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
 
-    return !filterPublicAssets && (assetTypeStr == 'Filestore' && getFiles || assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
+    return !filterPublicAssets && (assetTypeStr == 'Filestore' && getFiles || assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
   });
 
   // Calculates how to display the asset menu element (on the top or bottom) to avoid scrolling in the assets table

@@ -6,7 +6,6 @@ class User < ApplicationRecord
   has_many :transformations, dependent: :destroy
   has_many :data_distributions, dependent: :destroy
   has_many :filestores, dependent: :destroy
-  has_many :queriable_data_stores, dependent: :destroy
   has_many :data_pages, dependent: :destroy
   has_many :utility_functions, dependent: :destroy
   has_many :queries, dependent: :destroy
