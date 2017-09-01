@@ -14,7 +14,7 @@ module SparqlEndpointsHelper
         rr = se.rdf_repo
         return rr.get_repository_size
       else
-        return user.get_ontotext_repository_size(se)
+        return '0'
       end
     rescue Exception => e
       puts 'Error getting repository size'
