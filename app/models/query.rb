@@ -57,6 +57,8 @@ class Query < Thing
   end
 
 
+  # TO-BE-DELETED. Deprecated method no longer used? Commented out for now.
+=begin
   def execute(sparql_endpoint, timeout = 180)
     if sparql_endpoint.has_rdf_repo?
       res = sparql_endpoint.rdf_repo.query_repository(query_string)
@@ -103,8 +105,9 @@ class Query < Thing
         }
     end
   end
+=end
 
-
+  # Execute query on SPARQL endpoint
   def execute_on_sparql_endpoint(sparql_endpoint, user, timeout = 180)
     if sparql_endpoint.has_rdf_repo?
       res = sparql_endpoint.rdf_repo.query_repository(query_string)
@@ -150,7 +153,6 @@ class Query < Thing
       increment_query_execution_metric(self)
 
       parsed = JSON.parse(result.body)
-
 
       return {
         headers: parsed["head"]["vars"],
