@@ -25,7 +25,6 @@ class Dbm < ApplicationRecord
     api_key.name = name
     api_key.key = key_secret
     api_key.enabled = true
-    api_key.user = self.user
     api_key.save
     
     self.save
