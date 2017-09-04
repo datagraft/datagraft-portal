@@ -48,34 +48,14 @@ class DbmS4 < Dbm
     configuration["endpoint"] = val
   end
   
-  def key
-    configuration["key"] if configuration
-  end
-  
-  def key=(val)
-    touch_configuration!
-    configuration["key"] = val
-  end  
-  
-  def secret
-    configuration["secret"] if configuration
-  end
-  
-  def secret=(val)
-    touch_configuration!
-    configuration["secret"] = val
-  end
-  
-  
+
   # Create new S4 repository
   def create_repository(rdf_repo, ep)
     puts "***** Enter DbmS4.create_repository(#{name})"
     
-    today = Time.now.to_s.slice(0,10)
-
     url = rdf_repo.dbm.endpoint + '/repositories'
-    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
-    basicToken = Base64.strict_encode64(key)
+    api_key = rdf_repo.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
       
     request = RestClient::Request.new(
       :method => :put,
@@ -124,17 +104,15 @@ class DbmS4 < Dbm
     puts rdf_repo.inspect
     puts public
 
-    rdf_repo.is_public = public
-    
     url = rdf_repo.uri
-    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
-    basicToken = Base64.strict_encode64(key)
+    api_key = rdf_repo.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
   
     request = RestClient::Request.new(
       :method => :post,
       :url => url,
       :payload => {
-        'public' => rdf_repo.is_public.to_s
+        'public' => public.to_s
       }.to_json,
       :headers => {
         'Authorization' => 'Basic' + ' ' + basicToken,
@@ -146,6 +124,9 @@ class DbmS4 < Dbm
     begin
       response = request.execute
       throw "Error updating S4 repository public property" unless response.code.between?(200, 299)
+
+      rdf_repo.is_public = public
+      rdf_repo.save
     
     rescue Exception => e
       puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
@@ -241,8 +222,8 @@ class DbmS4 < Dbm
     puts "***** Enter DbmS4.delete_repository(#{name})"
 
     url = rdf_repo.uri.to_s.gsub("RR:", "")
-    key = rdf_repo.dbm.key + ':' + rdf_repo.dbm.secret
-    basicToken = Base64.strict_encode64(key)
+    api_key = rdf_repo.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
 
     request = RestClient::Request.new(
       :method => :delete,

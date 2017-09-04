@@ -30,11 +30,10 @@ class RdfRepo < ApplicationRecord
   # Upload file to RDF repository
   def upload_file_to_repository(file, file_type)
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
-    #dbm.upload_file_to_repository(self, file, file_type)
     
     url = self.uri + '/statements'
-    key = self.dbm.key + ':' + self.dbm.secret
-    basicToken = Base64.strict_encode64(key)
+    api_key = self.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
 
     mime_type = case file_type
     when 'rdf' then
@@ -85,35 +84,34 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.query_repository(#{name})"
     
     url = self.uri
-    key = self.dbm.key + ':' + self.dbm.secret
-    basicToken = Base64.strict_encode64(key)
     
-    # No user authentication required for public SPARQL endpoints
-    if self.is_public
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          :params => {
-            'query' => query_string
-          },
-          'Accept' => 'application/sparql-results+json'
-        }
-      )
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      api_key = self.dbm.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+      
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => 'application/sparql-results+json'
+      }
     else
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          :params => {
-            'query' => query_string
-          },
-          'Authorization' => 'Basic ' + basicToken,
-          'Accept' => 'application/sparql-results+json'
-        }
-      )
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => 'application/sparql-results+json'
+      }
     end
-  
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+
     begin
       response = request.execute
       throw "Error querying RDF repository" unless response.code.between?(200, 299)
@@ -143,36 +141,34 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
 
     url = self.uri
-    key = self.dbm.key + ':' + self.dbm.secret
-    basicToken = Base64.strict_encode64(key)
-    
     query_string = "SELECT (count(*) as ?count) WHERE { ?s ?p ?o . }"
     
-    # No user authentication required for public SPARQL endpoints
-    if self.is_public
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          :params => {
-            'query' => query_string
-          },
-          'Accept' => 'application/sparql-results+json'
-        }
-      )
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      api_key = self.dbm.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => 'application/sparql-results+json'
+      }
     else
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => {
-          :params => {
-            'query' => query_string
-          },
-          'Authorization' => 'Basic ' + basicToken,
-          'Accept' => 'application/sparql-results+json'
-        }
-      )
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => 'application/sparql-results+json'
+      }
     end
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
   
     begin
       response = request.execute

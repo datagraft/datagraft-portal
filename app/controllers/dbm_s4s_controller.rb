@@ -45,14 +45,9 @@ class DbmS4sController < ApplicationController
     @dbm_s4.secret = dbm_s4_params[:secret]
     
     # Create and add new API Key to DBM
-    api_key = ApiKey.new
-    api_key.name = "Manually registered S4 API Key"
-    api_key.key = dbm_s4_params[:key] + ':' + dbm_s4_params[:secret]
-    api_key.enabled = true
-    api_key.dbm = @dbm_s4
-    api_key.user = current_user
-    api_key.save
-    @dbm_s4.api_keys
+    key_name = "Manually registered S4 API Key"
+    key_secret = dbm_s4_params[:key] + ':' + dbm_s4_params[:secret]
+    @dbm_s4.add_key(key_name, key_secret)
     
     respond_to do |format|
       if @dbm_s4.save
