@@ -4,6 +4,8 @@ class DbmS4 < Dbm
   # Non-persistent attribute for storing inputs from new form
   attr_accessor :dbm_account_username
   attr_accessor :dbm_account_password
+  attr_accessor :key
+  attr_accessor :secret
   
 
   #######

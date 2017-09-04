@@ -23,7 +23,10 @@ div.mdl-card
               td.mdl-data-table__cell--non-numeric = dbm_s4.name
               td.mdl-data-table__cell--non-numeric = dbm_s4.db_plan
               td.mdl-data-table__cell--non-numeric = dbm_s4.endpoint
-              td.mdl-data-table__cell--non-numeric = dbm_s4.key + ':' + dbm_s4.secret
+              - if dbm_s4.first_enabled_key == nil
+                  td.mdl-data-table__cell--non-numeric = "(No enabled API keys found)"
+              - else
+                  td.mdl-data-table__cell--non-numeric = dbm_s4.first_enabled_key.key
               td.sin-action-table
                 == link_to edit_dbm_s4_path(dbm_s4) do
                   i.material-icons edit
