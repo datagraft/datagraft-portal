@@ -64,3 +64,6 @@ Gemfile.lock
 
 # Seed data
 /db/seeds.rb
+routes\.txt
+
+config/initializers/refile\.rb\.location
