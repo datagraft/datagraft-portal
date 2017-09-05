@@ -19,17 +19,20 @@ class QuotasController < ApplicationController
     #@maxOldSPARQLtriples = current_user.quota_sparql_ktriples*1024
 
     @SPARQLdbArr = []
+    @nbSPARQLcached = 0
 
-    entry = {name: "#{dbms_descriptive_name(nil)} endpoints",
-             nb_ep: quota_used_sparql_count(current_user),
-             max_ep: current_user.quota_sparql_count,
-             nb_triples: triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples],
-             max_triples: current_user.quota_sparql_ktriples*1024}
-    @SPARQLdbArr << entry
-    @nbSPARQLcached = triple_info_hash[:cached_req]
+    old_ep = quota_used_sparql_count(current_user)
+    unless old_ep == 0
+      entry = {name: "#{dbms_descriptive_name(nil)} endpoints",
+               nb_ep: old_ep,
+               max_ep: current_user.quota_sparql_count,
+               nb_triples: triple_info_hash[:repo_triples] + triple_info_hash[:cached_triples],
+               max_triples: current_user.quota_sparql_ktriples*1024}
+      @SPARQLdbArr << entry
+      @nbSPARQLcached += triple_info_hash[:cached_req]
+    end
 
-
-    rdf_dbms = current_user.search_for_existing_dbms('RDF')
+    rdf_dbms = current_user.search_for_existing_dbms_reptype('RDF')
     rdf_dbms.each do |dbm|
       triple_info_hash = quota_used_sparql_triples(current_user, dbm)
       entry = {name: "#{dbms_descriptive_name(dbm)} endpoints",

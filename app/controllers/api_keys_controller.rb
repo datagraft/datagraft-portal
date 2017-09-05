@@ -8,7 +8,15 @@ class ApiKeysController < ApplicationController
   # GET /api_keys
   # GET /api_keys.json
   def index
-    @api_keys = current_user.api_keys
+    ##@api_keys = current_user.api_keys
+    @api_keys = []
+    all_keys = ApiKey.all
+    all_keys.each do |key|
+      dbm = key.dbm
+      unless dbm == nil
+        @api_keys << key if key.dbm.user == current_user
+      end
+    end
   end
 
   # GET /api_keys/new

@@ -8,36 +8,7 @@ div.mdl-card
 
   div.mdl-layout style="align-items: center;"
     div.mdl-card__supporting-text.sin-padding
-      table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
-        thead
-          tr
-            th.mdl-data-table__cell--non-numeric Name
-            th.mdl-data-table__cell--non-numeric Plan
-            th.mdl-data-table__cell--non-numeric Endpoint
-            th.mdl-data-table__cell--non-numeric API Key (Key:Secret)
-            th.mdl-data-table__cell--non-numeric Edit
-            th.mdl-data-table__cell--non-numeric Delete
-        tbody
-          - @dbm_s4s.each do |dbm_s4|
-            tr
-              td.mdl-data-table__cell--non-numeric = dbm_s4.name
-              td.mdl-data-table__cell--non-numeric = dbm_s4.db_plan
-              td.mdl-data-table__cell--non-numeric = dbm_s4.endpoint
-              - if dbm_s4.first_enabled_key == nil
-                  td.mdl-data-table__cell--non-numeric = "(No enabled API keys found)"
-              - else
-                  td.mdl-data-table__cell--non-numeric = dbm_s4.first_enabled_key.key
-              td.sin-action-table
-                == link_to edit_dbm_s4_path(dbm_s4) do
-                  i.material-icons edit
-              td.sin-action-table
-                == link_to dbm_s4, method: :delete, data: { confirm: 'Are you sure?' } do
-                  i.material-icons delete
-        - if @dbm_s4s.empty?
-          tfoot
-            tr
-              td.mdl-data-table__cell--non-numeric[colspan=3]
-                em No DBM S4 (databases) registered yet
+      = render 'table_dbm_s4s'
 
   div.mdl-card__actions
     == link_to 'New S4 Database', new_dbm_s4_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

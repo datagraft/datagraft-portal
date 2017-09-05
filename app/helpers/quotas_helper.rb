@@ -110,7 +110,7 @@ module QuotasHelper
   def quota_user_room_for_new_sparql_count?(user)
     ret_ok = false
     unless user == nil #Check for room in any dbm
-      dbm_list = user.search_for_existing_dbms('RDF')
+      dbm_list = user.search_for_existing_dbms_reptype('RDF')
       res = []
       dbm_list.each do |dbm|
         ret_ok = true if quota_dbm_room_for_new_sparql_count?(dbm)

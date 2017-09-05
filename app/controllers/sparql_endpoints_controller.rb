@@ -12,7 +12,7 @@ class SparqlEndpointsController < ThingsController
       redirect_to quotas_path
     else
       # Find valid dbms
-      dbm_list = current_user.search_for_existing_dbms('RDF')
+      dbm_list = current_user.search_for_existing_dbms_reptype('RDF')
       @dbm_entries = quota_filter_dbm_sparql_count?(dbm_list)
     end
 
