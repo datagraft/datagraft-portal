@@ -6,41 +6,41 @@ class DbmS4 < Dbm
   attr_accessor :dbm_account_password
   attr_accessor :key
   attr_accessor :secret
-  
+
 
   #######
   private
   #######
-  
+
   # Rails 4 strong params usage
   def dbm_s4_params
     params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
   end
-  
+
 
   ######
   public
   ######
-  
+
   @@supported_repository_types = %w(RDF)
   def get_supported_repository_types
     return @@supported_repository_types
   end
-  
+
   @@supported_db_plans = %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
   def get_supported_db_plans
     return @@supported_db_plans
   end
-  
+
   def db_plan
     configuration["db_plan"] if configuration
   end
-  
+
   def db_plan=(val)
     touch_configuration!
     configuration["db_plan"] = val
   end
-  
+
   def endpoint
     configuration["endpoint"] if configuration
   end
@@ -49,21 +49,21 @@ class DbmS4 < Dbm
     touch_configuration!
     configuration["endpoint"] = val
   end
-  
+
 
   # Create new S4 repository
   def create_repository(rdf_repo, ep)
     puts "***** Enter DbmS4.create_repository(#{name})"
-    
+
     url = rdf_repo.dbm.endpoint + '/repositories'
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
-      
+
     request = RestClient::Request.new(
       :method => :put,
       :url => url,
       :payload => {
-        'repositoryID' => ep.name,
+        'repositoryID' => ep.slug,
         'label' => ep.description,
         'ruleset' => 'owl-horst-optimized',
         'base-URL' => 'http://example.org/graphdb#'
@@ -80,9 +80,9 @@ class DbmS4 < Dbm
 
       rdf_repo.repo_hash = {repo_id: "Dummy repo_id #{type}:#{name}:#{rdf_repo.name}" }
       rdf_repo.is_public = ep.public
-      rdf_repo.uri = url + '/' + ep.name
+      rdf_repo.uri = url + '/' + ep.slug
       ep.uri = rdf_repo.uri
-      
+
       # By default all newly created S4 repositories are private
       if rdf_repo.is_public
         update_repository_public(rdf_repo, rdf_repo.is_public)
@@ -99,7 +99,7 @@ class DbmS4 < Dbm
     puts "***** Exit DbmS4.create_repository()"
   end
 
-  
+
   # Update S4 repository public property
   def update_repository_public(rdf_repo, public)
     puts "***** Enter DbmS4.set_repository_public(#{name})"
@@ -109,7 +109,7 @@ class DbmS4 < Dbm
     url = rdf_repo.uri
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
-  
+
     request = RestClient::Request.new(
       :method => :post,
       :url => url,
@@ -129,24 +129,24 @@ class DbmS4 < Dbm
 
       rdf_repo.is_public = public
       rdf_repo.save
-    
+
     rescue Exception => e
       puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
       puts e.message
       puts e.backtrace.inspect
     end
-    
+
     puts "***** Exit DbmS4.set_repository_public()"
   end
 
 
-  
+
   def used_sparql_count
     rdf_repo_list = self.rdf_repos.all
     return rdf_repo_list.size
   end
 
-  
+
   def used_sparql_triples
     puts "***** Enter DbmS4.quota_used_sparql_triples(#{name})"
     total_repo_sparql_triples = 0
@@ -162,31 +162,31 @@ class DbmS4 < Dbm
     return res
   end
 
-  
+
   # Get S4 database quota count for max repositories
   def quota_sparql_count()
     puts "***** Enter DbmS4.quota_sparql_count(#{name})"
-    
+
     res = case self.db_plan
-    when 'BL1' then 
+    when 'BL1' then
       1
-    when 'BL2' then 
+    when 'BL2' then
       1
-    when 'SL1' then 
+    when 'SL1' then
       2
-    when 'SL2' then 
+    when 'SL2' then
       4
-    when 'EL1' then 
+    when 'EL1' then
       8
-    when 'EL2' then 
+    when 'EL2' then
       10
-    when 'EL3' then 
+    when 'EL3' then
       16
-    else 
+    else
       1
     end
 
-    puts "***** Exit DbmS4.quota_sparql_count()"    
+    puts "***** Exit DbmS4.quota_sparql_count()"
     return res
   end
 
@@ -194,23 +194,23 @@ class DbmS4 < Dbm
   # Get S4 database quota count for max triples
   def quota_sparql_ktriples()
     puts "***** Enter DbmS4.quota_sparql_ktriples(#{name})"
-    
+
     res = case self.db_plan
-    when 'BL1' then 
+    when 'BL1' then
       100000
-    when 'BL2' then 
+    when 'BL2' then
       1000000
-    when 'SL1' then 
+    when 'SL1' then
       5000000
-    when 'SL2' then 
+    when 'SL2' then
       10000000
-    when 'EL1' then 
+    when 'EL1' then
       50000000
-    when 'EL2' then 
+    when 'EL2' then
       250000000
-    when 'EL3' then 
+    when 'EL3' then
       1000000000
-    else 
+    else
       100000
     end
 
@@ -218,7 +218,7 @@ class DbmS4 < Dbm
     return res
   end
 
-  
+
   # Delete S4 repository
   def delete_repository(rdf_repo)
     puts "***** Enter DbmS4.delete_repository(#{name})"
@@ -239,7 +239,7 @@ class DbmS4 < Dbm
     begin
       response = request.execute
       throw "Error deleting S4 repository" unless response.code.between?(200, 299)
-    
+
       rdf_repo.repo_hash = {repo_id: 'deleted' }
       rdf_repo.uri = 'Deleted URI...'
     rescue Exception => e
@@ -248,6 +248,6 @@ class DbmS4 < Dbm
       puts e.backtrace.inspect
     end
     puts "***** Exit DbmS4.delete_repository()"
-  end    
+  end
 
 end
