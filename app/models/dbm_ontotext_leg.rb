@@ -31,8 +31,10 @@ class DbmOntotextLeg < Dbm
     uri = new_ontotext_repository(ep)
     rdf_repo.repo_hash = {repo_id: "Dummy repo_id #{type}:#{name}:#{rdf_repo.name}" }
     rdf_repo.is_public = ep.public
-    rdf_repo.uri = url + '/' + ep.slug
+    rdf_repo.uri = uri
     ep.uri = uri
+    ep.repo_successfully_created
+
     puts "***** Exit DbmOntotextLeg.create_repository()"
   end
 
@@ -75,7 +77,7 @@ class DbmOntotextLeg < Dbm
     puts "***** Enter DbmOntotextLeg.quota_sparql_count(#{name})"
 
     res = user.quota_sparql_count # Fetch from user profile
-    res = used_sparql_count # Return the current count to avoid creation of more
+    ##TODO res = used_sparql_count # Return the current count to avoid creation of more
 
     puts "***** Exit DbmOntotextLeg.quota_sparql_count()"
     return res
@@ -324,9 +326,10 @@ class DbmOntotextLeg < Dbm
 
       json_repository = JSON.parse(resp_repository.body)
 
-      return { 'ontotext_uri' => json_repository['access-url']}
+      return json_repository['access-url']
 
     rescue Exception => e
+      thing.error_occured_creating_repo
       puts 'Error creating Ontotext repository'
       puts e.message
       puts e.backtrace.inspect
