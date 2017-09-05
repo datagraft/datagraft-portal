@@ -53,7 +53,6 @@ module ThingHelper
 
 
   def update_asset_version_metric(asset_type_string)
-
     begin
       num_assets = 0
       case asset_type_string
@@ -63,10 +62,6 @@ module ThingHelper
         end
       when "Transformation"
         Thing.includes(:versions).where(type: "Transformation").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "QueriableDataStore"
-        Thing.includes(:versions).where(type: "QueriableDataStore").each do |thing|
           num_assets += thing.versions.count
         end
       when "Query"
@@ -95,7 +90,6 @@ module ThingHelper
       puts e.message
       puts e.backtrace
     end
-
   end
 
   def reset_num_assets_public_private(thing)
@@ -113,8 +107,10 @@ module ThingHelper
     end
     
     # Set the number of public and private things of this type for the owner
-    num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'public'}, number_public_things)
-    num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, number_private_things)
+    if !num_assets.nil?
+      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'public'}, number_public_things)
+      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, number_private_things)
+    end
   end
 
   def reset_num_assets(thing, change)

@@ -16,14 +16,37 @@ class Dbm < ApplicationRecord
   def update_account(dbm_account)
   end
 
-  def add_key(key, name)
+
+  # Create and add new API key to the DBM
+  def add_key(name, key_secret)
+    self.save
+    api_key = self.api_keys.create()
+    
+    api_key.name = name
+    api_key.key = key_secret
+    api_key.enabled = true
+    api_key.save
+    
+    self.save
   end
 
+
+  # Delete API key from the DBM
   def delete_key(api_key)
+    self.api_keys.find(api_key).destroy
   end
+  
 
+  # TO-BE-DELETED. NOT NEEDED!
   def update_key(api_key)
   end
+
+
+  # Returns the first enabled API key
+  def first_enabled_key
+    return self.api_keys.where(enabled: true).first
+  end
+  
 
   def has_configuration?(key)
     !get_configuration(key).nil?
@@ -47,6 +70,5 @@ class Dbm < ApplicationRecord
   def touch_configuration!
     self.configuration = {} if not configuration.is_a?(Hash)
   end
-
 
 end

@@ -1,7 +1,24 @@
+require 'rest-client'
+
 class RdfRepo < ApplicationRecord
   belongs_to :dbm
   has_many :things
+  
+  ######
+  public
+  ######
+  
+  def is_public
+    configuration["is_public"] if configuration
+  end
 
+  def is_public=(val)
+    touch_configuration!
+    configuration["is_public"] = val
+  end
+  
+
+  # Create RDF repository
   def create_repository(ep)
     puts "***** Enter RdfRepo.create_repository(#{name})"
     dbm.create_repository(self, ep)
@@ -9,36 +26,172 @@ class RdfRepo < ApplicationRecord
     puts "***** Exit RdfRepo.create_repository()"
   end
 
+  
+  # Upload file to RDF repository
   def upload_file_to_repository(file, file_type)
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
-    dbm.upload_file_to_repository(self, file, file_type)
+    
+    url = self.uri + '/statements'
+    api_key = self.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
+
+    mime_type = case file_type
+    when 'rdf' then
+      'application/rdf+xml'
+    when 'nt' then
+      'text/plain'
+    when 'ttl' then
+      'application/x-turtle'
+    when 'n3' then
+      'text/rdf+n3'
+    when 'trix' then
+      'application/trix'
+    when 'trig' then
+      'application/x-trix'
+    else
+      'text/plain'
+    end
+
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => file.read,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => mime_type
+      }
+    )
+
+    begin
+      response = request.execute
+      throw "Error uploading file to RDF repository" unless response.code.between?(200, 299)
+    
+      puts rdf_repo.inspect
+      puts file.inspect
+      puts file_type.inspect
+    rescue Exception => e
+      puts 'Error uploading file to RDF repository'
+      puts e.message
+      puts e.backtrace.inspect
+    end
+    
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
 
+
+  # Query RDF repository
   def query_repository(query_string)
     puts "***** Enter RdfRepo.query_repository(#{name})"
-    res = dbm.query_repository(self, query_string)
+    
+    url = self.uri
+    
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      api_key = self.dbm.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+      
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => 'application/sparql-results+json'
+      }
+    else
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => 'application/sparql-results+json'
+      }
+    end
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+
+    begin
+      response = request.execute
+      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+
+      puts response.inspect
+    rescue Exception => e
+      puts 'Error querying RDF repository'
+      puts e.message
+      puts e.backtrace.inspect    
+    end
+    
     puts "***** Exit RdfRepo.query_repository()"
-    return res
+    return response
   end
 
-  def update_ontotext_repository_public(public)
+  
+  # Update public property of RDF property
+  def update_repository_public(public)
     puts "***** Enter RdfRepo.update_ontotext_repository_public(#{name})"
-    dbm.update_ontotext_repository_public(self, public)
+    dbm.update_repository_public(self, public)
     puts "***** Exit RdfRepo.update_ontotext_repository_public()"
   end
+      
 
+  # Get RDF repository size
   def get_repository_size()
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
-    res = dbm.get_repository_size(self)
 
-    # TODO fix cached size
-    #ep.cached_size = resp_size.body ||= ep.cached_size
-    #ep.save
+    url = self.uri
+    query_string = "SELECT (count(*) as ?count) WHERE { ?s ?p ?o . }"
+    
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      api_key = self.dbm.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => 'application/sparql-results+json'
+      }
+    else
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => 'application/sparql-results+json'
+      }
+    end
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+  
+    begin
+      response = request.execute
+      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+
+      puts response.inspect
+    rescue Exception => e
+      puts 'Error querying RDF repository'
+      puts e.message
+      puts e.backtrace.inspect    
+    end
+    
+    triples_count = JSON.parse(response.body)["results"]["bindings"].first["count"]["value"].to_i
+    
+    self.cached_size = triples_count ||= self.cached_size
+    self.save
+    
     puts "***** Exit RdfRepo.get_repository_size()"
-    return res
+    return triples_count
   end
 
+  
+  # Delete RDF repository
   def delete_repository()
     puts "***** Enter RdfRepo.delete_repository(#{name})"
     dbm.delete_repository(self)
@@ -80,6 +233,15 @@ class RdfRepo < ApplicationRecord
   def name=(val)
     touch_configuration!
     self.configuration["name"] = val
+  end
+
+  def cached_size
+    get_configuration("cached_size")
+  end
+
+  def cached_size=(val)
+    touch_configuration!
+    self.configuration["cached_size"] = val
   end
 
   protected

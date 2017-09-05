@@ -93,7 +93,7 @@ class SparqlEndpointsController < ThingsController
       rr.save
       @thing.rdf_repo = rr
 
-      Thread.new do
+      #Thread.new do
         puts "***** Create thread...start"
         @thing.issue_create_repo
         # @thing.uri = current_user.new_ontotext_repository(@thing)
@@ -119,7 +119,7 @@ class SparqlEndpointsController < ThingsController
         @upwizard.destroy if @upwizard
         ActiveRecord::Base.connection.close
         puts "***** Create thread...end"
-      end
+      #end
       respond_to do |format|
         if @thing.save
           format.html { redirect_to thing_path(@thing), notice: create_notice }
@@ -130,7 +130,7 @@ class SparqlEndpointsController < ThingsController
           format.json { render json: @thing.errors, status: :unprocessable_entity }
         end
       end
-    end
+#    end
   end
 
   def update
@@ -145,8 +145,6 @@ class SparqlEndpointsController < ThingsController
         if @thing.has_rdf_repo?
           rr = @thing.rdf_repo
           rr.upload_file_to_repository(rdfFile, rdfType)
-        else
-          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
         end
       rescue Exception => e
         flash[:error] = "Could not upload to SPARQL endpoint. Please try again."

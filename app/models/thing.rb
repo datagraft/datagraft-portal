@@ -60,10 +60,9 @@ class Thing < ApplicationRecord
     # returns a default registry
     Thing.where(
       :public => true,
-      :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+      :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('Widget' if Flip.on? :widgets)]
       )
     .order(stars_count: :desc, created_at: :desc).includes(:user)
-
   end
 
   def self.public_search(search)

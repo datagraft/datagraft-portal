@@ -23,9 +23,9 @@ class DashboardController < ApplicationController
       'catalogues' => query_catalogues,
       'datapages' => query_things.where(type: 'DataPage'),
       'transformations' => query_things.where(type: 'Transformation'),
-      'queriable_data_stores' => query_things.where(type: 'QueriableDataStore'),
+      'sparql_endpoints' => query_things.where(type: 'SparqlEndpoint'),
       'queries' => query_things.where(type: 'Query'),
-      'other' => query_things.where.not(type: ['DataPage', 'Transformation', 'QueriableDataStore'])
+      'other' => query_things.where.not(type: ['DataPage', 'Transformation', 'SparqlEndpoint'])
       }
 
     # get active tab

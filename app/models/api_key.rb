@@ -37,6 +37,7 @@ class ApiKey < ApplicationRecord
     key = user.api_keys.where(enabled: true).first
 
     # Create a key if one doesn't exist yet
+=begin
     if key.nil?
       key = ApiKey.new
       key.enabled = true
@@ -48,7 +49,7 @@ class ApiKey < ApplicationRecord
       # TODO : Check if this definitely removes the bad credentials bug…
       sleep 5
     end
-
+=end
     key
   end
 
