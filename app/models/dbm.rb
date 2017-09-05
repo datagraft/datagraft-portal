@@ -21,13 +21,14 @@ class Dbm < ApplicationRecord
   def add_key(name, key_secret)
     self.save
     api_key = self.api_keys.create()
-    
+
     api_key.name = name
     api_key.key = key_secret
     api_key.enabled = true
     api_key.save
-    
+
     self.save
+    return api_key
   end
 
 
@@ -35,7 +36,7 @@ class Dbm < ApplicationRecord
   def delete_key(api_key)
     self.api_keys.find(api_key).destroy
   end
-  
+
 
   # TO-BE-DELETED. NOT NEEDED!
   def update_key(api_key)
@@ -46,7 +47,7 @@ class Dbm < ApplicationRecord
   def first_enabled_key
     return self.api_keys.where(enabled: true).first
   end
-  
+
 
   def has_configuration?(key)
     !get_configuration(key).nil?
