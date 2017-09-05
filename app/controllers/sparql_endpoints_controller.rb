@@ -89,7 +89,7 @@ class SparqlEndpointsController < ThingsController
 
       rr = RdfRepo.new
       rr.dbm = dbm
-      rr.name = "RR:#{@thing.name}"
+      rr.name = "RR:#{@thing.slug}"
       rr.save
       @thing.rdf_repo = rr
 
@@ -130,7 +130,7 @@ class SparqlEndpointsController < ThingsController
           format.json { render json: @thing.errors, status: :unprocessable_entity }
         end
       end
-#    end
+    end
   end
 
   def update
