@@ -1,6 +1,8 @@
 class ApiKeysController < ApplicationController
+  wrap_parameters :api_key, include: [:key_pub, :key_secret, :name, :enabled]
 
   before_action :set_api_key, only: [:show, :edit, :update, :destroy]
+  before_action :set_dbm, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   load_and_authorize_resource
 
   wrap_parameters :api_key, include: [:name, :enabled]
@@ -8,28 +10,29 @@ class ApiKeysController < ApplicationController
   # GET /api_keys
   # GET /api_keys.json
   def index
-    ##@api_keys = current_user.api_keys
-    @api_keys = []
-    all_keys = ApiKey.all
-    all_keys.each do |key|
-      dbm = key.dbm
-      unless dbm == nil
-        @api_keys << key if key.dbm.user == current_user
-      end
-    end
+    @api_keys = current_user.api_keys.where(dbm_id: params[:dbm_id])
+    ##@api_keys = []
+    ##all_keys = ApiKey.all
+    ##all_keys.each do |key|
+    ##  dbm = key.dbm
+    ##  unless dbm == nil
+    ##    @api_keys << key if key.dbm.user == current_user
+    ##  end
+    ##end
   end
 
   # GET /api_keys/new
   def new
     @api_key = ApiKey.new
     @api_key.enabled = true
+    @api_key.dbm = @dbm
   end
 
   # GET /api_keys/1
   # GET /api_keys/1.json
   def show
     respond_to do |format|
-        format.html { redirect_to api_keys_path }
+        format.html { redirect_to dbm_api_keys_path(@dbm) }
         format.json { render :show }
     end
   end
@@ -44,11 +47,12 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     @api_key.name = Bazaar.object if @api_key.name.blank?
     @api_key.user = current_user
-    @api_key.key = @api_key.new_ontotext_api_key(current_user)
+    @api_key.dbm = @dbm
 
     respond_to do |format|
       if @api_key.save
-        format.html { redirect_to api_keys_path, notice: 'Api key was successfully created.' }
+        @api_key.add_in_dbm
+        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully created.' }
         format.json { render :show, status: :created, location: @api_key }
       else
         format.html { render :new }
@@ -62,8 +66,8 @@ class ApiKeysController < ApplicationController
   def update
     respond_to do |format|
       if @api_key.update(api_key_params)
-        @api_key.update_in_ontotext(current_user)
-        format.html { redirect_to api_keys_path, notice: 'Api key was successfully updated.' }
+        @api_key.update_in_dbm
+        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: @api_key }
       else
         format.html { render :edit }
@@ -75,10 +79,10 @@ class ApiKeysController < ApplicationController
   # DELETE /api_keys/1
   # DELETE /api_keys/1.json
   def destroy
-    @api_key.delete_from_ontotext(current_user)
+    @api_key.delete_in_dbm
     @api_key.destroy
     respond_to do |format|
-      format.html { redirect_to api_keys_url, notice: 'Api key was successfully destroyed.' }
+      format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -95,8 +99,12 @@ class ApiKeysController < ApplicationController
       @api_key = ApiKey.find(params[:id])
     end
 
+    def set_dbm
+      @dbm = Dbm.find(params[:dbm_id])
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def api_key_params
-      params.require(:api_key).permit(:name, :enabled)
+      params.require(:api_key).permit(:key_pub, :key_secret, :name, :enabled)
     end
 end

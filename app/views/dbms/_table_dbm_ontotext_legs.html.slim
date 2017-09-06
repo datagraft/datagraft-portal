@@ -2,15 +2,13 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
   thead
     tr
       th.mdl-data-table__cell--non-numeric Name
-      th.mdl-data-table__cell--non-numeric API Key (Key:Secret)
+      th.mdl-data-table__cell--non-numeric Api Keys
   tbody
     - @dbm_ontotext_legs.each do |dbm_ol|
       tr
         td.mdl-data-table__cell--non-numeric = dbm_ol.name
-        - if dbm_ol.first_enabled_key == nil
-            td.mdl-data-table__cell--non-numeric = "(No enabled API keys found)"
-        - else
-            td.mdl-data-table__cell--non-numeric = dbm_ol.first_enabled_key.key
+        td.sin-action-table
+          == link_to 'Show keys', dbm_api_keys_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
   - if @dbm_ontotext_legs.empty?
     tfoot
       tr

@@ -2,6 +2,18 @@ class ApiKey < ApplicationRecord
   belongs_to :user
   belongs_to :dbm
 
+  def add_in_dbm
+    dbm.key_added(self)
+  end
+
+  def update_in_dbm
+    dbm.key_updated(self)
+  end
+
+  def delete_in_dbm
+    dbm.key_deleted(self)
+  end
+
   def new_ontotext_api_key(user)
     #Devise.friendly_token(32)
     key = user.new_ontotext_api_key
@@ -52,6 +64,29 @@ class ApiKey < ApplicationRecord
 =end
     key
   end
+
+  def key_pub
+    r = /^(.+):/.match(key)
+    kp = r ? r[1] : ''
+    return kp
+  end
+
+  def key_pub=(kp)
+    ks = key_secret
+    self.key = kp +':'+ ks
+  end
+
+  def key_secret
+    r = /:(.+)/.match(key)
+    ks = r ? r[1] : ''
+    return ks
+  end
+
+  def key_secret=(ks)
+    kp = key_pub
+    self.key = kp +':'+ ks
+  end
+
 
   private
     def get_key_without_secret

@@ -23,17 +23,17 @@ div.mdl-card
               td.mdl-data-table__cell--non-numeric = api_key.dbm.name
               td.mdl-data-table__cell--non-numeric = api_key.name
               td.mdl-data-table__cell--non-numeric.sin-action-table
-               == link_to edit_api_key_path(api_key) do
+               == link_to edit_dbm_api_key_path(@dbm, api_key) do
                 - if api_key.enabled
                   i.material-icons check_box
                 - else
                   i.material-icons check_box_outline_blank
               td.mdl-data-table__cell--non-numeric.sin-monospace-key = api_key.key
               td.sin-action-table
-               == link_to edit_api_key_path(api_key) do
+               == link_to edit_dbm_api_key_path(@dbm, api_key) do
                 i.material-icons edit
               td.sin-action-table
-               == link_to api_key, method: :delete, data: { confirm: 'Are you sure?' } do
+               == link_to dbm_api_key_path(@dbm, api_key), method: :delete, data: { confirm: 'Are you sure?' } do
                 i.material-icons delete
         - if @api_keys.empty?
           tfoot
@@ -43,4 +43,8 @@ div.mdl-card
 
 
   div.mdl-card__actions
-    == link_to 'New Api key', new_api_key_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    = link_to 'Back', dbms_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
+    - if @dbm.allow_manual_api_key?
+      == link_to 'New Api key', new_dbm_api_key_path(@dbm), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

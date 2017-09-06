@@ -1,21 +1,21 @@
-- title 'Your Database Management (Databases)'
+- title 'Your Registered Databases'
 - setOption :mdlCard
 
-div.mdl-card
-  /! MDL Card container
-  div.mdl-card__title.mdl-color-text--grey-50
-    h3 = yield(:title)
+.mdl-card
+  .sin-card-with-tabs-layout.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    .sin-card-with-tabs-title
+      .mdl-card__title.mdl-color-text--grey-50
+        h3 = yield(:title)
 
-  div.mdl-layout style="align-items: center;"
-    div.mdl-card__supporting-text.sin-padding
+      .mdl-tabs__tab-bar
+        a.mdl-tabs__tab.is-active href="#dbm_s4s-panel" S4
+        a.mdl-tabs__tab href="#dbm_ontotext_legs-panel"  Legacy
 
-        h3 S4 databases
-        = render 'table_dbm_s4s'
-        == link_to 'New S4 Database', new_dbm_s4_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-
-        h3 Ontotext Legacy databases
-        = render 'table_dbm_ontotext_legs'
-
-
-  div.mdl-card__actions
-    
+    /! MDL tab panels, is-active to denote currently active
+    #dbm_s4s-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'index_dbm_s4s_tab'
+    /! MDL Tab panel 2
+    #dbm_ontotext_legs-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'index_dbm_ontotext_legs_tab'

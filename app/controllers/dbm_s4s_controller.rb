@@ -44,8 +44,9 @@ class DbmS4sController < DbmsController
 
     # Create and add new API Key to DBM
     key_name = "Manually registered S4 API Key"
-    key_secret = dbm_s4_params[:key] + ':' + dbm_s4_params[:secret]
-    @dbm_s4.add_key(key_name, key_secret)
+    key_pub = dbm_s4_params[:key]
+    key_secret = dbm_s4_params[:secret]
+    @dbm_s4.add_key(key_name, key_pub, key_secret)
 
     respond_to do |format|
       if @dbm_s4.save

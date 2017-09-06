@@ -17,7 +17,10 @@ Rails.application.routes.draw do
     }
 
   get 'api_keys/first' => 'api_keys#first'
-  resources :api_keys
+  # resources :api_keys
+  resources :dbms do
+    resources :api_keys
+  end
 
   get 'explore' => 'public_portal#explore'
   get 'news' => 'public_portal#news'
