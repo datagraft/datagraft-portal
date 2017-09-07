@@ -65,10 +65,9 @@ class RdfRepo < ApplicationRecord
     begin
       response = request.execute
       throw "Error uploading file to RDF repository" unless response.code.between?(200, 299)
-
-      puts rdf_repo.inspect
       puts file.inspect
       puts file_type.inspect
+
     rescue Exception => e
       puts 'Error uploading file to RDF repository'
       puts e.message

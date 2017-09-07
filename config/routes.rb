@@ -16,8 +16,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
     }
 
-  get 'api_keys/first' => 'api_keys#first'
-  # resources :api_keys
+  #get 'api_keys/first' => 'api_keys#first'
   resources :dbms do
     resources :api_keys
   end

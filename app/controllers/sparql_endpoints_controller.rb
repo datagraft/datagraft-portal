@@ -93,7 +93,7 @@ class SparqlEndpointsController < ThingsController
       rr.save
       @thing.rdf_repo = rr
 
-      #Thread.new do
+      Thread.new do
         puts "***** Create thread...start"
         @thing.issue_create_repo
         # @thing.uri = current_user.new_ontotext_repository(@thing)
@@ -119,7 +119,7 @@ class SparqlEndpointsController < ThingsController
         @upwizard.destroy if @upwizard
         ActiveRecord::Base.connection.close
         puts "***** Create thread...end"
-      #end
+      end
       respond_to do |format|
         if @thing.save
           format.html { redirect_to thing_path(@thing), notice: create_notice }

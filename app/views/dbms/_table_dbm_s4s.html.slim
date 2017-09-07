@@ -14,7 +14,7 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
         td.mdl-data-table__cell--non-numeric = dbm_s4.db_plan
         td.mdl-data-table__cell--non-numeric = dbm_s4.endpoint
         td.sin-action-table
-          == link_to 'Show keys', dbm_api_keys_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+          == link_to 'Show', dbm_api_keys_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
         td.sin-action-table
           == link_to edit_dbm_s4_path(dbm_s4) do
             i.material-icons edit
