@@ -56,20 +56,32 @@ class MigrateLegacySparqlEndpoints < ActiveRecord::Migration[5.0]
     # Counting up usage...
     db_list = user.dbms.all
     db_use = {}
+    failing_dbm = 0
+    failing_rr = 0
     db_list.each do |dbm|
       db_use[dbm.id] = 0
     end
 
     ep_list = user.sparql_endpoints.all
     ep_list.each do |ep|
-      dbm_id = ep.rdf_repo.dbm_id
-      db_use[dbm_id] = db_use[dbm_id] + 1
+      unless ep.rdf_repo == nil
+        unless ep.rdf_repo.dbm == nil
+          dbm_id = ep.rdf_repo.dbm_id
+          db_use[dbm_id] = db_use[dbm_id] + 1
+        else
+          failing_dbm = failing_dbm + 1
+        end
+      else
+        failing_rr = failing_rr + 1
+      end
     end
 
     say "  Status summary"
     db_list.each do |dbm|
       say "    Found #{db_use[dbm.id]} SparqlEndpoints connected to Dbm #{dbm.name} type #{dbm.type} id #{dbm.id}"
     end
+    say "    ERROR **** Found #{failing_rr} SparqlEndpoints connected to missing RdfRepos" if failing_rr > 0
+    say "    ERROR **** Found #{failing_dbm} SparqlEndpoints connected to missing Dbms" if failing_dbm > 0
     say " "
 
   end
