@@ -5,31 +5,34 @@ class ApiKeysController < ApplicationController
   before_action :set_dbm, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   load_and_authorize_resource
 
-  wrap_parameters :api_key, include: [:name, :enabled]
-
   # GET /api_keys
   # GET /api_keys.json
-  def index
-    @api_keys = current_user.api_keys.where(dbm_id: params[:dbm_id])
-    ##@api_keys = []
-    ##all_keys = ApiKey.all
-    ##all_keys.each do |key|
-    ##  dbm = key.dbm
-    ##  unless dbm == nil
-    ##    @api_keys << key if key.dbm.user == current_user
-    ##  end
-    ##end
+  def index_all
+    @api_keys = []
+    all_keys = current_user.api_keys.all
+    all_keys.each do |key|
+      dbm = key.dbm
+      unless dbm == nil
+        @api_keys << key
+      end
+    end
   end
 
-  # GET /api_keys/new
+  # GET /dbms/dbm_id/api_keys
+  # GET /dbms/dbm_id/api_keys.json
+  def index
+    @api_keys = current_user.api_keys.where(dbm_id: params[:dbm_id])
+  end
+
+  # GET /dbms/dbm_id/api_keys/new
   def new
     @api_key = ApiKey.new
     @api_key.enabled = true
     @api_key.dbm = @dbm
   end
 
-  # GET /api_keys/1
-  # GET /api_keys/1.json
+  # GET /dbms/dbm_id/api_keys/1
+  # GET /dbms/dbm_id/api_keys/1.json
   def show
     respond_to do |format|
         format.html { redirect_to dbm_api_keys_path(@dbm) }
@@ -37,12 +40,12 @@ class ApiKeysController < ApplicationController
     end
   end
 
-  # GET /api_keys/1/edit
+  # GET /dbms/dbm_id/api_keys/1/edit
   def edit
   end
 
-  # POST /api_keys
-  # POST /api_keys.json
+  # POST /dbms/dbm_id/api_keys
+  # POST /dbms/dbm_id/api_keys.json
   def create
     @api_key = ApiKey.new(api_key_params)
     @api_key.name = Bazaar.object if @api_key.name.blank?
@@ -53,7 +56,7 @@ class ApiKeysController < ApplicationController
       if @api_key.save
         @api_key.add_in_dbm
         format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully created.' }
-        format.json { render :show, status: :created, location: @api_key }
+        format.json { render :show, status: :created, location: dbm_api_key_path(@dbm, @api_key) }
       else
         format.html { render :new }
         format.json { render json: @api_key.errors, status: :unprocessable_entity }
@@ -61,14 +64,14 @@ class ApiKeysController < ApplicationController
     end
   end
 
-  # PATCH/PUT /api_keys/1
-  # PATCH/PUT /api_keys/1.json
+  # PATCH/PUT /dbms/dbm_id/api_keys/1
+  # PATCH/PUT /dbms/dbm_id/api_keys/1.json
   def update
     respond_to do |format|
       if @api_key.update(api_key_params)
         @api_key.update_in_dbm
         format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully updated.' }
-        format.json { render :show, status: :ok, location: @api_key }
+        format.json { render :show, status: :ok, location: dbm_api_key_path(@dbm, @api_key) }
       else
         format.html { render :edit }
         format.json { render json: @api_key.errors, status: :unprocessable_entity }
@@ -76,8 +79,8 @@ class ApiKeysController < ApplicationController
     end
   end
 
-  # DELETE /api_keys/1
-  # DELETE /api_keys/1.json
+  # DELETE /dbms/dbm_id/api_keys/1
+  # DELETE /dbms/dbm_id/api_keys/1.json
   def destroy
     @api_key.delete_in_dbm
     @api_key.destroy

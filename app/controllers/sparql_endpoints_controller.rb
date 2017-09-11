@@ -21,6 +21,12 @@ class SparqlEndpointsController < ThingsController
   def show
     super
     @dbm_info = dbms_repo_info(@thing.rdf_repo)
+    @dbm_id = nil
+    unless @thing.rdf_repo == nil
+      unless @thing.rdf_repo.dbm == nil
+        @dbm_id = @thing.rdf_repo.dbm_id
+      end
+    end
 
   end
 
@@ -77,7 +83,10 @@ class SparqlEndpointsController < ThingsController
     dbm_id = params[:sparql_endpoint][:dbm_entries]
     dbm = Dbm.where(id: dbm_id).first
 
-    throw 'Error DBM with different user' unless dbm.user == current_user
+    unless dbm.user == current_user
+      flash[:error] = 'Error DBM with different user'
+      throw 'Error DBM with different user'
+    end
 
     # Check if quota is broken
     unless quota_dbm_room_for_new_sparql_count?(dbm)
@@ -122,7 +131,7 @@ class SparqlEndpointsController < ThingsController
       end
       respond_to do |format|
         if @thing.save
-          format.html { redirect_to thing_path(@thing), notice: create_notice }
+          format.html { redirect_to thing_path(@thing), notice: create_background_notice }
           format.json { render :show, status: :created, location: thing_path(@thing) }
         else
           flash[:error] = "Could not create SPARQL endpoint. Please try again."
