@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   #get 'api_keys/first' => 'api_keys#first'
   get 'api_keys' => 'api_keys#index_all'
-  resources :dbms do
+  resources :dbms, only: [ :index ] do
     resources :api_keys
   end
 

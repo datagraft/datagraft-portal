@@ -21,12 +21,6 @@ class SparqlEndpointsController < ThingsController
   def show
     super
     @dbm_info = dbms_repo_info(@thing.rdf_repo)
-    @dbm_id = nil
-    unless @thing.rdf_repo == nil
-      unless @thing.rdf_repo.dbm == nil
-        @dbm_id = @thing.rdf_repo.dbm_id
-      end
-    end
 
   end
 
@@ -47,7 +41,7 @@ class SparqlEndpointsController < ThingsController
     end
   end
 
-  # Receive file to be pushed to ontotext
+  # Receive file to be pushed to rdf_repo
   # POST     /:username/sparql_endpoints/:id/publish
   def publish
     ok = false
@@ -63,8 +57,8 @@ class SparqlEndpointsController < ThingsController
           rr.upload_file_to_repository(file, file_type)
           ok = true
         else
-          current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-          ok = true
+          ## current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
+          ## ok = true
         end
       rescue Exception => e
         puts "Could not upload to SPARQL endpoint."
@@ -154,6 +148,8 @@ class SparqlEndpointsController < ThingsController
         if @thing.has_rdf_repo?
           rr = @thing.rdf_repo
           rr.upload_file_to_repository(rdfFile, rdfType)
+        else
+          throw "SparqlEndpoint has no RdfRepo"
         end
       rescue Exception => e
         flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
@@ -168,15 +164,14 @@ class SparqlEndpointsController < ThingsController
       rr = @thing.rdf_repo
       # Do not delete backend datastores that exist in other sparql endpoint
       return if rr.things.all.size > 1
-      rr.delete_repository()
       rr.destroy
     else
       # Do not delete backend datastores that exist in other sparql endpoints
-      return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
+      #return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
 
-      if not @thing.uri.blank?
-        current_user.delete_ontotext_repository(@thing)
-      end
+      #if not @thing.uri.blank?
+      #  current_user.delete_ontotext_repository(@thing)
+      #end
     end
   end
 

@@ -74,7 +74,7 @@ module QuotasHelper
       users_sparql.each do |se|
         begin
           str = nil
-          str = user.get_ontotext_repository_size(se) unless se.has_rdf_repo?
+          #str = user.get_ontotext_repository_size(se) unless se.has_rdf_repo?
           unless str==nil
             puts 'Quota triples:'+str
             total_repo_sparql_triples += Integer(str)

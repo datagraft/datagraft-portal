@@ -53,13 +53,19 @@ class ApiKeysController < ApplicationController
     @api_key.dbm = @dbm
 
     respond_to do |format|
-      if @api_key.save
-        @api_key.add_in_dbm
-        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully created.' }
-        format.json { render :show, status: :created, location: dbm_api_key_path(@dbm, @api_key) }
+      if @dbm.allow_manual_api_key?
+        if @api_key.save
+          @api_key.add_in_dbm
+          format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully created.' }
+          format.json { render :show, status: :created, location: dbm_api_key_path(@dbm, @api_key) }
+        else
+          format.html { render :new }
+          format.json { render json: @api_key.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render :new }
-        format.json { render json: @api_key.errors, status: :unprocessable_entity }
+        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Manual Api key not supported by this DBM.' }
+        # json error code to be discussed. :upgrade_required, :insufficient_storage
+        format.json { render json: { error: 'Manual Api key not supported by this DBM.'}, status: :unprocessable_entity}
       end
     end
   end
@@ -68,7 +74,12 @@ class ApiKeysController < ApplicationController
   # PATCH/PUT /dbms/dbm_id/api_keys/1.json
   def update
     respond_to do |format|
-      if @api_key.update(api_key_params)
+      if @dbm.allow_manual_api_key?
+        filtered_params = api_key_params
+      else
+        filtered_params = api_key_params_no_manual_key
+      end
+      if @api_key.update(filtered_params)
         @api_key.update_in_dbm
         format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: dbm_api_key_path(@dbm, @api_key) }
@@ -91,10 +102,10 @@ class ApiKeysController < ApplicationController
   end
 
   # Return the first enabled API key
-  def first
-    key = ApiKey.first_or_create(current_user)
-    render :text => key.key
-  end
+  #def first
+  #  key = ApiKey.first_or_create(current_user)
+  #  render :text => key.key
+  #end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -109,5 +120,8 @@ class ApiKeysController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def api_key_params
       params.require(:api_key).permit(:key_pub, :key_secret, :name, :enabled)
+    end
+    def api_key_params_no_manual_key
+      params.require(:api_key).permit(:name, :enabled)
     end
 end

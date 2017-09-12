@@ -1,6 +1,7 @@
 require 'rest-client'
 
 class DbmS4 < Dbm
+
   # Non-persistent attribute for storing inputs from new form
   attr_accessor :dbm_account_username
   attr_accessor :dbm_account_password
@@ -16,7 +17,6 @@ class DbmS4 < Dbm
   def dbm_s4_params
     params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
   end
-
 
   ######
   public
@@ -59,22 +59,22 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    request = RestClient::Request.new(
-      :method => :put,
-      :url => url,
-      :payload => {
-        'repositoryID' => ep.slug,
-        'label' => ep.description,
-        'ruleset' => 'owl-horst-optimized',
-        'base-URL' => 'http://example.org/graphdb#'
-      }.to_json,
-      :headers => {
-        'Authorization' => 'Basic ' + basicToken,
-        'Content-Type' => 'application/json'
-      }
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :put,
+        :url => url,
+        :payload => {
+          'repositoryID' => ep.slug,
+          'label' => ep.description,
+          'ruleset' => 'owl-horst-optimized',
+          'base-URL' => 'http://example.org/graphdb#'
+        }.to_json,
+        :headers => {
+          'Authorization' => 'Basic ' + basicToken,
+          'Content-Type' => 'application/json'
+        }
+      )
+
       response = request.execute
       throw "Error creating new repository" unless response.code.between?(200, 299)
 
@@ -94,6 +94,7 @@ class DbmS4 < Dbm
       puts 'Error creating S4 repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error creating S4 repository'
     end
 
     puts "***** Exit DbmS4.create_repository()"
@@ -110,20 +111,20 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    request = RestClient::Request.new(
-      :method => :post,
-      :url => url,
-      :payload => {
-        'public' => public.to_s
-      }.to_json,
-      :headers => {
-        'Authorization' => 'Basic' + ' ' + basicToken,
-        'Cache-Control' => 'no-cache',
-        'Content-Type' => 'application/json'
-      }
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :post,
+        :url => url,
+        :payload => {
+          'public' => public.to_s
+        }.to_json,
+        :headers => {
+          'Authorization' => 'Basic' + ' ' + basicToken,
+          'Cache-Control' => 'no-cache',
+          'Content-Type' => 'application/json'
+        }
+      )
+
       response = request.execute
       throw "Error updating S4 repository public property" unless response.code.between?(200, 299)
 
@@ -134,6 +135,7 @@ class DbmS4 < Dbm
       puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
     end
 
     puts "***** Exit DbmS4.set_repository_public()"
@@ -227,16 +229,16 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    request = RestClient::Request.new(
-      :method => :delete,
-      :url => url,
-      :headers => {
-        'Authorization' => 'Basic ' + basicToken,
-        'Content-Type' => 'application/json'
-      }
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :delete,
+        :url => url,
+        :headers => {
+          'Authorization' => 'Basic ' + basicToken,
+          'Content-Type' => 'application/json'
+        }
+      )
+
       response = request.execute
       throw "Error deleting S4 repository" unless response.code.between?(200, 299)
 
@@ -246,8 +248,21 @@ class DbmS4 < Dbm
       puts 'Error deleting S4 repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error deleting S4 repository'
     end
     puts "***** Exit DbmS4.delete_repository()"
+  end
+
+  private
+  # Delete all RDF repositories owned by this dbm called by before_destroy
+  def unreg_before_destroy()
+    puts "***** Enter DbmS4.unreg_before_destroy(#{name})"
+    # Remove all rdf_repos referencing this dbm
+    rdf_repos.all.each do |rr|
+      rr.destroy
+    end
+
+    puts "***** Exit DbmS4.unreg_before_destroy()"
   end
 
 end

@@ -22,6 +22,21 @@ class SparqlEndpoint < Thing
     rdf_repo != nil
   end
 
+  def dbm
+    res = nil
+    unless rdf_repo == nil
+      res = rdf_repo.dbm
+    end
+    return res
+  end
+
+  def dbm_id
+    res = nil
+    d = dbm
+    res = d.id unless d == nil
+    return res
+  end
+
   def license
     metadata["license"] if metadata
   end

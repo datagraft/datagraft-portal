@@ -143,6 +143,7 @@ class DbmOntotextLeg < Dbm
       puts 'Error deleting DbmOntotextLeg repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error deleting DbmOntotextLeg repository'
     end
     puts "***** Exit DbmOntotextLeg.delete_repository()"
   end
@@ -263,6 +264,7 @@ class DbmOntotextLeg < Dbm
       puts 'Error getting Ontotext DB ID'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error getting Ontotext DB ID'
     end
   end
 
@@ -293,6 +295,7 @@ class DbmOntotextLeg < Dbm
       puts 'Error updating Ontotext repository public property'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error updating Ontotext repository public property'
     end
   end
 
@@ -370,6 +373,7 @@ class DbmOntotextLeg < Dbm
       puts 'Error creating Ontotext repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error creating Ontotext repository'
     end
   end
 
@@ -377,10 +381,6 @@ class DbmOntotextLeg < Dbm
 
 
   # Methods ported from api_key.rb
-  def get_key_without_secret(key)   #Checked
-    r = /^(.+):/.match(key)
-    r ? r[1] : nil
-  end
 
   def create_new_key()     #Checked
     ont_key = new_ontotext_api_key
@@ -461,6 +461,17 @@ class DbmOntotextLeg < Dbm
       }
   end
 
+  private
+  # Delete all RDF repositories owned by this dbm called by before_destroy
+  def unreg_before_destroy()
+    puts "***** Enter DbmOntotextLeg.unreg_before_destroy(#{name})"
+    # Remove all rdf_repos referencing this dbm
+    rdf_repos.all.each do |rr|
+      rr.destroy
+    end
+
+    puts "***** Exit DbmOntotextLeg.unreg_before_destroy()"
+  end
 
 
 end

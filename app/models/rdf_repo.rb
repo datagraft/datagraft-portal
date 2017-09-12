@@ -3,6 +3,7 @@ require 'rest-client'
 class RdfRepo < ApplicationRecord
   belongs_to :dbm
   has_many :things
+  before_destroy :delete_repository
 
   ######
   public
@@ -52,17 +53,17 @@ class RdfRepo < ApplicationRecord
       'text/plain'
     end
 
-    request = RestClient::Request.new(
-      :method => :post,
-      :url => url,
-      :payload => file.read,
-      :headers => {
-        'Authorization' => 'Basic ' + basicToken,
-        'Content-Type' => mime_type
-      }
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :post,
+        :url => url,
+        :payload => file.read,
+        :headers => {
+          'Authorization' => 'Basic ' + basicToken,
+          'Content-Type' => mime_type
+        }
+      )
+
       response = request.execute
       throw "Error uploading file to RDF repository" unless response.code.between?(200, 299)
       puts file.inspect
@@ -72,6 +73,7 @@ class RdfRepo < ApplicationRecord
       puts 'Error uploading file to RDF repository'
       puts e.message
       puts e.backtrace.inspect
+      throw "Error uploading file to RDF repository"
     end
 
     puts "***** Exit RdfRepo.upload_file_to_repository()"
@@ -105,13 +107,13 @@ class RdfRepo < ApplicationRecord
       }
     end
 
-    request = RestClient::Request.new(
-      :method => :get,
-      :url => url,
-      :headers => headers
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => headers
+      )
+
       response = request.execute
       throw "Error querying RDF repository" unless response.code.between?(200, 299)
 
@@ -120,6 +122,7 @@ class RdfRepo < ApplicationRecord
       puts 'Error querying RDF repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error querying RDF repository'
     end
 
     puts "***** Exit RdfRepo.query_repository()"
@@ -129,9 +132,9 @@ class RdfRepo < ApplicationRecord
 
   # Update public property of RDF property
   def update_repository_public(public)
-    puts "***** Enter RdfRepo.update_ontotext_repository_public(#{name})"
+    puts "***** Enter RdfRepo.update_repository_public(#{name})"
     dbm.update_repository_public(self, public)
-    puts "***** Exit RdfRepo.update_ontotext_repository_public()"
+    puts "***** Exit RdfRepo.update_repository_public()"
   end
 
 
@@ -162,13 +165,13 @@ class RdfRepo < ApplicationRecord
       }
     end
 
-    request = RestClient::Request.new(
-      :method => :get,
-      :url => url,
-      :headers => headers
-    )
-
     begin
+      request = RestClient::Request.new(
+        :method => :get,
+        :url => url,
+        :headers => headers
+      )
+
       response = request.execute
       throw "Error querying RDF repository" unless response.code.between?(200, 299)
 
@@ -177,6 +180,7 @@ class RdfRepo < ApplicationRecord
       puts 'Error querying RDF repository'
       puts e.message
       puts e.backtrace.inspect
+      throw 'Error querying RDF repository'
     end
 
     triples_count = JSON.parse(response.body)["results"]["bindings"].first["count"]["value"].to_i
@@ -188,13 +192,6 @@ class RdfRepo < ApplicationRecord
     return triples_count
   end
 
-
-  # Delete RDF repository
-  def delete_repository()
-    puts "***** Enter RdfRepo.delete_repository(#{name})"
-    dbm.delete_repository(self)
-    puts "***** Exit RdfRepo.delete_repository()"
-  end
 
 
   def has_configuration?(key)
@@ -246,5 +243,22 @@ class RdfRepo < ApplicationRecord
   def touch_configuration!
     self.configuration = {} if not configuration.is_a?(Hash)
   end
+
+  private
+  # Delete RDF repository called by before_destroy
+  def delete_repository()
+    puts "***** Enter RdfRepo.delete_repository(#{name})"
+    # Remove all things referencing this rr
+    things.all.each do |thing|
+      thing.rdf_repo = nil  # Avoid ecursive calls to delete_repository
+      thing.save
+      thing.delete
+    end
+
+    dbm.delete_repository(self)
+
+    puts "***** Exit RdfRepo.delete_repository()"
+  end
+
 
 end

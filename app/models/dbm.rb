@@ -1,4 +1,6 @@
 class Dbm < ApplicationRecord
+  before_destroy :unreg_before_destroy  # This is important to have available ApiKeys when deleting the repos
+
   belongs_to :user
   has_many :dbm_accounts, dependent: :destroy
   has_many :api_keys, dependent: :destroy
@@ -6,15 +8,6 @@ class Dbm < ApplicationRecord
 
   cattr_accessor :supported_repository_types
 
-
-  def delete_dbm()
-  end
-
-  def create_dbm(dbm_account, api_key)
-  end
-
-  def update_account(dbm_account)
-  end
 
 
   # Create and add new API key to the DBM
@@ -81,17 +74,25 @@ class Dbm < ApplicationRecord
   end
 
   def name
-    get_configuration("mock_name")
+    res = get_configuration("name")
+    res = get_configuration("mock_name") if res == nil
+    return res
   end
 
   def name=(val)
     touch_configuration!
-    configuration["mock_name"] = val
+    configuration["name"] = val
   end
 
   protected
   def touch_configuration!
     self.configuration = {} if not configuration.is_a?(Hash)
+  end
+
+  private
+  def unreg_before_destroy()
+    puts "***** Enter Dbm.unreg_before_destroy(#{name})"
+    puts "***** Exit Dbm.unreg_before_destroy()"
   end
 
 end
