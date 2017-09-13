@@ -69,7 +69,7 @@ class RdfRepo < ApplicationRecord
       puts file.inspect
       puts file_type.inspect
 
-    rescue Exception => e
+    rescue => e
       puts 'Error uploading file to RDF repository'
       puts e.message
       puts e.backtrace.inspect
@@ -118,7 +118,7 @@ class RdfRepo < ApplicationRecord
       throw "Error querying RDF repository" unless response.code.between?(200, 299)
 
       puts response.inspect
-    rescue Exception => e
+    rescue => e
       puts 'Error querying RDF repository'
       puts e.message
       puts e.backtrace.inspect
@@ -176,7 +176,7 @@ class RdfRepo < ApplicationRecord
       throw "Error querying RDF repository" unless response.code.between?(200, 299)
 
       puts response.inspect
-    rescue Exception => e
+    rescue => e
       puts 'Error querying RDF repository'
       puts e.message
       puts e.backtrace.inspect

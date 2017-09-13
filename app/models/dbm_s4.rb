@@ -89,7 +89,7 @@ class DbmS4 < Dbm
       end
 
       ep.repo_successfully_created
-    rescue Exception => e
+    rescue => e
       ep.error_occured_creating_repo
       puts 'Error creating S4 repository'
       puts e.message
@@ -131,7 +131,7 @@ class DbmS4 < Dbm
       rdf_repo.is_public = public
       rdf_repo.save
 
-    rescue Exception => e
+    rescue => e
       puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
       puts e.message
       puts e.backtrace.inspect
@@ -244,7 +244,7 @@ class DbmS4 < Dbm
 
       rdf_repo.repo_hash = {repo_id: 'deleted' }
       rdf_repo.uri = 'Deleted URI...'
-    rescue Exception => e
+    rescue => e
       puts 'Error deleting S4 repository'
       puts e.message
       puts e.backtrace.inspect

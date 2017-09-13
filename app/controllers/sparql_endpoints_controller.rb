@@ -60,7 +60,7 @@ class SparqlEndpointsController < ThingsController
           ## current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
           ## ok = true
         end
-      rescue Exception => e
+      rescue => e
         puts "Could not upload to SPARQL endpoint."
       end
     end
@@ -116,7 +116,7 @@ class SparqlEndpointsController < ThingsController
           else
             flash[:warning] = "No triple file provided."
           end
-        rescue Exception => error
+        rescue => error
           flash[:error] = error.message
         end
         @upwizard.destroy if @upwizard
@@ -151,7 +151,7 @@ class SparqlEndpointsController < ThingsController
         else
           throw "SparqlEndpoint has no RdfRepo"
         end
-      rescue Exception => e
+      rescue => e
         flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
       end
     end
@@ -196,7 +196,7 @@ class SparqlEndpointsController < ThingsController
 
     begin
       @query_result = @query.execute_on_sparql_endpoint(@thing, current_user)
-    rescue Exception => error
+    rescue => error
       flash[:error] = error.message
       @query_result = {
         headers: [],

@@ -16,7 +16,7 @@ module SparqlEndpointsHelper
       else
         return '0'
       end
-    rescue Exception => e
+    rescue => e
       puts 'Error getting repository size'
       puts e.message
       puts e.backtrace.inspect

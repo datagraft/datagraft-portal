@@ -79,7 +79,7 @@ module QuotasHelper
             puts 'Quota triples:'+str
             total_repo_sparql_triples += Integer(str)
           end
-        rescue Exception => e
+        rescue => e
           puts 'Exception when reading triple size :' + e.message
           str = se.cached_size
           puts 'Cached quota triples:'+str

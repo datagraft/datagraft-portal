@@ -32,7 +32,7 @@ class Thing < ApplicationRecord
     begin
       reset_num_assets(self, -1)
       update_asset_version_metric(self.type)
-    rescue Exception => e
+    rescue => e
       puts 'Error decrementing num_assets metric'
       puts e.message
       puts e.backtrace.inspect
@@ -44,7 +44,7 @@ class Thing < ApplicationRecord
     begin
       reset_num_assets(self, 0)
       update_asset_version_metric(self.type)
-    rescue Exception => e
+    rescue => e
       puts 'Error incrementing num_assets metric'
       puts e.message
       puts e.backtrace.inspect
@@ -87,7 +87,7 @@ class Thing < ApplicationRecord
             # This procedure is needed to force refile to copy the attachement
             tmp_file = Refile.store.upload(original.file)
             copy.update(file_id: tmp_file.id)
-          rescue Exception => e
+          rescue => e
             puts 'Fork cannot copy attachement. Cause:<'+e.message+'>'
           end
         end

@@ -54,7 +54,7 @@ class UpwizardsController < ApplicationController
       end
       if task == 'sparql'
         known_task = true
-        quota_full = true unless quota_user_room_for_new_sparql_count?(current_user) 
+        quota_full = true unless quota_user_room_for_new_sparql_count?(current_user)
       end
 
       if quota_full
@@ -87,7 +87,7 @@ class UpwizardsController < ApplicationController
             format.json { render :show_json, status: :ok }
           end
 
-        rescue Exception => e
+        rescue => e
           redirect_error_to_dashboard("Wizard create failed.", e)
         end
       else
@@ -109,7 +109,7 @@ class UpwizardsController < ApplicationController
       @upwizard.destroy
       flash[:notice] = "Wizard #{params[:wiz_id]} is deleted"
       redirect_to upwizard_index_path
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -127,7 +127,7 @@ class UpwizardsController < ApplicationController
       @upwizard = Upwizard.find(params[:wiz_id])
       authorize! :read, @upwizard
       process_state
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -147,7 +147,7 @@ class UpwizardsController < ApplicationController
         format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
         format.json { render :show_json, status: :ok }
       end
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -163,7 +163,7 @@ class UpwizardsController < ApplicationController
     begin
       @upwizard = Upwizard.find(params[:wiz_id])
       authorize! :read, @upwizard
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -185,7 +185,7 @@ class UpwizardsController < ApplicationController
       copy_additional_fileinfo
       @upwizard.update_attributes(upwizard_params)
       process_state
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -208,7 +208,7 @@ class UpwizardsController < ApplicationController
       else
         redirect_to location, status: :moved_permanently
       end
-    rescue Exception => e
+    rescue => e
       unless (@upwizard)
         puts "Wizard #{params[:wiz_id]} does not exist!"
       end
@@ -452,7 +452,7 @@ class UpwizardsController < ApplicationController
       else
         ret[:error_txt] = "Selected filestore with no file attached"
       end
-    rescue Exception => e
+    rescue => e
       ret[:error_txt] = 'Error fetching file with ID ' + thing_id.to_s
       ret[:e] = e
     end
@@ -553,7 +553,7 @@ class UpwizardsController < ApplicationController
               :only_path  => true
               }.merge options
             redirect_to url_for(options)
-          rescue Exception => e
+          rescue => e
             puts 'Error transforming file ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(pipe)'  if @upwizard.get_current_file && transformation
             jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
@@ -573,14 +573,14 @@ class UpwizardsController < ApplicationController
               }.merge options
 
             redirect_to url_for(options)
-          rescue Exception => e
+          rescue => e
             puts 'Error transforming file with ID ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(graft)' if @upwizard.get_current_file && transformation
             jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
         else
           redirect_error_to_dashboard('This wizard does not support <'+@upwizard.task+'>')
         end
-      rescue Exception => e
+      rescue => e
         puts 'Error retrieving transformation'
         if (@upwizard)
           puts 'Transformation ID: ' + @upwizard.radio_thing_id.to_s if @upwizard.radio_thing_id
@@ -607,7 +607,7 @@ class UpwizardsController < ApplicationController
         @path_back = wizard_path(:transform)
 
         render_wizard
-      rescue Exception => e
+      rescue => e
         if (@upwizard)
           puts 'Transformation ID: ' + @upwizard.radio_thing_id.to_s if @upwizard.radio_thing_id
         else
@@ -657,7 +657,7 @@ class UpwizardsController < ApplicationController
               format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
               format.json { render :show_json, status: :ok }
             end
-          rescue Exception => e
+          rescue => e
             puts 'Error transforming file ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(pipe)'  if @upwizard.get_current_file && transformation
             jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
@@ -670,14 +670,14 @@ class UpwizardsController < ApplicationController
               format.html { redirect_error_to_dashboard('Error URL not supported for HTML.') }
               format.json { render :show_json, status: :ok }
             end
-          rescue Exception => e
+          rescue => e
             puts 'Error transforming file with ID ' + @upwizard.get_current_file.id.to_s + 'with transformation ' + transformation.id.to_s + '(graft)' if @upwizard.get_current_file && transformation
             jump_error_to_state_and_render("Error transforming file.", :transform, e)
           end
         else
           redirect_error_to_dashboard('This wizard does not support <'+@upwizard.task+'>')
         end
-      rescue Exception => e
+      rescue => e
         puts 'Error retrieving transformation'
         if (@upwizard)
           puts 'Transformation ID: ' + transformation_id.to_s if transformation_id

@@ -71,7 +71,7 @@ class TransformationsController < ThingsController
       begin
         out_file = @thing.transform(@thing.file, type)
         ok = true
-      rescue Exception => e
+      rescue => e
         puts "Could transform uploaded file ... #{e}"
       end
     elsif params["file_id"] != nil
@@ -79,7 +79,7 @@ class TransformationsController < ThingsController
         in_file = current_user.filestores.friendly.find(params['file_id'])
         out_file = @thing.transform(in_file.file, type)
         ok = true
-      rescue Exception => e
+      rescue => e
         puts "Could transform file_id ... #{e}"
       end
     end

@@ -44,7 +44,7 @@ class QueriesController < ThingsController
 
       begin
         @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
-      rescue Exception => error
+      rescue => error
         if error.class.to_s.eql?("Faraday::TimeoutError")
           timeout_error = true
         end

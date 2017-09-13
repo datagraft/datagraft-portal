@@ -139,7 +139,7 @@ class DbmOntotextLeg < Dbm
 
       rdf_repo.repo_hash = {repo_id: 'deleted' }
       rdf_repo.uri = 'Deleted URI...'
-    rescue Exception => e
+    rescue => e
       puts 'Error deleting DbmOntotextLeg repository'
       puts e.message
       puts e.backtrace.inspect
@@ -260,7 +260,7 @@ class DbmOntotextLeg < Dbm
 
       return json_resp[0]['db-id']
 
-    rescue Exception => e
+    rescue => e
       puts 'Error getting Ontotext DB ID'
       puts e.message
       puts e.backtrace.inspect
@@ -291,7 +291,7 @@ class DbmOntotextLeg < Dbm
 
       return resp.body
 
-    rescue Exception => e
+    rescue => e
       puts 'Error updating Ontotext repository public property'
       puts e.message
       puts e.backtrace.inspect
@@ -368,7 +368,7 @@ class DbmOntotextLeg < Dbm
 
       return json_repository['access-url']
 
-    rescue Exception => e
+    rescue => e
       thing.error_occured_creating_repo
       puts 'Error creating Ontotext repository'
       puts e.message
