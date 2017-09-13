@@ -110,17 +110,23 @@ class Query < Thing
   # Execute query on SPARQL endpoint
   def execute_on_sparql_endpoint(sparql_endpoint, user, timeout = 180)
     if sparql_endpoint.has_rdf_repo?
-      res = sparql_endpoint.rdf_repo.query_repository(query_string)
-      return {
-        headers: [],
-        results: []
-      } if res == nil
+      begin
+        res = sparql_endpoint.rdf_repo.query_repository(query_string)
 
-      query_res = JSON.parse(res.body)
-      return {
-        headers: query_res["head"]["vars"],
-        results: query_res["results"]["bindings"]
-      }
+        query_res = JSON.parse(res.body)
+        return {
+          headers: query_res["head"]["vars"],
+          results: query_res["results"]["bindings"]
+        }
+      rescue => e
+        puts 'Error querying RDF repository'
+        puts e.message
+        puts e.backtrace.inspect
+        return {
+          headers: [],
+          results: []
+        }
+      end
     else
       return {
         headers: [],
@@ -128,5 +134,4 @@ class Query < Thing
       }
     end
   end
-
 end
