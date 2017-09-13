@@ -73,14 +73,22 @@ class ApiKeysController < ApplicationController
   # PATCH/PUT /dbms/dbm_id/api_keys/1
   # PATCH/PUT /dbms/dbm_id/api_keys/1.json
   def update
+    ok = true
+    if @dbm.allow_manual_api_key?
+      filtered_params = api_key_params
+    else
+      filtered_params = api_key_params_no_manual_key
+    end
+
+    begin
+      ok = @api_key.update(filtered_params)
+      @api_key.update_in_dbm if ok
+    rescue => e
+      ok = false
+    end
+
     respond_to do |format|
-      if @dbm.allow_manual_api_key?
-        filtered_params = api_key_params
-      else
-        filtered_params = api_key_params_no_manual_key
-      end
-      if @api_key.update(filtered_params)
-        @api_key.update_in_dbm
+      if ok
         format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: dbm_api_key_path(@dbm, @api_key) }
       else
@@ -93,11 +101,22 @@ class ApiKeysController < ApplicationController
   # DELETE /dbms/dbm_id/api_keys/1
   # DELETE /dbms/dbm_id/api_keys/1.json
   def destroy
-    @api_key.delete_in_dbm
-    @api_key.destroy
+    ok = true
+    begin
+      @api_key.delete_in_dbm
+      @api_key.destroy
+    rescue => e
+      ok = false
+    end
+
     respond_to do |format|
-      format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully destroyed.' }
-      format.json { head :no_content }
+      if ok
+        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Failed to delete Api key.' }
+        format.json { head :no_content, status: :unprocessable_entity }
+      end
     end
   end
 

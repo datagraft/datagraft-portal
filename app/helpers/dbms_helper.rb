@@ -4,7 +4,7 @@ module DbmsHelper
   def dbms_descriptive_name(dbm)
 
     if dbm == nil
-      res = "DBM(Old OntoText)"
+      res = "No database"
     else
       res = "DBM(#{dbm.name})"
     end

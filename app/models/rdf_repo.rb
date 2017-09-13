@@ -53,28 +53,21 @@ class RdfRepo < ApplicationRecord
       'text/plain'
     end
 
-    begin
-      request = RestClient::Request.new(
-        :method => :post,
-        :url => url,
-        :payload => file.read,
-        :headers => {
-          'Authorization' => 'Basic ' + basicToken,
-          'Content-Type' => mime_type
-        }
-      )
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => file.read,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => mime_type
+      }
+    )
 
-      response = request.execute
-      throw "Error uploading file to RDF repository" unless response.code.between?(200, 299)
-      puts file.inspect
-      puts file_type.inspect
+    response = request.execute
+    raise "Error uploading file to RDF repository" unless response.code.between?(200, 299)
+    puts file.inspect
+    puts file_type.inspect
 
-    rescue => e
-      puts 'Error uploading file to RDF repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw "Error uploading file to RDF repository"
-    end
 
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
@@ -107,23 +100,16 @@ class RdfRepo < ApplicationRecord
       }
     end
 
-    begin
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => headers
-      )
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
 
-      response = request.execute
-      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+    response = request.execute
+    raise "Error querying RDF repository" unless response.code.between?(200, 299)
 
-      puts response.inspect
-    rescue => e
-      puts 'Error querying RDF repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error querying RDF repository'
-    end
+    puts response.inspect
 
     puts "***** Exit RdfRepo.query_repository()"
     return response
@@ -141,55 +127,27 @@ class RdfRepo < ApplicationRecord
   # Get RDF repository size
   def get_repository_size()
     puts "***** Enter RdfRepo.get_repository_size(#{name})"
-    url = self.uri
     query_string = "SELECT (count(*) as ?count) WHERE { ?s ?p ?o . }"
 
-    # User authentication required for private RDF repositories (SPARQL endpoints)
-    if !self.is_public
-      api_key = self.dbm.first_enabled_key
-      basicToken = Base64.strict_encode64(api_key.key)
-
-      headers = {
-        :params => {
-          'query' => query_string
-        },
-        'Authorization' => 'Basic ' + basicToken,
-        'Accept' => 'application/sparql-results+json'
-      }
-    else
-      headers = {
-        :params => {
-          'query' => query_string
-        },
-        'Accept' => 'application/sparql-results+json'
-      }
-    end
-
     begin
-      request = RestClient::Request.new(
-        :method => :get,
-        :url => url,
-        :headers => headers
-      )
-
-      response = request.execute
-      throw "Error querying RDF repository" unless response.code.between?(200, 299)
+      response = query_repository(query_string)
 
       puts response.inspect
+      triples_count = JSON.parse(response.body)["results"]["bindings"].first["count"]["value"].to_i
+      self.cached_size = triples_count ||= self.cached_size
+      self.save
+
     rescue => e
-      puts 'Error querying RDF repository'
+      puts 'Error querying repo size - using cached value'
       puts e.message
       puts e.backtrace.inspect
-      throw 'Error querying RDF repository'
     end
 
-    triples_count = JSON.parse(response.body)["results"]["bindings"].first["count"]["value"].to_i
-
-    self.cached_size = triples_count ||= self.cached_size
-    self.save
-
     puts "***** Exit RdfRepo.get_repository_size()"
-    return triples_count
+
+    res = self.cached_size
+    res = 0 if res == nil
+    return res
   end
 
 
@@ -252,10 +210,9 @@ class RdfRepo < ApplicationRecord
     things.all.each do |thing|
       thing.rdf_repo = nil  # Avoid ecursive calls to delete_repository
       thing.save
-      thing.delete
+      thing.destroy
     end
-
-    dbm.delete_repository(self)
+    dbm.delete_repository(self) unless self.uri == nil
 
     puts "***** Exit RdfRepo.delete_repository()"
   end

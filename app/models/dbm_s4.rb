@@ -59,42 +59,32 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    begin
-      request = RestClient::Request.new(
-        :method => :put,
-        :url => url,
-        :payload => {
-          'repositoryID' => ep.slug,
-          'label' => ep.description,
-          'ruleset' => 'owl-horst-optimized',
-          'base-URL' => 'http://example.org/graphdb#'
-        }.to_json,
-        :headers => {
-          'Authorization' => 'Basic ' + basicToken,
-          'Content-Type' => 'application/json'
-        }
-      )
+    request = RestClient::Request.new(
+      :method => :put,
+      :url => url,
+      :payload => {
+        'repositoryID' => ep.slug,
+        'label' => ep.description,
+        'ruleset' => 'owl-horst-optimized',
+        'base-URL' => 'http://example.org/graphdb#'
+      }.to_json,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => 'application/json'
+      }
+    )
 
-      response = request.execute
-      throw "Error creating new repository" unless response.code.between?(200, 299)
+    response = request.execute
+    raise "Error creating new repository" unless response.code.between?(200, 299)
 
-      rdf_repo.repo_hash = {repo_id: "Dummy repo_id #{type}:#{name}:#{rdf_repo.name}" }
-      rdf_repo.is_public = ep.public
-      rdf_repo.uri = url + '/' + ep.slug
-      ep.uri = rdf_repo.uri
+    rdf_repo.repo_hash = {repo_id: "DbmS4 repo_id #{type}:#{name}:#{rdf_repo.name}" }
+    rdf_repo.is_public = ep.public
+    rdf_repo.uri = url + '/' + ep.slug
+    ep.uri = rdf_repo.uri
 
-      # By default all newly created S4 repositories are private
-      if rdf_repo.is_public
-        update_repository_public(rdf_repo, rdf_repo.is_public)
-      end
-
-      ep.repo_successfully_created
-    rescue => e
-      ep.error_occured_creating_repo
-      puts 'Error creating S4 repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error creating S4 repository'
+    # By default all newly created S4 repositories are private
+    if rdf_repo.is_public
+      update_repository_public(rdf_repo, rdf_repo.is_public)
     end
 
     puts "***** Exit DbmS4.create_repository()"
@@ -111,32 +101,24 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    begin
-      request = RestClient::Request.new(
-        :method => :post,
-        :url => url,
-        :payload => {
-          'public' => public.to_s
-        }.to_json,
-        :headers => {
-          'Authorization' => 'Basic' + ' ' + basicToken,
-          'Cache-Control' => 'no-cache',
-          'Content-Type' => 'application/json'
-        }
-      )
+    request = RestClient::Request.new(
+      :method => :post,
+      :url => url,
+      :payload => {
+        'public' => public.to_s
+      }.to_json,
+      :headers => {
+        'Authorization' => 'Basic' + ' ' + basicToken,
+        'Cache-Control' => 'no-cache',
+        'Content-Type' => 'application/json'
+      }
+    )
 
-      response = request.execute
-      throw "Error updating S4 repository public property" unless response.code.between?(200, 299)
+    response = request.execute
+    raise "Error updating S4 repository public property" unless response.code.between?(200, 299)
 
-      rdf_repo.is_public = public
-      rdf_repo.save
-
-    rescue => e
-      puts 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error updating S4 repository public property to ' + rdf_repo.is_public.to_s + '.'
-    end
+    rdf_repo.is_public = public
+    rdf_repo.save
 
     puts "***** Exit DbmS4.set_repository_public()"
   end
@@ -229,27 +211,21 @@ class DbmS4 < Dbm
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
-    begin
-      request = RestClient::Request.new(
-        :method => :delete,
-        :url => url,
-        :headers => {
-          'Authorization' => 'Basic ' + basicToken,
-          'Content-Type' => 'application/json'
-        }
-      )
+    request = RestClient::Request.new(
+      :method => :delete,
+      :url => url,
+      :headers => {
+        'Authorization' => 'Basic ' + basicToken,
+        'Content-Type' => 'application/json'
+      }
+    )
 
-      response = request.execute
-      throw "Error deleting S4 repository" unless response.code.between?(200, 299)
+    response = request.execute
+    raise "Error deleting S4 repository" unless response.code.between?(200, 299)
 
-      rdf_repo.repo_hash = {repo_id: 'deleted' }
-      rdf_repo.uri = 'Deleted URI...'
-    rescue => e
-      puts 'Error deleting S4 repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error deleting S4 repository'
-    end
+    rdf_repo.repo_hash = {repo_id: 'deleted' }
+    rdf_repo.uri = 'Deleted URI...'
+
     puts "***** Exit DbmS4.delete_repository()"
   end
 

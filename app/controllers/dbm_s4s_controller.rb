@@ -76,10 +76,23 @@ class DbmS4sController < DbmsController
 
   # DELETE /dbm_s4s/1
   def destroy
-    @dbm_s4.destroy
+    ok = false
+    begin
+      @dbm_s4.destroy
+      ok = true
+    rescue => e
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = e.message
+    end
     respond_to do |format|
-      format.html { redirect_to dbm_s4s_url, notice: 'DBM S4 was successfully destroyed.' }
-      format.json { head :no_content }
+      if ok
+        format.html { redirect_to dbm_s4s_url, notice: 'DBM S4 was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to dbm_s4s_url }
+        format.json { head :no_content, status: 'Failed to delete the database' }
+      end
     end
   end
 

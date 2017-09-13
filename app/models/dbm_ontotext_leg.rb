@@ -17,7 +17,7 @@ class DbmOntotextLeg < Dbm
   # This is a hook if dbm needs to synchronize
   def key_added(api_key)
     puts "***** DbmOntotextLeg::key_added()"
-    throw "Manual keys are not supported for #{name}"
+    raise "Manual keys are not supported for #{name}"
   end
 
 
@@ -66,11 +66,10 @@ class DbmOntotextLeg < Dbm
   def create_repository(rdf_repo, ep)
     puts "***** Enter DbmOntotextLeg.create_repository(#{name})"
     uri = new_ontotext_repository(ep)
-    rdf_repo.repo_hash = {repo_id: "Dummy repo_id #{type}:#{name}:#{rdf_repo.name}" }
+    rdf_repo.repo_hash = {repo_id: "DbmOntotext repo_id #{type}:#{name}:#{rdf_repo.name}" }
     rdf_repo.is_public = ep.public
     rdf_repo.uri = uri
     ep.uri = uri
-    ep.repo_successfully_created
 
     puts "***** Exit DbmOntotextLeg.create_repository()"
   end
@@ -80,7 +79,6 @@ class DbmOntotextLeg < Dbm
     puts "***** Enter DbmOntotextLeg.set_repository_public(#{name})"
     update_ontotext_repository_public(rdf_repo, public)
 
-    puts rdf_repo.inspect
     puts public
 
     rdf_repo.is_public = public
@@ -133,18 +131,13 @@ class DbmOntotextLeg < Dbm
   # Delete OntotextLegacy repository
   def delete_repository(rdf_repo)
     puts "***** Enter DbmOntotextLeg.delete_repository(#{name})"
-    begin
-      connect = ontotext_connexion(true)
-      connect.delete rdf_repo.uri
 
-      rdf_repo.repo_hash = {repo_id: 'deleted' }
-      rdf_repo.uri = 'Deleted URI...'
-    rescue => e
-      puts 'Error deleting DbmOntotextLeg repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error deleting DbmOntotextLeg repository'
-    end
+    connect = ontotext_connexion(true)
+    connect.delete rdf_repo.uri
+
+    rdf_repo.repo_hash = {repo_id: 'deleted' }
+    rdf_repo.uri = 'Deleted URI...'
+
     puts "***** Exit DbmOntotextLeg.delete_repository()"
   end
 
@@ -165,7 +158,6 @@ class DbmOntotextLeg < Dbm
       req.url '/dapaas-management-services/api/api_keys'
     end
 
-    # throw lol.status
   end
 
   # Create new ontotext api key
@@ -178,7 +170,7 @@ class DbmOntotextLeg < Dbm
       req.headers['Content-Type'] = 'application/json'
     end
 
-    throw "Unable to create the API key" unless resp.status.between?(200, 299)
+    raise "Unable to create the API key" unless resp.status.between?(200, 299)
 
     JSON.parse resp.body
   end
@@ -245,66 +237,46 @@ class DbmOntotextLeg < Dbm
 
   # Get Ontotext DB ID belonging to the Ontotext user account
   def get_ontotext_db_id(ontotext_user_id)       #Checked
-    begin
-      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'users/'+ontotext_user_id+'/db'
-      connect = Faraday.new
-      resp = connect.get do |req|
-        req.url url
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.options.timeout = 720
-      end
 
-      throw ("Unable to get Ontotext DB ID - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
-
-      json_resp = JSON.parse(resp.body)
-
-      return json_resp[0]['db-id']
-
-    rescue => e
-      puts 'Error getting Ontotext DB ID'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error getting Ontotext DB ID'
+    url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'users/'+ontotext_user_id+'/db'
+    connect = Faraday.new
+    resp = connect.get do |req|
+      req.url url
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.options.timeout = 720
     end
+
+    raise ("Unable to get Ontotext DB ID - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
+
+    json_resp = JSON.parse(resp.body)
+
+    return json_resp[0]['db-id']
+
   end
 
 
   # Update the public property of the repository
-  def update_ontotext_repository_public(rr, public)   #TODO
-    begin
-      user_id = decode_ontotext_user_id(rr)
-      db_id = get_ontotext_db_id(user_id)
-      repository_id = rr.uri.split('/')[6]
-      url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+db_id+'/repository/'+repository_id
-      body = '{"public": ' + '"' + public.to_s + '"}'
+  def update_ontotext_repository_public(rr, public)
 
-      connect = Faraday.new
-      resp = connect.post do |req|
-        req.url url
-        req.headers['Content-Type'] = 'application/json'
-        req.body = body
-        req.options.timeout = 720
-      end
+    user_id = decode_ontotext_user_id(rr)
+    db_id = get_ontotext_db_id(user_id)
+    repository_id = rr.uri.split('/')[6]
+    url = ENV['DBAAS_COORDINATOR_ENDPOINT']+'db/'+db_id+'/repository/'+repository_id
+    body = '{"public": ' + '"' + public.to_s + '"}'
 
-      throw ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless
-      resp.status.between?(200, 299)
-
-      return resp.body
-
-    rescue => e
-      puts 'Error updating Ontotext repository public property'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error updating Ontotext repository public property'
+    connect = Faraday.new
+    resp = connect.post do |req|
+      req.url url
+      req.headers['Content-Type'] = 'application/json'
+      req.body = body
+      req.options.timeout = 720
     end
+
+    raise ("Unable to update Ontotext repository public property - " + resp.body + " - " + resp.status) unless resp.status.between?(200, 299)
+
+    return resp.body
+
   end
-
-
-
-
-
-
-
 
   # Create new ontotext repository
   def new_ontotext_repository(thing)     #Checked
@@ -324,10 +296,9 @@ class DbmOntotextLeg < Dbm
           'dct:modified'=> today,
           'dct:issued' => today
           }.to_json
-        #throw req.body
       end
 
-      throw ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status.to_s) unless resp_dataset.status.between?(200, 299)
+      raise ("Unable to create the Ontotext Dataset - " + resp_dataset.body + " - " + resp_dataset.status.to_s) unless resp_dataset.status.between?(200, 299)
 
       json_dataset = JSON.parse(resp_dataset.body)
 
@@ -347,7 +318,7 @@ class DbmOntotextLeg < Dbm
           }
       end
 
-      throw ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
+      raise ("Unable to create the Ontotext Distribution - " + resp_distribution.body + " - " + resp_distribution.status.to_s) unless resp_distribution.status.between?(200, 299)
 
       json_distribution = JSON.parse(resp_distribution.body)
 
@@ -362,23 +333,17 @@ class DbmOntotextLeg < Dbm
         req.options.timeout = 720
       end
 
-      throw ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
+      raise ("Unable to create the Ontotext Repository - " + resp_repository.body + " - " + resp_repository.status.to_s) unless resp_repository.status.between?(200, 299)
 
       json_repository = JSON.parse(resp_repository.body)
 
       return json_repository['access-url']
 
     rescue => e
-      thing.error_occured_creating_repo
       puts 'Error creating Ontotext repository'
-      puts e.message
-      puts e.backtrace.inspect
-      throw 'Error creating Ontotext repository'
+      raise e
     end
   end
-
-
-
 
   # Methods ported from api_key.rb
 
@@ -393,8 +358,6 @@ class DbmOntotextLeg < Dbm
 
     return key
   end
-
-
 
   # Methods ported from ontotext_user.rb
   def new_api_connexion       #Checked
@@ -412,7 +375,7 @@ class DbmOntotextLeg < Dbm
   def register_ontotext_account    #Checked
     return if has_ontotext_account
 
-    throw "User doesnt have a registered Ontotext user"
+    raise "User doesnt have a registered Ontotext user"
   end
 
   # Create an ontotext connection
@@ -440,8 +403,7 @@ class DbmOntotextLeg < Dbm
           }.to_json
       end
 
-      # throw resp.headers
-      throw ontotext_account unless resp.status.between?(200, 299)
+      raise ontotext_account unless resp.status.between?(200, 299)
     end
 
     conn

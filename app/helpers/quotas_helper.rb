@@ -50,13 +50,9 @@ module QuotasHelper
   end
 
   # Find how many sparql endpoints the user has or a dbm has
-  def quota_used_sparql_count(user, dbm = nil)
-    res = 0
+  def quota_used_sparql_count_dbm(dbm = nil)
     if dbm == nil
-      eps =  user.sparql_endpoints
-      eps.each do |ep|
-        res = res + 1 unless ep.has_rdf_repo?
-      end
+      res = 0
     else
       res = dbm.used_sparql_count
     end
@@ -64,29 +60,12 @@ module QuotasHelper
   end
 
   # Find users sparql endpoints and calculate total number of triples
-  def quota_used_sparql_triples(user, dbm=nil)
+  def quota_used_sparql_triples_dbm(dbm=nil)
     total_repo_sparql_triples = 0
     total_cached_sparql_triples = 0
     cached_sparql_requests = 0
 
     if dbm == nil
-      users_sparql = user.sparql_endpoints
-      users_sparql.each do |se|
-        begin
-          str = nil
-          #str = user.get_ontotext_repository_size(se) unless se.has_rdf_repo?
-          unless str==nil
-            puts 'Quota triples:'+str
-            total_repo_sparql_triples += Integer(str)
-          end
-        rescue => e
-          puts 'Exception when reading triple size :' + e.message
-          str = se.cached_size
-          puts 'Cached quota triples:'+str
-          cached_sparql_requests += 1
-          total_cached_sparql_triples += Integer(str)
-        end
-      end
       ret = {repo_triples: total_repo_sparql_triples, cached_triples: total_cached_sparql_triples, cached_req: cached_sparql_requests}
     else
       ret = dbm.used_sparql_triples

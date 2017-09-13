@@ -57,11 +57,12 @@ class SparqlEndpointsController < ThingsController
           rr.upload_file_to_repository(file, file_type)
           ok = true
         else
-          ## current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-          ## ok = true
+          flash[:error] = "SparqlEndpoint is not connected to any database"
         end
       rescue => e
         puts "Could not upload to SPARQL endpoint."
+        puts e.message
+        puts e.backtrace.inspect
       end
     end
     if ok
@@ -79,7 +80,7 @@ class SparqlEndpointsController < ThingsController
 
     unless dbm.user == current_user
       flash[:error] = 'Error DBM with different user'
-      throw 'Error DBM with different user'
+      redirect_to dashboard_path
     end
 
     # Check if quota is broken
@@ -106,7 +107,7 @@ class SparqlEndpointsController < ThingsController
           @upwizard = nil
           if params[:wiz_id]
             @upwizard = Upwizard.find(params[:wiz_id])
-            throw "Wizard object not found!" if !@upwizard
+            raise "Wizard object not found!" if !@upwizard
             # Get file from wizard
             fill_default_values_if_empty
             rdfFile = @upwizard.get_current_file
@@ -116,8 +117,17 @@ class SparqlEndpointsController < ThingsController
           else
             flash[:warning] = "No triple file provided."
           end
-        rescue => error
-          flash[:error] = error.message
+          @thing.repo_successfully_created
+
+        rescue => e
+          @thing.error_occured_creating_repo
+          puts e.message
+          puts e.backtrace.inspect
+          flash[:error] = e.message
+          #Cleanup
+          @thing.rdf_repo = nil
+          @thing.save
+          rr.destroy
         end
         @upwizard.destroy if @upwizard
         ActiveRecord::Base.connection.close
@@ -138,40 +148,50 @@ class SparqlEndpointsController < ThingsController
 
   def update
     authorize! :update, @thing
-    super
+    begin
+      super
 
-    if @thing.publish_file != nil
-      rdfFile = @thing.publish_file
-      rdfType = file_ext(@thing.publish_file.original_filename)
+      if @thing.publish_file != nil
+        rdfFile = @thing.publish_file
+        rdfType = file_ext(@thing.publish_file.original_filename)
 
-      begin
-        if @thing.has_rdf_repo?
-          rr = @thing.rdf_repo
-          rr.upload_file_to_repository(rdfFile, rdfType)
-        else
-          throw "SparqlEndpoint has no RdfRepo"
+        begin
+          if @thing.has_rdf_repo?
+            rr = @thing.rdf_repo
+            rr.upload_file_to_repository(rdfFile, rdfType)
+          else
+            flash[:error] = "SparqlEndpoint is not connected to any database"
+          end
+        rescue => e
+          puts e.message
+          puts e.backtrace.inspect
+          flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
         end
-      rescue => e
-        flash[:error] = "Could not upload to SPARQL endpoint. Please try again."
       end
+    rescue => e
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = "Could not update SPARQL endpoint."
     end
   end
 
   def destroy
     authorize! :destroy, @thing
-    super
-    if @thing.has_rdf_repo?
-      rr = @thing.rdf_repo
-      # Do not delete backend datastores that exist in other sparql endpoint
-      return if rr.things.all.size > 1
-      rr.destroy
-    else
-      # Do not delete backend datastores that exist in other sparql endpoints
-      #return if SparqlEndpoint.where(["metadata->>'uri' = ? AND id != ?", @thing.uri, @thing.id]).exists?
 
-      #if not @thing.uri.blank?
-      #  current_user.delete_ontotext_repository(@thing)
-      #end
+    ok = false
+    begin
+      super
+      if @thing.has_rdf_repo?
+        rr = @thing.rdf_repo
+        # Do not delete backend datastores that exist in other sparql endpoint
+        return if rr.things.all.size > 1
+        rr.destroy
+      end
+      ok = true
+    rescue => e
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = e.message
     end
   end
 
