@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     resources :api_keys
   end
 
+
   get 'explore' => 'public_portal#explore'
   get 'news' => 'public_portal#news'
   get 'documentation' => 'public_portal#documentation'
@@ -38,6 +39,7 @@ Rails.application.routes.draw do
   get 'transform' => 'transformations#transform'
 
   get 'dbms' => 'dbms#index'
+  get 'dbms/:id/things'   =>   'dbms#index_things'
   #resources :dbms
   resources :dbm_s4s
 

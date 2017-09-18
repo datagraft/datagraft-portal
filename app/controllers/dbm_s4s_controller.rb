@@ -78,6 +78,9 @@ class DbmS4sController < DbmsController
   def destroy
     ok = false
     begin
+      things = @dbm_s4.find_things
+      raise "The database has #{things.count} assets connected. Delete assets first." if things.count > 0
+      
       @dbm_s4.destroy
       ok = true
     rescue => e
@@ -105,7 +108,6 @@ class DbmS4sController < DbmsController
   def set_dbm_s4
     @dbm_s4 = DbmS4.find(params[:id])
   end
-
 
   # Only allow white listed paramters
   def dbm_s4_params

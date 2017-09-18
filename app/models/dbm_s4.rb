@@ -50,6 +50,15 @@ class DbmS4 < Dbm
     configuration["endpoint"] = val
   end
 
+  def find_things
+    se = []
+    self.rdf_repos.each do |rr|
+      rr.things.each do |thing|
+        se << thing
+      end
+    end
+    return se
+  end
 
   # Create new S4 repository
   def create_repository(rdf_repo, ep)

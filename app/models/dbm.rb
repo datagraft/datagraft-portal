@@ -9,6 +9,9 @@ class Dbm < ApplicationRecord
   cattr_accessor :supported_repository_types
 
 
+  def find_tings
+    return []
+  end
 
   # Create and add new API key to the DBM
   def add_key(name, key_pub, key_secret, enabled = true)

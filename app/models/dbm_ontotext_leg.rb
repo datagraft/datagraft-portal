@@ -13,6 +13,16 @@ class DbmOntotextLeg < Dbm
     return @@supported_repository_types
   end
 
+  def find_things
+    se = []
+    self.rdf_repos.each do |rr|
+      rr.things.each do |thing|
+        se << thing
+      end
+    end
+    return se
+  end
+
   # The user have added the api_key element
   # This is a hook if dbm needs to synchronize
   def key_added(api_key)
@@ -112,7 +122,7 @@ class DbmOntotextLeg < Dbm
     puts "***** Enter DbmOntotextLeg.quota_sparql_count(#{name})"
 
     res = user.quota_sparql_count # Fetch from user profile
-    ##TODO res = used_sparql_count # Return the current count to avoid creation of more
+    res = used_sparql_count # Return the current count to avoid creation of more
 
     puts "***** Exit DbmOntotextLeg.quota_sparql_count()"
     return res

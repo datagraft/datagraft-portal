@@ -21,3 +21,12 @@ module DbmsHelper
     return res
   end
 end
+
+def dbm_things_path(dbm)
+  dbm_generic_path(dbm, '/things')
+end
+
+
+def dbm_generic_path(dbm, method)
+  "/dbms/#{dbm.id}/#{method}"
+end
