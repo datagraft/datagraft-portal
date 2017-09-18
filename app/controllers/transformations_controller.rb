@@ -35,15 +35,15 @@ class TransformationsController < ThingsController
   def transform
     authenticate_user!
 
-    if !session[:tmp_api_key] || (session[:tmp_api_key]['date'] < 1.day.ago)
-      api_result = current_user.new_ontotext_api_key(true)  ## TODO Fix this code ... 'new_ontotext_api_key' does  not exist
-      session[:tmp_api_key] = {
-        'key' => api_result['api_key'] + ':' + api_result['secret'],
-        'date' => DateTime.now
-        }
-    end
+    #if !session[:tmp_api_key] || (session[:tmp_api_key]['date'] < 1.day.ago)
+    #  api_result = current_user.new_ontotext_api_key(true)  ## TODO Fix this code ... 'new_ontotext_api_key' does  not exist
+    #  session[:tmp_api_key] = {
+    #    'key' => api_result['api_key'] + ':' + api_result['secret'],
+    #    'date' => DateTime.now
+    #    }
+    #end
 
-    @key = session[:tmp_api_key]['key']
+    #@key = session[:tmp_api_key]['key']
   end
 
   # POST ':username/transformations/:id/execute/:type/' => 'transformations#execute'
