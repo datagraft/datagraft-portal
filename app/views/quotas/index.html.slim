@@ -28,4 +28,4 @@ div.sin-quotas-bar
   div.sin-quotas-bar
     div.sin-quotas-bar-fill style="width:#{((dbinfo[:nb_triples].to_f/dbinfo[:max_triples].to_f)*100.0).round}%"
     div.sin-quotas-text
-      = "#{number_to_human(dbinfo[:nb_triples])}/#{number_to_human(dbinfo[:max_triples])} triples "
+      = "#{number_to_human(dbinfo[:nb_triples])} triples /#{number_to_human(dbinfo[:max_triples])} triples "
