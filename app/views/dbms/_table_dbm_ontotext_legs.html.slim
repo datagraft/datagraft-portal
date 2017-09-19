@@ -9,9 +9,9 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
       tr
         td.mdl-data-table__cell--non-numeric = dbm_ol.name
         td.sin-action-table
-          == link_to 'Show', dbm_api_keys_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+          == link_to "Show (#{dbm_ol.api_keys.count})", dbm_api_keys_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
         td.sin-action-table
-          == link_to 'Show', dbm_things_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+          == link_to "Show (#{dbm_ol.api_keys.count})", dbm_things_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
   - if @dbm_ontotext_legs.empty?
     tfoot
       tr

@@ -44,7 +44,5 @@ div.mdl-card
             td.mdl-data-table__cell--non-numeric[colspan=3]
               em No Assets registered yet
 
-
-  - if !@user.nil? && user_signed_in? && @user == current_user
-    div.mdl-card__actions
-      == link_to "New #{params[:controller].singularize.humanize}", new_generic_thing_path, :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
+  div.mdl-card__actions
+    = link_to 'Back', dbms_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
