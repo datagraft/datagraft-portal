@@ -16,7 +16,7 @@ module DbmsHelper
       res = dbms_descriptive_name(nil)
     else
       dbm = repo.dbm
-      res = "#{dbms_descriptive_name(dbm)}:#{repo.name}"
+      res = "#{dbms_descriptive_name(dbm)}"
     end
     return res
   end
