@@ -110,28 +110,15 @@ class Query < Thing
   # Execute query on SPARQL endpoint
   def execute_on_sparql_endpoint(sparql_endpoint, user, timeout = 180)
     if sparql_endpoint.has_rdf_repo?
-      begin
-        res = sparql_endpoint.rdf_repo.query_repository(query_string)
+      res = sparql_endpoint.rdf_repo.query_repository(query_string)
 
-        query_res = JSON.parse(res.body)
-        return {
-          headers: query_res["head"]["vars"],
-          results: query_res["results"]["bindings"]
-        }
-      rescue => e
-        puts 'Error querying RDF repository'
-        puts e.message
-        puts e.backtrace.inspect
-        return {
-          headers: [],
-          results: []
-        }
-      end
-    else
+      query_res = JSON.parse(res.body)
       return {
-        headers: [],
-        results: []
+        headers: query_res["head"]["vars"],
+        results: query_res["results"]["bindings"]
       }
+    else
+      raise "Error SparqlEndpoint has no database"
     end
   end
 end

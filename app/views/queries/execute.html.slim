@@ -64,4 +64,4 @@
           th.mdl-data-table__cell--non-numeric.sin-td-wrap colspan=@query_result[:headers].count
             = will_paginate @results_list
 - else
-  em No rows returned
+  h3 #{@query_error}

@@ -215,17 +215,21 @@ class SparqlEndpointsController < ThingsController
     @query.language = 'SPARQL'
 
     begin
+      @query_error = ""
       @query_result = @query.execute_on_sparql_endpoint(@thing, current_user)
-    rescue => error
-      flash[:error] = error.message
+    rescue => e
+      puts "Error querying RDF repository"
+      ## flash[:error] = e.message
       @query_result = {
         headers: [],
         results: []
-        }
+      }
+      @query_error = "Error querying RDF repository #{e.message}"
     end
 
     if @query_result.blank?
       @results_list = []
+      @query_error = "Blank result"
     else
       @results_list = @query_result[:results]
     end
