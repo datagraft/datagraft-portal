@@ -46,6 +46,15 @@ class SparqlEndpoint < Thing
     metadata["license"] = val
   end
 
+  def repo_error_message
+    metadata["repo_error_message"] if metadata
+  end
+
+  def repo_error_message=(val)
+    touch_metadata!
+    metadata["repo_error_message"] = val
+  end
+
   def should_generate_new_friendly_id?
     name_changed? || super
   end

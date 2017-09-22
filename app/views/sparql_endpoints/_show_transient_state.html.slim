@@ -1,0 +1,11 @@
+div.mdl-grid
+  div.mdl-card__supporting-text
+    h3#endpoint-transient.sin-hidden
+      = @thing.state
+    h3 Creation of the SPARQL endpoint in progress
+    p Detailed message: #{@thing.state} ... reloading automatically
+    #endpoint-transient.sin-hidden
+      = @thing.state
+div.mdl-card__actions
+  = link_to 'Back', dashboard_path, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+  .mdl-layout-spacer

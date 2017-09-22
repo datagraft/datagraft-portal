@@ -1,0 +1,9 @@
+div.mdl-grid
+  div.mdl-card__supporting-text
+    h3 Creation of the SPARQL endpoint failed
+    h4 The SPARQL endpoint failed connecting to the database. <br> Delete this asset and try again when the error is fixed.
+    p Detailed message: #{@thing.repo_error_message}
+div.mdl-card__actions
+  = link_to 'Back', dashboard_path, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+  .mdl-layout-spacer
+  = link_to 'Delete endpoint', thing_path(@thing), method: :delete, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"

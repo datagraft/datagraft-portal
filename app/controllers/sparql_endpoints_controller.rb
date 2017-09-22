@@ -22,6 +22,7 @@ class SparqlEndpointsController < ThingsController
     super
     @dbm_info = dbms_repo_info(@thing.rdf_repo)
 
+
   end
 
   # POST /:username/sparql_endpoints/:id/fork
@@ -120,10 +121,11 @@ class SparqlEndpointsController < ThingsController
           @thing.repo_successfully_created
 
         rescue => e
+          @thing.repo_error_message = e.message
           @thing.error_occured_creating_repo
           puts e.message
           puts e.backtrace.inspect
-          flash[:error] = e.message
+
           #Cleanup
           @thing.rdf_repo = nil
           @thing.save
@@ -133,6 +135,7 @@ class SparqlEndpointsController < ThingsController
         ActiveRecord::Base.connection.close
         puts "***** Create thread...end"
       end
+
       respond_to do |format|
         if @thing.save
           format.html { redirect_to thing_path(@thing), notice: create_background_notice }
