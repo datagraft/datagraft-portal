@@ -63,7 +63,11 @@ class Dbm < ApplicationRecord
 
   # Returns the first enabled API key
   def first_enabled_key
-    return self.api_keys.where(enabled: true).first
+    api_key = self.api_keys.where(enabled: true).first
+    
+    raise "No enabled API key found" if api_key.nil?
+    
+    return api_key
   end
 
 
