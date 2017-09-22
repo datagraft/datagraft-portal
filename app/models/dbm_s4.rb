@@ -82,7 +82,7 @@ class DbmS4 < Dbm
         'Content-Type' => 'application/json'
       }
     )
-
+    puts request.inspect
     response = request.execute
     raise "Error creating new repository" unless response.code.between?(200, 299)
 
@@ -123,6 +123,7 @@ class DbmS4 < Dbm
       }
     )
 
+    puts request.inspect
     response = request.execute
     raise "Error updating S4 repository public property" unless response.code.between?(200, 299)
 
@@ -229,6 +230,7 @@ class DbmS4 < Dbm
       }
     )
 
+    puts request.inspect
     response = request.execute
     raise "Error deleting S4 repository" unless response.code.between?(200, 299)
 

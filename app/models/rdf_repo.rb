@@ -63,6 +63,7 @@ class RdfRepo < ApplicationRecord
       }
     )
 
+    puts request.inspect
     response = request.execute
     raise "Error uploading file to RDF repository" unless response.code.between?(200, 299)
     puts file.inspect
@@ -106,6 +107,7 @@ class RdfRepo < ApplicationRecord
       :headers => headers
     )
 
+    puts request.inspect
     response = request.execute
     raise "Error querying RDF repository" unless response.code.between?(200, 299)
 
