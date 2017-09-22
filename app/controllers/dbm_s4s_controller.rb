@@ -25,7 +25,7 @@ class DbmS4sController < DbmsController
   # GET /dbm_s4s/1
   def show
     respond_to do |format|
-        format.html { redirect_to dbm_s4s_path }
+        format.html { redirect_to dbms_path }
         format.json { render :show }
     end
   end
@@ -50,7 +50,7 @@ class DbmS4sController < DbmsController
 
     respond_to do |format|
       if @dbm_s4.save
-        format.html { redirect_to dbm_s4s_path, notice: 'DBM S4 was successfully created.' }
+        format.html { redirect_to dbms_path, notice: 'DBM S4 was successfully created.' }
         format.json { render :show, status: :created, location: @dbm_s4 }
       else
         format.html { render :new }
@@ -64,7 +64,7 @@ class DbmS4sController < DbmsController
   def update
     respond_to do |format|
       if @dbm_s4.update(dbm_s4_params)
-        format.html { redirect_to dbm_s4s_path, notice: 'DBM S4 was successfully updated.' }
+        format.html { redirect_to dbms_path, notice: 'DBM S4 was successfully updated.' }
         format.json { render :show, status: :ok, location: @dbm_s4 }
       else
         format.html { render :edit }
@@ -80,7 +80,7 @@ class DbmS4sController < DbmsController
     begin
       things = @dbm_s4.find_things
       raise "The database has #{things.count} assets connected. Delete assets first." if things.count > 0
-      
+
       @dbm_s4.destroy
       ok = true
     rescue => e
@@ -90,7 +90,7 @@ class DbmS4sController < DbmsController
     end
     respond_to do |format|
       if ok
-        format.html { redirect_to dbm_s4s_url, notice: 'DBM S4 was successfully destroyed.' }
+        format.html { redirect_to dbms_url, notice: 'DBM S4 was successfully destroyed.' }
         format.json { head :no_content }
       else
         format.html { redirect_to dbm_s4s_url }
