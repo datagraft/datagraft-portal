@@ -1,5 +1,7 @@
 class MigrateLegacySparqlEndpoints < ActiveRecord::Migration[5.0]
+  
   def up
+    Thing.reset_column_information
     all_users = User.all
     all_users.each do |user|
       say "Checking user #{user.id} #{user.name}"
@@ -43,9 +45,10 @@ class MigrateLegacySparqlEndpoints < ActiveRecord::Migration[5.0]
         rr.name = "RR_leg:#{ep.slug}"
         rr.uri = ep.uri
         rr.dbm = dbm
-        rr.save
+        rr.is_public = ep.public
+        rr.save!
         ep.rdf_repo = rr
-        ep.save
+        ep.save!
         say "      For SparqlEndpoint #{ep.id} #{ep.slug} created RdfRepo #{ep.rdf_repo.id} #{ep.rdf_repo.name} connected to Dbm dbm.id #{ep.rdf_repo.dbm.id}"
       end
 

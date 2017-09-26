@@ -62,7 +62,7 @@ class DbmOntotextLeg < Dbm
 
   # Overrides DBM method Returns the first enabled API key or creates key
   def first_enabled_key
-    key = super
+    key = self.api_keys.where(enabled: true).first
 
     # Create a key if one doesn't exist yet
     if key.nil?
