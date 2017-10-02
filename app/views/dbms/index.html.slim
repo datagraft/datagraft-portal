@@ -1,0 +1,21 @@
+- title 'Your Registered Databases'
+- setOption :mdlCard
+
+.mdl-card
+  .sin-card-with-tabs-layout.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    .sin-card-with-tabs-title
+      .mdl-card__title.mdl-color-text--grey-50
+        h3 = yield(:title)
+
+      .mdl-tabs__tab-bar
+        a.mdl-tabs__tab.is-active href="#dbm_s4s-panel" S4
+        a.mdl-tabs__tab href="#dbm_ontotext_legs-panel"  Legacy
+
+    /! MDL tab panels, is-active to denote currently active
+    #dbm_s4s-panel.mdl-tabs__panel.is-active
+      div.mdl-card__supporting-text.sin-padding
+        = render 'index_dbm_s4s_tab'
+    /! MDL Tab panel 2
+    #dbm_ontotext_legs-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'index_dbm_ontotext_legs_tab'

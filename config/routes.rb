@@ -16,8 +16,12 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
     }
 
-  get 'api_keys/first' => 'api_keys#first'
-  resources :api_keys
+  #get 'api_keys/first' => 'api_keys#first'
+  get 'api_keys' => 'api_keys#index_all'
+  resources :dbms, only: [ :index ] do
+    resources :api_keys
+  end
+
 
   get 'explore' => 'public_portal#explore'
   get 'news' => 'public_portal#news'
@@ -34,9 +38,14 @@ Rails.application.routes.draw do
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
 
+  get 'dbms' => 'dbms#index'
+  get 'dbms/:id/things'   =>   'dbms#index_things'
+  #resources :dbms
+  resources :dbm_s4s
+
   get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
   get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'
-  
+
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'

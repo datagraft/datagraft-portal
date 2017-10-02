@@ -36,5 +36,6 @@ json.set! 'dcat:record' do
     json.set! 'dct:modified', sparql_endpoint.updated_at
     json.set! 'dct:issued', sparql_endpoint.created_at
     json.set! 'dcat:accessURL', sparql_endpoint.uri
+    json.set! '@dbm_id', sparql_endpoint.dbm_id
   end
 end

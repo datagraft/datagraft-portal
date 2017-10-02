@@ -1,0 +1,8 @@
+div.mdl-grid
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
+    //div.mdl-card__title.mdl-card--expand
+    //  h2.mdl-card__title-text Ontotext Legacy databases
+    div.mdl-card__supporting-text
+      = render 'table_dbm_ontotext_legs'
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

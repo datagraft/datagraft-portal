@@ -43,20 +43,21 @@ class QueriesController < ThingsController
       timeout_error = false
 
       begin
+        @query_error =  ""
         @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
-      rescue Exception => error
-        if error.class.to_s.eql?("Faraday::TimeoutError")
-          timeout_error = true
-        end
-        flash[:error] = error.message
+      rescue => e
+        puts "Error querying RDF repository"
+        ##flash[:error] = e.message
         @query_result = {
           headers: [],
           results: []
         }
+        @query_error =  "Error querying RDF repository #{e.message}"
       end
 
       if @query_result.blank?
         @results_list = []
+        @query_error = "Blank result"
       else
         @results_list = @query_result[:results]
       end
@@ -107,14 +108,14 @@ class QueriesController < ThingsController
 
     def query_set_relations(query)
       # This is EXTREMELY important lol
-      query.queriable_data_stores.to_a.each do |qds|
-        # Reject private data_stores that are not owned by the user
-        # Security…
-        if qds.user != query.user && !qds.public
-          query.queriable_data_stores.delete(qds)
-        end
-      end
-      # throw query.queriable_data_stores
+      ##query.queriable_data_stores.to_a.each do |qds|
+      ##  # Reject private data_stores that are not owned by the user
+      ##  # Security…
+      ##  if qds.user != query.user && !qds.public
+      ##    query.queriable_data_stores.delete(qds)
+      ##  end
+      ##end
+      ### throw query.queriable_data_stores
 
       query.sparql_endpoints.to_a.each do |se|
         if se.user != query.user && !se.public

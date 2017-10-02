@@ -1,0 +1,14 @@
+- title 'Your Database Management (S4 Databases)'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-layout style="align-items: center;"
+    div.mdl-card__supporting-text.sin-padding
+      = render 'table_dbm_s4s'
+
+  div.mdl-card__actions
+    == link_to 'New S4 Database', new_dbm_s4_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

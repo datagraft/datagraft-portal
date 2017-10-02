@@ -36,7 +36,7 @@ document.addEventListener('turbolinks:load', function() {
           $('.sin-loading-bar-container').hide();
           $('#surveyor-iframe').attr('src', '/RDFsurveyor/index.html?repo=' + res.url);
         } else {
-          // could not get URL?? Should not happen but just in case 
+          // could not get URL?? Should not happen but just in case
           console.log('URL not found! Please try again later;');
           $('#sparql-loading-error-container > .sin-error-message').text('Error fetching URL for endpoint! Try refreshing this page...');
           $('#sparql-endpoint-address').hide();
@@ -46,6 +46,13 @@ document.addEventListener('turbolinks:load', function() {
         }
       }
     })
+  }
+
+  var pollEndpointTransient = async function() {
+    // after four seconds - reload the page
+    setTimeout(() => {
+      window.location.reload(1);
+    }, 4000);
   }
 
   var pollEndpointState = async function() {
@@ -119,10 +126,16 @@ document.addEventListener('turbolinks:load', function() {
       }, 4000);
     }
   }
-  
+
   if($('#endpoint-state').length) {
     pollEndpointState();
   }
+  if($('#endpoint-transient').length) {
+    pollEndpointTransient();
+  }
+
+
+
   if($('#sparql-loading-error-container').length) {
     $('#sparql-loading-error-container').hide();
   }
@@ -190,7 +203,7 @@ document.addEventListener('turbolinks:load', function() {
     });
     oTable = $('#query-results-table').DataTable();
     $('.mdl-textfield').each(function (index, element) {
-      componentHandler.upgradeElement(element);  
+      componentHandler.upgradeElement(element);
     });
 
     $('#query-results-search').keyup(function () {
@@ -208,7 +221,7 @@ document.addEventListener('turbolinks:load', function() {
   });
 
   $('.sin-execute-request-button').click(function(event) {
-    // execute form but do not unfold 
+    // execute form but do not unfold
     event.stopPropagation();
   });
 
@@ -249,4 +262,3 @@ document.addEventListener('turbolinks:load', function() {
 });
 
 var updateGlAssociatedStyle = function(){}
-

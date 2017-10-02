@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dbm_account: one
+  dbm_key: one
+  rdf_repo: one
+  type:
+  configuration:
+
+two:
+  dbm_account: two
+  dbm_key: two
+  rdf_repo: two
+  type:
+  configuration:

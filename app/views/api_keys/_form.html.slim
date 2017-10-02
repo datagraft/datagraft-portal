@@ -1,5 +1,5 @@
 div.mdl-card.mdl-shadow--2dp
-  = form_for(@api_key) do |f|
+  = form_for(:api_key, method: :post, url: dbm_api_keys_path(@dbm)) do |f|
     .mdl-card__supporting-text
       - if @api_key.errors.any?
         #error_explanation
@@ -13,6 +13,12 @@ div.mdl-card.mdl-shadow--2dp
         .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
           = f.label :name, class: "mdl-textfield__label"
           = f.text_field :name, class: "mdl-textfield__input"
+        .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+          = f.label :Api_key, class: "mdl-textfield__label"
+          = f.text_field :key_pub, class: "mdl-textfield__input"
+        .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+          = f.label :Api_key_secret, class: "mdl-textfield__label"
+          = f.text_field :key_secret, class: "mdl-textfield__input"
         label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for="checkbox-enabled"
           = f.check_box :enabled, id: "checkbox-enabled", class: "mdl-switch__input"
           span.mdl-switch__label Enabled

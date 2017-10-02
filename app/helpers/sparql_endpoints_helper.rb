@@ -10,9 +10,13 @@ module SparqlEndpointsHelper
     raise CanCan::AccessDenied.new("Not allowed to access Sparql Endpoint", :read, se) unless can? :read, se
 
     begin
-      return user.get_ontotext_repository_size(se)
-
-    rescue Exception => e
+      if se.has_rdf_repo?
+        rr = se.rdf_repo
+        return rr.get_repository_size
+      else
+        return '0'
+      end
+    rescue => e
       puts 'Error getting repository size'
       puts e.message
       puts e.backtrace.inspect

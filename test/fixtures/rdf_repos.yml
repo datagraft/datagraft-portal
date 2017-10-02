@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  thing: one
+  configuration:
+  dbm_id: 1
+
+two:
+  thing: two
+  configuration:
+  dbm_id: 1

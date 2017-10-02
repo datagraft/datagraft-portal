@@ -35,15 +35,15 @@ class TransformationsController < ThingsController
   def transform
     authenticate_user!
 
-    if !session[:tmp_api_key] || (session[:tmp_api_key]['date'] < 1.day.ago)
-      api_result = current_user.new_ontotext_api_key(true)
-      session[:tmp_api_key] = {
-        'key' => api_result['api_key'] + ':' + api_result['secret'],
-        'date' => DateTime.now
-        }
-    end
+    #if !session[:tmp_api_key] || (session[:tmp_api_key]['date'] < 1.day.ago)
+    #  api_result = current_user.new_ontotext_api_key(true)  ## TODO Fix this code ... 'new_ontotext_api_key' does  not exist
+    #  session[:tmp_api_key] = {
+    #    'key' => api_result['api_key'] + ':' + api_result['secret'],
+    #    'date' => DateTime.now
+    #    }
+    #end
 
-    @key = session[:tmp_api_key]['key']
+    #@key = session[:tmp_api_key]['key']
   end
 
   # POST ':username/transformations/:id/execute/:type/' => 'transformations#execute'
@@ -71,7 +71,7 @@ class TransformationsController < ThingsController
       begin
         out_file = @thing.transform(@thing.file, type)
         ok = true
-      rescue Exception => e
+      rescue => e
         puts "Could transform uploaded file ... #{e}"
       end
     elsif params["file_id"] != nil
@@ -79,7 +79,7 @@ class TransformationsController < ThingsController
         in_file = current_user.filestores.friendly.find(params['file_id'])
         out_file = @thing.transform(in_file.file, type)
         ok = true
-      rescue Exception => e
+      rescue => e
         puts "Could transform file_id ... #{e}"
       end
     end
@@ -96,7 +96,7 @@ class TransformationsController < ThingsController
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     super
   end
-  
+
   def show
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
     @publisherId = @transformation.user.username

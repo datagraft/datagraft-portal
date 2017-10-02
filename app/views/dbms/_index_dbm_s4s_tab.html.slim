@@ -1,0 +1,11 @@
+div.mdl-grid
+  div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
+    //div.mdl-card__title.mdl-card--expand
+    //  h2.mdl-card__title-text S4 Databases
+    div.mdl-card__supporting-text
+      = render 'table_dbm_s4s'
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
+    == link_to 'New S4 Database', new_dbm_s4_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

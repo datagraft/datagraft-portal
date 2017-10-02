@@ -9,6 +9,8 @@ class Thing < ApplicationRecord
   has_many :stars, dependent: :destroy
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
+  belongs_to :rdf_repo
+
 
   validates :name, presence: true
   validates :user, presence: true
@@ -30,7 +32,7 @@ class Thing < ApplicationRecord
     begin
       reset_num_assets(self, -1)
       update_asset_version_metric(self.type)
-    rescue Exception => e
+    rescue => e
       puts 'Error decrementing num_assets metric'
       puts e.message
       puts e.backtrace.inspect
@@ -42,13 +44,13 @@ class Thing < ApplicationRecord
     begin
       reset_num_assets(self, 0)
       update_asset_version_metric(self.type)
-    rescue Exception => e
+    rescue => e
       puts 'Error incrementing num_assets metric'
       puts e.message
       puts e.backtrace.inspect
     end
   end
-  
+
   # on each asset update we update the number of private/public assets
   def update_public_private_metrics
     reset_num_assets_public_private(self)
@@ -58,10 +60,9 @@ class Thing < ApplicationRecord
     # returns a default registry
     Thing.where(
       :public => true,
-      :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('QueriableDataStore' if Flip.on? :queriable_data_stores), *('Widget' if Flip.on? :widgets)]
+      :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('Widget' if Flip.on? :widgets)]
       )
     .order(stars_count: :desc, created_at: :desc).includes(:user)
-
   end
 
   def self.public_search(search)
@@ -73,7 +74,7 @@ class Thing < ApplicationRecord
 
   def fork(newuser)
     self.deep_clone do |original, copy|
-      copy.user = newuser
+      copy.user = newuser   ## TODO Will this work if cloning sparql_EP with new user when DB_USER is stored in user.ontotext_account?
       copy.stars_count = 0
       copy.public = false
       copy.state = :created
@@ -86,7 +87,7 @@ class Thing < ApplicationRecord
             # This procedure is needed to force refile to copy the attachement
             tmp_file = Refile.store.upload(original.file)
             copy.update(file_id: tmp_file.id)
-          rescue Exception => e
+          rescue => e
             puts 'Fork cannot copy attachement. Cause:<'+e.message+'>'
           end
         end

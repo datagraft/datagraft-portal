@@ -13,7 +13,80 @@ class SparqlEndpoint < Thing
 
   after_create_commit :initialised_sparql_endpoint
 
-  # SPARQL endpoints act as state machines so we can control the behavior of UI and backend
+  def initialised_sparql_endpoint
+    self.pass_parameters
+  end
+
+  # Check if user has db account
+  def has_rdf_repo?
+    rdf_repo != nil
+  end
+
+  def dbm
+    res = nil
+    unless rdf_repo == nil
+      res = rdf_repo.dbm
+    end
+    return res
+  end
+
+  def dbm_id
+    res = nil
+    d = dbm
+    res = d.id unless d == nil
+    return res
+  end
+
+  def license
+    metadata["license"] if metadata
+  end
+
+  def license=(val)
+    touch_metadata!
+    metadata["license"] = val
+  end
+
+  def repo_error_message
+    metadata["repo_error_message"] if metadata
+  end
+
+  def repo_error_message=(val)
+    touch_metadata!
+    metadata["repo_error_message"] = val
+  end
+
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
+
+  def write_attribute(attr_name, value)
+    # Check if new (no user) or update (existing user)
+    if self.user != nil and attr_name == 'public'
+      old_value = self.read_attribute(attr_name)
+      super
+      new_value = self.read_attribute(attr_name)
+
+      # Update public/private property if changed
+      if new_value != old_value
+        if self.has_rdf_repo?
+          self.rdf_repo.update_repository_public(self.public)
+        end
+      end
+    else
+      super
+    end
+  end
+
+  def dbm_entries=(val)
+    #Do nothing...
+  end
+
+  def dbm_entries
+    #Return Dummy
+    return 1001
+  end
+
+
   state_machine :initial => :created do
 
     # pass the parameters to the initialisation function
@@ -85,7 +158,11 @@ class SparqlEndpoint < Thing
     # repository successfully created and attached
     state :repo_created do
       def uri
-        metadata["uri"] if metadata
+        if self.has_rdf_repo?
+          self.rdf_repo.uri
+        else
+          metadata["uri"] if metadata
+        end
       end
 
       def cached_size
@@ -107,36 +184,4 @@ class SparqlEndpoint < Thing
     metadata["uri"] = val
   end
 
-  def initialised_sparql_endpoint
-    self.pass_parameters
-  end
-
-  def license
-    metadata["license"] if metadata
-  end
-
-  def license=(val)
-    touch_metadata!
-    metadata["license"] = val
-  end
-
-  def should_generate_new_friendly_id?
-    name_changed? || super
-  end
-
-  def write_attribute(attr_name, value)
-    # Check if new (no user) or update (existing user)
-    if self.user != nil and attr_name == 'public'
-      old_value = self.read_attribute(attr_name)
-      super
-      new_value = self.read_attribute(attr_name)
-
-      # Update public/private property if changed
-      if new_value != old_value
-        self.user.update_ontotext_repository_public(self)
-      end
-    else
-      super
-    end
-  end
 end
