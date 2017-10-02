@@ -4,9 +4,9 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
       th.mdl-data-table__cell--non-numeric Name
       th.mdl-data-table__cell--non-numeric Plan
       th.mdl-data-table__cell--non-numeric Endpoint
-      th.mdl-data-table__cell--non-numeric Api Keys
+      th.mdl-data-table__cell--non-numeric API Keys
       th.mdl-data-table__cell--non-numeric Assets
-      th.mdl-data-table__cell--non-numeric Edit DBM
+      th.mdl-data-table__cell--non-numeric Edit
       th.mdl-data-table__cell--non-numeric Delete
   tbody
     - @dbm_s4s.each do |dbm_s4|
@@ -18,10 +18,10 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
           == link_to "Show (#{dbm_s4.api_keys.count})", dbm_api_keys_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
         td.sin-action-table
           == link_to "Show (#{dbm_s4.rdf_repos.count})", dbm_things_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
-        td.sin-action-table
+        td.sin-action-table--center
           == link_to edit_dbm_s4_path(dbm_s4) do
             i.material-icons edit
-        td.sin-action-table
+        td.sin-action-table--center
           == link_to dbm_s4, method: :delete, data: { confirm: 'Are you sure?' } do
             i.material-icons delete
   - if @dbm_s4s.empty?

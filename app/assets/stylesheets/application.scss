@@ -205,6 +205,20 @@ body .mdl-layout__header-row {
   color: #333;
 }
 
+.mdl-data-table .sin-action-table--center {
+  padding-left:1em;
+  padding-right:0;
+  text-align: center;
+}
+.sin-action-table--center a {
+  color:inherit;
+}
+.sin-action-table--center a:hover {
+  background: inherit;
+  color: #333;
+}
+
+
 .sin-horizontal-scroll {
   overflow-y: auto;
   padding-bottom:2em;

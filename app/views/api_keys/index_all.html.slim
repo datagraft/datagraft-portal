@@ -11,7 +11,7 @@ div.mdl-card
       table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
         thead
           tr
-            th.mdl-data-table__cell--non-numeric Dbms
+            th.mdl-data-table__cell--non-numeric Database
             th.mdl-data-table__cell--non-numeric Name
             th.mdl-data-table__cell--non-numeric Enabled
             th.mdl-data-table__cell--non-numeric Key
@@ -22,17 +22,17 @@ div.mdl-card
             tr
               td.mdl-data-table__cell--non-numeric = api_key.dbm.name
               td.mdl-data-table__cell--non-numeric = api_key.name
-              td.mdl-data-table__cell--non-numeric.sin-action-table
+              td.mdl-data-table__cell--non-numeric.sin-action-table--center
                == link_to edit_dbm_api_key_path(api_key.dbm, api_key) do
                 - if api_key.enabled
                   i.material-icons check_box
                 - else
                   i.material-icons check_box_outline_blank
               td.mdl-data-table__cell--non-numeric.sin-monospace-key = api_key.key
-              td.sin-action-table
+              td.sin-action-table--center
                == link_to edit_dbm_api_key_path(api_key.dbm, api_key) do
                 i.material-icons edit
-              td.sin-action-table
+              td.sin-action-table--center
                == link_to dbm_api_key_path(api_key.dbm, api_key), method: :delete, data: { confirm: 'Are you sure?' } do
                 i.material-icons delete
         - if @api_keys.empty?
