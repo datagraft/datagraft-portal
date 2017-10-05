@@ -43,14 +43,14 @@ class DbmS4sController < DbmsController
     @dbm_s4.endpoint = dbm_s4_params[:endpoint]
 
     # Create and add new API Key to DBM
-    key_name = "Manually registered S4 API Key"
+    key_name = "Manually registered API Key"
     key_pub = dbm_s4_params[:key]
     key_secret = dbm_s4_params[:secret]
     @dbm_s4.add_key(key_name, key_pub, key_secret)
 
     respond_to do |format|
       if @dbm_s4.save
-        format.html { redirect_to dbms_path, notice: 'DBM S4 was successfully created.' }
+        format.html { redirect_to dbms_path, notice: 'Database was successfully registered.' }
         format.json { render :show, status: :created, location: @dbm_s4 }
       else
         format.html { render :new }
@@ -64,7 +64,7 @@ class DbmS4sController < DbmsController
   def update
     respond_to do |format|
       if @dbm_s4.update(dbm_s4_params)
-        format.html { redirect_to dbms_path, notice: 'DBM S4 was successfully updated.' }
+        format.html { redirect_to dbms_path, notice: 'Database was successfully updated.' }
         format.json { render :show, status: :ok, location: @dbm_s4 }
       else
         format.html { render :edit }
@@ -90,7 +90,7 @@ class DbmS4sController < DbmsController
     end
     respond_to do |format|
       if ok
-        format.html { redirect_to dbms_url, notice: 'DBM S4 was successfully destroyed.' }
+        format.html { redirect_to dbms_url, notice: 'Database was successfully unregistered.' }
         format.json { head :no_content }
       else
         format.html { redirect_to dbm_s4s_url }

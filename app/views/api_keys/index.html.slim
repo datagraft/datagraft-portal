@@ -38,7 +38,7 @@ div.mdl-card
         - if @api_keys.empty?
           tfoot
             tr
-              td.mdl-data-table__cell--non-numeric[colspan=3]
+              td.mdl-data-table__cell--non-numeric[colspan=7]
                 em No API keys yet
 
 
@@ -47,4 +47,4 @@ div.mdl-card
 
     .mdl-layout-spacer
     - if @dbm.allow_manual_api_key?
-      == link_to 'New Api key', new_dbm_api_key_path(@dbm), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+      == link_to 'New API key', new_dbm_api_key_path(@dbm), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

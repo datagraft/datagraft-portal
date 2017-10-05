@@ -75,7 +75,6 @@ class SparqlEndpointsController < ThingsController
 
   def create
     authorize! :create, SparqlEndpoint
-
     dbm_id = params[:sparql_endpoint][:dbm_entries]
     dbm = Dbm.where(id: dbm_id).first
 
@@ -88,21 +87,26 @@ class SparqlEndpointsController < ThingsController
     unless quota_dbm_room_for_new_sparql_count?(dbm)
       redirect_to quotas_path
     else
-      @thing = SparqlEndpoint.new(sparql_endpoint_params)
-      @thing.user = current_user
-      @thing.pass_parameters
-
-      rr = RdfRepo.new
-      rr.dbm = dbm
-      rr.name = "RR:#{@thing.slug}"
-      rr.save
-      @thing.rdf_repo = rr
+      begin
+        @thing = SparqlEndpoint.new(sparql_endpoint_params)
+        @thing.user = current_user
+        @thing.pass_parameters
+      rescue => e
+        @thing.error_occured_creating_repo
+        puts e.message
+        puts e.backtrace.inspect
+      end
 
       Thread.new do
         puts "***** Create thread...start"
         @thing.issue_create_repo
         # @thing.uri = current_user.new_ontotext_repository(@thing)
         begin
+          rr = RdfRepo.new
+          rr.dbm = dbm
+          rr.name = "RR:#{@thing.slug}"
+          rr.save
+          @thing.rdf_repo = rr
           rr.create_repository(@thing)
           rr.save
           @upwizard = nil
@@ -127,6 +131,7 @@ class SparqlEndpointsController < ThingsController
           puts e.backtrace.inspect
 
           #Cleanup
+          @thing.rdf_repo.destroy
           @thing.rdf_repo = nil
           @thing.save
           rr.destroy
@@ -226,7 +231,7 @@ class SparqlEndpointsController < ThingsController
       @query_result = {
         headers: [],
         results: []
-      }
+        }
       @query_error = "Error querying RDF repository #{e.message}"
     end
 
