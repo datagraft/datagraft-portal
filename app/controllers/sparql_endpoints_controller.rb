@@ -271,7 +271,7 @@ class SparqlEndpointsController < ThingsController
   private
   def sparql_endpoint_params
     params.require(:sparql_endpoint).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :publish_file, :dbm_entries,
+      :meta_keyword_list, :publish_file, :dbm_entries, :rdf_repo_id,
       queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
