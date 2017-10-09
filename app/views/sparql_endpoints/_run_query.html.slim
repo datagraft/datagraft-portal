@@ -40,6 +40,6 @@ div class = "#{highlight_class}"
         | Query text:
       br
       .sin-tab-textfield__scroll
-        = simple_format thing.query_string
+        = simple_format h(thing.query_string)
       i.sin-flex-center
         = link_to "Go to asset...", thing_path(thing)
