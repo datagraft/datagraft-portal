@@ -9,8 +9,8 @@
 - if query_links_to_sparql_endpoint(thing, sparql_thing)
   - highlight_class = 'highlight-true'
 
-div class = "#{highlight_class}"
-  .sin-gen-squeeze-sparql
+div 
+  div class = "#{highlight_class} sin-gen-squeeze-sparql"
     .sin-gs-head
       .sin-query-list-icon
         = image_tag(thing_icon_name(thing), height: "48")
