@@ -15,6 +15,29 @@ module SignInHelper
   end
 end
 
+#module to help creating a DbmXXX setup for testing of interaction with RdfRepos and SparqlEndpoints
+module DbmXXXHelper
+  def create_test_dbm_s4(testUser)
+    testDbmS4 = DbmS4.new()
+    testDbmS4.user = testUser
+    testDbmS4.name = 'TestDbmS4'
+    testDbmS4.endpoint = ENV['DBMS4_EP']
+    testDbmS4.db_plan = "BL1"
+    testDbmS4.save
+
+    return testDbmS4
+  end
+
+  def get_test_dbm_s4_key
+    return ENV['DBMS4_KEY']
+  end
+
+  def get_test_dbm_s4_secret
+    return ENV['DBMS4_SECRET']
+  end
+
+end
+
 # module to help with one initial filestore obj in the fixture
 module FilestoreHelper
   # Uploads a new file if not already there
@@ -35,6 +58,7 @@ end
 
 class ActiveSupport::TestCase
     include SignInHelper
+    include DbmXXXHelper
     include FilestoreHelper
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
