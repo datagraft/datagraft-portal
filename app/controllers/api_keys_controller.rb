@@ -56,16 +56,16 @@ class ApiKeysController < ApplicationController
       if @dbm.allow_manual_api_key?
         if @api_key.save
           @api_key.add_in_dbm
-          format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully created.' }
+          format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'API key was successfully created.' }
           format.json { render :show, status: :created, location: dbm_api_key_path(@dbm, @api_key) }
         else
           format.html { render :new }
           format.json { render json: @api_key.errors, status: :unprocessable_entity }
         end
       else
-        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Manual Api key not supported by this DBM.' }
+        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Manual API key not supported by this DBM.' }
         # json error code to be discussed. :upgrade_required, :insufficient_storage
-        format.json { render json: { error: 'Manual Api key not supported by this DBM.'}, status: :unprocessable_entity}
+        format.json { render json: { error: 'Manual API key not supported by this DBM.'}, status: :unprocessable_entity}
       end
     end
   end
@@ -89,7 +89,7 @@ class ApiKeysController < ApplicationController
 
     respond_to do |format|
       if ok
-        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully updated.' }
+        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'API key was successfully updated.' }
         format.json { render :show, status: :ok, location: dbm_api_key_path(@dbm, @api_key) }
       else
         format.html { render :edit }
@@ -111,10 +111,10 @@ class ApiKeysController < ApplicationController
 
     respond_to do |format|
       if ok
-        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'Api key was successfully destroyed.' }
+        format.html { redirect_to dbm_api_keys_path(@dbm), notice: 'API key was successfully destroyed.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Failed to delete Api key.' }
+        format.html { redirect_to dbm_api_keys_path(@dbm), error: 'Failed to delete API key.' }
         format.json { head :no_content, status: :unprocessable_entity }
       end
     end

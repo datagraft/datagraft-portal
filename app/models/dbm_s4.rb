@@ -217,7 +217,7 @@ class DbmS4 < Dbm
   def delete_repository(rdf_repo)
     puts "***** Enter DbmS4.delete_repository(#{name})"
 
-    url = rdf_repo.uri.to_s.gsub("RR:", "")
+      url = rdf_repo.uri.to_s.gsub("RR:", "")
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
@@ -245,6 +245,7 @@ class DbmS4 < Dbm
   def unreg_before_destroy()
     puts "***** Enter DbmS4.unreg_before_destroy(#{name})"
     # Remove all rdf_repos referencing this dbm
+    # TODO: Pls explain why this is needed?????
     rdf_repos.all.each do |rr|
       rr.destroy
     end

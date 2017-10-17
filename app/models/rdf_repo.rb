@@ -215,7 +215,8 @@ class RdfRepo < ApplicationRecord
       thing.destroy
     end
     dbm.delete_repository(self) unless self.uri == nil
-
+    
+    return true
     puts "***** Exit RdfRepo.delete_repository()"
   end
 

@@ -54,10 +54,13 @@
         - @results_list.each do |result|
           tr
             - @query_result[:headers].each do |header|
-              - if result[header]["value"].is_a? Numeric
-                td = result[header]["value"]
+              - if result[header]
+                - if result[header]["value"].is_a? Numeric
+                  td = result[header]["value"]
+                - else
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
               - else
-                td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+                td = ''
 
       tfoot
         tr

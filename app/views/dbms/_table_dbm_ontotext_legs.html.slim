@@ -1,8 +1,8 @@
-table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
   thead
     tr
       th.mdl-data-table__cell--non-numeric Name
-      th.mdl-data-table__cell--non-numeric Api Keys
+      th.mdl-data-table__cell--non-numeric API Keys
       th.mdl-data-table__cell--non-numeric Assets
   tbody
     - @dbm_ontotext_legs.each do |dbm_ol|
@@ -15,5 +15,5 @@ table.mdl-data-table.mdl-js-data-table.sin-table-fill.mdl-shadow--2dp
   - if @dbm_ontotext_legs.empty?
     tfoot
       tr
-        td.mdl-data-table__cell--non-numeric[colspan=3]
-          em No DBM Ontotext Legacy (databases) registered
+        td.mdl-data-table__cell--non-numeric[colspan=7]
+          em No Ontotext Legacy Databases registered
