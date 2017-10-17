@@ -182,3 +182,6 @@ gem 'rest-client'
 
 # StateMachines Active Record Integration
 gem 'state_machines-activerecord'
+
+# Minitest should avoid bug in update 5.10.2
+gem 'minitest', '5.10.1'
