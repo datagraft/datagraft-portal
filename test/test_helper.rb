@@ -3,7 +3,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
 # module to help with sign-ins
-module SignInHelper
+module TestSignInHelper
   # creates a new user for testing purposes
   def create_test_user_if_not_exists
     if not user = User.find_by_username('datagraft_test_user')
@@ -16,7 +16,7 @@ module SignInHelper
 end
 
 #module to help creating a DbmXXX setup for testing of interaction with RdfRepos and SparqlEndpoints
-module DbmXXXHelper
+module TestDbmXXXHelper
   def create_test_dbm_s4(testUser)
     testDbmS4 = DbmS4.new()
     testDbmS4.user = testUser
@@ -36,10 +36,51 @@ module DbmXXXHelper
     return ENV['DBMS4_SECRET']
   end
 
+  def delete_test_dbm_s4_repository(dbms4)
+    puts "***** Clean up DbmS4 repository"
+
+    begin
+      # This url mist match the names used for the test objects
+      url = 'https://rdf.ontotext.com/4043498093/test1/repositories/testname'
+      api_key = dbms4.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+
+      request = RestClient::Request.new(
+        :method => :delete,
+        :url => url,
+        :headers => {
+          'Authorization' => 'Basic ' + basicToken,
+          'Content-Type' => 'application/json'
+        }
+      )
+
+      puts request.inspect
+      response = request.execute
+      puts "Clean up DbmS4 repository with response code #{response.code}"
+    rescue => e
+      puts "Clean up DbmS4 repository with ex #{e.message}"
+    end
+
+  end
+
+end
+
+#module to help creating a SparqlEndpoint for testing
+module TestSparqlEndpointHelper
+  def create_test_sparql_endpoint(testUser)
+    se = SparqlEndpoint.new()
+    se.user = testUser
+    se.name = "TestName"
+    se.description = "TestDescription"
+    se.slug = "TestSlug"
+    se.save
+
+    return se
+  end
 end
 
 # module to help with one initial filestore obj in the fixture
-module FilestoreHelper
+module TestFilestoreHelper
   # Uploads a new file if not already there
   def create_test_filestore_if_not_exists
     if Filestore.exists?(name: 'test.xls')
@@ -57,9 +98,10 @@ module FilestoreHelper
 end
 
 class ActiveSupport::TestCase
-    include SignInHelper
-    include DbmXXXHelper
-    include FilestoreHelper
+    include TestSignInHelper
+    include TestDbmXXXHelper
+    include TestSparqlEndpointHelper
+    include TestFilestoreHelper
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 

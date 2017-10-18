@@ -23,6 +23,19 @@ class DbmS4Test < ActiveSupport::TestCase
 
   end
 
+
+  test "test methods on empty dbm" do
+    support_rdf = @testDbmS4.get_supported_repository_types.include? 'RDF'
+    assert support_rdf == true , 'DbmS4 should support RDF'
+
+    assert @testDbmS4.used_sparql_count == 0, 'DbmS4 should not have any rdf_repo when created'
+
+    ust = @testDbmS4.used_sparql_triples
+    assert ust[:repo_triples] == 0, 'DbmS4 should not have any triples when created'
+
+  end
+
+
   test "should not have api_key create one" do
     assert @testDbmS4.api_keys.count == 0, 'DbmS4 should not have any api keys when created'
 
@@ -40,18 +53,12 @@ class DbmS4Test < ActiveSupport::TestCase
 
     assert @testDbmS4.allow_manual_api_key? == true, 'DbmS4 should allow manual keys'
 
-    support_rdf = @testDbmS4.get_supported_repository_types.include? 'RDF'
-    assert support_rdf == true , 'DbmS4 should support RDF'
-
-    assert @testDbmS4.used_sparql_count == 0, 'DbmS4 should not have any rdf_repo when created'
-
-    ust = @testDbmS4.used_sparql_triples
-    assert ust[:repo_triples] == 0, 'DbmS4 should not have any triples when created'
-
     #puts "dbmS4: #{@testDbmS4.inspect}"
     #puts "apiKey: #{@testDbmS4.api_keys.first.inspect}"
     #puts "testUser: #{@testUser.inspect}"
   end
+
+
 
 #  test "should delete S4 repository" do
 #    assert @testDbmS4.send(:delete_repository("repository1"))
