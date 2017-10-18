@@ -210,12 +210,12 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.delete_repository(#{name})"
     # Remove all things referencing this rr
     things.all.each do |thing|
-      thing.rdf_repo = nil  # Avoid ecursive calls to delete_repository
+      thing.rdf_repo = nil  # Avoid recursive calls to delete_repository
       thing.save
-      thing.destroy
+      #thing.destroy
     end
     dbm.delete_repository(self) unless self.uri == nil
-    
+
     return true
     puts "***** Exit RdfRepo.delete_repository()"
   end
