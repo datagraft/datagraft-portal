@@ -36,12 +36,15 @@ module TestDbmXXXHelper
     return ENV['DBMS4_SECRET']
   end
 
-  def delete_test_dbm_s4_repository(dbms4)
+  def delete_test_dbm_s4_repository(dbms4, url)
     puts "***** Clean up DbmS4 repository"
 
+    if url.nil?
+      puts "No clean up of DbmS4 repository URL==nil"
+      return
+    end
+
     begin
-      # This url mist match the names used for the test objects
-      url = 'https://rdf.ontotext.com/4043498093/test1/repositories/testname'
       api_key = dbms4.first_enabled_key
       basicToken = Base64.strict_encode64(api_key.key)
 

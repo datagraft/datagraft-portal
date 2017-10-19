@@ -142,7 +142,7 @@ class RdfRepo < ApplicationRecord
     rescue => e
       puts 'Error querying repo size - using cached value'
       puts e.message
-      puts e.backtrace.inspect
+      #puts e.backtrace.inspect
     end
 
     puts "***** Exit RdfRepo.get_repository_size()"
@@ -198,6 +198,25 @@ class RdfRepo < ApplicationRecord
     touch_configuration!
     self.configuration["cached_size"] = val
   end
+
+  def read_size_wo_key_for_test
+
+    url = self.uri + '/size'
+
+    headers = {
+      'Accept' => 'application/sparql-results+json'
+    }
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+    puts request.inspect
+    response = request.execute
+
+    return response.body.to_i
+  end
+
 
   protected
   def touch_configuration!
