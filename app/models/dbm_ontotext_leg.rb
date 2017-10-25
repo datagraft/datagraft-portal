@@ -98,7 +98,7 @@ class DbmOntotextLeg < Dbm
   end
 
   def used_sparql_count
-    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list = self.rdf_repos.all #TODO fix to count real sparql_endpoints
     return rdf_repo_list.size
   end
 

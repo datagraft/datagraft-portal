@@ -78,6 +78,10 @@ class SparqlEndpointsController < ThingsController
     dbm_id = params[:sparql_endpoint][:dbm_entries]
     dbm = Dbm.where(id: dbm_id).first
 
+    if dbm == nil
+      flash[:error] = 'Error bad DBM reference'
+      redirect_to dashboard_path
+    end
     unless dbm.user == current_user
       flash[:error] = 'Error DBM with different user'
       redirect_to dashboard_path
@@ -87,62 +91,65 @@ class SparqlEndpointsController < ThingsController
     unless quota_dbm_room_for_new_sparql_count?(dbm)
       redirect_to quotas_path
     else
+      phase1_ok = false
       begin
         @thing = SparqlEndpoint.new(sparql_endpoint_params)
         @thing.user = current_user
         @thing.pass_parameters
+        phase1_ok = @thing.save   # It is important to save @thing before using it in another Thread
       rescue => e
         @thing.error_occured_creating_repo
         puts e.message
         puts e.backtrace.inspect
       end
 
-      Thread.new do
-        puts "***** Create thread...start"
-        @thing.issue_create_repo
-        # @thing.uri = current_user.new_ontotext_repository(@thing)
-        begin
-          rr = RdfRepo.new
-          rr.dbm = dbm
-          rr.name = "RR:#{@thing.slug}"
-          rr.save
-          @thing.rdf_repo = rr
-          rr.create_repository(@thing)
-          rr.save
-          @upwizard = nil
-          if params[:wiz_id]
-            @upwizard = Upwizard.find(params[:wiz_id])
-            raise "Wizard object not found!" if !@upwizard
-            # Get file from wizard
-            fill_default_values_if_empty
-            rdfFile = @upwizard.get_current_file
-            rdfType = file_ext(@upwizard.get_current_file_original_name)
-            #current_user.upload_file_ontotext_repository(rdfFile, rdfType, @thing)
-            @thing.rdf_repo.upload_file_to_repository(rdfFile, rdfType)
-          else
-            flash[:warning] = "No triple file provided."
+      if phase1_ok
+        Thread.new do
+          puts "***** Create thread...start"
+          begin
+            @thing.issue_create_repo
+            rr = RdfRepo.new
+            rr.dbm = dbm
+            rr.name = "RR:#{@thing.slug}"
+            rr.is_public = @thing.public
+            rr.save     # Save is needed before connecting to @thing
+            @thing.rdf_repo = rr
+
+            rr.create_repository(@thing)
+            @upwizard = nil
+            if params[:wiz_id]
+              @upwizard = Upwizard.find(params[:wiz_id])
+              raise "Wizard object not found!" if !@upwizard
+              # Get file from wizard
+              fill_default_values_if_empty
+              rdfFile = @upwizard.get_current_file
+              rdfType = file_ext(@upwizard.get_current_file_original_name)
+              rr.upload_file_to_repository(rdfFile, rdfType)
+            else
+              flash[:warning] = "No triple file provided."
+            end
+            @thing.repo_successfully_created
+            rr.save
+
+          rescue => e
+            @thing.repo_error_message = e.message
+            @thing.error_occured_creating_repo
+            puts e.message
+            puts e.backtrace.inspect
+
+            #Cleanup
+            @thing.rdf_repo = nil
+            rr.destroy
           end
-          @thing.repo_successfully_created
-
-        rescue => e
-          @thing.repo_error_message = e.message
-          @thing.error_occured_creating_repo
-          puts e.message
-          puts e.backtrace.inspect
-
-          #Cleanup
-          @thing.rdf_repo.destroy
-          @thing.rdf_repo = nil
           @thing.save
-          rr.destroy
+          @upwizard.destroy if @upwizard
+          ActiveRecord::Base.connection.close
+          puts "***** Create thread...end"
         end
-        @upwizard.destroy if @upwizard
-        ActiveRecord::Base.connection.close
-        puts "***** Create thread...end"
       end
 
       respond_to do |format|
-        if @thing.save
+        if phase1_ok
           format.html { redirect_to thing_path(@thing), notice: create_background_notice }
           format.json { render :show, status: :created, location: thing_path(@thing) }
         else

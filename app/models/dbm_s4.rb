@@ -9,15 +9,6 @@ class DbmS4 < Dbm
   attr_accessor :secret
 
 
-  #######
-  private
-  #######
-
-  # Rails 4 strong params usage
-  def dbm_s4_params
-    params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
-  end
-
   ######
   public
   ######
@@ -103,8 +94,8 @@ class DbmS4 < Dbm
   # Update S4 repository public property
   def update_repository_public(rdf_repo, public)
     puts "***** Enter DbmS4.set_repository_public(#{name})"
-    puts rdf_repo.inspect
-    puts public
+    ## puts rdf_repo.inspect
+    ## puts public
 
     url = rdf_repo.uri
     api_key = rdf_repo.dbm.first_enabled_key
@@ -136,7 +127,7 @@ class DbmS4 < Dbm
 
 
   def used_sparql_count
-    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list = self.rdf_repos.all #TODO fix to count real sparql_endpoints
     return rdf_repo_list.size
   end
 
@@ -239,6 +230,7 @@ class DbmS4 < Dbm
 
     puts "***** Exit DbmS4.delete_repository()"
   end
+
 
   private
   # Delete all RDF repositories owned by this dbm called by before_destroy

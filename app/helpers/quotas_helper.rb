@@ -82,6 +82,10 @@ module QuotasHelper
       limit_count = dbm.quota_sparql_count
       ret_ok = current_count < limit_count
     end
+    unless ret_ok
+      flash[:error] = "Your SPARQL endpoint count quota is exceeded"
+    end
+
     return ret_ok
   end
 
