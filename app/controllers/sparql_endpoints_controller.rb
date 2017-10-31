@@ -78,34 +78,24 @@ class SparqlEndpointsController < ThingsController
     dbm_id = params[:sparql_endpoint][:dbm_entries]
     dbm = Dbm.where(id: dbm_id).first
 
-    if dbm == nil
-      flash[:error] = 'Error bad DBM reference'
-      redirect_to dashboard_path
-    end
-    unless dbm.user == current_user
-      flash[:error] = 'Error DBM with different user'
-      redirect_to dashboard_path
-    end
+    begin
+      ok = false
+      raise 'Error bad DBM reference' if dbm == nil
+      raise 'Error DBM with different user' unless dbm.user == current_user
+      raise 'Error no quota on selected database' unless quota_dbm_room_for_new_sparql_count?(dbm)
 
-    # Check if quota is broken
-    unless quota_dbm_room_for_new_sparql_count?(dbm)
-      redirect_to quotas_path
-    else
-      phase1_ok = false
-      begin
-        @thing = SparqlEndpoint.new(sparql_endpoint_params)
-        @thing.user = current_user
-        @thing.pass_parameters
-        phase1_ok = @thing.save   # It is important to save @thing before using it in another Thread
-      rescue => e
-        @thing.error_occured_creating_repo
-        puts e.message
-        puts e.backtrace.inspect
-      end
+      @thing = SparqlEndpoint.new(sparql_endpoint_params)
+      @thing.user = current_user
+      @thing.pass_parameters
+      ok = @thing.save   # It is important to save @thing before using it in another Thread
 
-      if phase1_ok
+      if !ok
+        flash[:error] = "Could not create SPARQL endpoint. Please try again."
+      else
+        puts "Before - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
         Thread.new do
           puts "***** Create thread...start"
+          puts "New thread - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
           begin
             @thing.issue_create_repo
             rr = RdfRepo.new
@@ -125,8 +115,6 @@ class SparqlEndpointsController < ThingsController
               rdfFile = @upwizard.get_current_file
               rdfType = file_ext(@upwizard.get_current_file_original_name)
               rr.upload_file_to_repository(rdfFile, rdfType)
-            else
-              flash[:warning] = "No triple file provided."
             end
             @thing.repo_successfully_created
             rr.save
@@ -138,25 +126,31 @@ class SparqlEndpointsController < ThingsController
             puts e.backtrace.inspect
 
             #Cleanup
-            @thing.rdf_repo = nil
-            rr.destroy
+            @upwizard = nil          # Keep the upwizard for retries
+            @thing.rdf_repo = nil    # Remove the RdfRepo connection from SparqlEndpoint
+            rr.destroy               # Delete the RdfRepo
           end
-          @thing.save
-          @upwizard.destroy if @upwizard
+          @thing.save                      # Save SparqlEndpoint updates
+          @upwizard.destroy if @upwizard   # Delete Upwizard if we are ready with it
           ActiveRecord::Base.connection.close
           puts "***** Create thread...end"
         end
       end
 
-      respond_to do |format|
-        if phase1_ok
-          format.html { redirect_to thing_path(@thing), notice: create_background_notice }
-          format.json { render :show, status: :created, location: thing_path(@thing) }
-        else
-          flash[:error] = "Could not create SPARQL endpoint. Please try again."
-          format.html { redirect_to upwizard_new_path('sparql') }
-          format.json { render json: @thing.errors, status: :unprocessable_entity }
-        end
+    rescue => e
+      @thing.error_occured_creating_repo unless @thing.nil?
+      puts e.message
+      ## puts e.backtrace.inspect
+      flash[:error] = e.message
+    end
+
+    respond_to do |format|
+      if ok
+        format.html { redirect_to thing_path(@thing), notice: create_background_notice }
+        format.json { render :show, status: :created, location: thing_path(@thing) }
+      else
+        format.html { redirect_to dashboard_path }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -261,6 +255,7 @@ class SparqlEndpointsController < ThingsController
     @thing = SparqlEndpoint.find_by(slug: params[:slug], user: usr)
     authorize! :read, @thing
     puts @thing.state
+
     respond_to do |format|
       format.json { render :state, status: :ok }
     end
