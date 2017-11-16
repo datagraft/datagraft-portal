@@ -77,9 +77,10 @@ class Dbm < ApplicationRecord
     da = self.dbm_accounts.create()
 
     da.name = name
-    da.encrypted_password = password   #TODO
-    da.enabled = enabled
     da.user = user
+    da.enabled = enabled
+    da.save
+    da.password = password
     da.save
 
     self.save
