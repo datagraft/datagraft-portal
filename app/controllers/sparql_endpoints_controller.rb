@@ -144,6 +144,8 @@ class SparqlEndpointsController < ThingsController
       flash[:error] = e.message
     end
 
+    ##sleep(5)  # Wait some time so background thead gets ready
+    puts "After sleep - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
     respond_to do |format|
       if ok
         format.html { redirect_to thing_path(@thing), notice: create_background_notice }
