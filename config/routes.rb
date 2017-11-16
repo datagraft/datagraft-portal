@@ -16,10 +16,10 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
     }
 
-  #get 'api_keys/first' => 'api_keys#first'
   get 'api_keys' => 'api_keys#index_all'
   resources :dbms, only: [ :index ] do
     resources :api_keys
+    resources :dbm_accounts
   end
 
 
@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   get 'dbms/:id/things'   =>   'dbms#index_things'
   #resources :dbms
   resources :dbm_s4s
+  resources :dbm_arangos
 
   get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
   get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'

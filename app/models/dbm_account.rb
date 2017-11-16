@@ -1,7 +1,6 @@
 class DbmAccount < ApplicationRecord
   belongs_to :dbm
-
-
+  belongs_to :user
 
   def has_configuration?(key)
     !get_configuration(key).nil?

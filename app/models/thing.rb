@@ -10,6 +10,7 @@ class Thing < ApplicationRecord
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
   belongs_to :rdf_repo
+  belongs_to :dbm
 
 
   validates :name, presence: true

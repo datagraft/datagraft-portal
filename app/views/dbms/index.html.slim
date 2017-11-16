@@ -6,9 +6,10 @@
     .sin-card-with-tabs-title
       .mdl-card__title.mdl-color-text--grey-50
         h3 = yield(:title)
-    
+
       .mdl-tabs__tab-bar
         a.mdl-tabs__tab.is-active href="#dbm_s4s-panel" S4
+        a.mdl-tabs__tab href="#dbm_arangos-panel" Arango
         a.mdl-tabs__tab href="#dbm_ontotext_legs-panel" Legacy
 
     /! MDL tab panels, is-active to denote currently active
@@ -19,3 +20,7 @@
     #dbm_ontotext_legs-panel.mdl-tabs__panel
       div.mdl-card__supporting-text.sin-padding
         = render 'index_dbm_ontotext_legs_tab'
+    /! MDL Tab panel 3
+    #dbm_arangos-panel.mdl-tabs__panel
+      div.mdl-card__supporting-text.sin-padding
+        = render 'index_dbm_arangos_tab'

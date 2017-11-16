@@ -5,6 +5,7 @@ class Dbm < ApplicationRecord
   has_many :dbm_accounts, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :rdf_repos, dependent: :destroy
+  has_many :things, dependent: :destroy
 
   cattr_accessor :supported_repository_types
 
@@ -64,11 +65,38 @@ class Dbm < ApplicationRecord
   # Returns the first enabled API key
   def first_enabled_key
     api_key = self.api_keys.where(enabled: true).first
-    
+
     raise "No enabled API key found" if api_key.nil?
-    
+
     return api_key
   end
+
+  # Create and add new DbmAccount to the DBM
+  def add_account(name, password, enabled = true)
+    self.save
+    da = self.dbm_accounts.create()
+
+    da.name = name
+    da.encrypted_password = password   #TODO
+    da.enabled = enabled
+    da.user = user
+    da.save
+
+    self.save
+    return da
+  end
+
+
+  # Delete DbmAccount from the DBM
+  def delete_account(dbm_account)
+    self.api_keys.find(dbm_account).destroy
+  end
+
+
+
+
+
+
 
 
   def has_configuration?(key)
