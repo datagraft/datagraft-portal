@@ -65,6 +65,8 @@ Rails.application.routes.draw do
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
   post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
+  post ':username/arango_dbs/:id/execute_query' => 'arango_dbs#execute_query'
+
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
   get    ':username/upwizards/new/:task'   => 'upwizards#new'     #Start a new wizard for a task
@@ -129,6 +131,7 @@ Rails.application.routes.draw do
     datagraft_resources :queries
     datagraft_resources :filestores
     datagraft_resources :sparql_endpoints
+    datagraft_resources :arango_dbs
 
     # TODO fix me : Flip crashes on migration
     begin

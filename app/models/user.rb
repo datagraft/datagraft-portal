@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :api_keys, dependent: :destroy
   has_many :catalogues, dependent: :destroy
   has_many :sparql_endpoints, dependent: :destroy
+  has_many :arango_dbs, dependent: :destroy
   has_many :upwizards, dependent: :destroy
   has_many :dbms, dependent: :destroy
   has_many :dbm_accounts, dependent: :destroy
@@ -34,7 +35,15 @@ class User < ApplicationRecord
       data_page data_pages
       transformation transformations
       utility_function utility_functions
+      sparql_endpoint sparql_endpoints
+      arango_db arango_dbs
       query queries
+      upwizard upwizards
+      dbm dbms
+      dbm_s4 dbm_s4s
+      dbm_ontotext_leg dbm_ontotext_legs
+      dbm_arango dbm_arangos
+      dbm_account dbm_accounts
       api_key api_keys
       explore publish dashboard transform publish_queriable_data_store querying execute
       new edit index star unstar fork copy versions
