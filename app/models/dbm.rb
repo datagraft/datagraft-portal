@@ -93,6 +93,15 @@ class Dbm < ApplicationRecord
     self.api_keys.find(dbm_account).destroy
   end
 
+  # Returns the first enabled dbm_account
+  def first_enabled_account
+    da = self.dbm_accounts.where(enabled: true).first
+
+    raise "No enabled DbmAccount found" if da.nil?
+
+    return da
+  end
+
 
 
 

@@ -185,3 +185,6 @@ gem 'state_machines-activerecord'
 
 # Minitest should avoid bug in update 5.10.2
 gem 'minitest', '5.10.1'
+
+# Lib for accessing Arango Database
+gem 'arangorb'
