@@ -8,7 +8,7 @@ class DbmAccountsController < ApplicationController
   # GET /dbms/dbm_id/dbm_account
   # GET /dbms/dbm_id/dbm_account.json
   def index
-    @dbm_account = current_user.dbm_accounts.where(dbm_id: params[:dbm_id])
+    @dbm_accounts = current_user.dbm_accounts.where(dbm_id: params[:dbm_id])
   end
 
   # GET /dbms/dbm_id/dbm_account/new
@@ -40,7 +40,7 @@ class DbmAccountsController < ApplicationController
 
     respond_to do |format|
       if @dbm_account.save
-        format.html { redirect_to dbm_dbm_account_path(@dbm), notice: 'Dbm Account was successfully created.' }
+        format.html { redirect_to dbm_dbm_accounts_path(@dbm), notice: 'Dbm Account was successfully created.' }
         format.json { render :show, status: :created, location: dbm_dbm_account_path(@dbm, @dbm_account) }
       else
         format.html { render :new }
@@ -83,7 +83,7 @@ class DbmAccountsController < ApplicationController
 
     respond_to do |format|
       if ok
-        format.html { redirect_to dbm_abm_accounts_path(@dbm), notice: 'Dbm account was successfully destroyed.' }
+        format.html { redirect_to dbm_dbm_accounts_path(@dbm), notice: 'Dbm account was successfully destroyed.' }
         format.json { head :no_content }
       else
         format.html { redirect_to dbm_dbm_accounts_path(@dbm), error: 'Failed to delete Dbm account.' }

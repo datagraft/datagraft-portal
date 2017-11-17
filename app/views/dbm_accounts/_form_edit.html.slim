@@ -1,29 +1,21 @@
 div.mdl-card.mdl-shadow--2dp
-  = form_for(:api_key, method: :put, url: dbm_api_key_path(@dbm)) do |f|
+  = form_for(:dbm_account, method: :put, url: dbm_dbm_account_path(@dbm)) do |f|
     .mdl-card__supporting-text
-      - if @api_key.errors.any?
+      - if @dbm_account.errors.any?
         #error_explanation
           h2
-            = pluralize(@api_key.errors.count, "error")
-            | prohibited this api_key from being saved:
+            = pluralize(@dbm_account.errors.count, "error")
+            | prohibited this dbm_account from being saved:
           ul
-            - @api_key.errors.full_messages.each do |message|
+            - @dbm_account.errors.full_messages.each do |message|
               li= message
       .mdl-grid
         .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
           = f.label :name, class: "mdl-textfield__label"
           = f.text_field :name, class: "mdl-textfield__input"
-        - if @dbm.allow_manual_api_key?
-          - state = {:disabled => false}
-        - else
-          - state = {:disabled => true}
         .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-          = f.label :Api_key, class: "mdl-textfield__label"
-          = f.text_field :key_pub, state.merge(class: "mdl-textfield__input")
-        .mdl-cell.mdl-cell--12-col.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-          = f.label :Api_key_secret, class: "mdl-textfield__label"
-          = f.text_field :key_secret, state.merge(class: "mdl-textfield__input")
-
+          = f.label :Account_password, class: "mdl-textfield__label"
+          = f.password_field :password, autocomplete: "off", class: "mdl-textfield__input"
         label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for="checkbox-enabled"
           = f.check_box :enabled, id: "checkbox-enabled", class: "mdl-switch__input"
           span.mdl-switch__label Enabled

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170919121301) do
+ActiveRecord::Schema.define(version: 20171116165900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,8 @@ ActiveRecord::Schema.define(version: 20170919121301) do
     t.integer  "dbm_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "user_id"
+    t.boolean  "enabled"
     t.index ["dbm_id"], name: "index_dbm_accounts_on_dbm_id", using: :btree
   end
 
@@ -233,6 +235,7 @@ ActiveRecord::Schema.define(version: 20170919121301) do
     t.string   "original_filename"
     t.string   "state",             default: "repo_created"
     t.integer  "rdf_repo_id"
+    t.integer  "dbm_id"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true, using: :btree
     t.index ["type"], name: "index_things_on_type", using: :btree
     t.index ["user_id"], name: "index_things_on_user_id", using: :btree

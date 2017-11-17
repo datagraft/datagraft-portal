@@ -1,0 +1,14 @@
+- title 'Edit Database Management (Arango server)'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-layout style="align-items: center;"
+    div.mdl-card__supporting-text.sin-padding
+      = render 'form_edit'
+
+  div.mdl-card__actions
+    = link_to 'Back', dbms_path, :class => "mdl-button sin-button--danger mdl-button--raised mdl-js-button mdl-js-ripple-effect"

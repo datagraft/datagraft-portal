@@ -1,4 +1,4 @@
-- title "Dbm API keys connected to #{dbms_descriptive_name(@dbm)}"
+- title "Dbm accounts connected to #{dbms_descriptive_name(@dbm)}"
 - setOption :mdlCard
 
 div.mdl-card
@@ -14,37 +14,34 @@ div.mdl-card
             th.mdl-data-table__cell--non-numeric Database
             th.mdl-data-table__cell--non-numeric Name
             th.mdl-data-table__cell--non-numeric Enabled
-            th.mdl-data-table__cell--non-numeric Key
             th.mdl-data-table__cell--non-numeric Edit
             th.mdl-data-table__cell--non-numeric Delete
         tbody
-          - @api_keys.each do |api_key|
+          - @dbm_accounts.each do |dbm_account|
             tr
-              td.mdl-data-table__cell--non-numeric = api_key.dbm.name
-              td.mdl-data-table__cell--non-numeric = api_key.name
+              td.mdl-data-table__cell--non-numeric = dbm_account.dbm.name
+              td.mdl-data-table__cell--non-numeric = dbm_account.name
               td.mdl-data-table__cell--non-numeric.sin-action-table--center
-               == link_to edit_dbm_api_key_path(@dbm, api_key) do
-                - if api_key.enabled
+               == link_to edit_dbm_dbm_account_path(@dbm, dbm_account) do
+                - if dbm_account.enabled
                   i.material-icons check_box
                 - else
                   i.material-icons check_box_outline_blank
-              td.mdl-data-table__cell--non-numeric.sin-monospace-key = api_key.key
               td.sin-action-table--center
-               == link_to edit_dbm_api_key_path(@dbm, api_key) do
+               == link_to edit_dbm_dbm_account_path(@dbm, dbm_account) do
                 i.material-icons edit
               td.sin-action-table--center
-               == link_to dbm_api_key_path(@dbm, api_key), method: :delete, data: { confirm: 'Are you sure?' } do
+               == link_to dbm_dbm_account_path(@dbm, dbm_account), method: :delete, data: { confirm: 'Are you sure?' } do
                 i.material-icons delete
-        - if @api_keys.empty?
+        - if @dbm_accounts.empty?
           tfoot
             tr
               td.mdl-data-table__cell--non-numeric[colspan=7]
-                em No API keys yet
+                em No Dbm accounts yet
 
 
   div.mdl-card__actions
     = link_to 'Back', dbms_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
 
     .mdl-layout-spacer
-    - if @dbm.allow_manual_api_key?
-      == link_to 'New API key', new_dbm_api_key_path(@dbm), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+    == link_to 'New Dbm account', new_dbm_dbm_account_path(@dbm), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

@@ -2,10 +2,10 @@ class Dbm < ApplicationRecord
   before_destroy :unreg_before_destroy  # This is important to have available ApiKeys when deleting the repos
 
   belongs_to :user
-  has_many :dbm_accounts, dependent: :destroy
-  has_many :api_keys, dependent: :destroy
+  has_many :dbm_accounts  ## Deleted by user , dependent: :destroy
+  has_many :api_keys  ## Deleted by user , dependent: :destroy
   has_many :rdf_repos, dependent: :destroy
-  has_many :things, dependent: :destroy
+  has_many :things  ## Deleted by user , dependent: :destroy
 
   cattr_accessor :supported_repository_types
 
