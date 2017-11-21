@@ -1,6 +1,6 @@
-require "arangorb"
 
 class DbmArango < Dbm
+  include HTTParty
 
   # Non-persistent attribute for storing inputs from new form
   attr_accessor :dbm_account_username
@@ -35,24 +35,23 @@ class DbmArango < Dbm
   # Create a collection in a database
   def create_collection(db_name, collection_name, type)
     puts "***** Enter DbmArango.create_collection(#{name})"
-    db = get_database_obj(db_name)
-    coll = get_collection_obj(db, collection_name)
-    if type.downcase = 'edge'
-      coll.create_edge_collection
-    else
-      coll.create
-    end
+    #db = get_database_obj(db_name)
+    #coll = get_collection_obj(db, collection_name)
+    #if type.downcase = 'edge'
+    #  coll.create_edge_collection
+    #else
+    #  coll.create
+    #end
     puts "***** Exit DbmArango.create_collection()"
   end
 
   # Fetch list of collections from a database
-  def get_collections(db_name)
+  def get_collections(database_name)
     puts "***** Enter DbmArango.get_collections(#{name})"
-    db = get_database_obj(db_name)
-    coll_arr = get_collections_obj(db)
+    coll_arr = adbm_collections(database_name)
     res_arr = []
     coll_arr.each do |coll|
-      res_arr << {name: coll.collection, type: coll.type, collection: coll}
+      res_arr << {name: coll[:collection], type: coll[:type], collection: coll}
     end
     puts "***** Exit DbmArango.get_collections()"
     return res_arr
@@ -60,11 +59,11 @@ class DbmArango < Dbm
 
   def get_collection_status(db_name, collection_name)
     puts "***** Enter DbmArango.get_collection_status(#{name})"
-    status = {}
-    db = get_database_obj(db_name)
-    coll = get_collection_obj(db, collection_name)
+    #status = {}
+    #db = get_database_obj(db_name)
+    #coll = get_collection_obj(db, collection_name)
     puts "***** Exit DbmArango.get_collection_status()"
-    return status
+    #return status
   end
 
   # Delete collection
@@ -74,11 +73,10 @@ class DbmArango < Dbm
   end
 
   def get_databases
-    arango_init
-    db_arr = ArangoServer.databases
+    db_arr = adbm_databases
     res_arr = []
     db_arr.each do |db|
-      res_arr << {name: db.database, db: db}
+      res_arr << {name: db[:database]}
     end
     return res_arr
   end
@@ -86,39 +84,39 @@ class DbmArango < Dbm
 
   private
 
-  def arango_init
-    if @arango_init.nil?
+  def adbm_init
+    if @adbm_init.nil?
+      puts "***** adbm_init(#{name})"
       da = first_enabled_account
-      @arango_init = true
-      ArangoServer.default_server user: da.name, password: da.password, server: uri, port: "8529"
+      @adbm_server = uri
+      @adbm_port = "8529"
+      self.class.base_uri "http://#{@adbm_server}:#{@adbm_port}"
+
+      @adbm_user = da.name
+      @adbm_password = da.password
+      self.class.basic_auth @adbm_user, @adbm_password
+      @adbm_request = {:body => {}, :headers => {}, :query => {}}
+      @adbm_init = true
     end
   end
 
-  def get_database_obj(db_name)
-    arango_init
-    db = ArangoDatabase.new database: db_name
-    return db
+  def adbm_databases
+    adbm_init
+    result = self.class.get("/_api/database/user", @adbm_request)
+    result = result.parsed_response
+    return result["result"].map{|x| {obj: 'DB', database: x}}
   end
 
-  def get_collections_obj(db)
-    coll_arr = db.collections
-    return coll_arr
+  def adbm_collections(database_name, excludeSystem: true)
+    adbm_init
+    query = { "excludeSystem": excludeSystem }.delete_if{|k,v| v.nil?}
+    request = @adbm_request.merge({ :query => query })
+
+    result = self.class.get("/_db/#{database_name}/_api/collection", request)
+    result = result.parsed_response
+    result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Collection'}}
   end
 
-  def get_collection_obj(db, collection_name)
-    coll = db.collection(collection_name).retrieve
-    return coll
-  end
-
-  def get_graphs_obj(db)
-    graph_arr = db.graphs
-    return graph_arr
-  end
-
-  def get_graph_obj(db, graph_name)
-    graph = db.graph(graph_name).retrieve
-    return graph
-  end
 
 
 end

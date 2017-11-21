@@ -187,4 +187,5 @@ gem 'state_machines-activerecord'
 gem 'minitest', '5.10.1'
 
 # Lib for accessing Arango Database
-gem 'arangorb'
+# gem 'arangorb'
+gem 'httparty', '~> 0.14'
