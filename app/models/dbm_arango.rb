@@ -10,9 +10,8 @@ class DbmArango < Dbm
   public
   ######
 
-  @@supported_repository_types = %w(ARANGO)
   def get_supported_repository_types
-    return @@supported_repository_types
+    return %w(ARANGO)
   end
 
   def uri

@@ -4,7 +4,7 @@ class SparqlEndpointsController < ThingsController
   include QuotasHelper
   include DbmsHelper
 
-  wrap_parameters :sparql_endpoint, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file]
+  wrap_parameters :sparql_endpoint, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :dbm_entries]
 
   def new
     super

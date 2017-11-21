@@ -182,7 +182,7 @@ def search_for_existing_dbms_reptype(rep_type)
   dbm_list = self.dbms.all
   dbm_list.each do |dbm|
     unless dbm.type == nil ## Only check specialisations
-      srt = dbm.supported_repository_types
+      srt = dbm.get_supported_repository_types
       res << dbm if srt.include? rep_type
     end
   end

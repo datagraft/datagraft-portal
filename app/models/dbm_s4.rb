@@ -13,14 +13,12 @@ class DbmS4 < Dbm
   public
   ######
 
-  @@supported_repository_types = %w(RDF)
   def get_supported_repository_types
-    return @@supported_repository_types
+    return %w(RDF)
   end
 
-  @@supported_db_plans = %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
   def get_supported_db_plans
-    return @@supported_db_plans
+    return %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
   end
 
   def db_plan

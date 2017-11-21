@@ -12,6 +12,14 @@ class DbmArangosController < DbmsController
   # GET /dbm_arangos
   def index
     @dbm_arangos = current_user.search_for_existing_dbms_type("DbmArango")
+    db_arr = @dbm_arangos.first.get_databases
+    db_arr.each do |db|
+      puts "DB: #{db[:name]}"
+      coll_arr = @dbm_arangos.first.get_collections(db[:name])
+      coll_arr.each do |coll|
+        puts "  COL: #{coll[:name]} #{coll[:type]}"
+      end
+    end
   end
 
 

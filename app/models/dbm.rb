@@ -7,7 +7,11 @@ class Dbm < ApplicationRecord
   has_many :rdf_repos, dependent: :destroy
   has_many :things  ## Deleted by user , dependent: :destroy
 
-  cattr_accessor :supported_repository_types
+  ##cattr_accessor :supported_repository_types
+
+  def get_supported_repository_types
+    return ""
+  end
 
 
   def find_tings

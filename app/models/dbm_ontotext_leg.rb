@@ -8,9 +8,8 @@ class DbmOntotextLeg < Dbm
   public
   ######
 
-  @@supported_repository_types = %w(RDF)
   def get_supported_repository_types
-    return @@supported_repository_types
+    return %w(RDF)
   end
 
   def find_things

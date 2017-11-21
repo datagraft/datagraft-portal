@@ -4,12 +4,21 @@ class ArangoDbsController < ThingsController
   include QuotasHelper
   include DbmsHelper
 
-  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file]
+  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :db_entries]
 
   def new
     super
     # Find valid dbms
     @dbm_entries = current_user.search_for_existing_dbms_reptype('ARANGO')
+    @db_entries = []
+    @dbm_entries.each do |dbm|
+      db_arr = dbm.get_databases
+      db_arr.each do |db|
+        @db_entries << ["DBM: #{dbm.name}  =>  Database: #{db[:name]}", "#{dbm.id} #{db[:name]}"]
+        puts "DBM: #{dbm.name} DB: #{db[:name]}"
+      end
+    end
+
   end
 
   def show
@@ -21,7 +30,9 @@ class ArangoDbsController < ThingsController
 
   def create
     authorize! :create, ArangoDb
-    dbm_id = params[:arango_db][:dbm_entries]
+    db_entries = params[:arango_db][:db_entries]
+    dbm_id = db_entries.split(' ')[0]
+    db_name = db_entries.split(' ')[1]
     dbm = Dbm.where(id: dbm_id).first
 
     begin
@@ -31,6 +42,7 @@ class ArangoDbsController < ThingsController
 
       @thing = ArangoDb.new(arango_db_params)
       @thing.user = current_user
+      @thing.dbm = dbm
       ok = @thing.save   # It is important to save @thing before using it in another Thread
 
       if !ok
@@ -128,7 +140,7 @@ class ArangoDbsController < ThingsController
   private
   def arango_db_params
     params.require(:arango_db).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :publish_file, :dbm_entries, :rdf_repo_id,
+      :meta_keyword_list, :publish_file, :db_entries,
       queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 

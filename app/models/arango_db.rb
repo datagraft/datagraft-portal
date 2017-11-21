@@ -2,8 +2,8 @@ class ArangoDb < Thing
   extend FriendlyId
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  #has_many :sparql_endpoint_queries, dependent: :destroy
-  #has_many :queries, :through => :sparql_endpoint_queries
+  has_many :sparql_endpoint_queries, dependent: :destroy
+  has_many :queries, :through => :sparql_endpoint_queries
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
 
@@ -42,11 +42,11 @@ class ArangoDb < Thing
     name_changed? || super
   end
 
-  def dbm_entries=(val)
+  def db_entries=(val)
     #Do nothing...
   end
 
-  def dbm_entries
+  def db_entries
     #Return Dummy
     return 1001
   end
