@@ -62,4 +62,11 @@ class ArangoDb < Thing
     metadata["db_name"] = val
   end
 
+  def uri
+    res = "No database"
+    unless dbm.nil?
+      res = dbm.get_database_uri(db_name)
+    end
+    return res
+  end
 end

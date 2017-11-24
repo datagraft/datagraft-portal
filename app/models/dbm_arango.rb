@@ -50,19 +50,17 @@ class DbmArango < Dbm
     coll_arr = adbm_collections(database_name)
     res_arr = []
     coll_arr.each do |coll|
-      res_arr << {name: coll[:collection], type: coll[:type], collection: coll}
+      res_arr << {name: coll[:collection], type: coll[:type], collection: coll, database: {name: database_name}}
     end
     puts "***** Exit DbmArango.get_collections()"
     return res_arr
   end
 
-  def get_collection_status(db_name, collection_name)
+  def get_collection_info(coll)
     puts "***** Enter DbmArango.get_collection_status(#{name})"
-    #status = {}
-    #db = get_database_obj(db_name)
-    #coll = get_collection_obj(db, collection_name)
+    info = adbm_collection_info(coll[:database][:name], coll[:name])
     puts "***** Exit DbmArango.get_collection_status()"
-    #return status
+    return info
   end
 
   # Delete collection
@@ -71,6 +69,7 @@ class DbmArango < Dbm
     puts "***** Exit DbmArango.delete_collection()"
   end
 
+  # List all databases available for current user
   def get_databases
     db_arr = adbm_databases
     res_arr = []
@@ -79,6 +78,11 @@ class DbmArango < Dbm
     end
     return res_arr
   end
+
+  # Get URI for specific database
+    def get_database_uri(db_name)
+      "http://#{@adbm_server}:#{@adbm_port}/_db/#{db_name}/_admin/aardvark/index.html#login"
+    end
 
 
   private
@@ -114,6 +118,12 @@ class DbmArango < Dbm
     result = self.class.get("/_db/#{database_name}/_api/collection", request)
     result = result.parsed_response
     result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Collection'}}
+  end
+
+  def adbm_collection_info(db_name, coll_name)
+    adbm_init
+    result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
+    result = result.parsed_response
   end
 
 

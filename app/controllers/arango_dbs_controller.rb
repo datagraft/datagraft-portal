@@ -23,7 +23,21 @@ class ArangoDbsController < ThingsController
 
   def show
     super
-    @dbm_info = dbms_descriptive_name(dbm)
+    @dbm_info = dbms_descriptive_name(@thing.dbm)
+    coll_arr = @thing.dbm.get_collections(@thing.db_name)
+    docs = 0
+    edges = 0
+    coll_arr.each do |coll|
+      puts "  COL: #{coll[:name]} #{coll[:type]}"
+      info = @thing.dbm.get_collection_info(coll)
+      if info['type'] == 2
+        docs += info['count']
+      else
+        edges += info['count']
+      end
+    end
+    @db_edges = "Edges:#{edges}"
+    @db_docs = "Documents:#{docs}"
 
 
   end
@@ -43,6 +57,7 @@ class ArangoDbsController < ThingsController
       @thing = ArangoDb.new(arango_db_params)
       @thing.user = current_user
       @thing.dbm = dbm
+      @thing.db_name = db_name
       ok = @thing.save   # It is important to save @thing before using it in another Thread
 
       if !ok
@@ -60,7 +75,7 @@ class ArangoDbsController < ThingsController
         format.html { redirect_to thing_path(@thing), notice: create_notice }
         format.json { render :show, status: :created, location: thing_path(@thing) }
       else
-        format.html { render :new  }
+        format.html { redirect_to dashboard_path  }
         format.json { render json: @thing.errors, status: :unprocessable_entity }
       end
     end
