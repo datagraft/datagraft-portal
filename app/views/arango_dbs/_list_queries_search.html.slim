@@ -1,4 +1,4 @@
-- queriesToShow = search_for_existing_sparql_queries
+- queriesToShow = search_for_existing_aql_queries
 - if queriesToShow.empty?
   div.mdl-card__supporting-text
     h2 No existing queries found
@@ -54,5 +54,5 @@
                 .sin-gl-hidden-user
                   = query.user.username
                 .sin-gl-hidden-linked-to-endpoint
-                  = query_links_to_sparql_endpoint(query, @thing)
-                = render partial: "run_query", locals: {thing: query, count: count, rparams: {sparql_thing: @thing}}
+                  = query_links_to_arango_db(query, @thing)
+                = render partial: "run_query", locals: {thing: query, count: count, rparams: {arango_thing: @thing}}

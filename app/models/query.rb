@@ -129,6 +129,27 @@ class Query < Thing
   def execute_on_arango_db(adb, user, timeout = 180)
     if adb.has_dbm?
       res = adb.dbm.query_database(adb.db_name, query_string)
+      # Collect all headers from the first entry
+      headers = []
+      if res["result"].count > 0
+        res["result"][0].each do |k,v|
+          headers << k
+        end
+      end
+
+      # Reformat the values into result_list["header_name"]["value"]
+      result_list = []
+      res["result"].each do |in_entry|
+        out_entry = {}
+        in_entry.each do |k,v|
+          out_entry[k] = {"value" => v}
+        end
+        result_list << out_entry
+      end
+      return {
+        headers: headers,
+        results: result_list
+      }
 
     else
       raise "Error ArangoDb has no database"

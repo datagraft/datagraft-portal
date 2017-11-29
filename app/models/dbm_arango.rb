@@ -89,31 +89,9 @@ class DbmArango < Dbm
     puts "***** Enter DbmArango.query_database(#{name})"
     response = adbm_database_query(db_name, query_string)
 
-    # Collect all headers from the first entry
-    headers = []
-    if response["result"].count > 0
-      response["result"][0].each do |k,v|
-        headers << k
-      end
-    end
-
-    # Reformat the values into result_list["header_name"]["value"]
-    result_list = []
-    response["result"].each do |in_entry|
-      out_entry = {}
-      in_entry.each do |k,v|
-        out_entry[k] = {"value" => v}
-      end
-      result_list << out_entry
-    end
-    res = {:results => result_list, :headers => headers}
-
     puts "***** Exit DbmArango.query_database()"
-    return res
+    return response
   end
-
-
-
 
 
   private
