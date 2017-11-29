@@ -1,0 +1,9 @@
+.mdl-cell--12-col
+  .sin-info-label Collections
+  .sin-info-textfield__scroll
+    - unless @coll_info_list.size == 0
+      - @coll_info_list.each do |coll_info|
+        = coll_info
+        br
+    - else
+      = "No collections for this database"

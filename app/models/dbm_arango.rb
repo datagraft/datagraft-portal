@@ -80,9 +80,40 @@ class DbmArango < Dbm
   end
 
   # Get URI for specific database
-    def get_database_uri(db_name)
-      "http://#{@adbm_server}:#{@adbm_port}/_db/#{db_name}/_admin/aardvark/index.html#login"
+  def get_database_uri(db_name)
+    "http://#{@adbm_server}:#{@adbm_port}/_db/#{db_name}/_admin/aardvark/index.html#login"
+  end
+
+  # Query specific database
+  def query_database(db_name, query_string)
+    puts "***** Enter DbmArango.query_database(#{name})"
+    response = adbm_database_query(db_name, query_string)
+
+    # Collect all headers from the first entry
+    headers = []
+    if response["result"].count > 0
+      response["result"][0].each do |k,v|
+        headers << k
+      end
     end
+
+    # Reformat the values into result_list["header_name"]["value"]
+    result_list = []
+    response["result"].each do |in_entry|
+      out_entry = {}
+      in_entry.each do |k,v|
+        out_entry[k] = {"value" => v}
+      end
+      result_list << out_entry
+    end
+    res = {:results => result_list, :headers => headers}
+
+    puts "***** Exit DbmArango.query_database()"
+    return res
+  end
+
+
+
 
 
   private
@@ -106,6 +137,7 @@ class DbmArango < Dbm
   def adbm_databases
     adbm_init
     result = self.class.get("/_api/database/user", @adbm_request)
+    raise "Error fetching databases" unless result.code.between?(200, 299)
     result = result.parsed_response
     return result["result"].map{|x| {obj: 'DB', database: x}}
   end
@@ -114,8 +146,9 @@ class DbmArango < Dbm
     adbm_init
     query = { "excludeSystem": excludeSystem }.delete_if{|k,v| v.nil?}
     request = @adbm_request.merge({ :query => query })
-
     result = self.class.get("/_db/#{database_name}/_api/collection", request)
+    raise "Error fetching collections" unless result.code.between?(200, 299)
+
     result = result.parsed_response
     result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Collection'}}
   end
@@ -123,9 +156,30 @@ class DbmArango < Dbm
   def adbm_collection_info(db_name, coll_name)
     adbm_init
     result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
+    raise "Error fetching collection info" unless result.code.between?(200, 299)
     result = result.parsed_response
   end
 
-
+  def adbm_database_query(db_name, query_string)
+    adbm_init
+    body = {
+      "query" => query_string,
+      "limit" => 4,
+      "count" => nil,
+      "batchSize" => nil,
+      "ttl" => nil,
+      "cache" => nil,
+      "options" => nil,
+      "bindVars" => nil
+    }.delete_if{|k,v| v.nil?}
+    request = @adbm_request.merge({ :body => body.to_json })
+    result = self.class.post("/_db/#{db_name}/_api/cursor", request)
+    raise "Error querying database" unless result.code.between?(200, 299)
+    result = result.parsed_response
+    @quantity = result["count"]
+    @hasMore = result["hasMore"]
+    @id = result["id"]
+    return result
+  end
 
 end

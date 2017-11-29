@@ -2,8 +2,8 @@ class ArangoDb < Thing
   extend FriendlyId
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
-  has_many :sparql_endpoint_queries, dependent: :destroy
-  has_many :queries, :through => :sparql_endpoint_queries
+  has_many :arango_db_queries, dependent: :destroy
+  has_many :queries, :through => :arango_db_queries
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
 

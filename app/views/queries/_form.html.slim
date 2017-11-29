@@ -2,43 +2,39 @@
   .mdl-grid
     h4.mdl-cell--12-col Properties
     .sin-input-with-help-icon
-      = f.input :name, placeholder: "Enter a SPARQL query name", wrapper: :default
+      = f.input :name, placeholder: "Enter a Query name", wrapper: :default
       .sin-help-icon-with-tooltip
         #tooltip-name.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the SPARQL query, which will appear on the asset browsing table.
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the Query, which will appear on the asset browsing table.
     .sin-input-with-help-icon
-      = f.input :description, placeholder: "Enter a description for the SPARQL query", as: :text, input_html: { rows: 5 }
+      = f.input :description, placeholder: "Enter a description for the Query", as: :text, input_html: { rows: 5 }
       .sin-help-icon-with-tooltip
         #tooltip-description.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the SPARQL query. You can use Markdown to format the description.
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the Query. You can use Markdown to format the description.
     .sin-input-with-help-icon
       = f.input :public, wrapper: :switch
       .sin-help-icon-with-tooltip__switch
         #tooltip-public.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the SPARQL query will be visible to other users of DataGraft.
+        .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the Query will be visible to other users of DataGraft.
     h4.mdl-cell--12-col
     .sin-input-with-help-icon
-      = f.input :query_type, prompt: "Choose a query type...", collection: get_sparql_query_types, wrapper: :select
+      = f.input :query_type, prompt: "Choose a query type...", collection: get_query_types, wrapper: :select
       .sin-help-icon-with-tooltip__select
         #tooltip-type.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-type" Choose the type of query. The result of the query will be determined by its type.
+
+    // Selection of SPARQL endpoints is removed beacuse we dont know if it is a SPARQL or an AQL query
     //.sin-input-with-help-icon
-    //  = f.association :sparql_endpoints, collection: current_user.sparql_endpoints.order(stars_count: :desc, created_at: :desc), wrapper: :select
+    //  .mdl-cell.mdl-cell--12-col
+    //    .sin-info-label
+    //      = 'SPARQL endpoints'
+    //    .sin-info-frame
+    //      = render partial: "gen_thing_list", locals: {things: @sparql_endpoint_entries, things_name: "endpoints", show_thing_partial: "select_sparql_endpoint",  rparams: {form: f, query: @thing}}
     //  .sin-help-icon-with-tooltip__select
     //    #tooltip-endpoints.icon.material-icons help
     //    .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
 
-    .sin-input-with-help-icon
-      .mdl-cell.mdl-cell--12-col
-        .sin-info-label
-          = 'SPARQL endpoints'
-        .sin-info-frame
-          = render partial: "gen_thing_list", locals: {things: @sparql_endpoint_entries, things_name: "endpoints", show_thing_partial: "select_sparql_endpoint",  rparams: {form: f, query: @thing}}
-      .sin-help-icon-with-tooltip__select
-        #tooltip-endpoints.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-endpoints" Choose one or more endpoints your query will be linked to.
-
-    = f.input :query_string, label: "SPARQL query", as: :text, input_html: { rows: 10 }
+    = f.input :query_string, label: "Query text", as: :text, input_html: { rows: 10 }
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

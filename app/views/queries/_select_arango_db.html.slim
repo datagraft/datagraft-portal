@@ -1,0 +1,35 @@
+// This partial shows details about a arango_db thing using squeezebox to hide parts of the information
+// Input params:
+//   thing              - The thing to render
+//   rparams {form}     - The enclosing form for selecting SPARQL_endpoint
+
+- f = rparams[:form]
+- query = rparams[:query]
+
+.highlight-false
+  .sin-gen-squeeze
+    .sin-gs-head
+      .sin-query-list-icon
+        .sin-gl-stop-propagate
+          = check_box_tag "query[arango_db_ids][]", thing.id, f.object.arango_dbs.include?(thing)
+        = image_tag(thing_icon_name(thing), height: "48")
+      .sin-query-list-meta
+        .sin-query-list-meta-name
+          = thing.name
+        .sin-query-list-meta-date
+          | Last modification&nbsp;
+          = time_ago_in_words thing.updated_at
+          | &nbsp;ago
+          | &nbsp;-&nbsp;
+          = thing.updated_at
+          | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          | By:&nbsp;
+          = thing.user.username
+      .mdl-layout-spacer
+      .sin-gs-right
+        i.material-icons = thing.public ? 'lock_open' : 'lock'
+    .sin-gs-cnt
+      - unless thing.description.blank?
+        i.sin-tab-label Description:
+        .sin-tab-textfield__box
+          = thing.description

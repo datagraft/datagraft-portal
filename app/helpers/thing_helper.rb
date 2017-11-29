@@ -72,6 +72,10 @@ module ThingHelper
         Thing.includes(:versions).where(type: "SparqlEndpoint").each do |thing|
           num_assets += thing.versions.count
         end
+      when "ArangoDb"
+        Thing.includes(:versions).where(type: "ArangoDb").each do |thing|
+          num_assets += thing.versions.count
+        end
       when "Filestore"
         Thing.includes(:versions).where(type: "Filestore").each do |thing|
           num_assets += thing.versions.count
@@ -186,7 +190,7 @@ module ThingHelper
   def increment_query_execution_metric(query)
     num_query_executions = Prometheus::Client.registry.get(:num_query_executions)
     if(!query.slug)
-      num_query_executions.increment({ query_slug: 'Sparql querying panel', query_type: 'unknown' })
+      num_query_executions.increment({ query_slug: 'Sparql / Arango querying panel', query_type: 'unknown' })
     else
       num_query_executions.increment({ query_slug: query.slug, query_type: query.query_type })
     end
@@ -219,6 +223,8 @@ module ThingHelper
     elsif thing_type == "data_store"
       ret = "icon--queriable_data_store.svg"
     elsif thing_type == "sparql_endpoint"
+      ret = "icon--queriable_data_store.svg"
+    elsif thing_type == "arango_db"
       ret = "icon--queriable_data_store.svg"
     end
     return ret

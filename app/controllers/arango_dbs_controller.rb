@@ -23,18 +23,26 @@ class ArangoDbsController < ThingsController
 
   def show
     super
-    @dbm_info = dbms_descriptive_name(@thing.dbm)
-    coll_arr = @thing.dbm.get_collections(@thing.db_name)
     docs = 0
     edges = 0
-    coll_arr.each do |coll|
-      puts "  COL: #{coll[:name]} #{coll[:type]}"
-      info = @thing.dbm.get_collection_info(coll)
-      if info['type'] == 2
-        docs += info['count']
-      else
-        edges += info['count']
+    @coll_info_list = []
+    begin
+      @dbm_info = dbms_descriptive_name(@thing.dbm)
+      coll_arr = @thing.dbm.get_collections(@thing.db_name)
+      coll_arr.each do |coll|
+        puts "  COL: #{coll[:name]} #{coll[:type]}"
+        info = @thing.dbm.get_collection_info(coll)
+        if info['type'] == 2
+          docs += info['count']
+          @coll_info_list << "#{coll[:name]}  Type: document  Count: #{info['count']}"
+        else
+          edges += info['count']
+          @coll_info_list << "#{coll[:name]}  Type: edge  Count: #{info['count']}"
+        end
       end
+    rescue => e
+      puts e.message
+      puts e.backtrace.inspect
     end
     @db_edges = "Edges:#{edges}"
     @db_docs = "Documents:#{docs}"
