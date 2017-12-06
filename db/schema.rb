@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171116165900) do
+ActiveRecord::Schema.define(version: 20171127113100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,15 @@ ActiveRecord::Schema.define(version: 20171116165900) do
     t.datetime "updated_at",                 null: false
     t.integer  "dbm_id"
     t.index ["key"], name: "index_api_keys_on_key", using: :btree
+  end
+
+  create_table "arango_db_queries", force: :cascade do |t|
+    t.integer  "query_id"
+    t.integer  "arango_db_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["arango_db_id"], name: "index_arango_db_queries_on_arango_db_id", using: :btree
+    t.index ["query_id"], name: "index_arango_db_queries_on_query_id", using: :btree
   end
 
   create_table "catalogue_records", force: :cascade do |t|
