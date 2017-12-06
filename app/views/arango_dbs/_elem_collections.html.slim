@@ -1,9 +1,17 @@
 .mdl-cell--12-col
   .sin-info-label Collections
-  .sin-info-textfield__scroll
-    - unless @coll_info_list.size == 0
-      - @coll_info_list.each do |coll_info|
-        = coll_info
-        br
-    - else
-      = "No collections for this database"
+  - unless @coll_info_list.size == 0
+    table.mdl-data-table.cell-border.sin-full-width
+      thead
+        tr
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Name"
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Type"
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Count"
+      tbody
+        - @coll_info_list.each do |coll_info|
+          tr
+            td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:name]
+            td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:type]
+            td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:count]
+  - else
+    = "No collections for this database"

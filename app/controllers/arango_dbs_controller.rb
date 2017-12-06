@@ -34,11 +34,12 @@ class ArangoDbsController < ThingsController
         info = @thing.dbm.get_collection_info(coll)
         if info['type'] == 2
           docs += info['count']
-          @coll_info_list << "#{coll[:name]}  Type: document  Count: #{info['count']}"
+          type = 'document'
         else
           edges += info['count']
-          @coll_info_list << "#{coll[:name]}  Type: edge  Count: #{info['count']}"
+          type = 'edge'
         end
+        @coll_info_list << {name: coll[:name], type: type, count: info['count']}
       end
     rescue => e
       puts e.message
