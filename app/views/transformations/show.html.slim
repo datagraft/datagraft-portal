@@ -19,6 +19,7 @@ div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
     - if user_signed_in?
       == link_to 'Copy', thing_version_fork_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to 'Download', transformation_download_path(@thing), data: { turbolinks: false }, class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     //- if user_signed_in?
     //  -if current_user.has_star(@thing)
     //    == link_to "Unstar (#{@thing.stars_count})", thing_unstar_path(@thing), :method => 'post', :class => "mdl-button mdl-js-button mdl-js-ripple-effect"
