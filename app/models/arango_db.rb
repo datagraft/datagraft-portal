@@ -9,8 +9,9 @@ class ArangoDb < Thing
 
   # Non-persistent attribute for storing query to be executed
   attr_accessor :execute_query
-  #attr_accessor :publish_file
-
+  attr_accessor :coll_name
+  attr_accessor :coll_type
+  
   #after_create_commit :initialised_sparql_endpoint
 
   #def initialised_sparql_endpoint

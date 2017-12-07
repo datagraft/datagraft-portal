@@ -14,6 +14,14 @@ class DbmArango < Dbm
     return %w(ARANGO)
   end
 
+  def get_collection_types
+    res = []
+    res << ["Document", "2"]
+    res << ["Edge", "3"]
+
+    return res
+  end
+
   def uri
     configuration["uri"] if configuration
   end
@@ -34,14 +42,9 @@ class DbmArango < Dbm
   # Create a collection in a database
   def create_collection(db_name, collection_name, type)
     puts "***** Enter DbmArango.create_collection(#{name})"
-    #db = get_database_obj(db_name)
-    #coll = get_collection_obj(db, collection_name)
-    #if type.downcase = 'edge'
-    #  coll.create_edge_collection
-    #else
-    #  coll.create
-    #end
+    res = adbm_collection_create(db_name, collection_name, type)
     puts "***** Exit DbmArango.create_collection()"
+    return res
   end
 
   # Fetch list of collections from a database
@@ -64,9 +67,11 @@ class DbmArango < Dbm
   end
 
   # Delete collection
-  def delete_collection(db_name, collection_name)
+  def delete_collection(coll)
     puts "***** Enter DbmArango.delete_collection(#{name})"
+    info = adbm_collection_delete(coll[:database][:name], coll[:name])
     puts "***** Exit DbmArango.delete_collection()"
+    return info
   end
 
   # List all databases available for current user
@@ -81,7 +86,7 @@ class DbmArango < Dbm
 
   # Get URI for specific database
   def get_database_uri(db_name)
-    "http://#{@adbm_server}:#{@adbm_port}/_db/#{db_name}/_admin/aardvark/index.html#login"
+    "#{@adbm_uri}/_db/#{db_name}"
   end
 
   # Query specific database
@@ -100,9 +105,8 @@ class DbmArango < Dbm
     if @adbm_init.nil?
       puts "***** adbm_init(#{name})"
       da = first_enabled_account
-      @adbm_server = uri
-      @adbm_port = "8529"
-      self.class.base_uri "http://#{@adbm_server}:#{@adbm_port}"
+      @adbm_uri = uri
+      self.class.base_uri "#{@adbm_uri}"
 
       @adbm_user = da.name
       @adbm_password = da.password
@@ -131,10 +135,52 @@ class DbmArango < Dbm
     result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Collection'}}
   end
 
+  def adbm_collection_create(db_name, coll_name, type, journalSize=nil, keyOptions=nil, waitForSync=nil, doCompact=nil, isVolatile=nil, shardKeys=nil, numberOfShards=nil, isSystem=nil, indexBuckets=nil)
+
+    adbm_init
+
+    type = 3 if type == "Edge"
+    type = nil if type == "Document"
+    body = {
+      "name" => coll_name,
+      "type" => type,
+      "journalSize" => journalSize,
+      "keyOptions" => keyOptions,
+      "waitForSync" => waitForSync,
+      "doCompact" => doCompact,
+      "isVolatile" => isVolatile,
+      "shardKeys" => shardKeys,
+      "numberOfShards" => numberOfShards,
+      "isSystem" => isSystem,
+      "indexBuckets" => indexBuckets
+    }
+    body = body.delete_if{|k,v| v.nil?}.to_json
+    request = @adbm_request.merge({ :body => body })
+
+    result = self.class.post("/_db/#{db_name}/_api/collection", request)
+    byebug
+    raise "Error creating collection info '#{result["errorMessage"]}'" unless result.code.between?(200, 299)
+    result = result.parsed_response
+  end
+
   def adbm_collection_info(db_name, coll_name)
     adbm_init
     result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
     raise "Error fetching collection info" unless result.code.between?(200, 299)
+    result = result.parsed_response
+  end
+
+  def adbm_collection_info(db_name, coll_name)
+    adbm_init
+    result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
+    raise "Error fetching collection info" unless result.code.between?(200, 299)
+    result = result.parsed_response
+  end
+
+  def adbm_collection_delete(db_name, coll_name)
+    adbm_init
+    result = self.class.delete("/_db/#{db_name}/_api/collection/#{coll_name}", @adbm_request)
+    raise "Error deleting collection" unless result.code.between?(200, 299)
     result = result.parsed_response
   end
 

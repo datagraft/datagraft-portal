@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
 
 
+
   get 'explore' => 'public_portal#explore'
   get 'news' => 'public_portal#news'
   get 'documentation' => 'public_portal#documentation'
@@ -67,7 +68,10 @@ Rails.application.routes.draw do
   post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
   post ':username/arango_dbs/:id/execute_query' => 'arango_dbs#execute_query'
-
+  get ':username/arango_dbs/:id/collection/new' => 'arango_dbs#collection_new'
+  post ':username/arango_dbs/:id/collection' => 'arango_dbs#collection_create'
+  post ':username/arango_dbs/:id/collection/:collection_name/publish' => 'arango_dbs#collection_publish'
+  delete ':username/arango_dbs/:id/collection/:collection_name' => 'arango_dbs#collection_destroy'
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
   get    ':username/upwizards/new/:task'   => 'upwizards#new'     #Start a new wizard for a task
