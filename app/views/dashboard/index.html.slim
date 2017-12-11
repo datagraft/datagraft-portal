@@ -34,10 +34,18 @@
             = link_to upwizard_new_path('sparql'), class: "mdl-navigation__link"
                 button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
     .sin-vertical-card.mdl-card.mdl-shadow--2dp
-        .mdl-card__title SPARQL query
+        .mdl-card__title ArangoDB page
         .mdl-card__supporting-text
-            |  Use the DataGraft wizard to create a new SPARQL query and execute
-            |  it against an existing endpoint. Your queries will be accessible
+            |  Use the DataGraft wizard to connect to an Arango database
+            |  and store your data. You can directly upload your JSON dataset.
+        .mdl-card__actions
+            = link_to new_arango_db_path, class: "mdl-navigation__link"
+                button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect Create
+    .sin-vertical-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__title AQL/SPARQL Query
+        .mdl-card__supporting-text
+            |  Use the DataGraft wizard to create a new query (AQL or SPARQL) and execute
+            |  it against an SPARQL endpoint or a Arango database. Your queries will be accessible
             |  through the Assets access page.
         .mdl-card__actions
             = link_to new_query_path, class: "mdl-navigation__link"
@@ -46,7 +54,7 @@
         .mdl-card__title Transformation
         .mdl-card__supporting-text
             |  Use the DataGraft wizard to create a new data transformation using
-            |  the Grafterizer tool. You can store the result of your transformation 
+            |  the Grafterizer tool. You can store the result of your transformation
             |  in one of your SPARQL endpoints or download its result.
         .mdl-card__actions
             = link_to new_transformation_path, class: "mdl-navigation__link"
@@ -108,6 +116,10 @@
           input#dashboard-filter--sparql.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
           | SPARQL endpoints
+        label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--arango"
+          input#dashboard-filter--arango.mdl-checkbox__input checked="checked" type="checkbox" /
+          span.mdl-checkbox__label
+          | ArangoDBs
         label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect for="dashboard-filter--transformations"
           input#dashboard-filter--transformations.mdl-checkbox__input checked="checked" type="checkbox" /
           span.mdl-checkbox__label
@@ -162,10 +174,10 @@
                 button.mdl-button.mdl-js-button.mdl-button--icon id=("menu-#{thing.id}")
                   i.material-icons more_vert
                 ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for=("menu-#{thing.id}")
-                  li.mdl-menu__item 
+                  li.mdl-menu__item
                     i.material-icons content_copy
                     == link_to 'Copy', thing_fork_path(thing), :method => 'post', style: "text-decoration: none; color: black; width: 100%;"
-                  - if thing.user == current_user  
+                  - if thing.user == current_user
                     li.mdl-menu__item
                       i.material-icons mode_edit
                       == link_to 'Edit', thing_edit_path(thing), style: "text-decoration: none; color: black; width: 100%;"
@@ -173,10 +185,10 @@
                     li.mdl-menu__item.sin-delete-asset-text
                       i.material-icons delete
                       = link_to 'Delete', thing_path(thing), method: :delete, data: { confirm: 'Are you sure you want to delete this asset?' }, style: "text-decoration: none; color: firebrick; width: 100%;"
-              
+
               td id=("last-modified-hidden-#{thing.id}")
                 = thing.created_at
-              
+
               td id=("last-modified-hidden-#{thing.id}")
                 = thing.updated_at
 
