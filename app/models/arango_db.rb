@@ -11,6 +11,7 @@ class ArangoDb < Thing
   attr_accessor :execute_query
   attr_accessor :coll_name
   attr_accessor :coll_type
+  attr_accessor :from_to_coll_prefix
   
   #after_create_commit :initialised_sparql_endpoint
 

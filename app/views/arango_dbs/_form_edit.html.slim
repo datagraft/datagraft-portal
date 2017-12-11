@@ -35,7 +35,7 @@
               td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:type]
               td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:count]
               td.mdl-data-table__cell--non-numeric.sin-td-wrap
-                == link_to new_arango_db_collection_path do
+                == link_to publish_new_arango_db_collection_path(coll_info[:name]) do
                   i.material-icons file_upload
               td.mdl-data-table__cell--non-numeric.sin-td-wrap
                 == link_to arango_db_collection_path(coll_info[:name]), method: :delete, data: { confirm: 'Are you sure?' } do

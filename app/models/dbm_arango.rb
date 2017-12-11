@@ -59,9 +59,12 @@ class DbmArango < Dbm
     return res_arr
   end
 
-  def get_collection_info(coll)
+  def get_collection_info(coll: nil, db_name: nil, collection_name: nil)
     puts "***** Enter DbmArango.get_collection_status(#{name})"
-    info = adbm_collection_info(coll[:database][:name], coll[:name])
+    db_name = coll[:database][:name] unless coll.nil?
+    collection_name = coll[:name] unless coll.nil?
+
+    info = adbm_collection_info(db_name, collection_name)
     puts "***** Exit DbmArango.get_collection_status()"
     return info
   end
@@ -72,6 +75,30 @@ class DbmArango < Dbm
     info = adbm_collection_delete(coll[:database][:name], coll[:name])
     puts "***** Exit DbmArango.delete_collection()"
     return info
+  end
+
+  def upload_document_data_array(jsonFile, db_name, coll_name)
+    puts "***** Enter DbmArango.upload_document_data_array(#{name})"
+    body = jsonFile.read
+    waitForSync = nil
+    onDuplicate = "replace"
+    complete = "yes"
+
+    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, onDuplicate: onDuplicate, complete: complete)
+    puts "***** Exit DbmArango.upload_document_data_array(#{name})"
+    return res
+  end
+
+  def upload_edge_data_array(jsonFile, db_name, coll_name, from_coll_name, to_coll_name)
+    puts "***** Enter DbmArango.upload_edge_data_array(#{name})"
+    body = jsonFile.read
+    waitForSync = nil
+    onDuplicate = "replace"
+    complete = "yes"
+
+    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, onDuplicate: onDuplicate, complete: complete, from: from_coll_name, to: to_coll_name)
+    puts "***** Exit DbmArango.upload_edge_data_array(#{name})"
+    return res
   end
 
   # List all databases available for current user
@@ -158,15 +185,7 @@ class DbmArango < Dbm
     request = @adbm_request.merge({ :body => body })
 
     result = self.class.post("/_db/#{db_name}/_api/collection", request)
-    byebug
     raise "Error creating collection info '#{result["errorMessage"]}'" unless result.code.between?(200, 299)
-    result = result.parsed_response
-  end
-
-  def adbm_collection_info(db_name, coll_name)
-    adbm_init
-    result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
-    raise "Error fetching collection info" unless result.code.between?(200, 299)
     result = result.parsed_response
   end
 
@@ -183,6 +202,27 @@ class DbmArango < Dbm
     raise "Error deleting collection" unless result.code.between?(200, 299)
     result = result.parsed_response
   end
+
+  def adbm_document_importJSON(db_name, coll_name, body, type: "auto", from: nil, to: nil, overwrite: nil, waitForSync: nil, onDuplicate: nil, complete: nil, details: nil)
+    query = {
+      "collection": coll_name,
+      "type": type,
+      "fromPrefix": from,
+      "toPrefix": to,
+      "overwrite": overwrite,
+      "waitForSync": waitForSync,
+      "onDuplicate": onDuplicate,
+      "complete": complete,
+      "details": details
+    }.delete_if{|k,v| v.nil?}
+    request = @adbm_request.merge({ :body => body, :query => query })
+    result = self.class.post("/_db/#{db_name}/_api/import", request)
+    raise "Error storing document into collection" unless result.code.between?(200, 299)
+    result = result.parsed_response
+  end
+
+
+
 
   def adbm_database_query(db_name, query_string)
     adbm_init

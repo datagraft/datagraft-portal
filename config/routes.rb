@@ -70,7 +70,8 @@ Rails.application.routes.draw do
   post ':username/arango_dbs/:id/execute_query' => 'arango_dbs#execute_query'
   get ':username/arango_dbs/:id/collection/new' => 'arango_dbs#collection_new'
   post ':username/arango_dbs/:id/collection' => 'arango_dbs#collection_create'
-  post ':username/arango_dbs/:id/collection/:collection_name/publish' => 'arango_dbs#collection_publish'
+  get ':username/arango_dbs/:id/collection/:collection_name/collection_publish_new' => 'arango_dbs#collection_publish_new'
+  post ':username/arango_dbs/:id/collection/:collection_name/collection_publish' => 'arango_dbs#collection_publish'
   delete ':username/arango_dbs/:id/collection/:collection_name' => 'arango_dbs#collection_destroy'
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards

@@ -12,8 +12,12 @@ module ArangoDbsHelper
     return "/"+current_user.username+"/arango_dbs/#{@thing.id}/collection#{ "?#{parameters.to_query}" if parameters.present? }"
   end
 
+  def publish_new_arango_db_collection_path(collection_name, parameters = {})
+    return "/"+current_user.username+"/arango_dbs/#{@thing.id}/collection/#{collection_name}/collection_publish_new#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
+
   def publish_arango_db_collection_path(collection_name, parameters = {})
-    return "/"+current_user.username+"/arango_dbs/#{@thing.id}/collection/#{collection_name}/publish#{ "?#{parameters.to_query}" if parameters.present? }"
+    return "/"+current_user.username+"/arango_dbs/#{@thing.id}/collection/#{collection_name}/collection_publish#{ "?#{parameters.to_query}" if parameters.present? }"
   end
 
   def arango_db_collection_path(collection_name, parameters = {})

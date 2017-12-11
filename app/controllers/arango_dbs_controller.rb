@@ -4,7 +4,7 @@ class ArangoDbsController < ThingsController
   include QuotasHelper
   include DbmsHelper
 
-  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :db_entries, :coll_name, :coll_type]
+  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix]
 
   def new
     super
@@ -86,10 +86,72 @@ class ArangoDbsController < ThingsController
     end
   end
 
-  # POST     /:username/arango_dbs/:id/collection/:collection_name/publish
-  def collection_publish
+  # GET     /:username/arango_dbs/:id/collection/:collection_name/publish_new
+  def collection_publish_new
     set_thing
     authorize! :update, @thing
+    find_doc_collections(params[:collection_name])
+  end
+
+  # POST     /:username/arango_dbs/:id/collection/:collection_name/publish
+  def collection_publish
+    ok = false
+    set_thing
+    authorize! :update, @thing
+
+    if arango_db_params["publish_file"] != nil
+      begin
+        file = arango_db_params["publish_file"]
+        info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name])
+        if info['type'] == 2
+          type = 'document'
+          result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name])
+          puts "Publish result:#{result}"
+          if result["error"] != false
+            flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+          elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+            flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+          else
+            flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+          end
+          ok = true
+        else
+          type = 'edge'
+          result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], arango_db_params["from_to_coll_prefix"], arango_db_params["from_to_coll_prefix"])
+          puts "Publish result:#{result}"
+          if result["error"] != false
+            flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+          elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+            flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+          else
+            flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+          end
+          ok = true
+
+        end
+      rescue => e
+        ok = false
+        flash[:error] = "Error publishing file to '#{params[:collection_name]}' #{e.message}"
+        puts e.message
+        puts e.backtrace.inspect
+      end
+    else
+      flash[:error] = "No file selected"
+    end
+
+    flash[:error] = "Error publishing file to '#{params[:collection_name]}'" if ok == false
+    find_collection_info
+
+    respond_to do |format|
+      format.html { redirect_to thing_edit_path(@thing) }
+      format.json { head :no_content }
+    end
+
+
+
+
+
+
   end
 
   def upload
@@ -209,7 +271,7 @@ class ArangoDbsController < ThingsController
   private
   def arango_db_params
     params.require(:arango_db).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :publish_file, :db_entries, :coll_name, :coll_type,
+      :meta_keyword_list, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix,
       queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
@@ -247,7 +309,7 @@ class ArangoDbsController < ThingsController
       coll_arr = @thing.dbm.get_collections(@thing.db_name)
       coll_arr.each do |coll|
         puts "  COL: #{coll[:name]} #{coll[:type]}"
-        info = @thing.dbm.get_collection_info(coll)
+        info = @thing.dbm.get_collection_info(coll: coll)
         if info['type'] == 2
           docs += info['count']
           type = 'document'
@@ -262,6 +324,24 @@ class ArangoDbsController < ThingsController
     rescue => e
       @db_edges = "Edges:#{edges}"
       @db_docs = "Documents:#{docs}"
+      puts e.message
+      puts e.backtrace.inspect
+    end
+  end
+
+  def find_doc_collections(doc_name)
+    @doc_collections = []
+    @doc_edge = true
+    begin
+      coll_arr = @thing.dbm.get_collections(@thing.db_name)
+      coll_arr.each do |coll|
+        info = @thing.dbm.get_collection_info(coll: coll)
+        if info['type'] == 2
+          @doc_collections << [coll[:name], coll[:name]]
+          @doc_edge = false if doc_name == coll[:name]
+        end
+      end
+    rescue => e
       puts e.message
       puts e.backtrace.inspect
     end
