@@ -18,36 +18,50 @@
       .sin-help-icon-with-tooltip__select
         #tooltip-license.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-license" Choose a license for use of the data in the Arango DB. You can find more details about data licensing on the Creative Commons web page (link), or at Open Data Commons web page (link).
-    .sin-info-label Collections
-    - unless @coll_info_list.size == 0
-      table.mdl-data-table.cell-border.sin-full-width
-        thead
-          tr
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Name"
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Type"
-            th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Count"
-            th.mdl-data-table__cell--non-numeric Upload
-            th.mdl-data-table__cell--non-numeric Delete
-        tbody
-          - @coll_info_list.each do |coll_info|
-            tr
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:name]
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:type]
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:count]
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap
-                == link_to publish_new_arango_db_collection_path(coll_info[:name]) do
-                  i.material-icons file_upload
-              td.mdl-data-table__cell--non-numeric.sin-td-wrap
-                == link_to arango_db_collection_path(coll_info[:name]), method: :delete, data: { confirm: 'Are you sure?' } do
-                  i.material-icons delete
-    - else
-      = "No collections for this database"
     .sin-input-with-help-icon
-      == link_to 'Create new collection', new_arango_db_collection_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
-      .mdl-layout-spacer
-      .sin-help-icon-with-tooltip__select
-        #tooltip-create_collection.icon.material-icons help
-        .mdl-tooltip.mdl-tooltip--left for="tooltip-create_collection" You have to create a collection before data can be uploaded.
+      .mdl-cell.mdl-cell--12-col.mdl-textfield
+        .mdl-textfield_label Collections with 'R/W' access
+
+        - unless @coll_info_rw_list.size == 0
+          table.mdl-data-table.cell-border.sin-full-width
+            thead
+              tr
+                th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Name"
+                th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Type"
+                th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Count"
+                th.mdl-data-table__cell--non-numeric Upload
+                th.mdl-data-table__cell--non-numeric Delete
+            tbody
+              - @coll_info_list.each do |coll_info|
+                tr
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:name]
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:type]
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:count]
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap
+                    == link_to publish_new_arango_db_collection_path(coll_info[:name]) do
+                      i.material-icons file_upload
+                  td.mdl-data-table__cell--non-numeric.sin-td-wrap
+                    == link_to arango_db_collection_path(coll_info[:name]), method: :delete, data: { confirm: 'Are you sure?' } do
+                      i.material-icons delete
+        - else
+          .mdl-textfield__input No collections with R/W access in this database
+      .sin-help-icon-with-tooltip
+        #tooltip-collections.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-collections" Here you can administrate the collections in the database you have R/W access to.
+
+    .sin-input-with-help-icon
+      .mdl-cell.mdl-cell--12-col.mdl-textfield
+        - if @dbm_access == 'rw'
+          .mdl-textfield_label .
+          == link_to 'Create new collection', new_arango_db_collection_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+        - else
+          .mdl-textfield_label Create new collection
+          .mdl-textfield__input You cannot create collections, due to missing R/W access for this database. Please check your account settings.
+      .sin-help-icon-with-tooltip
+        #tooltip-new-collection.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-new-collection" Create a new collection for uploading data.
+
+    .mdl-layout-spacer
   hr.sin-invisible-form-separator
   div.mdl-card__actions
     = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

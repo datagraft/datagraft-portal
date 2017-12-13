@@ -53,7 +53,8 @@ class DbmArango < Dbm
     coll_arr = adbm_collections(database_name)
     res_arr = []
     coll_arr.each do |coll|
-      res_arr << {name: coll[:collection], type: coll[:type], collection: coll, database: {name: database_name}}
+      access = adbm_collection_access(database_name, coll[:collection])
+      res_arr << {name: coll[:collection], type: coll[:type], collection: coll, database: {name: database_name}, access: access}
     end
     puts "***** Exit DbmArango.get_collections()"
     return res_arr
@@ -106,9 +107,15 @@ class DbmArango < Dbm
     db_arr = adbm_databases
     res_arr = []
     db_arr.each do |db|
-      res_arr << {name: db[:database]}
+      res_arr << {name: db[:name], access: db[:access]}
+      puts "get_databases() user:#{@adbm_user} database:#{db[:name]} of type:#{db[:access]}"
+
     end
     return res_arr
+  end
+
+  def get_database_access(database_name)
+    return adbm_database_access(database_name)
   end
 
   # Get URI for specific database
@@ -145,14 +152,53 @@ class DbmArango < Dbm
 
   def adbm_databases
     adbm_init
-    result = self.class.get("/_api/database/user", @adbm_request)
+    result = self.class.get("/_api/user/#{@adbm_user}/database", @adbm_request)
     raise "Error fetching databases" unless result.code.between?(200, 299)
     result = result.parsed_response
-    return result["result"].map{|x| {obj: 'DB', database: x}}
+    return result["result"].map{|k,v| {obj: 'DB', name: k, access: v}}
+  end
+
+  def adbm_database_access(database_name)
+    adbm_init
+    result = self.class.get("/_api/user/#{@adbm_user}/database/#{database_name}", @adbm_request)
+    return "" unless result.code.between?(200, 299)
+    access = result.parsed_response["result"]
+    return access
+  end
+
+  def adbm_database_has_access(database_name, acc_type_arr)
+    access = adbm_database_access(database_name)
+
+    puts "adbm_database_has_access() user:#{@adbm_user} database:#{database_name} of type:#{access} ... required:#{acc_type_arr.to_s}"
+    acc_type_arr.each do |acc_type|
+      return true if acc_type == access
+    end
+    puts "adbm_database_has_access() NO ACCESS"
+    return false
+  end
+
+  def adbm_collection_access(database_name, collection_name)
+    adbm_init
+    result = self.class.get("/_api/user/#{@adbm_user}/database/#{database_name}/#{collection_name}", @adbm_request)
+    return "" unless result.code.between?(200, 299)
+    access = result.parsed_response["result"]
+    return access
+  end
+
+  def adbm_collection_has_access(database_name, collection_name, acc_type_arr)
+    access = adbm_collection_access(database_name, collection_name)
+
+    puts "adbm_database_has_access() user:#{@adbm_user} database:#{database_name} of type:#{access} ... required:#{acc_type_arr.to_s}"
+    acc_type_arr.each do |acc_type|
+      return true if acc_type == access
+    end
+    puts "adbm_database_has_access() NO ACCESS"
+    return false
   end
 
   def adbm_collections(database_name, excludeSystem: true)
-    adbm_init
+    return [] unless adbm_database_has_access(database_name , ["rw", "ro"])
+
     query = { "excludeSystem": excludeSystem }.delete_if{|k,v| v.nil?}
     request = @adbm_request.merge({ :query => query })
     result = self.class.get("/_db/#{database_name}/_api/collection", request)

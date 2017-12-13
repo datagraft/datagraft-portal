@@ -8,7 +8,7 @@ class ArangoDbsController < ThingsController
 
   def new
     super
-    find_valid_dbms
+    find_dbms_rw
   end
 
   def show
@@ -287,16 +287,24 @@ class ArangoDbsController < ThingsController
     params.permit(:arango_db, :public, :name, :description, :license, :meta_keyword_list) ## Rails 4 strong params usage
   end
 
-  def find_valid_dbms
+  def find_dbms_rw
     # Find valid dbms
-    @dbm_entries = current_user.search_for_existing_dbms_reptype('ARANGO')
-    @db_entries = []
-    @dbm_entries.each do |dbm|
-      db_arr = dbm.get_databases
-      db_arr.each do |db|
-        @db_entries << ["DBM: #{dbm.name}  =>  Database: #{db[:name]}", "#{dbm.id} #{db[:name]}"]
-        puts "DBM: #{dbm.name} DB: #{db[:name]}"
+    begin
+      @dbm_entries = current_user.search_for_existing_dbms_reptype('ARANGO')
+      @db_entries = []
+      @dbm_entries.each do |dbm|
+        db_arr = dbm.get_databases
+        db_arr.each do |db|
+          if db[:access] == "rw"
+            @db_entries << ["DBM: #{dbm.name}  =>  Database: #{db[:name]}", "#{dbm.id} #{db[:name]}"]
+          end
+          puts "DBM: #{dbm.name} DB: #{db[:name]}"
+        end
       end
+    rescue => e
+      flash[:error] = "Error searching for databases: #{e.message}"
+      puts e.message
+      # puts e.backtrace.inspect
     end
   end
 
@@ -304,8 +312,11 @@ class ArangoDbsController < ThingsController
     docs = 0
     edges = 0
     @coll_info_list = []
+    @coll_info_rw_list = []
     begin
       @dbm_info = dbms_descriptive_name(@thing.dbm)
+      @dbm_access = @thing.dbm.get_database_access(@thing.db_name)
+
       coll_arr = @thing.dbm.get_collections(@thing.db_name)
       coll_arr.each do |coll|
         puts "  COL: #{coll[:name]} #{coll[:type]}"
@@ -317,7 +328,9 @@ class ArangoDbsController < ThingsController
           edges += info['count']
           type = 'edge'
         end
-        @coll_info_list << {name: coll[:name], type: type, count: info['count']}
+        entry = {name: coll[:name], type: type, count: info['count'], access: coll[:access]}
+        @coll_info_list << entry
+        @coll_info_rw_list << entry if coll[:access] == 'rw'
       end
       @db_edges = "Edges:#{edges}"
       @db_docs = "Documents:#{docs}"

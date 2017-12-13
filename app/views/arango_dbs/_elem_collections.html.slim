@@ -7,11 +7,13 @@
           th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Name"
           th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Type"
           th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Count"
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = "Access"
       tbody
         - @coll_info_list.each do |coll_info|
           tr
             td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:name]
             td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:type]
             td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:count]
+            td.mdl-data-table__cell--non-numeric.sin-td-wrap = coll_info[:access]
   - else
     = "No collections for this database"
