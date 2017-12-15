@@ -2,8 +2,8 @@ class Dbm < ApplicationRecord
   before_destroy :unreg_before_destroy  # This is important to have available ApiKeys when deleting the repos
 
   belongs_to :user
-  has_many :dbm_accounts  ## Deleted by user , dependent: :destroy
-  has_many :api_keys  ## Deleted by user , dependent: :destroy
+  has_many :dbm_accounts, dependent: :destroy
+  has_many :api_keys, dependent: :destroy
   has_many :rdf_repos, dependent: :destroy
   has_many :things  ## Deleted by user , dependent: :destroy
 
@@ -78,6 +78,7 @@ class Dbm < ApplicationRecord
   # Create and add new DbmAccount to the DBM
   def add_account(name, password, enabled = true)
     self.save
+    test_user(name, password)
     da = self.dbm_accounts.create()
 
     da.name = name
@@ -98,16 +99,13 @@ class Dbm < ApplicationRecord
   end
 
   # Returns the first enabled dbm_account
-  def first_enabled_account
-    da = self.dbm_accounts.where(enabled: true).first
+  def first_enabled_account(public)
+    da = self.dbm_accounts.where(enabled: true, public: public).first
 
     raise "No enabled DbmAccount found" if da.nil?
 
     return da
   end
-
-
-
 
 
 

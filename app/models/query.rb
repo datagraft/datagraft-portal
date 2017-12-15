@@ -128,7 +128,9 @@ class Query < Thing
   # Execute query on Arango DB
   def execute_on_arango_db(adb, user, timeout = 180)
     if adb.has_dbm?
-      res = adb.dbm.query_database(adb.db_name, query_string)
+      public = adb.user != user
+
+      res = adb.dbm.query_database(adb.db_name, query_string, public)
       # Collect all headers from the first entry
       headers = []
       if res["result"].count > 0

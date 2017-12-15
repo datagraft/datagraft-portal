@@ -36,6 +36,7 @@ class DbmAccount < ApplicationRecord
 
   def encryption(plain_string)
     begin
+      plain_string += '*' # Add one extra char to handle empty string
       cipher = OpenSSL::Cipher.new(algorithm)
       cipher.encrypt()
       cipher.key = key_base
@@ -55,7 +56,7 @@ class DbmAccount < ApplicationRecord
       tempkey = Base64.decode64(crypt_string)
       plain_string = cipher.update(tempkey)
       plain_string << cipher.final()
-      return plain_string
+      return plain_string.chomp('*') # Remove the extra char added by encryption
     rescue Exception => exc
       puts ("Failed to decrypt text = #{exc.message}")
     end

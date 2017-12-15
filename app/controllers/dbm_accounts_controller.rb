@@ -1,5 +1,5 @@
 class DbmAccountsController < ApplicationController
-  wrap_parameters :dbm_account, include: [:name, :password, :enabled]
+  wrap_parameters :dbm_account, include: [:name, :password, :enabled, :public]
 
   before_action :set_dbm_account, only: [:show, :edit, :update, :destroy]
   before_action :set_dbm, only: [:index, :new, :create, :show, :edit, :update, :destroy]
@@ -34,12 +34,24 @@ class DbmAccountsController < ApplicationController
   # POST /dbms/dbm_id/dbm_account
   # POST /dbms/dbm_id/dbm_account.json
   def create
-    @dbm_account = DbmAccount.new(dbm_account_params)
-    @dbm_account.user = current_user
-    @dbm_account.dbm = @dbm
+    begin
+      ok = false
+      @dbm_account = DbmAccount.new(dbm_account_params)
+      @dbm_account.user = current_user
+      @dbm_account.dbm = @dbm
+
+      @dbm.test_user(dbm_account_params[:name], dbm_account_params[:password])
+
+      ok = @dbm_account.save
+    rescue => e
+      ok = false
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = "Error creating dbm_account: #{e.message}"
+    end
 
     respond_to do |format|
-      if @dbm_account.save
+      if ok
         format.html { redirect_to dbm_dbm_accounts_path(@dbm), notice: 'Dbm Account was successfully created.' }
         format.json { render :show, status: :created, location: dbm_dbm_account_path(@dbm, @dbm_account) }
       else
@@ -55,9 +67,20 @@ class DbmAccountsController < ApplicationController
     ok = true
 
     begin
-      ok = @dbm_account.update(dbm_account_params)
+      name = dbm_account_params[:name]                     # Fetch name for testing
+      password = dbm_account_params[:password]             # Fetch password for testing
+      password = @dbm_account.password if password == ""   # Use existing password if no new
+      @dbm.test_user(name, password)
+
+      @dbm_account.update(dbm_account_params)
+      @dbm_account.password = password                     # Use existing password if no new
+      
+      ok = @dbm_account.save
     rescue => e
       ok = false
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = "Error updating dbm_account: #{e.message}"
     end
 
     respond_to do |format|
@@ -104,6 +127,6 @@ class DbmAccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dbm_account_params
-      params.require(:dbm_account).permit(:name, :password, :enabled)
+      params.require(:dbm_account).permit(:name, :password, :enabled, :public)
     end
 end

@@ -12,14 +12,6 @@ class DbmArangosController < DbmsController
   # GET /dbm_arangos
   def index
     @dbm_arangos = current_user.search_for_existing_dbms_type("DbmArango")
-    db_arr = @dbm_arangos.first.get_databases
-    db_arr.each do |db|
-      puts "DB: #{db[:name]}"
-      coll_arr = @dbm_arangos.first.get_collections(db[:name])
-      coll_arr.each do |coll|
-        puts "  COL: #{coll[:name]} #{coll[:type]}"
-      end
-    end
   end
 
 
@@ -45,32 +37,55 @@ class DbmArangosController < DbmsController
 
   # POST /dbm_arangos
   def create
-    @dbm_arango = DbmArango.new(dbm_arango_params)
-    @dbm_arango.user = current_user
-    @dbm_arango.uri = dbm_arango_params[:uri]
+    ok = false
+    begin
+      @dbm_arango = DbmArango.new(dbm_arango_params)
+      @dbm_arango.user = current_user
+      @dbm_arango.uri = dbm_arango_params[:uri]
 
-    # Create and add new account DBM
+      # Create and add new account DBM
 
-    account_name = dbm_arango_params[:dbm_account_username]
-    account_password = dbm_arango_params[:dbm_account_password]
-    @dbm_arango.add_account(account_name, account_password)
+      account_name = dbm_arango_params[:dbm_account_username]
+      account_password = dbm_arango_params[:dbm_account_password]
+      @dbm_arango.add_account(account_name, account_password)
+
+      ok = @dbm_arango.save
+    rescue => e
+      ok = false
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = "Error registering server: #{e.message}"
+    end
 
     respond_to do |format|
-      if @dbm_arango.save
+      if ok
         format.html { redirect_to dbms_path, notice: 'Server was successfully registered.' }
         format.json { render :show, status: :created, location: @dbm_arango }
       else
         format.html { render :new }
         format.json { render json: @dbm_arango.errors, status: :unprocessable_entity }
+        @dbm_arango.destroy
       end
+
     end
   end
 
 
   # PATCH/PUT /dbm_arangos/1
   def update
+    ok = false
+    begin
+      ok = @dbm_arango.update(dbm_arango_params)
+      @dbm_arango.test_server()
+    rescue => e
+      ok = false
+      puts e.message
+      puts e.backtrace.inspect
+      flash[:error] = "Error updating server: #{e.message}"
+    end
+
     respond_to do |format|
-      if @dbm_arango.update(dbm_arango_params)
+      if ok
         format.html { redirect_to dbms_path, notice: 'Server was successfully updated.' }
         format.json { render :show, status: :ok, location: @dbm_arango }
       else

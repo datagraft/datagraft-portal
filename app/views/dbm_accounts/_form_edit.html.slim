@@ -19,6 +19,9 @@ div.mdl-card.mdl-shadow--2dp
         label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for="checkbox-enabled"
           = f.check_box :enabled, id: "checkbox-enabled", class: "mdl-switch__input"
           span.mdl-switch__label Enabled
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect for="checkbox-public"
+          = f.check_box :public, id: "checkbox-public", class: "mdl-switch__input"
+          span.mdl-switch__label Public
     .mdl-card__actions
       div style="margin:auto"
         = f.submit class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"

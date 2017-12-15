@@ -14,6 +14,7 @@ div.mdl-card
             th.mdl-data-table__cell--non-numeric Database
             th.mdl-data-table__cell--non-numeric Name
             th.mdl-data-table__cell--non-numeric Enabled
+            th.mdl-data-table__cell--non-numeric Public
             th.mdl-data-table__cell--non-numeric Edit
             th.mdl-data-table__cell--non-numeric Delete
         tbody
@@ -24,6 +25,12 @@ div.mdl-card
               td.mdl-data-table__cell--non-numeric.sin-action-table--center
                == link_to edit_dbm_dbm_account_path(@dbm, dbm_account) do
                 - if dbm_account.enabled
+                  i.material-icons check_box
+                - else
+                  i.material-icons check_box_outline_blank
+              td.mdl-data-table__cell--non-numeric.sin-action-table--center
+               == link_to edit_dbm_dbm_account_path(@dbm, dbm_account) do
+                - if dbm_account.public
                   i.material-icons check_box
                 - else
                   i.material-icons check_box_outline_blank

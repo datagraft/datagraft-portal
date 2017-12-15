@@ -38,7 +38,7 @@ class ArangoDbsController < ThingsController
     authorize! :create, @thing
 
     begin
-      res = @thing.dbm.create_collection(@thing.db_name, arango_db_params[:coll_name], arango_db_params[:coll_type])
+      res = @thing.dbm.create_collection(@thing.db_name, arango_db_params[:coll_name], arango_db_params[:coll_type], public_access)
       ok = true
     rescue => e
       ok = false
@@ -47,7 +47,6 @@ class ArangoDbsController < ThingsController
       puts e.backtrace.inspect
     end
     flash[:notice] = "Collection '#{arango_db_params[:coll_name]}' created" if ok == true
-    find_collection_info
 
     respond_to do |format|
       format.html { redirect_to thing_edit_path(@thing) }
@@ -62,11 +61,11 @@ class ArangoDbsController < ThingsController
     authorize! :destroy, @thing
 
     begin
-      coll_arr = @thing.dbm.get_collections(@thing.db_name)
+      coll_arr = @thing.dbm.get_collections(@thing.db_name, public_access)
       coll_arr.each do |coll|
-        puts "  COL: #{coll[:name]} #{coll[:type]}"
+        #puts "  COL: #{coll[:name]} #{coll[:type]}"
         if coll[:name] == params[:collection_name]
-          info = @thing.dbm.delete_collection(coll)
+          info = @thing.dbm.delete_collection(coll, public_access)
           ok = true
         end
       end
@@ -78,7 +77,6 @@ class ArangoDbsController < ThingsController
       puts e.backtrace.inspect
     end
     flash[:notice] = "Collection '#{params[:collection_name]}' deleted" if ok == true
-    find_collection_info
 
     respond_to do |format|
       format.html { redirect_to thing_edit_path(@thing) }
@@ -102,10 +100,10 @@ class ArangoDbsController < ThingsController
     if arango_db_params["publish_file"] != nil
       begin
         file = arango_db_params["publish_file"]
-        info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name])
+        info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
         if info['type'] == 2
           type = 'document'
-          result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name])
+          result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name], public_access)
           puts "Publish result:#{result}"
           if result["error"] != false
             flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
@@ -117,7 +115,7 @@ class ArangoDbsController < ThingsController
           ok = true
         else
           type = 'edge'
-          result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], arango_db_params["from_to_coll_prefix"], arango_db_params["from_to_coll_prefix"])
+          result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], arango_db_params["from_to_coll_prefix"], arango_db_params["from_to_coll_prefix"], public_access)
           puts "Publish result:#{result}"
           if result["error"] != false
             flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
@@ -140,7 +138,6 @@ class ArangoDbsController < ThingsController
     end
 
     flash[:error] = "Error publishing file to '#{params[:collection_name]}'" if ok == false
-    find_collection_info
 
     respond_to do |format|
       format.html { redirect_to thing_edit_path(@thing) }
@@ -177,13 +174,13 @@ class ArangoDbsController < ThingsController
       ok = @thing.save   # It is important to save @thing before using it in another Thread
 
       if !ok
-        flash[:error] = "Could not create Arango DB connection. Please try again."
+        flash[:error] = "Could not create ArangoDB asset. Please try again."
       end
 
     rescue => e
       puts e.message
       puts e.backtrace.inspect
-      flash[:error] = e.message
+      flash[:error] = "Error creating ArangoDB asset: #{e.message}"
     end
 
     respond_to do |format|
@@ -204,7 +201,7 @@ class ArangoDbsController < ThingsController
     rescue => e
       puts e.message
       puts e.backtrace.inspect
-      flash[:error] = "Could not update Arango DB connection."
+      flash[:error] = "Could not update ArangoDB asset: #{e.message}"
     end
   end
 
@@ -219,6 +216,7 @@ class ArangoDbsController < ThingsController
       puts e.message
       puts e.backtrace.inspect
       flash[:error] = e.message
+      flash[:error] = "Could not delete ArangoDB asset: #{e.message}"
     end
   end
 
@@ -251,7 +249,7 @@ class ArangoDbsController < ThingsController
         headers: [],
         results: []
         }
-      @query_error = "Error querying ArangoDb #{e.message}"
+      @query_error = "Error querying ArangoDb: #{e.message}"
     end
 
     if @query_result.blank?
@@ -287,13 +285,17 @@ class ArangoDbsController < ThingsController
     params.permit(:arango_db, :public, :name, :description, :license, :meta_keyword_list) ## Rails 4 strong params usage
   end
 
+  def public_access
+    return @thing.user.username != current_user.username
+  end
+
   def find_dbms_rw
     # Find valid dbms
     begin
       @dbm_entries = current_user.search_for_existing_dbms_reptype('ARANGO')
       @db_entries = []
       @dbm_entries.each do |dbm|
-        db_arr = dbm.get_databases
+        db_arr = dbm.get_databases(false)
         db_arr.each do |db|
           if db[:access] == "rw"
             @db_entries << ["DBM: #{dbm.name}  =>  Database: #{db[:name]}", "#{dbm.id} #{db[:name]}"]
@@ -315,12 +317,12 @@ class ArangoDbsController < ThingsController
     @coll_info_rw_list = []
     begin
       @dbm_info = dbms_descriptive_name(@thing.dbm)
-      @dbm_access = @thing.dbm.get_database_access(@thing.db_name)
+      @dbm_access = @thing.dbm.get_database_access(@thing.db_name, public_access)
 
-      coll_arr = @thing.dbm.get_collections(@thing.db_name)
+      coll_arr = @thing.dbm.get_collections(@thing.db_name, public_access)
       coll_arr.each do |coll|
         puts "  COL: #{coll[:name]} #{coll[:type]}"
-        info = @thing.dbm.get_collection_info(coll: coll)
+        info = @thing.dbm.get_collection_info(coll: coll, public: public_access)
         if info['type'] == 2
           docs += info['count']
           type = 'document'
@@ -339,6 +341,7 @@ class ArangoDbsController < ThingsController
       @db_docs = "Documents:#{docs}"
       puts e.message
       puts e.backtrace.inspect
+      flash[:error] = "Error searching for collections: #{e.message}"
     end
   end
 
@@ -346,9 +349,9 @@ class ArangoDbsController < ThingsController
     @doc_collections = []
     @doc_edge = true
     begin
-      coll_arr = @thing.dbm.get_collections(@thing.db_name)
+      coll_arr = @thing.dbm.get_collections(@thing.db_name, public_access)
       coll_arr.each do |coll|
-        info = @thing.dbm.get_collection_info(coll: coll)
+        info = @thing.dbm.get_collection_info(coll: coll, public: public_access)
         if info['type'] == 2
           @doc_collections << [coll[:name], coll[:name]]
           @doc_edge = false if doc_name == coll[:name]
@@ -357,6 +360,7 @@ class ArangoDbsController < ThingsController
     rescue => e
       puts e.message
       puts e.backtrace.inspect
+      flash[:error] = "Error searching for collections: #{e.message}"
     end
   end
 

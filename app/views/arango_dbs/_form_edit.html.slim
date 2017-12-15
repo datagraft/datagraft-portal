@@ -12,6 +12,11 @@
         #tooltip-description.icon.material-icons help
         .mdl-tooltip.mdl-tooltip--left for="tooltip-description" Description of the content of the Arango DB, which will appear on the Arango DB page. You can use Markdown to format the description.
     .sin-input-with-help-icon
+      = f.input :public, wrapper: :switch
+      .sin-help-icon-with-tooltip__switch
+        #tooltip-public.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--right for="tooltip-public" Choose whether the database asset will be visible to other users of DataGraft.
+    .sin-input-with-help-icon
       = render partial: "elem_edit_keywords", locals: {form: f}
     .sin-input-with-help-icon
       = f.input :license, prompt: "Choose a license...", collection: get_common_licenses, wrapper: :select
