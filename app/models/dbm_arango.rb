@@ -14,11 +14,56 @@ class DbmArango < Dbm
     return %w(ARANGO)
   end
 
-  def get_collection_types
+  def get_select_collection_types
     res = []
     res << ["Document", "2"]
     res << ["Edge", "3"]
 
+    return res
+  end
+
+  def get_select_import_json_options
+    res = []
+    res << ["Autodetect", "auto"]
+    res << ["JSON Document (Each line as standalone document)", "documents"]
+    res << ["JSON array (One array with all documents)", "array"]
+
+    return res
+  end
+
+  def get_select_import_overwrite_options
+    res = []
+    res << ["Keep old data in collection", nil]
+    res << ["Remove old data before import", "true"]
+
+    return res
+  end
+
+  def get_select_import_on_duplicate_options
+    res = []
+    res << ["Do not import current document - mark as error", "error"]
+    res << ["Update current document with new attribute values", "update"]
+    res << ["Replace current document with new", "replace"]
+    res << ["Do not update current document - ignore error", "ignore"]
+
+    return res
+  end
+
+  def get_select_import_complete_options
+    res = []
+    res << ["Continue in case of error", nil]
+    res << ["Abort in case of errors", "true"]
+
+    return res
+  end
+
+  def eval_import_option(val, options)
+    res = nil
+    options.each do |opt|
+      if val == opt[1]
+        res = val
+      end
+    end
     return res
   end
 
@@ -43,7 +88,7 @@ class DbmArango < Dbm
   def create_collection(db_name, collection_name, type, public)
     puts "***** Enter DbmArango.create_collection(#{name})"
     adbm_init(public)
-    res = adbm_collection_create(db_name, collection_name, type)
+    res = adbm_collection_create(db_name, collection_name, type, keyOptions: {"allowUserKeys" => true})
     puts "***** Exit DbmArango.create_collection()"
     return res
   end
@@ -82,28 +127,24 @@ class DbmArango < Dbm
     return info
   end
 
-  def upload_document_data_array(jsonFile, db_name, coll_name, public)
+  def upload_document_data_array(jsonFile, db_name, coll_name, public, jsonType, overwrite, onDuplicate, complete)
     puts "***** Enter DbmArango.upload_document_data_array(#{name})"
     body = jsonFile.read
     waitForSync = nil
-    onDuplicate = "replace"
-    complete = "yes"
 
     adbm_init(public)
-    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, onDuplicate: onDuplicate, complete: complete)
+    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, type: jsonType, overwrite: overwrite, onDuplicate: onDuplicate, complete: complete)
     puts "***** Exit DbmArango.upload_document_data_array(#{name})"
     return res
   end
 
-  def upload_edge_data_array(jsonFile, db_name, coll_name, from_coll_name, to_coll_name, public)
+  def upload_edge_data_array(jsonFile, db_name, coll_name, from_coll_name, to_coll_name, public, jsonType, overwrite, onDuplicate, complete)
     puts "***** Enter DbmArango.upload_edge_data_array(#{name})"
     body = jsonFile.read
     waitForSync = nil
-    onDuplicate = "replace"
-    complete = "yes"
 
     adbm_init(public)
-    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, onDuplicate: onDuplicate, complete: complete, from: from_coll_name, to: to_coll_name)
+    res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, type: jsonType, overwrite: overwrite, onDuplicate: onDuplicate, complete: complete, from: from_coll_name, to: to_coll_name)
     puts "***** Exit DbmArango.upload_edge_data_array(#{name})"
     return res
   end
@@ -345,6 +386,7 @@ class DbmArango < Dbm
       "details": details
     }.delete_if{|k,v| v.nil?}
     request = @adbm_request.merge({ :body => body, :query => query })
+
     result = self.class.post("/_db/#{db_name}/_api/import", request)
     raise "Error storing document into collection" unless result.code.between?(200, 299)
     result = result.parsed_response

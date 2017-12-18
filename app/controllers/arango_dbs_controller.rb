@@ -4,7 +4,7 @@ class ArangoDbsController < ThingsController
   include QuotasHelper
   include DbmsHelper
 
-  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix]
+  wrap_parameters :arango_db, include: [:public, :name, :description, :meta_keyword_list, :license, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix, :json_option, :overwrite_option, :on_duplicate_option, :complete_option]
 
   def new
     super
@@ -28,7 +28,7 @@ class ArangoDbsController < ThingsController
   def collection_new
     set_thing
     authorize! :create, @thing
-    @collection_types = @thing.dbm.get_collection_types
+    @collection_types = @thing.dbm.get_select_collection_types
   end
 
   # POST     /:username/arango_dbs/:id/collection
@@ -36,9 +36,13 @@ class ArangoDbsController < ThingsController
     ok = false
     set_thing
     authorize! :create, @thing
+    @collection_types = @thing.dbm.get_select_collection_types
+
+    coll_type = @thing.dbm.eval_import_option(arango_db_params[:coll_type], @collection_types)
 
     begin
-      res = @thing.dbm.create_collection(@thing.db_name, arango_db_params[:coll_name], arango_db_params[:coll_type], public_access)
+      raise "Invalid collection type: #{arango_db_params[:coll_type]}" if coll_type.nil?
+      res = @thing.dbm.create_collection(@thing.db_name, arango_db_params[:coll_name], coll_type, public_access)
       ok = true
     rescue => e
       ok = false
@@ -49,9 +53,15 @@ class ArangoDbsController < ThingsController
     flash[:notice] = "Collection '#{arango_db_params[:coll_name]}' created" if ok == true
 
     respond_to do |format|
-      format.html { redirect_to thing_edit_path(@thing) }
-      format.json { head :no_content }
+      if ok
+        format.html { redirect_to thing_edit_path(@thing) }
+        format.json { head :no_content}
+      else
+        format.html { render :collection_new }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
     end
+
   end
 
   # DELETE   /:username/arango_dbs/:id/collection/:collection_name
@@ -89,6 +99,8 @@ class ArangoDbsController < ThingsController
     set_thing
     authorize! :update, @thing
     find_doc_collections(params[:collection_name])
+    find_upload_options
+
   end
 
   # POST     /:username/arango_dbs/:id/collection/:collection_name/publish
@@ -96,74 +108,78 @@ class ArangoDbsController < ThingsController
     ok = false
     set_thing
     authorize! :update, @thing
+    find_doc_collections(params[:collection_name])
+    find_upload_options
 
-    if arango_db_params["publish_file"] != nil
-      begin
-        file = arango_db_params["publish_file"]
-        info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
-        if info['type'] == 2
-          type = 'document'
-          result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name], public_access)
-          puts "Publish result:#{result}"
-          if result["error"] != false
-            flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
-          elsif ((result["updated"] != 0) or (result["ignored"] != 0))
-            flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-          else
-            flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-          end
-          ok = true
+    json_option = @thing.dbm.eval_import_option(arango_db_params["json_option"], @json_options)
+    overwrite_option = @thing.dbm.eval_import_option(arango_db_params["overwrite_option"], @overwrite_options)
+    on_duplicate_option = @thing.dbm.eval_import_option(arango_db_params["on_duplicate_option"], @on_duplicate_options)
+    complete_option = @thing.dbm.eval_import_option(arango_db_params["complete_option"], @complete_options)
+
+    begin
+      file = arango_db_params["publish_file"]
+      raise "No file selected" if file.nil?
+
+      info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
+      if info['type'] == 2
+        type = 'document'
+        result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        puts "Publish result:#{result}"
+        if result["error"] != false
+          flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+        elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+          flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
         else
-          type = 'edge'
-          result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], arango_db_params["from_to_coll_prefix"], arango_db_params["from_to_coll_prefix"], public_access)
-          puts "Publish result:#{result}"
-          if result["error"] != false
-            flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
-          elsif ((result["updated"] != 0) or (result["ignored"] != 0))
-            flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-          else
-            flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-          end
-          ok = true
-
+          flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
         end
-      rescue => e
-        ok = false
-        flash[:error] = "Error publishing file to '#{params[:collection_name]}' #{e.message}"
-        puts e.message
-        puts e.backtrace.inspect
-      end
-    else
-      flash[:error] = "No file selected"
-    end
+        ok = true
+      else
+        type = 'edge'
+        from_to_coll_prefix = arango_db_params["from_to_coll_prefix"]
+        raise "No document collection selected" if from_to_coll_prefix.nil?
+        raise "No document collection selected" if from_to_coll_prefix == ""
 
-    flash[:error] = "Error publishing file to '#{params[:collection_name]}'" if ok == false
+        result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, arango_db_params["from_to_coll_prefix"], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        puts "Publish result:#{result}"
+        if result["error"] != false
+          flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+        elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+          flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        else
+          flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        end
+        ok = true
+
+      end
+    rescue => e
+      ok = false
+      flash[:error] = "Error publishing file to '#{params[:collection_name]}' #{e.message}"
+      puts e.message
+      puts e.backtrace.inspect
+    end
 
     respond_to do |format|
-      format.html { redirect_to thing_edit_path(@thing) }
-      format.json { head :no_content }
+      if ok
+        format.html { redirect_to thing_edit_path(@thing) }
+        format.json { head :no_content}
+      else
+        format.html { render :collection_publish_new }
+        format.json { render json: @thing.errors, status: :unprocessable_entity }
+      end
     end
 
-
-
-
-
-
-  end
-
-  def upload
-    authorize! :create, ArangoDb
   end
 
   def create
+    ok = false
     authorize! :create, ArangoDb
     db_entries = params[:arango_db][:db_entries]
     dbm_id = db_entries.split(' ')[0]
     db_name = db_entries.split(' ')[1]
     dbm = Dbm.where(id: dbm_id).first
+    find_dbms_rw
 
     begin
-      ok = false
       raise 'Error bad DBM reference' if dbm == nil
       raise 'Error DBM with different user' unless dbm.user == current_user
 
@@ -188,7 +204,7 @@ class ArangoDbsController < ThingsController
         format.html { redirect_to thing_path(@thing), notice: create_notice }
         format.json { render :show, status: :created, location: thing_path(@thing) }
       else
-        format.html { redirect_to dashboard_path  }
+        format.html { render :new  }
         format.json { render json: @thing.errors, status: :unprocessable_entity }
       end
     end
@@ -269,7 +285,7 @@ class ArangoDbsController < ThingsController
   private
   def arango_db_params
     params.require(:arango_db).permit(:public, :name, :description, :license,
-      :meta_keyword_list, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix,
+      :meta_keyword_list, :publish_file, :db_entries, :coll_name, :coll_type, :from_to_coll_prefix, :json_option, :overwrite_option, :on_duplicate_option, :complete_option,
       queries_attributes: [:id, :name, :query_string, :description, :language, :_destroy]) ## Rails 4 strong params usage
   end
 
@@ -364,5 +380,11 @@ class ArangoDbsController < ThingsController
     end
   end
 
+  def find_upload_options
+    @json_options = @thing.dbm.get_select_import_json_options
+    @overwrite_options = @thing.dbm.get_select_import_overwrite_options
+    @on_duplicate_options = @thing.dbm.get_select_import_on_duplicate_options
+    @complete_options = @thing.dbm.get_select_import_complete_options
+  end
 
 end

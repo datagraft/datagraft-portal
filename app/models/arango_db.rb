@@ -12,7 +12,11 @@ class ArangoDb < Thing
   attr_accessor :coll_name
   attr_accessor :coll_type
   attr_accessor :from_to_coll_prefix
-  
+  attr_accessor :json_option
+  attr_accessor :overwrite_option
+  attr_accessor :on_duplicate_option
+  attr_accessor :complete_option
+
   #after_create_commit :initialised_sparql_endpoint
 
   #def initialised_sparql_endpoint
