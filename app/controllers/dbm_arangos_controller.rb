@@ -63,7 +63,7 @@ class DbmArangosController < DbmsController
         format.json { render :show, status: :created, location: @dbm_arango }
       else
         format.html { render :new }
-        format.json { render json: @dbm_arango.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
         @dbm_arango.destroy
       end
 
@@ -75,8 +75,9 @@ class DbmArangosController < DbmsController
   def update
     ok = false
     begin
-      ok = @dbm_arango.update(dbm_arango_params)
-      @dbm_arango.test_server()
+      ok = @dbm_arango.assign_attributes(dbm_arango_params)
+      @dbm_arango.test_server(false)
+      ok = @dbm_arango.save
     rescue => e
       ok = false
       puts e.message
@@ -90,7 +91,7 @@ class DbmArangosController < DbmsController
         format.json { render :show, status: :ok, location: @dbm_arango }
       else
         format.html { render :edit }
-        format.json { render json: @dbm_arango.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
   end
@@ -116,7 +117,7 @@ class DbmArangosController < DbmsController
         format.json { head :no_content }
       else
         format.html { redirect_to dbm_arangos_url }
-        format.json { head :no_content, status: 'Failed to unregister the server' }
+        format.json { render json: {error: flash[:error]}, status:  :unprocessable_entity  }
       end
     end
   end

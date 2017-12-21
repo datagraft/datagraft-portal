@@ -67,14 +67,21 @@ class DbmAccountsController < ApplicationController
     ok = true
 
     begin
-      name = dbm_account_params[:name]                     # Fetch name for testing
-      password = dbm_account_params[:password]             # Fetch password for testing
+      password = dbm_account_params[:password]             # Fetch new password
       password = @dbm_account.password if password == ""   # Use existing password if no new
-      @dbm.test_user(name, password)
+      @dbm_account.assign_attributes(dbm_account_params)
+      @dbm_account.password = password                     # Refresh password in case of no new
 
-      @dbm_account.update(dbm_account_params)
-      @dbm_account.password = password                     # Use existing password if no new
-      
+      @dbm.test_user(@dbm_account.name, @dbm_account.password)
+
+      #name = dbm_account_params[:name]                     # Fetch name for testing
+      #password = dbm_account_params[:password]             # Fetch password for testing
+      #password = @dbm_account.password if password == ""   # Use existing password if no new
+      #@dbm.test_user(name, password)
+
+      #@dbm_account.update(dbm_account_params)
+      #@dbm_account.password = password                     # Use existing password if no new
+
       ok = @dbm_account.save
     rescue => e
       ok = false

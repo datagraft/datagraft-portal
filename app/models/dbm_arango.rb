@@ -190,9 +190,9 @@ class DbmArango < Dbm
     return true
   end
 
-  def test_server()
+  def test_server(public = true)
     puts "***** Enter DbmArango.test_server(#{name})"
-    adbm_init(true)
+    adbm_init(public)
 
     puts "***** Exit DbmArango.test_server()"
     return true
@@ -252,7 +252,7 @@ class DbmArango < Dbm
   def adbm_databases
     if @adbm_databases.nil?
       result = self.class.get("/_api/user/#{@adbm_user}/database", @adbm_request)
-      raise "Error fetching databases" unless result.code.between?(200, 299)
+      raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
       result = result.parsed_response
       res = result["result"].map{|k,v| {obj: 'DB', name: k, access: v}}
       @adbm_databases = res
@@ -318,7 +318,7 @@ class DbmArango < Dbm
       query = { "excludeSystem": excludeSystem }.delete_if{|k,v| v.nil?}
       request = @adbm_request.merge({ :query => query })
       result = self.class.get("/_db/#{database_name}/_api/collection", request)
-      raise "Error fetching collections" unless result.code.between?(200, 299)
+      raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
 
       result = result.parsed_response
       res = result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Document'}}
@@ -352,22 +352,25 @@ class DbmArango < Dbm
 
     result = self.class.post("/_db/#{db_name}/_api/collection", request)
     adbm_clear # Clear all cache
-    raise "Error creating collection info '#{result["errorMessage"]}'" unless result.code.between?(200, 299)
-    result = result.parsed_response
+    raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
+
+    return result.parsed_response
   end
 
   def adbm_collection_info(db_name, coll_name)
     result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
-    raise "Error fetching collection info" unless result.code.between?(200, 299)
-    result = result.parsed_response
+    raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
+
+    return result.parsed_response
   end
 
   def adbm_collection_delete(db_name, coll_name)
     raise "No R/W access to collection" unless adbm_collection_has_access(db_name, coll_name, ["rw"])
     result = self.class.delete("/_db/#{db_name}/_api/collection/#{coll_name}", @adbm_request)
     adbm_clear # Clear all cache
-    raise "Error deleting collection" unless result.code.between?(200, 299)
-    result = result.parsed_response
+    raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
+
+    return result.parsed_response
   end
 
   def adbm_document_importJSON(db_name, coll_name, body, type: "auto", from: nil, to: nil, overwrite: nil, waitForSync: nil, onDuplicate: nil, complete: nil, details: nil)
@@ -388,8 +391,9 @@ class DbmArango < Dbm
     request = @adbm_request.merge({ :body => body, :query => query })
 
     result = self.class.post("/_db/#{db_name}/_api/import", request)
-    raise "Error storing document into collection" unless result.code.between?(200, 299)
-    result = result.parsed_response
+    raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
+
+    return result.parsed_response
   end
 
 
@@ -411,11 +415,10 @@ class DbmArango < Dbm
     request = @adbm_request.merge({ :body => body.to_json })
     result = self.class.post("/_db/#{db_name}/_api/cursor", request)
     raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
-    result = result.parsed_response
     @quantity = result["count"]
     @hasMore = result["hasMore"]
     @id = result["id"]
-    return result
+    return result.parsed_response
   end
 
 end

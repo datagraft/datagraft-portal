@@ -106,6 +106,7 @@ class ArangoDbsController < ThingsController
   # POST     /:username/arango_dbs/:id/collection/:collection_name/publish
   def collection_publish
     ok = false
+    @upload_result = {}
     set_thing
     authorize! :update, @thing
     find_doc_collections(params[:collection_name])
@@ -124,14 +125,15 @@ class ArangoDbsController < ThingsController
       if info['type'] == 2
         type = 'document'
         result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        @upload_result[:result] = result
         puts "Publish result:#{result}"
-        if result["error"] != false
-          flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
-        elsif ((result["updated"] != 0) or (result["ignored"] != 0))
-          flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-        else
-          flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-        end
+        #if result["error"] != false
+        #  flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+        #elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+        #  flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        #else
+        #  flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        #end
         ok = true
       else
         type = 'edge'
@@ -140,19 +142,21 @@ class ArangoDbsController < ThingsController
         raise "No document collection selected" if from_to_coll_prefix == ""
 
         result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, arango_db_params["from_to_coll_prefix"], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        @upload_result[:result] = result
         puts "Publish result:#{result}"
-        if result["error"] != false
-          flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
-        elsif ((result["updated"] != 0) or (result["ignored"] != 0))
-          flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-        else
-          flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
-        end
+        #if result["error"] != false
+        #  flash[:error] = "Error publishing to collection '#{params[:collection_name]}'<br> #{result}"
+        #elsif ((result["updated"] != 0) or (result["ignored"] != 0))
+        #  flash[:warning] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        #else
+        #  flash[:notice] = "File published to collection '#{params[:collection_name]}'<br> #{result}"
+        #end
         ok = true
 
       end
     rescue => e
       ok = false
+      @upload_result[:error] = "#{e.message}"
       flash[:error] = "Error publishing file to '#{params[:collection_name]}' #{e.message}"
       puts e.message
       puts e.backtrace.inspect
@@ -160,8 +164,8 @@ class ArangoDbsController < ThingsController
 
     respond_to do |format|
       if ok
-        format.html { redirect_to thing_edit_path(@thing) }
-        format.json { head :no_content}
+        format.html { render :collection_publish }
+        format.json { head :collection_publish}
       else
         format.html { render :collection_publish_new }
         format.json { render json: @thing.errors, status: :unprocessable_entity }
