@@ -24,3 +24,7 @@ json.set! 'sparql_endpoint_ids' do
   idnum_list = @thing.sparql_endpoints.collect {|sep| sep.id}
   json.array! idnum_list
 end
+json.set! 'arango_db_ids' do
+  idnum_list = @thing.arango_dbs.collect {|sep| sep.id}
+  json.array! idnum_list
+end

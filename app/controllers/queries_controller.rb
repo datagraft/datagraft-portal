@@ -33,11 +33,15 @@ class QueriesController < ThingsController
 
       ## Special hack because "wrap_params" doesnt support both :query and :execute_query
       endpoint = params[:sparql_endpoints]
-      endpoint = params[:execute_query][:sparql_endpoints]  if endpoint == nil
+      arango_db = params[:arango_dbs]
+      if endpoint.nil? && arango_db.nil?
+        unless params[:execute_query].nil?
+          endpoint = params[:execute_query][:sparql_endpoints]
+          arango_db = params[:execute_query][:arango_dbs]
+        end
+      end
       @sparql_endpoint = nil
       @sparql_endpoint = se_user.sparql_endpoints.friendly.find(endpoint) if endpoint != nil
-      arango_db = params[:arango_dbs]
-      arango_db = params[:execute_query][:arango_dbs]  if arango_db == nil
       @arango_db = nil
       @arango_db = se_user.arango_dbs.friendly.find(arango_db) if arango_db != nil
     end

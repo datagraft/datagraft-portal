@@ -12,6 +12,7 @@ class DbmArangosController < DbmsController
   # GET /dbm_arangos
   def index
     @dbm_arangos = current_user.search_for_existing_dbms_type("DbmArango")
+    find_dbms_rw
   end
 
 
@@ -136,5 +137,27 @@ class DbmArangosController < DbmsController
   def dbm_arango_params
     params.require(:dbm_arango).permit(:dbm_account_username, :dbm_account_password, :name, :uri)
   end
+
+  def find_dbms_rw
+    # Find valid dbms
+    begin
+      @dbm_entries = current_user.search_for_existing_dbms_reptype('ARANGO')
+      @db_entries = []
+      @dbm_entries.each do |dbm|
+        db_arr = dbm.get_databases(false)
+        db_arr.each do |db|
+          if db[:access] == "rw"
+            @db_entries << {description: "DBM: #{dbm.name}  =>  Database: #{db[:name]}", entry: "#{dbm.id} #{db[:name]}"}
+          end
+          puts "DBM: #{dbm.name} DB: #{db[:name]}"
+        end
+      end
+    rescue => e
+      flash[:error] = "Error searching for databases: #{e.message}"
+      puts e.message
+      # puts e.backtrace.inspect
+    end
+  end
+
 
 end

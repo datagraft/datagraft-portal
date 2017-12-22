@@ -56,7 +56,7 @@ class DbmAccountsController < ApplicationController
         format.json { render :show, status: :created, location: dbm_dbm_account_path(@dbm, @dbm_account) }
       else
         format.html { render :new }
-        format.json { render json: @dbm_account.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
   end
@@ -68,7 +68,7 @@ class DbmAccountsController < ApplicationController
 
     begin
       password = dbm_account_params[:password]             # Fetch new password
-      password = @dbm_account.password if password == ""   # Use existing password if no new
+      password = @dbm_account.password if password.nil? or password == ""   # Use existing password if no new
       @dbm_account.assign_attributes(dbm_account_params)
       @dbm_account.password = password                     # Refresh password in case of no new
 
@@ -96,7 +96,7 @@ class DbmAccountsController < ApplicationController
         format.json { render :show, status: :ok, location: dbm_dbm_account_path(@dbm, @dbm_account) }
       else
         format.html { render :edit }
-        format.json { render json: @dbm_account.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
   end

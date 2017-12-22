@@ -58,7 +58,7 @@ class ArangoDbsController < ThingsController
         format.json { head :no_content}
       else
         format.html { render :collection_new }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
 
@@ -165,10 +165,10 @@ class ArangoDbsController < ThingsController
     respond_to do |format|
       if ok
         format.html { render :collection_publish }
-        format.json { head :collection_publish}
+        format.json { render json: @upload_result}
       else
         format.html { render :collection_publish_new }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
 
@@ -209,7 +209,7 @@ class ArangoDbsController < ThingsController
         format.json { render :show, status: :created, location: thing_path(@thing) }
       else
         format.html { render :new  }
-        format.json { render json: @thing.errors, status: :unprocessable_entity }
+        format.json { render json: {error: flash[:error]}, status: :unprocessable_entity }
       end
     end
   end
