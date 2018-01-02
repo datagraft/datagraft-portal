@@ -15,8 +15,8 @@ module TestSignInHelper
   end
 end
 
-#module to help creating a DbmXXX setup for testing of interaction with RdfRepos and SparqlEndpoints
-module TestDbmXXXHelper
+#module to help creating a DbmS4 setup for testing of interaction with RdfRepos and SparqlEndpoints
+module TestDbmS4Helper
   def create_test_dbm_s4(testUser)
     testDbmS4 = DbmS4.new()
     testDbmS4.user = testUser
@@ -68,6 +68,63 @@ module TestDbmXXXHelper
 
 end
 
+#module to help creating a DbmArango setup for testing of interaction with ArangoDb asset
+module TestDbmArangoHelper
+  def create_test_dbm_arango(testUser)
+    testDbmArango = DbmArango.new()
+    testDbmArango.user = testUser
+    testDbmArango.name = 'TestDbmArango'
+    testDbmArango.uri = ENV['DBMARANGO_URI']
+    testDbmArango.save
+
+    return testDbmArango
+  end
+
+  def get_test_dbm_arango_db_name
+    return ENV['DBMARANGO_DBNAME']
+  end
+
+  def get_test_dbm_arango_rw_user
+    return ENV['DBMARANGO_RW_USER']
+  end
+
+  def get_test_dbm_arango_rw_pwd
+    return ENV['DBMARANGO_RW_PWD']
+  end
+
+  def get_test_dbm_arango_ro_user
+    return ENV['DBMARANGO_RO_USER']
+  end
+
+  def get_test_dbm_arango_ro_pwd
+    return ENV['DBMARANGO_RO_PWD']
+  end
+
+  def delete_test_dbm_arango_collections(dbmarango, db_name)
+    puts "***** Clean up DbmArango collections"
+
+    if db_name.nil?
+      puts "No clean up of DbmArango collections dbm_name==nil"
+      return
+    end
+
+    begin
+      count = 0
+      coll_arr = dbmarango.get_collections(db_name, false)
+      coll_arr.each do |coll|
+        puts "  COL: #{coll[:name]} #{coll[:type]}"
+        info = dbmarango.delete_collection(coll, false)
+        count += 1
+      end
+      puts "Clean up DbmArango #{count} collections"
+    rescue => e
+      puts "Clean up DbmArango #{count} collections with ex #{e.message}"
+    end
+
+  end
+
+end
+
 #module to help creating a SparqlEndpoint for testing
 module TestSparqlEndpointHelper
   def create_test_sparql_endpoint(testUser)
@@ -102,7 +159,8 @@ end
 
 class ActiveSupport::TestCase
     include TestSignInHelper
-    include TestDbmXXXHelper
+    include TestDbmS4Helper
+    include TestDbmArangoHelper
     include TestSparqlEndpointHelper
     include TestFilestoreHelper
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
