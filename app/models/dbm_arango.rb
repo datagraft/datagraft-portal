@@ -127,25 +127,25 @@ class DbmArango < Dbm
     return info
   end
 
-  def upload_document_data_array(jsonFile, db_name, coll_name, public, jsonType, overwrite, onDuplicate, complete)
-    puts "***** Enter DbmArango.upload_document_data_array(#{name})"
+  def upload_document_data(jsonFile, db_name, coll_name, public, jsonType, overwrite, onDuplicate, complete)
+    puts "***** Enter DbmArango.upload_document_data(#{name})"
     body = jsonFile.read
     waitForSync = nil
 
     adbm_init(public)
     res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, type: jsonType, overwrite: overwrite, onDuplicate: onDuplicate, complete: complete)
-    puts "***** Exit DbmArango.upload_document_data_array(#{name})"
+    puts "***** Exit DbmArango.upload_document_data(#{name})"
     return res
   end
 
-  def upload_edge_data_array(jsonFile, db_name, coll_name, from_coll_name, to_coll_name, public, jsonType, overwrite, onDuplicate, complete)
-    puts "***** Enter DbmArango.upload_edge_data_array(#{name})"
+  def upload_edge_data(jsonFile, db_name, coll_name, from_coll_name, to_coll_name, public, jsonType, overwrite, onDuplicate, complete)
+    puts "***** Enter DbmArango.upload_edge_data(#{name})"
     body = jsonFile.read
     waitForSync = nil
 
     adbm_init(public)
     res = adbm_document_importJSON(db_name, coll_name, body, waitForSync: waitForSync, type: jsonType, overwrite: overwrite, onDuplicate: onDuplicate, complete: complete, from: from_coll_name, to: to_coll_name)
-    puts "***** Exit DbmArango.upload_edge_data_array(#{name})"
+    puts "***** Exit DbmArango.upload_edge_data(#{name})"
     return res
   end
 

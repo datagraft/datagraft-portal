@@ -124,7 +124,7 @@ class ArangoDbsController < ThingsController
       info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
       if info['type'] == 2
         type = 'document'
-        result = @thing.dbm.upload_document_data_array(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        result = @thing.dbm.upload_document_data(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
         @upload_result[:result] = result
         puts "Publish result:#{result}"
         #if result["error"] != false
@@ -141,7 +141,7 @@ class ArangoDbsController < ThingsController
         raise "No document collection selected" if from_to_coll_prefix.nil?
         raise "No document collection selected" if from_to_coll_prefix == ""
 
-        result = @thing.dbm.upload_edge_data_array(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, arango_db_params["from_to_coll_prefix"], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        result = @thing.dbm.upload_edge_data(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, arango_db_params["from_to_coll_prefix"], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
         @upload_result[:result] = result
         puts "Publish result:#{result}"
         #if result["error"] != false

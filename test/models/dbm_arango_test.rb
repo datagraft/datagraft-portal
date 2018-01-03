@@ -46,7 +46,7 @@ class DbmArangoTest < ActiveSupport::TestCase
     assert testAccount == rdAccount, 'DbmArango account mismatch'
 
     #puts "dbmArango: #{@testDbmArango.inspect}"
-    #puts "dbmAccount: #{@testDbmArango.dbm_accounts.first.inspect}"
+    puts "dbmAccount: #{@testDbmArango.dbm_accounts.first.inspect}"
     #puts "testUser: #{@testUser.inspect}"
   end
 
