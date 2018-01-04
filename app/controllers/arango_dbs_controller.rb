@@ -122,7 +122,7 @@ class ArangoDbsController < ThingsController
       raise "No file selected" if file.nil?
 
       info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
-      if info['type'] == 2
+      if info['type'] == 'document'
         type = 'document'
         result = @thing.dbm.upload_document_data(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
         @upload_result[:result] = result
@@ -141,7 +141,7 @@ class ArangoDbsController < ThingsController
         raise "No document collection selected" if from_to_coll_prefix.nil?
         raise "No document collection selected" if from_to_coll_prefix == ""
 
-        result = @thing.dbm.upload_edge_data(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, arango_db_params["from_to_coll_prefix"], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
+        result = @thing.dbm.upload_edge_data(file, @thing.db_name, params[:collection_name], from_to_coll_prefix, from_to_coll_prefix, public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
         @upload_result[:result] = result
         puts "Publish result:#{result}"
         #if result["error"] != false
@@ -343,7 +343,7 @@ class ArangoDbsController < ThingsController
       coll_arr.each do |coll|
         puts "  COL: #{coll[:name]} #{coll[:type]}"
         info = @thing.dbm.get_collection_info(coll: coll, public: public_access)
-        if info['type'] == 2
+        if info['type'] == 'document'
           docs += info['count']
           type = 'document'
         else
@@ -372,7 +372,7 @@ class ArangoDbsController < ThingsController
       coll_arr = @thing.dbm.get_collections(@thing.db_name, public_access)
       coll_arr.each do |coll|
         info = @thing.dbm.get_collection_info(coll: coll, public: public_access)
-        if info['type'] == 2
+        if info['type'] == 'document'
           @doc_collections << [coll[:name], coll[:name]]
           @doc_edge = false if doc_name == coll[:name]
         end

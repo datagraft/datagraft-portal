@@ -16,8 +16,8 @@ class DbmArango < Dbm
 
   def get_select_collection_types
     res = []
-    res << ["Document", "2"]
-    res << ["Edge", "3"]
+    res << ["Document", "document"]
+    res << ["Edge", "edge"]
 
     return res
   end
@@ -201,6 +201,8 @@ class DbmArango < Dbm
   private
   def adbm_clear
     @adbm_init = nil
+    @acc_user = nil
+    @acc_password = nil
     @adbm_login = nil
     @adbm_databases = nil
     @adbm_database_access = nil
@@ -209,12 +211,14 @@ class DbmArango < Dbm
   end
 
   def adbm_init(public)
-    if @adbm_init.nil?
+    @adbm_init = {} if @adbm_init.nil?
+    if @adbm_init["public"].nil? || @adbm_init["public"] |= public
+      adbm_clear
       da = first_enabled_account(public)
       @acc_user = da.name
       @acc_password = da.password
 
-      @adbm_init = true
+      @adbm_init = {"public" => public}
     end
     adbm_login(@acc_user, @acc_password)
   end
@@ -321,7 +325,7 @@ class DbmArango < Dbm
       raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
 
       result = result.parsed_response
-      res = result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'Edge' : 'Document'}}
+      res = result["result"].map{|x| {obj: 'COLL', db: database_name, collection: x["name"], type: x['type'] == 3 ? 'edge' : 'document'}}
       @adbm_collections[database_name] = res
     end
     return @adbm_collections[database_name]
@@ -333,7 +337,9 @@ class DbmArango < Dbm
     raise "Existing collection" unless adbm_collection_access(db_name, coll_name) != ""
 
     type = 3 if type == "Edge"
+    type = 3 if type == "edge"
     type = nil if type == "Document"
+    type = nil if type == "document"     
     body = {
       "name" => coll_name,
       "type" => type,
