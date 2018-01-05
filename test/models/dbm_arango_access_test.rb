@@ -35,6 +35,40 @@ class DbmArangoAccessTest < ActiveSupport::TestCase
 
   end
 
+  test "check databases" do
+    db_arr = @testDbmArango.get_databases(false)
+    assert db_arr.count == 1, "There shall only one database accessible for private user"
+    db = db_arr.first
+    assert db[:name] == @testDbName, "Unexpected database name found #{db[:name]}"
+    assert db[:access] == "rw", "Unexpected access found #{db[:access]}"
+
+    db_arr = @testDbmArango.get_databases(true)
+    assert db_arr.count == 1, "There shall only one database accessible for public user"
+    db = db_arr.first
+    assert db[:name] == @testDbName, "Unexpected database name found #{db[:name]}"
+    assert db[:access] == "ro", "Unexpected access found #{db[:access]}"
+
+    access = @testDbmArango.get_database_access(@testDbName, false)
+    assert access == "rw", "Unexpected access found #{access}"
+
+    access = @testDbmArango.get_database_access(@testDbName, true)
+    assert access == "ro", "Unexpected access found #{access}"
+  end
+
+  test "check access" do
+    @testDbmArango.test_server()   # This should work based on initial setup
+
+    assert_raises(StandardError) do
+      @testDbmArango.test_user("xxx", "ppp")  # This user should fail
+    end
+
+    assert_raises(StandardError) do
+      @testDbmArango.uri = "abc"
+      @testDbmArango.test_server()   # This should work based on initial setup
+    end
+
+  end
+
   test "create and delete collection success path" do
 
     collection_name = "test_doc_coll"

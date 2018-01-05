@@ -224,6 +224,7 @@ class DbmArango < Dbm
   end
 
   def adbm_test_user(user, password)
+    adbm_clear
     adbm_login(user, password)
     adbm_clear
   end
@@ -339,7 +340,7 @@ class DbmArango < Dbm
     type = 3 if type == "Edge"
     type = 3 if type == "edge"
     type = nil if type == "Document"
-    type = nil if type == "document"     
+    type = nil if type == "document"
     body = {
       "name" => coll_name,
       "type" => type,

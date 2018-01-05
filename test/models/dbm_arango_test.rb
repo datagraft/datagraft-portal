@@ -27,6 +27,21 @@ class DbmArangoTest < ActiveSupport::TestCase
     support = @testDbmArango.get_supported_repository_types.include? 'ARANGO'
     assert support == true , 'DbmArango should support ARANGO'
 
+    options = @testDbmArango.get_select_collection_types
+    assert @testDbmArango.eval_import_option(options[1][1], options) == options[1][1], 'Option eval mismatch'
+
+    options = @testDbmArango.get_select_import_json_options
+    assert @testDbmArango.eval_import_option(options[1][1], options) == options[1][1], 'Option eval mismatch'
+
+    options = @testDbmArango.get_select_import_overwrite_options
+    assert @testDbmArango.eval_import_option(options[1][1], options) == options[1][1], 'Option eval mismatch'
+
+    options = @testDbmArango.get_select_import_on_duplicate_options
+    assert @testDbmArango.eval_import_option(options[1][1], options) == options[1][1], 'Option eval mismatch'
+
+    options = @testDbmArango.get_select_import_complete_options
+    assert @testDbmArango.eval_import_option(options[1][1], options) == options[1][1], 'Option eval mismatch'
+
   end
 
 
