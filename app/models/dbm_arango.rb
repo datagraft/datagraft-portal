@@ -368,7 +368,10 @@ class DbmArango < Dbm
     result = self.class.get("/_db/#{db_name}/_api/collection/#{coll_name}/count", @adbm_request)
     raise result.parsed_response["errorMessage"] unless result.code.between?(200, 299)
 
-    return result.parsed_response
+    res = result.parsed_response
+    res['type'] = 'edge' if res['type'] == 3
+    res['type'] = 'document' if res['type'] == 2
+    return res
   end
 
   def adbm_collection_delete(db_name, coll_name)

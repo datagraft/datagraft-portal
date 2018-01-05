@@ -94,16 +94,17 @@ class ArangoDbsController < ThingsController
     end
   end
 
-  # GET     /:username/arango_dbs/:id/collection/:collection_name/publish_new
+  # GET     /:username/arango_dbs/:id/collection/:collection_name/collection_publish_new
   def collection_publish_new
     set_thing
     authorize! :update, @thing
+
     find_doc_collections(params[:collection_name])
     find_upload_options
 
   end
 
-  # POST     /:username/arango_dbs/:id/collection/:collection_name/publish
+  # POST     /:username/arango_dbs/:id/collection/:collection_name/collection_publish
   def collection_publish
     ok = false
     @upload_result = {}
@@ -122,6 +123,7 @@ class ArangoDbsController < ThingsController
       raise "No file selected" if file.nil?
 
       info = @thing.dbm.get_collection_info(db_name: @thing.db_name, collection_name: params[:collection_name], public: public_access)
+
       if info['type'] == 'document'
         type = 'document'
         result = @thing.dbm.upload_document_data(file, @thing.db_name, params[:collection_name], public_access, json_option, overwrite_option, on_duplicate_option, complete_option)
@@ -178,17 +180,24 @@ class ArangoDbsController < ThingsController
     ok = false
     authorize! :create, ArangoDb
     db_entries = params[:arango_db][:db_entries]
-    dbm_id = db_entries.split(' ')[0]
-    db_name = db_entries.split(' ')[1]
-    dbm = Dbm.where(id: dbm_id).first
     find_dbms_rw
 
     begin
+      @thing = ArangoDb.new(arango_db_params)
+      @thing.user = current_user
+
+      begin
+        dbm_id = db_entries.split(' ')[0]
+        db_name = db_entries.split(' ')[1]
+        dbm = Dbm.where(id: dbm_id).first
+      rescue => e
+        raise "Invalid or missing db_entry"
+      end
+      find_dbms_rw
+
       raise 'Error bad DBM reference' if dbm == nil
       raise 'Error DBM with different user' unless dbm.user == current_user
 
-      @thing = ArangoDb.new(arango_db_params)
-      @thing.user = current_user
       @thing.dbm = dbm
       @thing.db_name = db_name
       ok = @thing.save   # It is important to save @thing before using it in another Thread
@@ -245,25 +254,25 @@ class ArangoDbsController < ThingsController
     set_thing
     authorize! :read, @thing
 
-    @query = Query.new
-    @query.name = 'Unsaved query'
-    @query.query_string =
-      if params[:existing_query] != nil
-        params[:existing_query]
-      else
-        if params["query_string"] != nil
-          params["query_string"]
-        else
-          params["execute_query"]["query_string"]
-        end
-      end
-    @query.language = 'AQL'
-
     begin
+      @query = Query.new
+      @query.name = 'Unsaved query'
+      @query.query_string =
+        if params[:existing_query] != nil
+          params[:existing_query]
+        else
+          if params["query_string"] != nil
+            params["query_string"]
+          else
+            params["execute_query"]["query_string"]
+          end
+        end
+      @query.language = 'AQL'
+
       @query_error = ""
       @query_result = @query.execute_on_arango_db(@thing, current_user)
     rescue => e
-      puts "Error querying ArangoDb"
+      puts "Error querying ArangoDb #{e.message}"
       ## flash[:error] = e.message
       @query_result = {
         headers: [],
@@ -360,8 +369,8 @@ class ArangoDbsController < ThingsController
       @db_edges = "Edges:#{edges}"
       @db_docs = "Documents:#{docs}"
       puts e.message
-      puts e.backtrace.inspect
-      flash[:error] = "Error searching for collections: #{e.message}"
+      #puts e.backtrace.inspect
+      #flash[:error] = "Error searching for collections: #{e.message}"
     end
   end
 
