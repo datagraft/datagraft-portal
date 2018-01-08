@@ -74,10 +74,14 @@ module TestDbmArangoHelper
     testDbmArango = DbmArango.new()
     testDbmArango.user = testUser
     testDbmArango.name = 'TestDbmArango'
-    testDbmArango.uri = ENV['DBMARANGO_URI']
+    testDbmArango.uri = get_test_dbm_arango_db_uri
     testDbmArango.save
 
     return testDbmArango
+  end
+
+  def get_test_dbm_arango_db_uri
+    return ENV['DBMARANGO_URI']
   end
 
   def get_test_dbm_arango_db_name

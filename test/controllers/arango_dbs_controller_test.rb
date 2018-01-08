@@ -56,7 +56,10 @@ class ArangoDbsControllerTest < ActionController::TestCase
 
 
   test "should get index" do
-    get :index, params: { username: @user.username }
+    get :index, params: {
+      username: @user.username,
+      resource: 'arango_dbs'
+    }
     assert_response :success
     assert_not_nil assigns(:arango_dbs)
   end
