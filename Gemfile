@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.1'
+gem 'rails', '5.1.4'
 
 ## Use sqlite3 as the database for Active Record
 #gem 'sqlite3'
@@ -91,10 +91,10 @@ gem 'omniauth-github'
 gem 'will_paginate', '~> 3.1.0'
 
 # Fulltext search
-gem 'textacular', '~> 4.0'
+gem 'textacular', '~> 5.0'
 
 # textacular requires postgresql
-gem 'pg'
+gem 'pg', '~> 0.20'
 
 # file upload with streaming io
 gem "refile", '~> 0.6.2',require: "refile/rails", :git => 'https://github.com/manfe/refile.git'
@@ -153,7 +153,7 @@ gem 'indefinite_article'
 gem 'deep_cloneable', '~> 2.2.0'
 
 # Feature flippin'
-gem 'flip'
+gem 'flipflop'
 
 # This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
 gem 'jquery-datatables-rails', '~> 3.4.0'

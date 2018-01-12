@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   resources :features, only: [ :index ] do
     resources :strategies, only: [ :update, :destroy ]
   end
-  mount Flip::Engine => "/features" rescue "no flip"
 
   use_doorkeeper
 
@@ -15,7 +14,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
     }
-
+  mount Flipflop::Engine => "/flipflop"
   get 'api_keys' => 'api_keys#index_all'
   resources :dbms, only: [ :index ] do
     resources :api_keys
@@ -141,24 +140,24 @@ Rails.application.routes.draw do
 
     # TODO fix me : Flip crashes on migration
     begin
-#      if Flip.on? :catalogues
-#        resources :catalogues do
-#          member do
-#            get 'versions'
-#            post 'star'
-#            post 'unstar'
-#          end
-#        end
-#      end
+      if Flipflop.enabled? :catalogues
+        resources :catalogues do
+          member do
+            get 'versions'
+            post 'star'
+            post 'unstar'
+          end
+        end
+      end
 
-#      if Flip.on? :queriable_data_stores
-#        datagraft_resources :queriable_data_stores
-#      end
+      if Flipflop.enabled? :queriable_data_stores
+        datagraft_resources :queriable_data_stores
+      end
 
 
-#      if Flip.on? :utility_functions
-#        datagraft_resources :utility_functions
-#      end
+      if Flipflop.enabled? :utility_functions
+        datagraft_resources :utility_functions
+      end
     rescue
       puts "No Flip"
     end
