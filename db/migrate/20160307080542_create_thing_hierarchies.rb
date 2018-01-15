@@ -1,4 +1,4 @@
-class CreateThingHierarchies < ActiveRecord::Migration
+class CreateThingHierarchies < ActiveRecord::Migration[4.2]
   def change
     create_table :thing_hierarchies, id: false do |t|
       t.integer :ancestor_id, null: false

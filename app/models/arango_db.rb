@@ -7,6 +7,8 @@ class ArangoDb < Thing
 
   accepts_nested_attributes_for :queries, reject_if: :all_blank, :allow_destroy => true
 
+  attribute :db_name
+  
   # Non-persistent attribute for storing query to be executed
   attr_accessor :execute_query
   attr_accessor :coll_name

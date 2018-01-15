@@ -1,4 +1,4 @@
-class CreateCatalogueRecords < ActiveRecord::Migration
+class CreateCatalogueRecords < ActiveRecord::Migration[4.2]
   def change
     create_table :catalogue_records do |t|
       t.integer :catalogue_id
