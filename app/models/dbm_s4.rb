@@ -198,7 +198,7 @@ class DbmS4 < Dbm
     end
 
     puts "***** Exit DbmS4.quota_sparql_ktriples()"
-    return res
+    return res/1024.0
   end
 
 
