@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include OntotextUser
   include UserHelper
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
   has_many :stars, dependent: :destroy
@@ -7,14 +6,16 @@ class User < ApplicationRecord
   has_many :transformations, dependent: :destroy
   has_many :data_distributions, dependent: :destroy
   has_many :filestores, dependent: :destroy
-  has_many :queriable_data_stores, dependent: :destroy
   has_many :data_pages, dependent: :destroy
   has_many :utility_functions, dependent: :destroy
   has_many :queries, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :catalogues, dependent: :destroy
   has_many :sparql_endpoints, dependent: :destroy
+  has_many :arango_dbs, dependent: :destroy
   has_many :upwizards, dependent: :destroy
+  has_many :dbms, dependent: :destroy
+  has_many :dbm_accounts, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -34,7 +35,15 @@ class User < ApplicationRecord
       data_page data_pages
       transformation transformations
       utility_function utility_functions
+      sparql_endpoint sparql_endpoints
+      arango_db arango_dbs
       query queries
+      upwizard upwizards
+      dbm dbms
+      dbm_s4 dbm_s4s
+      dbm_ontotext_leg dbm_ontotext_legs
+      dbm_arango dbm_arangos
+      dbm_account dbm_accounts
       api_key api_keys
       explore publish dashboard transform publish_queriable_data_store querying execute
       new edit index star unstar fork copy versions
@@ -56,10 +65,10 @@ class User < ApplicationRecord
 
   # register the decrease in number of users
   after_destroy :reset_num_users_metric
-  
+
   # register the increase in number of users
   after_create :reset_num_users_metric
-  
+
   def to_param
     self.username
   end
@@ -167,4 +176,24 @@ class User < ApplicationRecord
       end
     end
   end
+
+def search_for_existing_dbms_reptype(rep_type)
+  res = []
+  dbm_list = self.dbms.all
+  dbm_list.each do |dbm|
+    unless dbm.type == nil ## Only check specialisations
+      srt = dbm.get_supported_repository_types
+      res << dbm if srt.include? rep_type
+    end
+  end
+  return res
+end
+
+def search_for_existing_dbms_type(type)
+  res = self.dbms.where(type: type)
+  return res
+end
+
+
+
 end

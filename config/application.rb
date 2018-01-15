@@ -2,6 +2,8 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'uri'
+
 require 'roo' #Used for viewing Excel files
 
 # tracing of HTTP requests
@@ -32,25 +34,29 @@ module Datagraft
     # config.autoload_paths << Rails.root.join('lib')
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-#    config.active_record.raise_in_transactional_callbacks = true
+    #    config.active_record.raise_in_transactional_callbacks = true
     config.action_controller.allow_forgery_protection = false
-    
+
     Gravatarify.options[:default] = 'monsterid' # beautiful monsters by default
     Gravatarify.options[:rating] = 'x' # allows x classified avatars
     Gravatarify.options[:secure] = true # security is our primary concern
     Gravatarify.options[:filetype] = :png # png > jpeg for small avatars
-    
-    config.to_prepare do
-        Doorkeeper::ApplicationsController.layout "application" 
-        Doorkeeper::AuthorizationsController.layout "application" 
-        Doorkeeper::AuthorizedApplicationsController.layout "application" 
 
-        require 'multi_json'
-        MultiJson.use :yajl
+    config.to_prepare do
+      Doorkeeper::ApplicationsController.layout "application" 
+      Doorkeeper::AuthorizationsController.layout "application" 
+      Doorkeeper::AuthorizedApplicationsController.layout "application" 
+
+      require 'multi_json'
+      MultiJson.use :yajl
     end
-    
+
     config.grafterizer = config_for(:grafterizer)
     config.graftwerk = config_for(:graftwerk)
     
+    # feature toggle dashboard only available to logged in users in development/testing environment
+    config.flipflop.dashboard_access_filter = :require_authenticated_user
+
+
   end
 end

@@ -1,0 +1,10 @@
+div.mdl-grid
+  //div.mdl-card.mdl-shadow--2dp.mdl-cell--12-col.sin-card-dropzone.mdl-cell
+  div.mdl-card.mdl-cell--12-col.sin-card-dropzone.mdl-cell
+    div.mdl-card__supporting-text
+      = render 'table_dbm_arangos'
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+    .mdl-layout-spacer
+    == link_to 'Register Server', new_dbm_arango_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

@@ -7,9 +7,9 @@ begin
 
   num_platform_users.set({}, User.where(:isadmin => false).count)
   prometheus.register(num_platform_users)
-rescue Exception => e  
+rescue => e  
   puts 'Error registering num_platform_users metric'
-  puts e.message  
+  puts e.message
   puts e.backtrace.inspect
 end
 
@@ -22,12 +22,12 @@ begin
   things.each do |thing|
     # public/private assets of a type for the user
     number = num_assets.get({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}) ? num_assets.get({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}) : 0
-    
+
     num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}, number + 1)
 
     number = num_versions.get({asset_type: thing.type}) ? num_versions.get({asset_type: thing.type}) : 0;
     num_versions.set({asset_type: thing.type}, number + 1 + thing.versions.count)
-   
+
     number = num_forks.get({asset_type: thing.type}) ? num_forks.get({asset_type: thing.type}) : 0
     num_forks.set({asset_type: thing.type}, thing.parent ? number + 1 : number)
   end
@@ -35,9 +35,9 @@ begin
   prometheus.register(num_assets)
   prometheus.register(num_versions)
   prometheus.register(num_forks)
-rescue Exception => e  
+rescue => e
   puts 'Error registering num_assets metric'
-  puts e.message  
+  puts e.message
   puts e.backtrace.inspect
 end
 

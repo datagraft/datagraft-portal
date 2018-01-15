@@ -1,0 +1,34 @@
+/! Tab layout
+.sin-tab-layout
+  .mdl-grid
+    h3#endpoint-state.sin-hidden
+      = @thing.state
+    = render 'elem_description'
+
+    = render 'elem_keywords'
+
+    = render 'elem_collections'
+
+    hr.mdl-cell--12-col
+
+    = render 'elem_license'
+
+    .mdl-cell--6-col
+      .sin-tab-label ArangoDB information
+      .sin-tab-textfield__box
+        dt Provisioned on:
+        dd
+          = @thing.created_at
+        dt Size:
+        dd #{@db_edges}
+        dd #{@db_docs}
+        dt Database:
+        dd #{@dbm_info}:#{@thing.db_name}(#{@dbm_access})
+
+  hr.sin-invisible-form-separator
+  div.mdl-card__actions
+    - if can? :edit, @thing
+      == link_to 'Edit', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    == link_to "Versions (#{@thing.versions.count})", thing_versions_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    == link_to 'Back to Dashboard', dashboard_path, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

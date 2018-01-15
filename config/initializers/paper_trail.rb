@@ -2,7 +2,7 @@
 PaperTrail.config.track_associations = false
 
 module PaperTrail
-  
+
   class Version < ActiveRecord::Base
     include PaperTrail::VersionConcern
     # Updates metric for versions; we do it only on creation of a version unless the event that triggered the version creation is "destroy" (yes, we also store versions of destroyed assets), which means that we do not need to increment versions
@@ -14,10 +14,10 @@ module PaperTrail
         num_versions = Prometheus::Client.registry.get(:num_versions)
         curr_num_versions_metric_val = num_versions.get({asset_type: self.item.type})
         num_versions.set({asset_type: self.item.type}, curr_num_versions_metric_val + 1)
-      rescue Exception => e  
+      rescue => e  
         puts 'Error incrementing num_versions metric'
         puts '!'
-        puts e.message  
+        puts e.message
         puts e.backtrace.inspect
       end
     end

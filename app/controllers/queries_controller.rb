@@ -1,19 +1,22 @@
 class QueriesController < ThingsController
   wrap_parameters :query, include: [:public, :name, :description, :meta_keyword_list, :license, :query_string, :query_type, :language,
-    sparql_endpoint_ids: []]
+    sparql_endpoint_ids: [], arango_db_ids: []]
 
   def new
     search_for_existing_sparql_endpoints
+    search_for_existing_arango_dbs
     super
   end
 
   def edit
     search_for_existing_sparql_endpoints
+    search_for_existing_arango_dbs
     super
   end
 
   def create
     search_for_existing_sparql_endpoints
+    search_for_existing_arango_dbs
     super
   end
 
@@ -30,33 +33,47 @@ class QueriesController < ThingsController
 
       ## Special hack because "wrap_params" doesnt support both :query and :execute_query
       endpoint = params[:sparql_endpoints]
-      endpoint = params[:execute_query][:sparql_endpoints]  if endpoint == nil
-      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(endpoint)
+      arango_db = params[:arango_dbs]
+      if endpoint.nil? && arango_db.nil?
+        unless params[:execute_query].nil?
+          endpoint = params[:execute_query][:sparql_endpoints]
+          arango_db = params[:execute_query][:arango_dbs]
+        end
+      end
+      @sparql_endpoint = nil
+      @sparql_endpoint = se_user.sparql_endpoints.friendly.find(endpoint) if endpoint != nil
+      @arango_db = nil
+      @arango_db = se_user.arango_dbs.friendly.find(arango_db) if arango_db != nil
     end
 
     # Go to selected endpoint page button_to
-    #if params[:goto_sparql_endpoint_button]
-    if params[:commit] == "Go to selected endpoint page"
+    if params[:commit] == "Go to selected endpoint page" #goto_sparql_endpoint_button
       redirect_to thing_path(@sparql_endpoint)
-    # Execute query button_to
-    else
+
+    elsif params[:commit] == "Go to selected database page" #goto_selected_database_button
+      redirect_to thing_path(@arango_db)
+
+    else # Execute query button_to
       timeout_error = false
 
       begin
-        @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user)
-      rescue Exception => error
-        if error.class.to_s.eql?("Faraday::TimeoutError")
-          timeout_error = true
-        end
-        flash[:error] = error.message
+        @query_error =  ""
+        @query_result = @query.execute_on_sparql_endpoint(@sparql_endpoint, current_user) unless @sparql_endpoint.nil?
+        @query_result = @query.execute_on_arango_db(@arango_db, current_user) unless @arango_db.nil?
+
+      rescue => e
+        puts "Error executing query: #{e.message}"
+        ##flash[:error] = e.message
         @query_result = {
           headers: [],
           results: []
         }
+        @query_error =  "Error querying RDF repository #{e.message}"
       end
 
       if @query_result.blank?
         @results_list = []
+        @query_error = "Blank result"
       else
         @results_list = @query_result[:results]
       end
@@ -90,8 +107,7 @@ class QueriesController < ThingsController
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
         from_params = params.require(:query).permit(:public, :name, :metadata, :configuration, :query_string, :query_type, :language, :description,
-          queriable_data_store_ids: [],
-          sparql_endpoint_ids: [])
+          queriable_data_store_ids: [], sparql_endpoint_ids: [], arango_db_ids: [])
 
         # If no checkboxes are ticked no array is present. Add an empty array to fix this
         unless from_params.has_key?('sparql_endpoint_ids')
@@ -107,14 +123,14 @@ class QueriesController < ThingsController
 
     def query_set_relations(query)
       # This is EXTREMELY important lol
-      query.queriable_data_stores.to_a.each do |qds|
-        # Reject private data_stores that are not owned by the user
-        # Security…
-        if qds.user != query.user && !qds.public
-          query.queriable_data_stores.delete(qds)
-        end
-      end
-      # throw query.queriable_data_stores
+      ##query.queriable_data_stores.to_a.each do |qds|
+      ##  # Reject private data_stores that are not owned by the user
+      ##  # Security…
+      ##  if qds.user != query.user && !qds.public
+      ##    query.queriable_data_stores.delete(qds)
+      ##  end
+      ##end
+      ### throw query.queriable_data_stores
 
       query.sparql_endpoints.to_a.each do |se|
         if se.user != query.user && !se.public
@@ -137,6 +153,20 @@ class QueriesController < ThingsController
     @sparql_endpoint_entries =  tmp_user + tmp_pub
     puts "******************* search_for_existing_sparql_endpoints"
     puts "@sparql_endpoint_entries: <#{@sparql_endpoint_entries.size}>"
+  end
+
+  # Make a list of existing arango_dbs. Used by view
+  def search_for_existing_arango_dbs
+    user = current_user
+    if user != nil
+      tmp_user = user.arango_dbs.includes(:user).where(public: false).where.not("name LIKE ?", "%previewed_dataset_%").sort_by(&:updated_at).reverse
+    else
+      tmp_user = []
+    end
+    tmp_pub = Thing.public_list.includes(:user).where(:type => ['ArangoDb']).where.not("name LIKE ?", "%previewed_dataset_%")
+    @arango_db_entries =  tmp_user + tmp_pub
+    puts "******************* search_for_existing_arango_dbs"
+    puts "@arango_db_entries: <#{@arango_db_entries.size}>"
   end
 
 

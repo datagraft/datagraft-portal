@@ -7,7 +7,6 @@ h3.sin-tab-title.mdl-cell--12-col
     .mdl-textfield.mdl-js-textfield
       input#query-results-search.mdl-textfield__input type="text" /
       label.mdl-textfield__label for="query-results-search"  Search
-
 - unless @results_list.empty?
   table#query-results-table.mdl-data-table.cell-border
     thead
@@ -23,4 +22,4 @@ h3.sin-tab-title.mdl-cell--12-col
             - else
               td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
 - else
-  em.mdl-cell--12-col No rows returned
+  h3.mdl-cell--12-col #{@query_error}

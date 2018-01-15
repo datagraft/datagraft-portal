@@ -44,7 +44,7 @@ class Transformation < Thing
     rescue RestClient::ExceptionWithResponse => e
       puts e.response
       throw "Failed to execute transformation."
-    rescue Exception => e
+    rescue => e
       puts e.message
       puts e.backtrace.inspect
       throw "Failed to execute transformation. Unknown error."

@@ -1,0 +1,34 @@
+
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
+  thead
+    tr
+      th.mdl-data-table__cell--non-numeric Name
+      th.mdl-data-table__cell--non-numeric Plan
+      th.mdl-data-table__cell--non-numeric Endpoint
+      th.mdl-data-table__cell--non-numeric API Keys
+      th.mdl-data-table__cell--non-numeric Assets
+      th.mdl-data-table__cell--non-numeric Edit
+      th.mdl-data-table__cell--non-numeric Delete
+  tbody
+    - @dbm_s4s.each do |dbm_s4|
+      tr
+        td.mdl-data-table__cell--non-numeric = dbm_s4.name
+        td.mdl-data-table__cell--non-numeric = dbm_s4.db_plan
+        td.mdl-data-table__cell--non-numeric = dbm_s4.endpoint
+        td.sin-action-table
+          == link_to "Show (#{dbm_s4.api_keys.count})", dbm_api_keys_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table
+          == link_to "Show (#{dbm_s4.rdf_repos.count})", dbm_things_path(dbm_s4), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table--center
+          == link_to edit_dbm_s4_path(dbm_s4) do
+            i.material-icons edit
+        td.sin-action-table--center
+          == link_to dbm_s4, method: :delete, data: { confirm: 'Are you sure?' } do
+            i.material-icons delete
+  - if @dbm_s4s.empty?
+    tfoot
+      tr
+        td.mdl-data-table__cell--non-numeric[colspan=7]
+          em No Databases registered yet. See how to create your first database 
+          a[href="https://store.prodatamarket.eu/publisher_help/ds_onto/", style="font-style: italic" target="_blank"] here
+          em .

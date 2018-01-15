@@ -9,6 +9,7 @@ document.addEventListener('turbolinks:load', function () {
     }
     var getFiles = $('#dashboard-filter--files').is(':checked'),
         getSparql = $('#dashboard-filter--sparql').is(':checked'),
+        getArango = $('#dashboard-filter--arango').is(':checked'),
         getTransformations = $('#dashboard-filter--transformations').is(':checked'),
         getQueries = $('#dashboard-filter--queries').is(':checked'),
         assetTypeStr = data[0],
@@ -16,8 +17,7 @@ document.addEventListener('turbolinks:load', function () {
         filterPublicAssets = !$('#dashboard-filter--public').is(':checked') && !(owner === 'You');
 
     //    var shouldFilterPublicAssets = filterPublicAssets && !(owner ==='You');
-
-    return !filterPublicAssets && (assetTypeStr == 'Filestore' && getFiles || assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Queriable Data Store' && getSparql || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Transformation' && getTransformations);
+    return !filterPublicAssets && (assetTypeStr == 'Filestore' && getFiles || assetTypeStr == 'Data Page' && getFiles || assetTypeStr == 'Query' && getQueries || assetTypeStr == 'Sparql Endpoint' && getSparql || assetTypeStr == 'Arango Db' && getArango || assetTypeStr == 'Transformation' && getTransformations);
   });
 
   // Calculates how to display the asset menu element (on the top or bottom) to avoid scrolling in the assets table
@@ -123,7 +123,7 @@ document.addEventListener('turbolinks:load', function () {
       $(".mdl-data-table").css({"width":"100%"});
     },
     'columnDefs': [
-      
+
       { orderData: [6], targets: [4] },
       { orderData: [7], targets: [3] },
       { 'width': '10%', 'targets': 0 },
@@ -163,12 +163,14 @@ document.addEventListener('turbolinks:load', function () {
           // if we just checked the 'All' checkbox - check all other checkboxes too
           $('.mdl-js-checkbox').has('#dashboard-filter--files')[0].MaterialCheckbox.check();
           $('.mdl-js-checkbox').has('#dashboard-filter--sparql')[0].MaterialCheckbox.check();
+          $('.mdl-js-checkbox').has('#dashboard-filter--arango')[0].MaterialCheckbox.check();
           $('.mdl-js-checkbox').has('#dashboard-filter--transformations')[0].MaterialCheckbox.check();
           $('.mdl-js-checkbox').has('#dashboard-filter--queries')[0].MaterialCheckbox.check();
         } else {
           // otherwise - un-check all other checkboxes
           $('.mdl-js-checkbox').has('#dashboard-filter--files')[0].MaterialCheckbox.uncheck();
           $('.mdl-js-checkbox').has('#dashboard-filter--sparql')[0].MaterialCheckbox.uncheck();
+          $('.mdl-js-checkbox').has('#dashboard-filter--arango')[0].MaterialCheckbox.uncheck();
           $('.mdl-js-checkbox').has('#dashboard-filter--transformations')[0].MaterialCheckbox.uncheck();
           $('.mdl-js-checkbox').has('#dashboard-filter--queries')[0].MaterialCheckbox.uncheck();
         }

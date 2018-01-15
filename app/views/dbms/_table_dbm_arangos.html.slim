@@ -1,0 +1,30 @@
+
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
+  thead
+    tr
+      th.mdl-data-table__cell--non-numeric Name
+      th.mdl-data-table__cell--non-numeric Uri
+      th.mdl-data-table__cell--non-numeric Account user
+      th.mdl-data-table__cell--non-numeric DBs
+      th.mdl-data-table__cell--non-numeric Edit
+      th.mdl-data-table__cell--non-numeric Delete
+  tbody
+    - @dbm_arangos.each do |dbm_arango|
+      tr
+        td.mdl-data-table__cell--non-numeric = dbm_arango.name
+        td.mdl-data-table__cell--non-numeric = dbm_arango.uri
+        td.sin-action-table
+          == link_to "Show (#{dbm_arango.dbm_accounts.count})", dbm_dbm_accounts_path(dbm_arango), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table
+          == link_to "Show (#{dbm_arango.things.count})", dbm_things_path(dbm_arango), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table--center
+          == link_to edit_dbm_arango_path(dbm_arango) do
+            i.material-icons edit
+        td.sin-action-table--center
+          == link_to dbm_arango, method: :delete, data: { confirm: 'Are you sure?' } do
+            i.material-icons delete
+  - if @dbm_arangos.empty?
+    tfoot
+      tr
+        td.mdl-data-table__cell--non-numeric[colspan=7]
+          em No Servers registered yet.

@@ -9,12 +9,12 @@
 - if query_links_to_sparql_endpoint(thing, sparql_thing)
   - highlight_class = 'highlight-true'
 
-div class = "#{highlight_class}"
-  .sin-gen-squeeze-sparql
+div
+  div class = "#{highlight_class} sin-gen-squeeze-sparql"
     .sin-gs-head
       .sin-query-list-icon
         = image_tag(thing_icon_name(thing), height: "48")
-        = display_sparql_query_type(thing.query_type)
+        = display_query_type(thing.query_type)
       .sin-query-list-meta
         .sin-query-list-meta-name
           = thing.name
@@ -40,6 +40,6 @@ div class = "#{highlight_class}"
         | Query text:
       br
       .sin-tab-textfield__scroll
-        = simple_format thing.query_string
+        = simple_format h(thing.query_string)
       i.sin-flex-center
         = link_to "Go to asset...", thing_path(thing)

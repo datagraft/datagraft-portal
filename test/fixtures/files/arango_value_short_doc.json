@@ -1,0 +1,4 @@
+{"_key":"0","label":"Start node","value":"Start node"}
+{"_key":"1","namespace+id":"","graphURI":"http://www.example.no/#/","__type":"Graph","$$hashKey":"object:762","label":""}
+
+{"_key":"3","namespace+id":"https://www.infrarisk-fp7.eu/vocabs/#occurredAtLoc","namespace":"https://www.infrarisk-fp7.eu/vocabs/#","prefix":"infrarisk","propertyName":"occurredAtLoc","__type":"Property","$$hashKey":"object:851","label":"infrarisk : occurredAtLoc"}

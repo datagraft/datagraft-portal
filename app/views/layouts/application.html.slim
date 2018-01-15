@@ -45,7 +45,9 @@ html
                 li
                   = link_to('Quotas', quotas_path, class: "mdl-menu__item")
                 li
-                  = link_to('API keys', api_keys_path, class: "mdl-menu__item")
+                  = link_to('Database Management', dbms_path, class: "mdl-menu__item")
+                li
+                  = link_to('API Keys', api_keys_path, class: "mdl-menu__item")
                 li
                   = link_to('Authorized Applications', oauth_authorized_applications_path, class: "mdl-menu__item")
                 li
@@ -90,11 +92,11 @@ html
             .mdl-mini-footer__left-section
               ul.mdl-mini-footer__link-list
                 //li News
-                li 
+                li
                   =link_to "Documentation", "https://github.com/datagraft/datagraft-reference/blob/master/documentation.md"
-                li 
-                  =link_to "API", "https://prodatamarket.github.io/datagraft-api-documentation/#!/default"
-                li 
+                li
+                  =link_to "API", "https://github.com/datagraft/datagraft-API"
+                li
                   =link_to "About Us", about_us_path
             .sin-mini-footer__small-print
               ' DataGraft is a service operated by the #{link_to 'proDataMarket', 'http://prodatamarket.eu'} project, co-funded by the EC under HORIZON 2020, The EU Framework Programme for Research and Innovation (2015-2017)

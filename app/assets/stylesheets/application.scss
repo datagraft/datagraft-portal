@@ -59,7 +59,7 @@ html, body.mdl-base {
   }
 
   &:after {
-    content: " alpha";
+    content: " beta2";
     color: $accent-color;
     font-weight: 400;
     position: relative;
@@ -69,8 +69,6 @@ html, body.mdl-base {
 }
 
 .sin-padding {
-  /*padding: 0.1em 1em 1em 1em;*/
-  /*padding: 0.1em 2em 2em 2.1em;*/
   padding: 2em;
 }
 
@@ -206,6 +204,18 @@ body .mdl-layout__header-row {
   background: inherit;
   color: #333;
 }
+
+.mdl-data-table .sin-action-table--center {
+  text-align: center;
+}
+.sin-action-table--center a {
+  color:inherit;
+}
+.sin-action-table--center a:hover {
+  background: inherit;
+  color: #333;
+}
+
 
 .sin-horizontal-scroll {
   overflow-y: auto;
@@ -385,7 +395,6 @@ iframe.grafterizer {
   flex-direction: column;
   width: 100%;
 }
-
 
 .sin-input-with-help-icon .mdl-switch {
   width: 100px;

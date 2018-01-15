@@ -264,6 +264,10 @@ class ThingsController < ApplicationController
     'Asset has been successfully created!'
   end
 
+  def create_background_notice
+    'Asset is created in background!'
+  end
+
   def copy_notice
     'Successfully copied asset!'
   end

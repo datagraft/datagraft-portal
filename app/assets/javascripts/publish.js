@@ -15,20 +15,13 @@ Dropzone.options.dataDistributionDropZone = {
 
     $('#sin-cancel-upload').click(function(e) {
       if (this.disabled) return;
-      // alert(uploadedFiles);
       uploadedFiles.forEach(function(file)  {
-        // alert(file['@id'])
         $.ajax({
           url: file['@id'],
           dataType: 'json',
           type: 'DELETE'
-          // success: function(lol) {
-            // alert(lol);
-            // console.log(lol)
-          // }
         });
       });
-      // e.preventDefault();
     });
 
     this.on("success", function(file, data) {
@@ -60,20 +53,13 @@ Dropzone.options.filestoreDropZone = {
 
     $('#sin-cancel-upload').click(function(e) {
       if (this.disabled) return;
-      // alert(uploadedFiles);
       uploadedFiles.forEach(function(file)  {
-        // alert(file['@id'])
         $.ajax({
           url: file['@id'],
           dataType: 'json',
           type: 'DELETE'
-          // success: function(lol) {
-            // alert(lol);
-            // console.log(lol)
-          // }
         });
       });
-      // e.preventDefault();
     });
 
     this.on("success", function(file, data) {
@@ -81,7 +67,6 @@ Dropzone.options.filestoreDropZone = {
         debugger;
         console.log("Success url : "+data["@id"]);
         if (data["sin:extension"]) {
-          // file.previewTemplate.appendChild(document.createTextNode(data["sin:extension"]));
           file.previewTemplate.classList.add('sin-preview-filetype-'+data["sin:extension"]);
         }
 
@@ -167,18 +152,12 @@ Dropzone.options.upwizardDropZone = {
       if (this.disabled) return;
       // alert(uploadedFiles);
       uploadedFiles.forEach(function(file)  {
-        // alert(file['@id'])
         $.ajax({
           url: file['@id'],
           dataType: 'json',
           type: 'DELETE'
-          // success: function(lol) {
-            // alert(lol);
-            // console.log(lol)
-          // }
         });
       });
-      // e.preventDefault();
     });
 
     this.on("success", function(file, data) {

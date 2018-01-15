@@ -53,7 +53,6 @@ module ThingHelper
 
 
   def update_asset_version_metric(asset_type_string)
-
     begin
       num_assets = 0
       case asset_type_string
@@ -65,16 +64,16 @@ module ThingHelper
         Thing.includes(:versions).where(type: "Transformation").each do |thing|
           num_assets += thing.versions.count
         end
-      when "QueriableDataStore"
-        Thing.includes(:versions).where(type: "QueriableDataStore").each do |thing|
-          num_assets += thing.versions.count
-        end
       when "Query"
         Thing.includes(:versions).where(type: "Query").each do |thing|
           num_assets += thing.versions.count
         end
       when "SparqlEndpoint"
         Thing.includes(:versions).where(type: "SparqlEndpoint").each do |thing|
+          num_assets += thing.versions.count
+        end
+      when "ArangoDb"
+        Thing.includes(:versions).where(type: "ArangoDb").each do |thing|
           num_assets += thing.versions.count
         end
       when "Filestore"
@@ -90,12 +89,11 @@ module ThingHelper
       end
       num_versions = Prometheus::Client.registry.get(:num_versions)
       num_versions.set({asset_type: asset_type_string}, num_assets)
-    rescue Exception => e
+    rescue => e
       puts 'Error updating num_versions metric: '
       puts e.message
       puts e.backtrace
     end
-
   end
 
   def reset_num_assets_public_private(thing)
@@ -111,10 +109,12 @@ module ThingHelper
       number_public_things = Thing.where(:user => thing.user, :type => thing.type, :public => true).count
       number_private_things = Thing.where(:user => thing.user, :type => thing.type, :public => false).count
     end
-    
+
     # Set the number of public and private things of this type for the owner
-    num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'public'}, number_public_things)
-    num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, number_private_things)
+    if !num_assets.nil?
+      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'public'}, number_public_things)
+      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, number_private_things)
+    end
   end
 
   def reset_num_assets(thing, change)
@@ -131,7 +131,7 @@ module ThingHelper
       else
         number_things = Thing.where(:user => thing.user, :type => thing.type, :public => thing.public).count
       end
-      
+
       num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}, number_things + change)
 
 
@@ -141,13 +141,13 @@ module ThingHelper
       #      number_private_transformations = Thing.where(:user => user, :type => 'Transformation', :public => false).count
       #      num_assets.set({asset_type: 'Transformation', owner: user.username, access_permission: true}, number_public_transformations)
       #      num_assets.set({asset_type: 'Transformation', owner: user.username, access_permission: false}, number_private_transformations)
-      #      
+      #
       #      # Set the metric for number of Queries
       #      number_public_queries = Thing.where(:user => user, :type => 'Query', :public => true).count
       #      number_private_queries = Thing.where(:user => user, :type => 'Query', :public => false).count
       #      num_assets.set({asset_type: 'Query', owner: user.username, access_permission: true}, number_public_queries)
       #      num_assets.set({asset_type: 'Query', owner: user.username, access_permission: false}, number_private_queries)
-      #      
+      #
       #      # Set the metric for number of SPARQL endpoints
       #      number_public_sparql_endpoints = Thing.where(:user => user, :type => 'SparqlEndpoint', :public => true).count
       #      number_private_sparql_endpoints = Thing.where(:user => user, :type => 'SparqlEndpoint', :public => false).count
@@ -159,7 +159,7 @@ module ThingHelper
       #      number_private_filestores = Thing.where(:user => user, :type => 'Filestore', :public => false).where.not("name LIKE ?", "%previewed_dataset_%").count
       #      num_assets.set({asset_type: 'Filestore', owner: user.username, access_permission: true}, number_public_filestores)
       #      num_assets.set({asset_type: 'Filestore', owner: user.username, access_permission: false}, number_private_filestores)
-    rescue Exception => e
+    rescue => e
       puts 'Error setting num_assets metric'
       puts e.message
       puts e.backtrace.inspect
@@ -173,7 +173,7 @@ module ThingHelper
 
       curr_num_forks = 0 if !curr_num_forks
       num_forks.set({asset_type: self.type}, curr_num_forks + 1)
-    rescue Exception => e
+    rescue => e
       puts 'Error decrementing num_forks metric'
       puts e.message
       puts e.backtrace.inspect
@@ -186,15 +186,15 @@ module ThingHelper
     curr_num_forks = num_forks.get({asset_type: self.type})
     num_forks.set({asset_type: self.type}, curr_num_forks - 1)
   end
-    
+
   def increment_query_execution_metric(query)
     num_query_executions = Prometheus::Client.registry.get(:num_query_executions)
     if(!query.slug)
-      num_query_executions.increment({ query_slug: 'Sparql querying panel', query_type: 'unknown' })
+      num_query_executions.increment({ query_slug: 'Sparql / Arango querying panel', query_type: 'unknown' })
     else
       num_query_executions.increment({ query_slug: query.slug, query_type: query.query_type })
     end
-    
+
   end
   private
 
@@ -223,6 +223,8 @@ module ThingHelper
     elsif thing_type == "data_store"
       ret = "icon--queriable_data_store.svg"
     elsif thing_type == "sparql_endpoint"
+      ret = "icon--queriable_data_store.svg"
+    elsif thing_type == "arango_db"
       ret = "icon--queriable_data_store.svg"
     end
     return ret

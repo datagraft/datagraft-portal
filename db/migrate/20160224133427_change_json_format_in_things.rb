@@ -1,4 +1,4 @@
-class ChangeJsonFormatInThings < ActiveRecord::Migration
+class ChangeJsonFormatInThings < ActiveRecord::Migration[4.2]
   def up
     change_column :things, :metadata, :jsonb
     change_column :things, :configuration, :jsonb

@@ -84,7 +84,7 @@ class FilestoresController < ThingsController
     unless params[:wiz_id] == nil
       begin
         @upwizard = Upwizard.find(params[:wiz_id])
-      rescue Exception => e
+      rescue => e
         puts e.message
         puts e.backtrace.inspect
         throw e
@@ -256,7 +256,7 @@ class FilestoresController < ThingsController
           end
         end
       end
-    rescue Exception => e
+    rescue => e
       puts "File decoding failed preview"
       puts e.message
       puts e.backtrace.inspect

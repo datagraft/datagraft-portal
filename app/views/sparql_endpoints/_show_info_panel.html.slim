@@ -1,6 +1,8 @@
 /! Tab layout
 .sin-tab-layout
   .mdl-grid
+    h3#endpoint-state.sin-hidden
+      = @thing.state
     = render 'elem_description'
 
     = render 'elem_keywords'
@@ -15,10 +17,14 @@
         dt Provisioned on:
         dd
           = @thing.created_at
-        p
         dt Size:
         dd
-          = repository_size_param(current_user, @thing).to_s + ' triples'
+          - if @thing.uri =~ URI::regexp
+            = repository_size_param(current_user, @thing).to_s + ' triples'
+          - else
+            | 0
+        dt Database:
+        dd #{@dbm_info}
 
   hr.sin-invisible-form-separator
   div.mdl-card__actions

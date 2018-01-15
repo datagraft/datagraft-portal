@@ -2,22 +2,26 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.1'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'rails', '5.1.4'
+
+## Use sqlite3 as the database for Active Record
+#gem 'sqlite3'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
+
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2.1'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks', '~> 5.0.0.beta'
+gem 'turbolinks', '~> 5.0.0'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
@@ -87,10 +91,10 @@ gem 'omniauth-github'
 gem 'will_paginate', '~> 3.1.0'
 
 # Fulltext search
-gem 'textacular', '~> 4.0'
+gem 'textacular', '~> 5.0'
 
 # textacular requires postgresql
-gem 'pg'
+gem 'pg', '~> 0.20'
 
 # file upload with streaming io
 gem "refile", '~> 0.6.2',require: "refile/rails", :git => 'https://github.com/manfe/refile.git'
@@ -149,7 +153,7 @@ gem 'indefinite_article'
 gem 'deep_cloneable', '~> 2.2.0'
 
 # Feature flippin'
-gem 'flip'
+gem 'flipflop'
 
 # This gem packages the jQuery DataTables plugin for easy use with the Rails 3.1+ asset pipleine. It provides all the basic DataTables files, and a few of the extras.
 gem 'jquery-datatables-rails', '~> 3.4.0'
@@ -175,3 +179,13 @@ gem 'wicked'
 gem 'puma'
 
 gem 'rest-client'
+
+# StateMachines Active Record Integration
+gem 'state_machines-activerecord'
+
+# Minitest should avoid bug in update 5.10.2
+gem 'minitest', '5.10.1'
+
+# Lib for accessing Arango Database
+# gem 'arangorb'
+gem 'httparty', '~> 0.14'

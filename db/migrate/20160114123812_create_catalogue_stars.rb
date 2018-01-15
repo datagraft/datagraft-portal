@@ -1,4 +1,4 @@
-class CreateCatalogueStars < ActiveRecord::Migration
+class CreateCatalogueStars < ActiveRecord::Migration[4.2]
   def change
     create_table :catalogue_stars do |t|
       t.integer :user_id

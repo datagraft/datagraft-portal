@@ -1,11 +1,13 @@
 h3 = @thing.name
-- unless @thing.public
-  .sin-lock
-    i.material-icons lock_outline
+//- unless @thing.public
+//  .sin-lock
+//    i.material-icons lock_outline
+.sin-lock
+  i.material-icons = @thing.public ? 'lock_open' : 'lock'
 h4
   | By&nbsp;
   = link_to (@thing.user.name || @thing.user.username), user_path(@thing.user)
-  - if feature? :activity_feed
+  - if Flipflop.activity_feed?
     - thing_is_stared = user_signed_in? && current_user.has_star(@thing)
     = link_to((thing_is_stared ? thing_unstar_path(@thing) : thing_star_path(@thing)), method: 'post', class: "sin-stars #{thing_is_stared ? 'sin-stared' : ''}", title: (thing_is_stared ? 'Remove from favourites' : 'Add to favourites')) do
       i.material-icons star

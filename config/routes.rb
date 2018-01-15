@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   resources :features, only: [ :index ] do
     resources :strategies, only: [ :update, :destroy ]
   end
-  mount Flip::Engine => "/features" rescue "no flip"
 
   use_doorkeeper
 
@@ -15,9 +14,14 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     omniauth_callbacks: "users/omniauth_callbacks"
     }
+  mount Flipflop::Engine => "/flipflop"
+  get 'api_keys' => 'api_keys#index_all'
+  resources :dbms, only: [ :index ] do
+    resources :api_keys
+    resources :dbm_accounts
+  end
 
-  get 'api_keys/first' => 'api_keys#first'
-  resources :api_keys
+
 
   get 'explore' => 'public_portal#explore'
   get 'news' => 'public_portal#news'
@@ -30,14 +34,19 @@ Rails.application.routes.draw do
   get 'cookie-policy' => 'public_portal#cookie'
   get 'faq' => 'public_portal#faq'
 
-#  get 'publish' => 'data_distributions#publish'
-#  get 'publishfilestore' => 'filestores#publish'
   get 'quotas' => 'quotas#index'
   get 'dashboard' => 'dashboard#index'
   get 'transform' => 'transformations#transform'
-#  get 'publish_queriable_data_store' => 'queriable_data_stores#publish'
 
-#  get ':username/data_distributions/:id/attachment' => 'data_distributions#attachment'
+  get 'dbms' => 'dbms#index'
+  get 'dbms/:id/things'   =>   'dbms#index_things'
+  #resources :dbms
+  resources :dbm_s4s
+  resources :dbm_arangos
+
+  get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
+  get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'
+
   get ':username/filestores/:id/attachment' => 'filestores#attachment'
   get ':username/filestores/:id/preview' => 'filestores#preview'
  post ':username/filestores/:id/preview' => 'filestores#preview'
@@ -46,6 +55,7 @@ Rails.application.routes.draw do
 
  post ':username/transformations/:id/execute/:type/' => 'transformations#execute'
  post ':username/transformations/:id/execute/:type/:file_id' => 'transformations#execute'
+  get ':username/transformations/:id/download' => 'transformations#download'
 
   post ':username/queries/:id/execute/:qds_username/:qds_id' => 'queries#execute'
   get 'querying' => 'queries#execute'
@@ -56,6 +66,12 @@ Rails.application.routes.draw do
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
   post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
 
+  post ':username/arango_dbs/:id/execute_query' => 'arango_dbs#execute_query'
+  get ':username/arango_dbs/:id/collection/new' => 'arango_dbs#collection_new'
+  post ':username/arango_dbs/:id/collection' => 'arango_dbs#collection_create'
+  get ':username/arango_dbs/:id/collection/:collection_name/collection_publish_new' => 'arango_dbs#collection_publish_new'
+  post ':username/arango_dbs/:id/collection/:collection_name/collection_publish' => 'arango_dbs#collection_publish'
+  delete ':username/arango_dbs/:id/collection/:collection_name' => 'arango_dbs#collection_destroy'
 
   get    ':username/upwizards'             => 'upwizards#index'   #List all wizards
   get    ':username/upwizards/new/:task'   => 'upwizards#new'     #Start a new wizard for a task
@@ -120,27 +136,28 @@ Rails.application.routes.draw do
     datagraft_resources :queries
     datagraft_resources :filestores
     datagraft_resources :sparql_endpoints
+    datagraft_resources :arango_dbs
 
     # TODO fix me : Flip crashes on migration
     begin
-#      if Flip.on? :catalogues
-#        resources :catalogues do
-#          member do
-#            get 'versions'
-#            post 'star'
-#            post 'unstar'
-#          end
-#        end
-#      end
+      if Flipflop.enabled? :catalogues
+        resources :catalogues do
+          member do
+            get 'versions'
+            post 'star'
+            post 'unstar'
+          end
+        end
+      end
 
-#      if Flip.on? :queriable_data_stores
-#        datagraft_resources :queriable_data_stores
-#      end
+      if Flipflop.enabled? :queriable_data_stores
+        datagraft_resources :queriable_data_stores
+      end
 
 
-#      if Flip.on? :utility_functions
-#        datagraft_resources :utility_functions
-#      end
+      if Flipflop.enabled? :utility_functions
+        datagraft_resources :utility_functions
+      end
     rescue
       puts "No Flip"
     end

@@ -18,7 +18,11 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :set_paper_trail_whodunnit
-
+  
+  def require_authenticated_user
+    head :forbidden unless user_signed_in?
+  end
+  
   protected
 
     # def authenticate_user!

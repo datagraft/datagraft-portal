@@ -1,0 +1,19 @@
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
+  thead
+    tr
+      th.mdl-data-table__cell--non-numeric Name
+      th.mdl-data-table__cell--non-numeric API Keys
+      th.mdl-data-table__cell--non-numeric Assets
+  tbody
+    - @dbm_ontotext_legs.each do |dbm_ol|
+      tr
+        td.mdl-data-table__cell--non-numeric = dbm_ol.name
+        td.sin-action-table
+          == link_to "Show (#{dbm_ol.api_keys.count})", dbm_api_keys_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table
+          == link_to "Show (#{dbm_ol.rdf_repos.count})", dbm_things_path(dbm_ol), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+  - if @dbm_ontotext_legs.empty?
+    tfoot
+      tr
+        td.mdl-data-table__cell--non-numeric[colspan=7]
+          em No Ontotext Legacy Databases registered

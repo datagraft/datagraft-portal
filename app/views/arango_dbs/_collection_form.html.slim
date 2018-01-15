@@ -1,0 +1,19 @@
+= simple_form_for @thing, url: create_arango_db_collection_path, method: :post do |f|
+  .mdl-grid
+    h4.mdl-cell--12-col Properties
+    .sin-input-with-help-icon
+      = f.input :coll_type, label: "Collection type", include_blank: false, collection: @collection_types, wrapper: :select
+      .sin-help-icon-with-tooltip__select
+        #tooltip-type.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-type" Select the collection type. The type has to match the data you want to upload
+    .sin-input-with-help-icon
+      = f.input :coll_name, placeholder: "Enter a Arango DB collection name", wrapper: :default
+      .sin-help-icon-with-tooltip
+        #tooltip-name.icon.material-icons help
+        .mdl-tooltip.mdl-tooltip--left for="tooltip-name" Name for the Arango DB collection, which will appear on the collection browsing table. The collection name must consist of letters, digits, and the _ (underscore) and - (dash) characters only.
+
+  hr.sin-invisible-form-separator
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    .mdl-layout-spacer
+    = f.button :submit, "Create the new collection", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

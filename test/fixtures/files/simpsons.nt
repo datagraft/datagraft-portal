@@ -1,0 +1,52 @@
+<http://www.ifi.uio.no/INF3580/simpsons#Homer> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Homer> <http://xmlns.com/foaf/0.1/name> "Homer Simpson" .
+<http://www.ifi.uio.no/INF3580/simpsons#Homer> <http://xmlns.com/foaf/0.1/age> "36"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Homer> <http://www.ifi.uio.no/INF3580/family#hasSpouse> <http://www.ifi.uio.no/INF3580/simpsons#Marge> .
+<http://www.ifi.uio.no/INF3580/simpsons#Homer> <http://www.ifi.uio.no/INF3580/family#hasFather> <http://www.ifi.uio.no/INF3580/simpsons#Abraham> .
+<http://www.ifi.uio.no/INF3580/simpsons#Marge> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Marge> <http://xmlns.com/foaf/0.1/name> "Marge Simpson" .
+<http://www.ifi.uio.no/INF3580/simpsons#Marge> <http://xmlns.com/foaf/0.1/age> "34"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Marge> <http://www.ifi.uio.no/INF3580/family#hasSpouse> <http://www.ifi.uio.no/INF3580/simpsons#Homer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://xmlns.com/foaf/0.1/name> "Lisa Simpson" .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://xmlns.com/foaf/0.1/age> "8"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasMother> <http://www.ifi.uio.no/INF3580/simpsons#Marge> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasFather> <http://www.ifi.uio.no/INF3580/simpsons#Homer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Maggie> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasBrother> <http://www.ifi.uio.no/INF3580/simpsons#Bart> .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasParent> _:genid3 .
+<http://www.ifi.uio.no/INF3580/simpsons#Lisa> <http://www.ifi.uio.no/INF3580/family#hasParent> _:genid4 .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://xmlns.com/foaf/0.1/name> "Bart Simpson" .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://xmlns.com/foaf/0.1/age> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://www.ifi.uio.no/INF3580/family#hasMother> <http://www.ifi.uio.no/INF3580/simpsons#Marge> .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://www.ifi.uio.no/INF3580/family#hasFather> <http://www.ifi.uio.no/INF3580/simpsons#Homer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Maggie> .
+<http://www.ifi.uio.no/INF3580/simpsons#Bart> <http://www.ifi.uio.no/INF3580/family#hasSistem> <http://www.ifi.uio.no/INF3580/simpsons#Lisa> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://xmlns.com/foaf/0.1/name> "Maggie Simpson" .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://xmlns.com/foaf/0.1/age> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasMother> <http://www.ifi.uio.no/INF3580/simpsons#Marge> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasFather> <http://www.ifi.uio.no/INF3580/simpsons#Homer> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Lisa> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasBrother> <http://www.ifi.uio.no/INF3580/simpsons#Bart> .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasParent> _:genid1 .
+<http://www.ifi.uio.no/INF3580/simpsons#Maggie> <http://www.ifi.uio.no/INF3580/family#hasParent> _:genid2 .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ifi.uio.no/INF3580/family#Family> .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.ifi.uio.no/INF3580/family#hasFamilyMember> <http://www.ifi.uio.no/INF3580/simpsons#Homer> .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.ifi.uio.no/INF3580/family#hasFamilyMember> <http://www.ifi.uio.no/INF3580/simpsons#Marge> .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.ifi.uio.no/INF3580/family#hasFamilyMember> <http://www.ifi.uio.no/INF3580/simpsons#Lisa> .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.ifi.uio.no/INF3580/family#hasFamilyMember> <http://www.ifi.uio.no/INF3580/simpsons#Bart> .
+<http://www.ifi.uio.no/INF3580/simpsons#SimpsonFam> <http://www.ifi.uio.no/INF3580/family#hasFamilyMember> <http://www.ifi.uio.no/INF3580/simpsons#Maggie> .
+<http://www.ifi.uio.no/INF3580/simpsons#Abraham> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Mona> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Patty> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Patty> <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Selma> .
+<http://www.ifi.uio.no/INF3580/simpsons#Selma> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.ifi.uio.no/INF3580/simpsons#Selma> <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Patty> .
+<http://www.ifi.uio.no/INF3580/simpsons#Herb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+_:genid1 <http://www.ifi.uio.no/INF3580/family#hasFather> <http://www.ifi.uio.no/INF3580/simpsons#Abraham> .
+_:genid2 <http://www.ifi.uio.no/INF3580/family#hasMother> <http://www.ifi.uio.no/INF3580/simpsons#Mona> .
+_:genid3 <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Patty> .
+_:genid3 <http://www.ifi.uio.no/INF3580/family#hasSister> <http://www.ifi.uio.no/INF3580/simpsons#Selma> .
+_:genid4 <http://www.ifi.uio.no/INF3580/family#hasBrother> <http://www.ifi.uio.no/INF3580/simpsons#Herb> .
