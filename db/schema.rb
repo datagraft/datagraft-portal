@@ -243,7 +243,7 @@ ActiveRecord::Schema.define(version: 20180112102416) do
     t.jsonb "configuration"
     t.integer "parent_id"
     t.string "original_filename"
-    t.string "state"
+    t.string "state", default: "repo_created"
     t.integer "rdf_repo_id"
     t.integer "dbm_id"
     t.index ["slug", "user_id", "type"], name: "index_things_on_slug_and_user_id_and_type", unique: true

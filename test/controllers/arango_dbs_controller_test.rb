@@ -1,6 +1,9 @@
 require 'test_helper'
 
 class ArangoDbsControllerTest < ActionController::TestCase
+
+  #self.use_transactional_tests = false
+
   include Devise::Test::ControllerHelpers
   include ThingHelper
   setup do
@@ -31,10 +34,15 @@ class ArangoDbsControllerTest < ActionController::TestCase
     # Create a arango_db for testing
     @adb = ArangoDb.new
     @adb.user = @user
+    @adb.name = "Test"
     @adb.dbm = @testDbmArango
     @adb.db_name = get_test_dbm_arango_db_name
 
-    @adb.save(:validate => false)
+    #@adb.save(:validate => false)
+    puts "Before save @adb:#{@adb.inspect}"
+
+    @adb.save!
+    puts "After save @adb:#{@adb.inspect}"
 
     # Test parameters
     @adb_public = true
@@ -42,7 +50,8 @@ class ArangoDbsControllerTest < ActionController::TestCase
     @adb_description = 'ADB description'
     @adb_license = 'CC0'
     @adb_keyword_list = 'key1, key2'
-    @adb.save(:validate => false)
+    #@adb.save(:validate => false)
+    #@adb.save
 
   end
 
