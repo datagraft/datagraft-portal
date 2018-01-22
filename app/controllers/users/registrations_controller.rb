@@ -1,8 +1,8 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
-  after_filter :update_metrics 
-  
+  after_action :update_metrics 
+
   # GET /resource/sign_up
   def new
     fill_infos_from_omniauth
@@ -12,7 +12,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     fill_infos_from_omniauth
-    super do 
+    super do
       if data = session['devise.facebook_data']
         puts "lol"
         resource.uid = data['uid']
