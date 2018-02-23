@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   #resources :dbms
   resources :dbm_s4s
   resources :dbm_arangos
+  resources :dbm_graphdbs
 
   get ':username/sparql_endpoints/:slug/state' => 'sparql_endpoints#state'
   get ':username/sparql_endpoints/:slug/url' => 'sparql_endpoints#url'

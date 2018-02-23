@@ -83,7 +83,10 @@ module QuotasHelper
       ret_ok = current_count < limit_count
     end
     unless ret_ok
-      flash[:error] = "Your SPARQL endpoint count quota is exceeded"
+# This is being flashed every time you start the SPARQL Endpoint wizard
+# if only one of the databases cannot accomodate more endpoints. This is wrong.
+# Commented it out as a preliminary fix.
+#      flash[:error] = "Your SPARQL endpoint count quota is exceeded"
     end
 
     return ret_ok
@@ -91,20 +94,28 @@ module QuotasHelper
 
   # Check if the user can create another sparql endpoint
   def quota_user_room_for_new_sparql_count?(user)
-    ret_ok = false
+# Rewrote the code so that it counts the number of available DBMs that still has
+# room for more repositories. Only if the count number is 0 is the flash error shown.
+#    ret_ok = false
+    dbm_room_count = 0
     unless user == nil #Check for room in any dbm
       dbm_list = user.search_for_existing_dbms_reptype('RDF')
       res = []
       dbm_list.each do |dbm|
-        ret_ok = true if quota_dbm_room_for_new_sparql_count?(dbm)
+#        ret_ok = true if quota_dbm_room_for_new_sparql_count?(dbm)
+        if quota_dbm_room_for_new_sparql_count?(dbm)
+          dbm_room_count = dbm_room_count + 1
+        end
       end
     end
 
-    unless ret_ok
+#    unless ret_ok
+    if dbm_room_count == 0
       flash[:error] = "Your SPARQL endpoint count quota is exceeded"
     end
 
-    return ret_ok
+#    return ret_ok
+    return true if dbm_room_count > 0
   end
 
   # Filter out the Dbms without room for another sparql endpoint

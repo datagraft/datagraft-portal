@@ -17,6 +17,12 @@ class Dbm < ApplicationRecord
   def find_tings
     return []
   end
+  
+  
+  def get_authorization_token
+    return ""
+  end
+  
 
   # Create and add new API key to the DBM
   def add_key(name, key_pub, key_secret, enabled = true)
@@ -74,6 +80,7 @@ class Dbm < ApplicationRecord
 
     return api_key
   end
+  
 
   # Create and add new DbmAccount to the DBM
   def add_account(name, password, enabled = true)
@@ -108,7 +115,14 @@ class Dbm < ApplicationRecord
   end
 
 
+  # Returns the first enabled DBM account ignoring public setting
+  def first_enabled_account_ignore_public
+    da = self.dbm_accounts.where(enabled: true).first
 
+    raise "No enabled DbmAccount found" if da.nil?
+
+    return da
+  end
 
 
   def has_configuration?(key)

@@ -1,0 +1,33 @@
+table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
+  thead
+    tr
+      th.mdl-data-table__cell--non-numeric Name
+      th.mdl-data-table__cell--non-numeric Plan
+      th.mdl-data-table__cell--non-numeric Endpoint
+      th.mdl-data-table__cell--non-numeric Account user
+      th.mdl-data-table__cell--non-numeric Assets
+      th.mdl-data-table__cell--non-numeric Edit
+      th.mdl-data-table__cell--non-numeric Delete
+  tbody
+    - @dbm_graphdbs.each do |dbm_graphdb|
+      tr
+        td.mdl-data-table__cell--non-numeric = dbm_graphdb.name
+        td.mdl-data-table__cell--non-numeric = dbm_graphdb.db_plan
+        td.mdl-data-table__cell--non-numeric = dbm_graphdb.endpoint
+        td.sin-action-table
+          == link_to "Show (#{dbm_graphdb.dbm_accounts.count})", dbm_dbm_accounts_path(dbm_graphdb), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table
+          == link_to "Show (#{dbm_graphdb.rdf_repos.count})", dbm_things_path(dbm_graphdb), :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"
+        td.sin-action-table--center
+          == link_to edit_dbm_graphdb_path(dbm_graphdb) do
+            i.material-icons edit
+        td.sin-action-table--center
+          == link_to dbm_graphdb, method: :delete, data: { confirm: 'Are you sure?' } do
+            i.material-icons delete
+  - if @dbm_graphdbs.empty?
+    tfoot
+      tr
+        td.mdl-data-table__cell--non-numeric[colspan=7]
+          em No Databases registered yet. See how to create your first repository 
+          a[href="https://store.prodatamarket.eu/publisher_help/ds_onto/", style="font-style: italic" target="_blank"] here
+          em .

@@ -27,15 +27,15 @@ class RdfRepo < ApplicationRecord
     puts "***** Exit RdfRepo.create_repository()"
   end
 
-
+  
   # Upload file to RDF repository
   def upload_file_to_repository(file, file_type)
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
 
     url = self.uri + '/statements'
-    api_key = self.dbm.first_enabled_key
-    basicToken = Base64.strict_encode64(api_key.key)
-
+    
+    basicToken = self.dbm.get_authorization_token
+    
     mime_type = case file_type
     when 'rdf' then
       'application/rdf+xml'
@@ -69,7 +69,6 @@ class RdfRepo < ApplicationRecord
     puts file.inspect
     puts file_type.inspect
 
-
     puts "***** Exit RdfRepo.upload_file_to_repository()"
   end
 
@@ -82,8 +81,7 @@ class RdfRepo < ApplicationRecord
 
     # User authentication required for private RDF repositories (SPARQL endpoints)
     if !self.is_public
-      api_key = self.dbm.first_enabled_key
-      basicToken = Base64.strict_encode64(api_key.key)
+      basicToken = self.dbm.get_authorization_token
 
       headers = {
         :params => {
