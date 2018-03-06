@@ -69,7 +69,7 @@
     .mdl-layout-spacer
   hr.sin-invisible-form-separator
   div.mdl-card__actions
-    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+    = link_to 'Back', thing_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
     .mdl-layout-spacer
     - unless @thing.new_record?
       = link_to 'Delete connection', thing_path(@thing), method: :delete, data: { confirm: 'Are you sure you want to disconnect?' }, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect sin-button--danger"
