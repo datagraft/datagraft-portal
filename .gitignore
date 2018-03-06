@@ -67,3 +67,5 @@ Gemfile.lock
 routes\.txt
 
 config/initializers/refile\.rb\.location
+
+p\.txt
