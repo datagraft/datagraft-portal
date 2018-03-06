@@ -12,12 +12,14 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
     @testDbmS4 = create_test_dbm_s4(@user)
     @testKey = @testDbmS4.add_key('TestS4Key', get_test_dbm_s4_key, get_test_dbm_s4_secret, true)
     @testRdfRepoUrl = nil  # Assign this when creating external repository
-    puts "Current first ApiKey: #{@testDbmS4.api_keys.first.inspect}"
+    # puts "Current first ApiKey: #{@testDbmS4.api_keys.first.inspect}"
 
     # Create a sparql endpoint for testing
     @se = SparqlEndpoint.new
     @se.user = @user
+    @se.name = 'SE init name'
     @se.save(:validate => false)
+    # puts "Current @se.slug: #{@se.slug}"
 
     # Test parameters
     @se_public = true
@@ -25,7 +27,7 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
     @se_description = 'SE description wo db'
     @se_license = 'CC0'
     @se_keyword_list = 'key1, key2'
-    @se.save(:validate => false)
+    # @se.save(:validate => false)
 
 
 
@@ -107,6 +109,36 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  # GET /:username/:resource/:slug/state
+  test "should get sparql endpoint state" do
+    # Test polling of state
+    puts "Current state @se.slug: #{@se.slug} @se.state: #{@se.state}"
+    get :state, :format => 'json', params: {
+      username: @user.username,
+      resource: 'sparql_endpoints',
+      slug: @se.slug
+    }
+    r = ActiveSupport::JSON.decode @response.body
+    ret = r["state"]
+    assert ret == @se.state, "Failed to fetch state"
+    puts "Got state:'#{ret}'"
+  end
+
+  # GET /:username/:resource/:slug/url
+  test "should get sparql endpoint url" do
+    # Test polling of url
+    puts "Current url @se.slug: #{@se.slug} @se.url: #{@se.uri}"
+    get :url, :format => 'json', params: {
+      username: @user.username,
+      resource: 'sparql_endpoints',
+      slug: @se.slug
+    }
+    r = ActiveSupport::JSON.decode @response.body
+    ret = r["url"]
+    assert ret == @se.uri, "Failed to fetch url"
+    puts "Got url:'#{ret}'"
+  end
+
   # GET /:username/:resource/:id/edit
   test "should get edit sparql endpoint" do
     get :edit, params: {
@@ -149,23 +181,20 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   private
 
   def wait_for_repo_to_become_ready(new_thing)
-    retries = 60
+    retries = 90
     repo_ready = false
     puts "Waiting for repo to become ready #{retries} seconds"
     while retries > 0 and !repo_ready do
       sleep(1)  # Wait some time so background thead gets ready
-      get :state, :format => 'json', params: {
-        username: @user.username,
-        resource: 'sparql_endpoints',
-        slug: new_thing.slug
-      }
-      r = ActiveSupport::JSON.decode @response.body
-      ret = r["state"]
+      @testRdfRepoUrl = new_thing.rdf_repo.uri
+      ret = new_thing.state
       repo_ready = true if ret == "repo_created"
       repo_ready = true if ret == "error_creating_repo"
       retries -= 1
+      puts "********** wait_for_repo_to_become_ready() retries:#{retries} state:#{ret} uri:#{@testRdfRepoUrl} **********"
     end
-    puts "Ended wait after #{60-retries} seconds"
+    puts "Ended wait after #{90-retries} seconds"
+    sleep(1)  # Wait some time so background thead terminates
     return ret == "repo_created"
   end
 

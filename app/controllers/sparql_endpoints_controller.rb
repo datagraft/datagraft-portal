@@ -92,10 +92,10 @@ class SparqlEndpointsController < ThingsController
       if !ok
         flash[:error] = "Could not create SPARQL endpoint. Please try again."
       else
-        puts "Before - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
+        # puts "Before - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
         Thread.new do
           puts "***** Create thread...start"
-          puts "New thread - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
+          # puts "New thread - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
           begin
             @thing.issue_create_repo
             rr = RdfRepo.new
@@ -145,7 +145,7 @@ class SparqlEndpointsController < ThingsController
     end
 
     ##sleep(5)  # Wait some time so background thead gets ready
-    puts "After sleep - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
+    #puts "After sleep - Dbm count: #{Dbm.count} ApiKey count: #{ApiKey.count}"
     respond_to do |format|
       if ok
         format.html { redirect_to thing_path(@thing), notice: create_background_notice }

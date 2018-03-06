@@ -10,7 +10,7 @@ module TestSignInHelper
       user = User.new({:username => "datagraft_test_user", :name => "tester",:email => "test@test.testtest", :password => "test1234", :password_confirmation => "test1234", :terms_of_service => true}) unless user = User.find_by_username('datagraft_test_user')
       user.save(:validate => false)
     end
-
+    # puts "*************** create_test_user_if_not_exists():  #{User.find_by_username('datagraft_test_user').inspect} ***************"
     return user
   end
 end
@@ -45,8 +45,9 @@ module TestDbmS4Helper
     end
 
     begin
-      api_key = dbms4.first_enabled_key
-      basicToken = Base64.strict_encode64(api_key.key)
+      #api_key = dbms4.first_enabled_key
+      #basicToken = Base64.strict_encode64(api_key.key)
+      basicToken = Base64.strict_encode64("#{get_test_dbm_s4_key}:#{get_test_dbm_s4_secret}")
 
       request = RestClient::Request.new(
         :method => :delete,

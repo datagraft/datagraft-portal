@@ -11,6 +11,8 @@ class SparqlEndpoint < Thing
   attr_accessor :execute_query
   attr_accessor :publish_file
 
+  attribute :uri
+
   after_create_commit :initialised_sparql_endpoint
 
   def initialised_sparql_endpoint
