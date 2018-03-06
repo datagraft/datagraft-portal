@@ -8,6 +8,7 @@ table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
       th.mdl-data-table__cell--non-numeric DBs
       th.mdl-data-table__cell--non-numeric Edit
       th.mdl-data-table__cell--non-numeric Delete
+      th.mdl-data-table__cell--non-numeric Info
   tbody
     - @dbm_arangos.each do |dbm_arango|
       tr
@@ -23,6 +24,7 @@ table.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp style="margin:auto"
         td.sin-action-table--center
           == link_to dbm_arango, method: :delete, data: { confirm: 'Are you sure?' } do
             i.material-icons delete
+        td.mdl-data-table__cell--non-numeric = @dbm_arangos_info[dbm_arango.id]
   - if @dbm_arangos.empty?
     tfoot
       tr
