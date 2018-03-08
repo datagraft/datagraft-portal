@@ -91,11 +91,11 @@ class DbmGraphdb < Dbm
     ep.uri = rdf_repo.uri
 
     # By default all newly created GraphDB repositories are private
-    # and only accessible by user accounts. It is possible to create
-    # free user access. TBD
-#    if rdf_repo.is_public
-#      update_repository_public(rdf_repo, rdf_repo.is_public)
-#    end
+    # and only accessible by user accounts. 
+    # When a repository is set to public we enable the free user access in GraphDB.
+    if rdf_repo.is_public
+      update_repository_public(rdf_repo, rdf_repo.is_public)
+    end
 
     puts "***** Exit DbmGraphdb.create_repository()"
   end
@@ -105,23 +105,25 @@ class DbmGraphdb < Dbm
   def update_repository_public(rdf_repo, public)
     puts "***** Enter DbmGraphdb.set_repository_public(#{name})"
 
-    url = rdf_repo.uri
+    url = "http://businessgraph.ontotext.com/rest/security/freeaccess"
     da = first_enabled_account_ignore_public
     basicToken = Base64.strict_encode64(da.name + ':' + da.password)
+    
+    rr_stripped_name = rdf_repo.name.gsub("RR:", '')
 
     request = RestClient::Request.new(
       :method => :post,
       :url => url,
       :payload => {
-        'public' => public.to_s
+        'enabled' => public.to_s,
+        'authorities' => ["ROLE_USER", "READ_REPO_*_" + rr_stripped_name]
       }.to_json,
       :headers => {
         'Authorization' => 'Basic' + ' ' + basicToken,
-        'Cache-Control' => 'no-cache',
         'Content-Type' => 'application/json'
       }
     )
-
+    
     puts request.inspect
     response = request.execute
     raise "Error updating GraphDB repository public property" unless response.code.between?(200, 299)
