@@ -252,6 +252,28 @@ class SparqlEndpointsController < ThingsController
     end
   end
 
+  # GET  /:username/sparql_endpoints/:id/sparql
+  def sparql
+    begin
+      set_thing
+      authorize! :read, @thing
+
+      if @thing.has_rdf_repo?
+        rr = @thing.rdf_repo
+        response = rr.query_repository_proxy(request.query_parameters["query"], request.headers['Accept'])
+      else
+        raise "SparqlEndpoint is not connected to any database"
+      end
+      render :inline => response.body
+    rescue => e
+      puts "Error forwarding SPARQL query #{e.message}"
+      render json: e.message, status: :unprocessable_entity
+    end
+
+
+
+  end
+
   def state
     usr = User.find_by(username: params[:username])
     @thing = SparqlEndpoint.find_by(slug: params[:slug], user: usr)

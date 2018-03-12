@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   get ':username/sparql_endpoints/new/:wiz_id' => 'sparql_endpoints#new'
   post ':username/sparql_endpoints/:id/execute_query' => 'sparql_endpoints#execute_query'
   post ':username/sparql_endpoints/:id/publish' => 'sparql_endpoints#publish'
+  get ':username/sparql_endpoints/:id/sparql' => 'sparql_endpoints#sparql'
 
   post ':username/arango_dbs/:id/execute_query' => 'arango_dbs#execute_query'
   get ':username/arango_dbs/:id/collection/new' => 'arango_dbs#collection_new'

@@ -1,4 +1,5 @@
-iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(@thing.uri)}"]
+//iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(@thing.uri)}"]
+iframe#surveyor-iframe.sin-surveyor-iframe [src="/RDFsurveyor/index.html?repo=#{url_encode(sparql_endpoint_proxy_path(@thing))}"]
 javascript:
   if ($('#surveyor-iframe').length) {
     iFrameResize({log:false}, '#surveyor-iframe')

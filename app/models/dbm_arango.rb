@@ -1,6 +1,6 @@
-
 class DbmArango < Dbm
   include HTTParty
+  # debug_output $stdout # <= will spit out all request details to the console
 
   # Non-persistent attribute for storing inputs from new form
   attr_accessor :dbm_account_username
@@ -198,12 +198,32 @@ class DbmArango < Dbm
     return true
   end
 
+  def get_version(public = true)
+    puts "***** Enter DbmArango.get_version(#{name})"
+    adbm_init(public)
+
+    # Find a db_name to use in the version request
+    db_arr = get_databases(public)
+    db_name = 'unknown'  # In case no dbs found
+    db_arr.each do |db|
+      if db[:access] == "rw"
+        db_name = db[:name]
+      end
+    end
+
+    response = adbm_version(db_name)
+
+    puts "***** Exit DbmArango.get_version()"
+    return response
+  end
+
   private
   def adbm_clear
     @adbm_init = nil
     @acc_user = nil
     @acc_password = nil
     @adbm_login = nil
+    @adbm_version = nil
     @adbm_databases = nil
     @adbm_database_access = nil
     @adbm_collection_access = nil
@@ -237,8 +257,22 @@ class DbmArango < Dbm
       @adbm_uri = uri.rstrip
       self.class.base_uri "#{@adbm_uri}"
 
+      ### Use basic auth
       self.class.basic_auth @adbm_user, @adbm_password
       @adbm_request = {:body => {}, :headers => {}, :query => {}}
+
+      ### Use Auth via JWT
+      #body = {
+      #  "username" => @adbm_user,
+      #  "password" => @adbm_password
+      #}
+      #body = body.delete_if{|k,v| v.nil?}.to_json
+      #request = { :body => body }
+      #result = self.class.post("/_open/auth", request)
+      #raise result.response unless result.code.between?(200, 299)
+      #result = result.parsed_response
+      #@adbm_request = {:body => {}, :headers => {"Authorization" => "bearer #{result['jwt']}"}, :query => {}}
+
       @adbm_login = true
 
       # Check if access privileges are ok
@@ -252,6 +286,27 @@ class DbmArango < Dbm
       raise "Error user:#{@adbm_user} is not activated at server" if respons["active"] != true
       puts "***** Exit adbm_init_user(#{name})"
     end
+  end
+
+  def adbm_version(db_name)
+    @adbm_version = {} if @adbm_version.nil?
+    @adbm_version = {} unless @adbm_version['db_name'] == db_name
+
+    if @adbm_version['res'].nil?
+      query = { }
+      request = @adbm_request.merge({ :query => query })
+      result = self.class.get("/_db/#{db_name}/_api/version", request)
+
+      if result.code.between?(200, 299)
+        x = result.parsed_response
+        res = {server: x["server"], version: x['version'], license: x['license'], db_name: db_name}
+      else
+        res = {server: '???', version: '???', license: '???', db_name: db_name}
+      end
+      @adbm_version['res'] = res
+      @adbm_version['db_name'] = db_name
+    end
+    return @adbm_version['res']
   end
 
   def adbm_databases

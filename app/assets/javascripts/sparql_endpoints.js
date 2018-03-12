@@ -34,7 +34,7 @@ document.addEventListener('turbolinks:load', function() {
           $('#tooltip-clipboard').show();
           $('#tooltip-clipboard').attr('data-clipboard-text', res.url);
           $('.sin-loading-bar-container').hide();
-          $('#surveyor-iframe').attr('src', '/RDFsurveyor/index.html?repo=' + res.url);
+          $('#surveyor-iframe').attr('src', '/RDFsurveyor/index.html?repo=' + res.proxy);
         } else {
           // could not get URL?? Should not happen but just in case
           console.log('URL not found! Please try again later;');

@@ -75,6 +75,48 @@ class RdfRepo < ApplicationRecord
 
 
   # Query RDF repository
+  def query_repository_proxy(query_string, accept_string)
+    puts "***** Enter RdfRepo.query_repository_proxy(#{name})"
+
+    url = self.uri
+
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      api_key = self.dbm.first_enabled_key
+      basicToken = Base64.strict_encode64(api_key.key)
+
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => accept_string
+      }
+    else
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => accept_string
+      }
+    end
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+
+    response = request.execute
+    raise "Error querying RDF repository" unless response.code.between?(200, 299)
+
+
+    puts "***** Exit RdfRepo.query_repository_proxy()"
+    return response
+  end
+
+
+  # Query RDF repository
   def query_repository(query_string)
     puts "***** Enter RdfRepo.query_repository(#{name})"
 
