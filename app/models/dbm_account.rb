@@ -39,7 +39,7 @@ class DbmAccount < ApplicationRecord
       plain_string += '*' # Add one extra char to handle empty string
       cipher = OpenSSL::Cipher.new(algorithm)
       cipher.encrypt()
-      cipher.key = key_base
+      cipher.key = key_base.truncate(32)
       crypt = cipher.update(plain_string) + cipher.final()
       crypt_string = (Base64.encode64(crypt))
       return crypt_string
@@ -52,7 +52,7 @@ class DbmAccount < ApplicationRecord
     begin
       cipher = OpenSSL::Cipher.new(algorithm)
       cipher.decrypt()
-      cipher.key = key_base
+      cipher.key = key_base.truncate(32)
       tempkey = Base64.decode64(crypt_string)
       plain_string = cipher.update(tempkey)
       plain_string << cipher.final()
