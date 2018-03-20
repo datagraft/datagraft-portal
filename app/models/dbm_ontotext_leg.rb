@@ -8,9 +8,8 @@ class DbmOntotextLeg < Dbm
   public
   ######
 
-  @@supported_repository_types = %w(RDF)
   def get_supported_repository_types
-    return @@supported_repository_types
+    return %w(RDF)
   end
 
   def find_things
@@ -98,7 +97,7 @@ class DbmOntotextLeg < Dbm
   end
 
   def used_sparql_count
-    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list = self.rdf_repos.all #TODO fix to count real sparql_endpoints
     return rdf_repo_list.size
   end
 

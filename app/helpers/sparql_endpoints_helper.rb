@@ -1,7 +1,12 @@
 module SparqlEndpointsHelper
+  include ThingHelper
 
   def new_sparql_endpoint_path(parameters = {})
     return "/"+current_user.username+"/sparql_endpoints/new#{ "?#{parameters.to_query}" if parameters.present? }"
+  end
+
+  def sparql_endpoint_proxy_path(thing, parameters = {})
+    thing_generic_path(thing, '/sparql', parameters)
   end
 
 
@@ -27,19 +32,28 @@ module SparqlEndpointsHelper
   end
 
 
-  # Return all queries
-  def all_queries
-    return Thing.where(type: 'Query')
-  end
+  ## Return all queries
+  #def all_queries
+  #  return Thing.where(type: 'Query')
+  #end
 
 
   # Search for queries
-  def search_for_existing_queries
+  def search_for_existing_sparql_queries
+    res = []
     user = @thing.user
     tmp_user = user.queries.includes(:user).where(public: false)
     tmp_pub = Thing.public_list.includes(:user).where(:type => ['Query'])
+    tmp_all = tmp_user + tmp_pub
 
-    return tmp_user + tmp_pub
+    tmp_all.each do |q|
+      qt = q.query_type
+      if (qt == "SELECT") || (qt == "CONSTRUCT")
+        res << q
+      end
+    end
+
+    return res
   end
 
 

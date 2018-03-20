@@ -1,0 +1,29 @@
+- title @thing.name
+- setOption :mdlCard
+
+/! MDL Card container
+div[class="mdl-card #{@thing.paper_trail.live? ? '' : 'sin-old-version'}"]
+  .sin-card-with-tabs-layout.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    .sin-card-with-tabs-title
+      .mdl-card__title.mdl-color-text--grey-50
+        = render 'thing_header'
+
+      /! Tab bars
+      .mdl-tabs__tab-bar
+        a.mdl-tabs__tab.is-active href="#db-info-panel" Database info
+        a.mdl-tabs__tab href="#db-querying-panel"  Querying
+
+    /! MDL tab panels, is-active to denote currently active
+    #db-info-panel.mdl-tabs__panel.is-active
+      /! Date infos
+      div.sin-date-infos
+        = render 'elem_last_modified'
+      .mdl-card__supporting-text.sin-padding
+        = render 'show_info_panel'
+    /! MDL Tab panel 2
+    #db-querying-panel.mdl-tabs__panel
+      /! Date infos
+      div.sin-date-infos
+        = render 'elem_last_modified'
+      .mdl-card__supporting-text.sin-padding
+        = render 'show_querying_panel'

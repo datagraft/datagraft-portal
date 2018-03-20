@@ -1,0 +1,53 @@
+- if @doc_edge and @doc_collections.size==0
+  h4.mdl-cell--12-col You must have a document collection before uploading data to an edge collection
+  div.mdl-card__actions
+    = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+
+-else
+  = simple_form_for @thing, url: publish_arango_db_collection_path(params[:collection_name]), method: :post do |f|
+    .mdl-grid
+      h4.mdl-cell--12-col Data to upload
+      - if @doc_edge
+        .sin-input-with-help-icon
+          = f.input :from_to_coll_prefix, label: "Document collection to connect", prompt: "Choose collection...", collection: @doc_collections, wrapper: :select
+          .sin-help-icon-with-tooltip__select
+            #tooltip-type.icon.material-icons help
+            .mdl-tooltip.mdl-tooltip--left for="tooltip-type" An edge collection must be connected to a document collection. Select the document collection that the edge shall refer to
+
+      .sin-input-with-help-icon
+        = f.input :publish_file, as: :file, :label => false
+        .sin-help-icon-with-tooltip
+          #tooltip-upload.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-upload" Choose a JSON file to upload/append data to the collection.
+
+      h4.mdl-cell--12-col Options
+
+      .sin-input-with-help-icon
+        = f.input :json_option, label: "JSON option", include_blank: false, collection: @json_options, wrapper: :select
+        .sin-help-icon-with-tooltip__select
+          #tooltip-json.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-json" Self-contained JSON documents: Each line in the file will be interpreted as one stand-alone document. Using this format, the documents are imported line-wise. JSON array: All documents are included in an array.
+
+      .sin-input-with-help-icon
+        = f.input :overwrite_option, label: "Overwrite option", include_blank: false, collection: @overwrite_options, wrapper: :select
+        .sin-help-icon-with-tooltip__select
+          #tooltip-overwrite.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-overwrite" Specifies what to do with existing data in the collection.
+
+      .sin-input-with-help-icon
+        = f.input :on_duplicate_option, label: "On duplicate option", include_blank: false, collection: @on_duplicate_options, wrapper: :select
+        .sin-help-icon-with-tooltip__select
+          #tooltip-duplicate.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-duplicate" Controls what action is carried out in case of a unique key constraint violation.
+
+      .sin-input-with-help-icon
+        = f.input :complete_option, label: "Error handling option", include_blank: false, collection: @complete_options, wrapper: :select
+        .sin-help-icon-with-tooltip__select
+          #tooltip-complete.icon.material-icons help
+          .mdl-tooltip.mdl-tooltip--left for="tooltip-complete" Specifies what to happen if error occurs
+
+    hr.sin-invisible-form-separator
+    div.mdl-card__actions
+      = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+      .mdl-layout-spacer
+      = f.button :submit, "Upload file to Arango collection", :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

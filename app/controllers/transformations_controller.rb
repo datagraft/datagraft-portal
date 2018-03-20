@@ -31,6 +31,15 @@ class TransformationsController < ThingsController
     end
   end
 
+  # GET /:username/transformation/:id/download
+  def download
+    set_thing
+    authorize! :read, @thing
+
+    send_data @thing.code, filename: "#{@thing.slug}_code.json"
+  end
+
+
   # GET /transform
   def transform
     authenticate_user!

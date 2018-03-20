@@ -4,71 +4,109 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
   include ThingHelper
   setup do
+    puts "Do setup ..."
     # Create a test user if it doesn't exist and sign in
     @user = create_test_user_if_not_exists
     sign_in @user
-    
+
+    @testDbmS4 = create_test_dbm_s4(@user)
+    @testKey = @testDbmS4.add_key('TestS4Key', get_test_dbm_s4_key, get_test_dbm_s4_secret, true)
+    @testRdfRepoUrl = nil  # Assign this when creating external repository
+    puts "Current first ApiKey: #{@testDbmS4.api_keys.first.inspect}"
+
     # Create a sparql endpoint for testing
     @se = SparqlEndpoint.new
     @se.user = @user
     @se.save(:validate => false)
-    
+
     # Test parameters
     @se_public = true
-    @se_name = 'SE test'
-    @se_description = 'SE description'
+    @se_name = 'SE test wo db'
+    @se_description = 'SE description wo db'
     @se_license = 'CC0'
     @se_keyword_list = 'key1, key2'
+    @se.save(:validate => false)
+
+
+
+
   end
-  
+
+  teardown do
+    puts "Do teardown ..."
+
+    # Cleanup using the url from the test object
+
+    delete_test_dbm_s4_repository(@testDbmS4, @testRdfRepoUrl)
+    # When controller is using cache it may be a good idea to reset it afterwards
+    Rails.cache.clear
+
+  end
+
+
   test "should get index" do
     get :index, params: { username: @user.username }
     assert_response :success
     assert_not_nil assigns(:sparql_endpoints)
   end
-  
+
   # GET /:username/:resource/new
   test "should get new sparql endpoint" do
     get :new, params: {
-      username: @user.username, 
-      resource: 'sparql_endpoints' 
+      username: @user.username,
+      resource: 'sparql_endpoints'
     }
     assert_response :success
   end
-  
-=begin
-  # TODO: Needs a test user with ontotext account to be able to create the SPARQL endpoint (Ontotext API)
+
   # POST /:username/:resource/
-  test "should create sparql endpoint" do
+  test "should fail_create_sparql endpoint_missing_dbm" do
+    post :create, params: {
+      username: @user.username,
+      resource: 'sparql_endpoints',
+      sparql_endpoint: {
+        public: false,
+        name: 'SE name',
+        description: 'SE description',
+        license: 'CC0'
+      }
+    }
+    assert_redirected_to dashboard_path
+  end
+
+  # POST /:username/:resource/
+  test "should create private_sparql endpoint" do
     assert_difference('SparqlEndpoint.count') do
       post :create, params: {
-        username: @user.username, resource: 'sparql_endpoints',
+        username: @user.username,
+        resource: 'sparql_endpoints',
         sparql_endpoint: {
-          public: @se_public, 
-          name: @se_name, 
-          description: @se_description, 
-          license: @se_license, 
-          keyword_list: @se_keyword_list
+          public: false,
+          dbm_entries: @testDbmS4.id,
+          name: 'SE name',
+          description: 'SE description',
+          license: 'CC0'
         }
       }
     end
-    assert_redirected_to thing_path(assigns(:sparql_endpoint))
+    new_thing = assigns(:thing)
+    assert_redirected_to thing_path(new_thing)
+
+    repo_success = wait_for_repo_to_become_ready(new_thing)
+    assert repo_success == true, "Failed to create repo"
+
   end
-=end
-  
-=begin
-  # TODO: Needs a test user with ontotext account to be able to get size of SPARQL endpoint (Ontotext API)
+
   # GET /:username/:resource/:id
   test "should show sparql endpoint" do
-    get :show, params: { 
+    get :show, params: {
       username: @user.username,
       resource: 'sparql_endpoints',
-      id: @se.id 
+      id: @se.id
     }
     assert_response :success
   end
-=end
-  
+
   # GET /:username/:resource/:id/edit
   test "should get edit sparql endpoint" do
     get :edit, params: {
@@ -82,14 +120,14 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   # PATH/PUT /:username/:resource/:id
   test "should update sparql endpoint" do
     patch :update, params: {
-      username: @user.username, 
+      username: @user.username,
       resource: 'sparql_endpoints',
       id: @se.id,
       sparql_endpoint: {
-        public: @se_public, 
-        name: @se_name, 
-        description: @se_description, 
-        license: @se_license, 
+        public: @se_public,
+        name: @se_name,
+        description: @se_description,
+        license: @se_license,
         keyword_list: @se_keyword_list
       }
     }
@@ -99,13 +137,36 @@ class SparqlEndpointsControllerTest < ActionController::TestCase
   # DELETE /:username/:resource/:id
   test "should delete sparql endpoint" do
     assert_difference('SparqlEndpoint.count', -1) do
-      delete :destroy, params: { 
-        username: @user.username, 
-        resource: 'sparql_endpoints', 
-        id: @se.id 
+      delete :destroy, params: {
+        username: @user.username,
+        resource: 'sparql_endpoints',
+        id: @se.id
       }
     end
-    assert_redirected_to things_path(@se)
+    assert_redirected_to dashboard_path
   end
-  
+
+  private
+
+  def wait_for_repo_to_become_ready(new_thing)
+    retries = 60
+    repo_ready = false
+    puts "Waiting for repo to become ready #{retries} seconds"
+    while retries > 0 and !repo_ready do
+      sleep(1)  # Wait some time so background thead gets ready
+      get :state, :format => 'json', params: {
+        username: @user.username,
+        resource: 'sparql_endpoints',
+        slug: new_thing.slug
+      }
+      r = ActiveSupport::JSON.decode @response.body
+      ret = r["state"]
+      repo_ready = true if ret == "repo_created"
+      repo_ready = true if ret == "error_creating_repo"
+      retries -= 1
+    end
+    puts "Ended wait after #{60-retries} seconds"
+    return ret == "repo_created"
+  end
+
 end

@@ -5,13 +5,24 @@ class Dbm < ApplicationRecord
   has_many :dbm_accounts, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :rdf_repos, dependent: :destroy
+  has_many :things  ## Deleted by user , dependent: :destroy
 
-  cattr_accessor :supported_repository_types
+  ##cattr_accessor :supported_repository_types
+
+  def get_supported_repository_types
+    return ""
+  end
 
 
   def find_tings
     return []
   end
+  
+  
+  def get_authorization_token
+    return ""
+  end
+  
 
   # Create and add new API key to the DBM
   def add_key(name, key_pub, key_secret, enabled = true)
@@ -64,10 +75,53 @@ class Dbm < ApplicationRecord
   # Returns the first enabled API key
   def first_enabled_key
     api_key = self.api_keys.where(enabled: true).first
-    
+
     raise "No enabled API key found" if api_key.nil?
-    
+
     return api_key
+  end
+  
+
+  # Create and add new DbmAccount to the DBM
+  def add_account(name, password, enabled = true)
+    self.save
+    test_user(name, password)
+    da = self.dbm_accounts.create()
+
+    da.name = name
+    da.user = user
+    da.enabled = enabled
+    da.save
+    da.password = password
+    da.save
+
+    self.save
+    return da
+  end
+
+
+  # Delete DbmAccount from the DBM
+  def delete_account(dbm_account)
+    self.api_keys.find(dbm_account).destroy
+  end
+
+  # Returns the first enabled dbm_account
+  def first_enabled_account(public)
+    da = self.dbm_accounts.where(enabled: true, public: public).first
+
+    raise "No enabled DbmAccount found" if da.nil?
+
+    return da
+  end
+
+
+  # Returns the first enabled DBM account ignoring public setting
+  def first_enabled_account_ignore_public
+    da = self.dbm_accounts.where(enabled: true).first
+
+    raise "No enabled DbmAccount found" if da.nil?
+
+    return da
   end
 
 

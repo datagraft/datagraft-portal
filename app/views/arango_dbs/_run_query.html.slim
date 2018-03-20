@@ -1,0 +1,45 @@
+// This partial shows details about a filestore thing using squeezebox to hide parts of the information
+// Input params:
+//   thing              - The thing to render
+//   rparams {arango_thing} - The associated Arango database
+
+- arango_thing = rparams[:arango_thing]
+
+- highlight_class = 'highlight-false'
+- if query_links_to_arango_db(thing, arango_thing)
+  - highlight_class = 'highlight-true'
+
+div
+  div class = "#{highlight_class} sin-gen-squeeze-sparql"
+    .sin-gs-head
+      .sin-query-list-icon
+        = image_tag(thing_icon_name(thing), height: "48")
+        = display_query_type(thing.query_type)
+      .sin-query-list-meta
+        .sin-query-list-meta-name
+          = thing.name
+        .sin-query-list-meta-date
+          | Last modification&nbsp;
+          = time_ago_in_words thing.updated_at
+          | &nbsp;ago
+          | &nbsp;-&nbsp;
+          = thing.updated_at
+          | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          | By:&nbsp;
+          = thing.user.username
+      .mdl-layout-spacer
+      span.sin-execute-request-button
+        = button_to 'Run', { action: "execute_query" }, remote: true, params: {:existing_query => thing.query_string}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect'
+      .sin-execute-request-response
+    .sin-gs-cnt
+      - unless thing.description.blank?
+        i.sin-tab-label Description:
+        .sin-tab-textfield__box
+          = thing.description
+      i.sin-tab-label
+        | Query text:
+      br
+      .sin-tab-textfield__scroll
+        = simple_format h(thing.query_string)
+      i.sin-flex-center
+        = link_to "Go to asset...", thing_path(thing)

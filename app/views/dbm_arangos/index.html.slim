@@ -1,0 +1,14 @@
+- title 'Your Database Management'
+- setOption :mdlCard
+
+div.mdl-card
+  /! MDL Card container
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+
+  div.mdl-layout style="align-items: center;"
+    div.mdl-card__supporting-text.sin-padding
+      = render 'table_dbm_arangos'
+
+  div.mdl-card__actions
+    == link_to 'New Server', new_dbm_arango_path, :class => "mdl-button mdl-button--icolored mdl-button--raised mdl-js-button mdl-js-ripple-effect"

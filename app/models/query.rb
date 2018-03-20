@@ -7,16 +7,19 @@ class Query < Thing
 
   has_many :sparql_endpoint_queries, dependent: :destroy
   has_many :sparql_endpoints, :through => :sparql_endpoint_queries
+  has_many :arango_db_queries, dependent: :destroy
+  has_many :arango_dbs, :through => :arango_db_queries
 
   validates_presence_of :query_string
 
-  @@allowed_languages = %w(SPARQL SQL R whatever)
+  @@allowed_languages = %w(SPARQL AQL SQL R whatever)
   cattr_accessor :allowed_languages
 
   # No longer required for SPARQL endpoints
   #  validates :language, presence: true, inclusion: {in: @@allowed_languages}
   accepts_nested_attributes_for :queriable_data_stores
   accepts_nested_attributes_for :sparql_endpoints
+  accepts_nested_attributes_for :arango_dbs
 
 
   def should_generate_new_friendly_id?
@@ -119,6 +122,39 @@ class Query < Thing
       }
     else
       raise "Error SparqlEndpoint has no database"
+    end
+  end
+
+  # Execute query on Arango DB
+  def execute_on_arango_db(adb, user, timeout = 180)
+    if adb.has_dbm?
+      public = adb.user != user
+
+      res = adb.dbm.query_database(adb.db_name, query_string, public)
+      # Collect all headers from the first entry
+      headers = []
+      if res["result"].count > 0
+        res["result"][0].each do |k,v|
+          headers << k
+        end
+      end
+
+      # Reformat the values into result_list["header_name"]["value"]
+      result_list = []
+      res["result"].each do |in_entry|
+        out_entry = {}
+        in_entry.each do |k,v|
+          out_entry[k] = {"value" => v}
+        end
+        result_list << out_entry
+      end
+      return {
+        headers: headers,
+        results: result_list
+      }
+
+    else
+      raise "Error ArangoDb has no database"
     end
   end
 end

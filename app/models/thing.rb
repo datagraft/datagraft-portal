@@ -10,6 +10,7 @@ class Thing < ApplicationRecord
   has_many :catalogues, :through => :catalogue_records
   belongs_to :user
   belongs_to :rdf_repo
+  belongs_to :dbm
 
 
   validates :name, presence: true
@@ -60,7 +61,7 @@ class Thing < ApplicationRecord
     # returns a default registry
     Thing.where(
       :public => true,
-      :type => ['DataPage', 'SparqlEndpoint', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('Widget' if Flip.on? :widgets)]
+      :type => ['DataPage', 'SparqlEndpoint', 'ArangoDb', 'Transformation', 'DataDistribution', 'Filestore', 'Query', *('Widget' if Flipflop.enabled? :widgets)]
       )
     .order(stars_count: :desc, created_at: :desc).includes(:user)
   end

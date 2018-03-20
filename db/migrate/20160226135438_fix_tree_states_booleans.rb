@@ -1,4 +1,4 @@
-class FixTreeStatesBooleans < ActiveRecord::Migration
+class FixTreeStatesBooleans < ActiveRecord::Migration[4.2]
   def up
     change_column :api_keys,   :enabled, :boolean, null: false, default: false
     change_column :things,     :public,  :boolean, null: false, default: false

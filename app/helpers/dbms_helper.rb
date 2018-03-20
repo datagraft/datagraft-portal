@@ -1,6 +1,5 @@
 module DbmsHelper
 
-  # Find how many transformations the user has
   def dbms_descriptive_name(dbm)
 
     if dbm == nil

@@ -33,8 +33,8 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.upload_file_to_repository(#{name})"
 
     url = self.uri + '/statements'
-    api_key = self.dbm.first_enabled_key
-    basicToken = Base64.strict_encode64(api_key.key)
+
+    basicToken = self.dbm.get_authorization_token
 
     mime_type = case file_type
     when 'rdf' then
@@ -69,8 +69,48 @@ class RdfRepo < ApplicationRecord
     puts file.inspect
     puts file_type.inspect
 
-
     puts "***** Exit RdfRepo.upload_file_to_repository()"
+  end
+
+
+  # Query RDF repository
+  def query_repository_proxy(query_string, accept_string)
+    puts "***** Enter RdfRepo.query_repository_proxy(#{name})"
+
+    url = self.uri
+
+    # User authentication required for private RDF repositories (SPARQL endpoints)
+    if !self.is_public
+      basicToken = self.dbm.get_authorization_token
+
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Authorization' => 'Basic ' + basicToken,
+        'Accept' => accept_string
+      }
+    else
+      headers = {
+        :params => {
+          'query' => query_string
+        },
+        'Accept' => accept_string
+      }
+    end
+
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+
+    response = request.execute
+    raise "Error querying RDF repository" unless response.code.between?(200, 299)
+
+
+    puts "***** Exit RdfRepo.query_repository_proxy()"
+    return response
   end
 
 
@@ -82,8 +122,7 @@ class RdfRepo < ApplicationRecord
 
     # User authentication required for private RDF repositories (SPARQL endpoints)
     if !self.is_public
-      api_key = self.dbm.first_enabled_key
-      basicToken = Base64.strict_encode64(api_key.key)
+      basicToken = self.dbm.get_authorization_token
 
       headers = {
         :params => {
@@ -142,7 +181,7 @@ class RdfRepo < ApplicationRecord
     rescue => e
       puts 'Error querying repo size - using cached value'
       puts e.message
-      puts e.backtrace.inspect
+      #puts e.backtrace.inspect
     end
 
     puts "***** Exit RdfRepo.get_repository_size()"
@@ -199,6 +238,25 @@ class RdfRepo < ApplicationRecord
     self.configuration["cached_size"] = val
   end
 
+  def read_size_wo_key_for_test
+
+    url = self.uri + '/size'
+
+    headers = {
+      'Accept' => 'application/sparql-results+json'
+    }
+    request = RestClient::Request.new(
+      :method => :get,
+      :url => url,
+      :headers => headers
+    )
+    puts request.inspect
+    response = request.execute
+
+    return response.body.to_i
+  end
+
+
   protected
   def touch_configuration!
     self.configuration = {} if not configuration.is_a?(Hash)
@@ -210,12 +268,12 @@ class RdfRepo < ApplicationRecord
     puts "***** Enter RdfRepo.delete_repository(#{name})"
     # Remove all things referencing this rr
     things.all.each do |thing|
-      thing.rdf_repo = nil  # Avoid ecursive calls to delete_repository
+      thing.rdf_repo = nil  # Avoid recursive calls to delete_repository
       thing.save
-      thing.destroy
+      #thing.destroy
     end
     dbm.delete_repository(self) unless self.uri == nil
-    
+
     return true
     puts "***** Exit RdfRepo.delete_repository()"
   end

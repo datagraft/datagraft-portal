@@ -1,0 +1,36 @@
+- title "Upload ArangoDB JSON file to collection"
+- setOption :mdlCard
+
+div.mdl-card
+  div.mdl-card__title.mdl-color-text--grey-50
+    h3 = yield(:title)
+  div.sin-date-infos
+    = render 'elem_last_modified'
+  div.mdl-card__supporting-text
+    .mdl-grid
+      .mdl-cell--12-col
+        .sin-tab-label Upload results
+        .sin-tab-textfield__box
+          - unless @upload_result[:error].nil?
+            dt Error occured
+            dd #{@upload_result[:error]}
+          - unless @upload_result[:result].nil?
+            - if @upload_result[:result]["error"] == false
+              dt Created:
+              dd #{@upload_result[:result]["created"]}
+              dt Updated:
+              dd #{@upload_result[:result]["updated"]}
+              dt Ignored:
+              dd #{@upload_result[:result]["ignored"]}
+              dt Empty:
+              dd #{@upload_result[:result]["empty"]}
+              dt Errors:
+              dd #{@upload_result[:result]["errors"]}
+            - else
+              dt Error occured at server
+              dd #{@upload_result[:result]["errorMessage"]}
+    hr.sin-invisible-form-separator
+    div.mdl-card__actions
+      = link_to 'Back', :back, :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+      .mdl-layout-spacer
+      == link_to 'Ok', thing_edit_path(@thing), :class => "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"

@@ -82,14 +82,14 @@ class PublicPortalController < ApplicationController
     if params[:search]
       query_things = Thing.public_search(params[:search])
       things_and_catalogues = query_things
-      if Flip.on? :catalogues
+      if Flipflop.enabled? :catalogues
         query_catalogues = Catalogue.public_search(params[:search])
         things_and_catalogues += query_catalogues
       end
     else
       query_things = Thing.public_list
       things_and_catalogues = query_things
-      if Flip.on? :catalogues
+      if Flipflop.enabled? :catalogues
         query_catalogues = Catalogue.public_list
         things_and_catalogues += query_catalogues
       end

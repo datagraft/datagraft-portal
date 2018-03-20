@@ -1,0 +1,30 @@
+hr.mdl-cell--12-col
+h3.sin-tab-title.mdl-cell--12-col
+  | Query results
+.sin-search-container
+  .mdl-textfield.mdl-js-textfield.sin-query-results-search
+    i.material-icons search
+    .mdl-textfield.mdl-js-textfield
+      input#query-results-search.mdl-textfield__input type="text" /
+      label.mdl-textfield__label for="query-results-search"  Search
+
+- unless @results_list.empty?
+  table#query-results-table.mdl-data-table.cell-border
+    thead
+      tr
+        - @query_result[:headers].each do |header|
+          th.mdl-data-table__cell--non-numeric.sin-td-wrap = header.titleize
+    tbody
+      - @results_list.each do |result|
+        tr
+          - @query_result[:headers].each do |header|
+            - if result[header]
+              - if result[header]["value"].is_a? Numeric
+                td = result[header]["value"]
+              - else
+                td.mdl-data-table__cell--non-numeric.sin-td-wrap = result[header]["value"]
+            - else
+              td = ''
+
+- else
+  h3.mdl-cell--12-col #{@query_error}

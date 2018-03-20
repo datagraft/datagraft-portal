@@ -6,9 +6,9 @@ module JsonConcern
       data = Rodash.get(data, key)
       not_found if not data
     end
-
+    
     if data.kind_of? String
-      render :text => data
+      render :plain => data
     else
       render :json => data
     end

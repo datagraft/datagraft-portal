@@ -9,27 +9,16 @@ class DbmS4 < Dbm
   attr_accessor :secret
 
 
-  #######
-  private
-  #######
-
-  # Rails 4 strong params usage
-  def dbm_s4_params
-    params.require(:dbm_s4).permit(:public, :dbm_account_username, :dbm_account_password, :name, :db_plan, :endpoint, :key, :secret)
-  end
-
   ######
   public
   ######
 
-  @@supported_repository_types = %w(RDF)
   def get_supported_repository_types
-    return @@supported_repository_types
+    return %w(RDF)
   end
 
-  @@supported_db_plans = %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
   def get_supported_db_plans
-    return @@supported_db_plans
+    return %w(BL1 BL2 SL1 SL2 EL1 EL2 EL3)
   end
 
   def db_plan
@@ -60,6 +49,14 @@ class DbmS4 < Dbm
     return se
   end
 
+  def get_authorization_token
+    api_key = rdf_repo.dbm.first_enabled_key
+    basicToken = Base64.strict_encode64(api_key.key)
+
+    return basicToken
+  end
+  
+  
   # Create new S4 repository
   def create_repository(rdf_repo, ep)
     puts "***** Enter DbmS4.create_repository(#{name})"
@@ -103,8 +100,8 @@ class DbmS4 < Dbm
   # Update S4 repository public property
   def update_repository_public(rdf_repo, public)
     puts "***** Enter DbmS4.set_repository_public(#{name})"
-    puts rdf_repo.inspect
-    puts public
+    ## puts rdf_repo.inspect
+    ## puts public
 
     url = rdf_repo.uri
     api_key = rdf_repo.dbm.first_enabled_key
@@ -136,7 +133,7 @@ class DbmS4 < Dbm
 
 
   def used_sparql_count
-    rdf_repo_list = self.rdf_repos.all
+    rdf_repo_list = self.rdf_repos.all #TODO fix to count real sparql_endpoints
     return rdf_repo_list.size
   end
 
@@ -209,7 +206,7 @@ class DbmS4 < Dbm
     end
 
     puts "***** Exit DbmS4.quota_sparql_ktriples()"
-    return res
+    return res/1024.0
   end
 
 
@@ -217,7 +214,7 @@ class DbmS4 < Dbm
   def delete_repository(rdf_repo)
     puts "***** Enter DbmS4.delete_repository(#{name})"
 
-      url = rdf_repo.uri.to_s.gsub("RR:", "")
+    url = rdf_repo.uri.to_s.gsub("RR:", "")
     api_key = rdf_repo.dbm.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
@@ -239,6 +236,7 @@ class DbmS4 < Dbm
 
     puts "***** Exit DbmS4.delete_repository()"
   end
+
 
   private
   # Delete all RDF repositories owned by this dbm called by before_destroy

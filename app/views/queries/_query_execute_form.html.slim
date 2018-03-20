@@ -1,12 +1,18 @@
 = simple_form_for :execute_query, url: thing_path(@thing)+'/execute_query', remote: true do |f|
   .mdl-cell--12-col
     .sin-cell-layout-flex__start
-      - unless @thing.sparql_endpoints.length == 0
-        .sin-form-input-label Endpoint
-        .sin-form-collection-select
-          = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
-        = f.button :submit, 'Go to selected endpoint page', class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
-        //= button_to 'Go to selected endpoint page', { action: "execute_query" }, remote: true, params: {:goto_sparql_endpoint_button => true}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+      - if @thing.query_type != 'AQL'
+        - unless @thing.sparql_endpoints.length == 0
+          .sin-form-input-label SPARQL Endpoint
+          .sin-form-collection-select
+            = f.collection_select :sparql_endpoints, @thing.sparql_endpoints, :id, :name
+          = f.button :submit, 'Go to selected endpoint page', class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+      - else
+        - unless @thing.arango_dbs.length == 0
+          .sin-form-input-label Arango DB
+          .sin-form-collection-select
+            = f.collection_select :arango_dbs, @thing.arango_dbs, :id, :name
+          = f.button :submit, 'Go to selected database page', class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
 
   p
   .mdl-cell--12-col
@@ -16,8 +22,13 @@
 
   p
   .mdl-cell--12-col
-    - unless @thing.sparql_endpoints.length == 0
-      .sin-execute-request-button.sin-cell-layout-flex__center
-        = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
-        //= button_to 'Execute', { action: "execute_query" }, remote: true, params:  {:execute_query_button => true, :goto_sparql_endpoint => :sparql_endpoints}, class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
-          input.hidden
+    - if @thing.query_type != 'AQL'
+      - unless @thing.sparql_endpoints.length == 0
+        .sin-execute-request-button.sin-cell-layout-flex__center
+          = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+            input.hidden
+    - else
+      - unless @thing.arango_dbs.length == 0
+        .sin-execute-request-button.sin-cell-layout-flex__center
+          = f.button :submit, "Execute", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect'
+            input.hidden

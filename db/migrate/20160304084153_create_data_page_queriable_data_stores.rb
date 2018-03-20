@@ -1,4 +1,4 @@
-class CreateDataPageQueriableDataStores < ActiveRecord::Migration
+class CreateDataPageQueriableDataStores < ActiveRecord::Migration[4.2]
   def change
     create_table :data_page_queriable_data_stores do |t|
       t.belongs_to :data_page, index: true

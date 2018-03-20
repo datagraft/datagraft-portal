@@ -4,7 +4,7 @@ class Filestore < Thing
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
 
   include FilestoresHelper
-  
+
   attachment :file
 
   def should_generate_new_friendly_id?
@@ -28,11 +28,11 @@ class Filestore < Thing
 
   def upload_filename
     if metadata.blank?
-      ret = ""
+      ret = "__blank__"
     else
       ret = metadata['upload_filename']
       if ret.blank?
-        ret = ""
+        ret = "__blank__"
       end
     end
     return ret # Assure that ret is returned
@@ -45,11 +45,11 @@ class Filestore < Thing
 
   def upload_format
     if metadata.blank?
-      ret = ""
+      ret = "__blank__"
     else
       ret = metadata['upload_format']
       if ret.blank?
-        ret = ""
+        ret = "__blank__"
       end
     end
     return ret # Assure that ret is returned
