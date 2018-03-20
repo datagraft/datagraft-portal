@@ -103,11 +103,13 @@ class TransformationsController < ThingsController
 
   def new
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @grafterizerOrigin = Rails.configuration.grafterizer['publicPath']
     super
   end
 
   def show
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @grafterizerOrigin = Rails.configuration.grafterizer['publicPath']
     @publisherId = @transformation.user.username
     @transformationID = @transformation.slug
     @transformationJSON = @transformation.configuration.to_json
@@ -119,6 +121,7 @@ class TransformationsController < ThingsController
   def edit
     authorize! :update, @thing
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @grafterizerOrigin = Rails.configuration.grafterizer['publicPath']
     @publisherId = current_user.username
     @transformationID = @transformation.id
   end

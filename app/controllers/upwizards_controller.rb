@@ -497,11 +497,16 @@ class UpwizardsController < ApplicationController
       @upwizard.trace_back_step_skip
       @upwizard.save
       @grafterizerPath = Rails.configuration.grafterizer['publicPath']
-
+      @grafterizerOrigin = Rails.configuration.grafterizer['publicPath']
       raise ActionController::RoutingError.new('Grafterizer tool connection failed.') if !@grafterizerPath
-
+      
+      
       # Make sure the wiz_id is an number, to prevent XSS
       @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+
+      @path_back = wizard_path(:transform)
+
+      
 
       @upwizard.save
       render_wizard
@@ -598,14 +603,19 @@ class UpwizardsController < ApplicationController
   def handle_transform_select_preview_and_render
     puts "************ upwizard handle_transform_select_preview_and_render"
     @grafterizerPath = Rails.configuration.grafterizer['publicPath']
+    @grafterizerOrigin = Rails.configuration.grafterizer['publicPath']
     unless !params[:wiz_id] || !params[:selected_id]
       begin
         transformation = Transformation.find(params[:selected_id])
         @transformationId = transformation.slug
         @publisherId = current_user.username
         @distributionId = "upwizards--" + (params[:wiz_id].to_i.to_s)
+        
+        # set Grafterizer path that will be displayed
+        @grafterizerPath += '/' + @publisherId + '/transformations/' + @transformationId + '/' + @distributionId + '/tabular-transformation'
         @path_back = wizard_path(:transform)
-
+        
+        # nvnikolov/transformations/eubg-sdati-uk/sample_uk_sdati_1000-csv/rdf-mapping
         render_wizard
       rescue => e
         if (@upwizard)

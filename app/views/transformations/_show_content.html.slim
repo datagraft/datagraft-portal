@@ -7,7 +7,7 @@ div#transformation-preview
 
 script
   | var graftInstance = new Grafterizer("#{@grafterizerPath}",
-    $('#transformation-preview').get(0))
+    $('#transformation-preview').get(0), "#{@grafterizerOrigin}")
     .go('transformations.readonly', {
       publisher: "#{@publisherId}",
       id: "#{@transformationID}"

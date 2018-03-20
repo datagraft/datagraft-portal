@@ -2,5 +2,5 @@
 - setOption :flexPage
 script
   | var graftInstance = new Grafterizer("#{@grafterizerPath}",
-    $('main > section').get(0))
+    $('main > section').get(0), "#{@grafterizerOrigin}")
     .go('transformations.new', {}, false);

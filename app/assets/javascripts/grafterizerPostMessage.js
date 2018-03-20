@@ -3,11 +3,11 @@
 (function(scope){
     var channel = 'datagraft-post-message';
 
-    function Grafterizer(origin, htmlElement) {
+    function Grafterizer(transformationPath, htmlElement, origin) {
         this._stuffToDo = [];
         this._stuffToDoAtEveryConnection = [];
-
         this.origin = origin;
+        this.transformationPath = transformationPath;
         this._createIframe(htmlElement);
         this._sendMessageWindow = window;
         this._savedAuthorization = null;
@@ -40,12 +40,12 @@
     Grafterizer.prototype._createIframe = function(htmlElement) {
         var iframe = document.createElement('iframe');
         iframe.className = 'grafterizer';
-        iframe.src = this.origin + '/#/embedded';
+        iframe.src = this.transformationPath;
         htmlElement.appendChild(iframe);
     };
 
     Grafterizer.prototype._onReady = function() {
-        this.setAuthorization(this._savedAuthorization);
+        // this.setAuthorization(this._savedAuthorization);
         for (a = this._stuffToDoAtEveryConnection, i = 0, l = a.length; i < l; ++i) {
             this.sendMessage(a[i]);
         }
@@ -72,7 +72,7 @@
         }
 
         message.channel = channel;
-        this._sendMessageWindow.postMessage(message, this.origin);
+        this._sendMessageWindow.postMessage(message, this.transformationPath);
         return this;
     };
 

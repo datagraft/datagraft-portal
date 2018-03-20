@@ -3,7 +3,9 @@
 
 script
   | var graftInstance = new Grafterizer("#{@grafterizerPath}",
-    $('main > section').get(0))
+    $('main > section').get(0), "#{@grafterizerOrigin}")
     .go('transformations.new.preview', {
-      distributionId: "#{@distributionId}"
+      distributionId: "#{@distributionId}",
+      publisher: "#{@publisherId}",
+      path_back: "#{@path_back}"
     }, true);
