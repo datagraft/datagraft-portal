@@ -6,3 +6,6 @@ test:
 
 production:
   publicPath: <%= ENV["GRAFTWERK_URI"] %>
+
+staging:
+  publicPath: <%= ENV["GRAFTWERK_URI"] %>
