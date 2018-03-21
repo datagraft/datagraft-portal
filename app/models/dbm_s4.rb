@@ -50,7 +50,7 @@ class DbmS4 < Dbm
   end
 
   def get_authorization_token
-    api_key = rdf_repo.dbm.first_enabled_key
+    api_key = self.first_enabled_key
     basicToken = Base64.strict_encode64(api_key.key)
 
     return basicToken
