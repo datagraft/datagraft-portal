@@ -2,7 +2,8 @@
 
 (function(scope){
     var channel = 'datagraft-post-message';
-
+    var currentState;
+    var currentParams;
     function Grafterizer(transformationPath, htmlElement, origin) {
         this._stuffToDo = [];
         this._stuffToDoAtEveryConnection = [];
@@ -16,10 +17,8 @@
         this.connected = false;
         window.addEventListener('message', function(event) {
             if (event.origin !== origin) return;
-
             var data = event.data;
             if (!data || !data.channel || data.channel !== channel) return;
-
             if (data.message === 'ready') {
                 console.log("ready")
                _this.connected = true;
@@ -27,6 +26,13 @@
                _this._onReady();
             } else if (data.message === 'set-location') {
                 window.location = data.location;
+            } else if (data.message === 'get-state-and-params') {
+                _this.sendMessage({
+                    message: 'get-state-and-params',
+                    state: _this.currentState,
+                    toParams: _this.currentParams,
+                    channel: channel
+                }, false);
             }
         }, false);
     };
@@ -77,6 +83,8 @@
     };
 
     Grafterizer.prototype.go = function(state, toParams, everyConnection) {
+        this.currentState = state;
+        this.currentParams = toParams;
         return this.sendMessage({
             message: 'state.go',
             state: state,

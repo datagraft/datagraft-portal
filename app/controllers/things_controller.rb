@@ -48,6 +48,7 @@ class ThingsController < ApplicationController
   # GET /:username/:resource/:id
   def show
     authorize! :read, @thing
+    @is_owned = current_user === @thing.user
   end
 
   # GET /:username/:resource/:id/edit

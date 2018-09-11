@@ -17,3 +17,5 @@ json.set! 'dcat:keyword' do
   kwd_list = @thing.keywords.collect {|kwd| kwd.name}
   json.array! kwd_list
 end
+
+json.set! 'is_owned', @is_owned
