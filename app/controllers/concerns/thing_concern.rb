@@ -34,4 +34,19 @@ module ThingConcern
 
     instance_variable_set("@"+virtual_resource_name(true), @thing)
   end
+
+  def set_user
+    # If the user lists her own resources
+    if user_signed_in? && (current_user.username == params[:username] || params[:username] == 'myassets')
+      @user = current_user
+    # If she is just browsing other people's pages
+    else
+      raise CanCan::AccessDenied.new("Not authorized!") if params[:username] == 'myassets'
+      if params[:username] == 'public_assets'
+        @user = nil
+      else
+        @user = User.find_by_username(params[:username]) or not_found
+      end
+    end
+  end
 end

@@ -52,50 +52,6 @@ module ThingHelper
   end
 
 
-  def update_asset_version_metric(asset_type_string)
-    begin
-      num_assets = 0
-      case asset_type_string
-      when "DataPage"
-        Thing.includes(:versions).where(type: "DataPage").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "Transformation"
-        Thing.includes(:versions).where(type: "Transformation").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "Query"
-        Thing.includes(:versions).where(type: "Query").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "SparqlEndpoint"
-        Thing.includes(:versions).where(type: "SparqlEndpoint").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "ArangoDb"
-        Thing.includes(:versions).where(type: "ArangoDb").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "Filestore"
-        Thing.includes(:versions).where(type: "Filestore").each do |thing|
-          num_assets += thing.versions.count
-        end
-      when "DataDistribution"
-        Thing.includes(:versions).where(type: "DataDistribution").each do |thing|
-          num_assets += thing.versions.count
-        end
-      else
-        throw "unknown asset type"
-      end
-      num_versions = Prometheus::Client.registry.get(:num_versions)
-      num_versions.set({asset_type: asset_type_string}, num_assets)
-    rescue => e
-      puts 'Error updating num_versions metric: '
-      puts e.message
-      puts e.backtrace
-    end
-  end
-
   def reset_num_assets_public_private(thing)
     # Get the num_assets metric
     num_assets = Prometheus::Client.registry.get(:num_assets)

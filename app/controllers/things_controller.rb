@@ -11,6 +11,9 @@ class ThingsController < ApplicationController
     :show_configuration, :edit_configuration, :delete_configuration, :update_partial
     ]
 
+  # TODO - should this be done for all actions?
+  before_action :set_user, only: [:create]
+
   # GET /:username/:resource
   def index
     # If the user lists her own resources

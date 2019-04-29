@@ -32,7 +32,6 @@ class Thing < ApplicationRecord
   def update_asset_metrics_destroy
     begin
       reset_num_assets(self, -1)
-      update_asset_version_metric(self.type)
     rescue => e
       puts 'Error decrementing num_assets metric'
       puts e.message
@@ -44,7 +43,6 @@ class Thing < ApplicationRecord
   def update_asset_metric
     begin
       reset_num_assets(self, 0)
-      update_asset_version_metric(self.type)
     rescue => e
       puts 'Error incrementing num_assets metric'
       puts e.message
