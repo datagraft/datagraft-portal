@@ -3,21 +3,8 @@ require 'rest-client'
 
 class Transformation < Thing
   extend FriendlyId
-  # friendly_id :name, :use => [:history, :scoped], :scope => :user
   friendly_id :name, :use => [:history, :scoped], :scope => [:user, :type]
-  # friendly_id :name, :use => :history
-
   attachment :file
-
-  #  def new_graftwerk_connection
-  #    Faraday.new(:url => Rails.configuration.graftwerk['publicPath']) do |faraday|
-  #      faraday.request :multipart
-  #
-  #      faraday.response :logger                  # log requests to STDOUT
-  ##      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
-  #      faraday.adapter :net_http
-  #    end
-  #  end
 
   def transform (data_file, transform_type)
     temp_data = data_file.download

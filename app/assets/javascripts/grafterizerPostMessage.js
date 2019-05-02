@@ -26,6 +26,8 @@
                _this._onReady();
             } else if (data.message === 'set-location') {
                 window.location = data.location;
+            } else if (data.message === 'set-location-no-redirect') {
+                window.history.pushState(data.state, data.title ? data.title : document.title, data.location);
             } else if (data.message === 'get-state-and-params') {
                 _this.sendMessage({
                     message: 'get-state-and-params',
