@@ -12,6 +12,7 @@ json.set! 'dct:title', @thing.name
 json.set! 'dct:description', @thing.description
 json.set! 'dct:issued', @thing.created_at
 json.set! 'dct:modified', @thing.updated_at
+json.internal_id @thing.id
 
 json.set! 'dcat:keyword' do
   kwd_list = @thing.keywords.collect {|kwd| kwd.name}
