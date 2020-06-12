@@ -68,8 +68,8 @@ module ThingHelper
 
     # Set the number of public and private things of this type for the owner
     if !num_assets.nil?
-      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'public'}, number_public_things)
-      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, number_private_things)
+      num_assets.set(number_public_things, labels: {asset_type: thing.type, owner: thing.user.username, access_permission: 'public'})
+      num_assets.set(number_private_things, labels: {asset_type: thing.type, owner: thing.user.username, access_permission: 'private'}, )
     end
   end
 
@@ -88,7 +88,7 @@ module ThingHelper
         number_things = Thing.where(:user => thing.user, :type => thing.type, :public => thing.public).count
       end
 
-      num_assets.set({asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'}, number_things + change)
+      num_assets.set(number_things + change, labels: {asset_type: thing.type, owner: thing.user.username, access_permission: thing.public ? 'public' : 'private'})
 
 
 
@@ -125,10 +125,10 @@ module ThingHelper
   def increment_forks_metric(thing)
     begin
       num_forks = Prometheus::Client.registry.get(:num_forks)
-      curr_num_forks = num_forks.get({asset_type: self.type})
+      curr_num_forks = num_forks.get(labels: {asset_type: self.type})
 
       curr_num_forks = 0 if !curr_num_forks
-      num_forks.set({asset_type: self.type}, curr_num_forks + 1)
+      num_forks.set(curr_num_forks + 1, labels: {asset_type: self.type})
     rescue => e
       puts 'Error decrementing num_forks metric'
       puts e.message
@@ -139,16 +139,16 @@ module ThingHelper
   # should we call this at all?
   def decrement_forks_metric(thing)
     num_forks = Prometheus::Client.registry.get(:num_forks)
-    curr_num_forks = num_forks.get({asset_type: self.type})
-    num_forks.set({asset_type: self.type}, curr_num_forks - 1)
+    curr_num_forks = num_forks.get(labels: {asset_type: self.type})
+    num_forks.set(curr_num_forks - 1, labels: {asset_type: self.type})
   end
 
   def increment_query_execution_metric(query)
     num_query_executions = Prometheus::Client.registry.get(:num_query_executions)
     if(!query.slug)
-      num_query_executions.increment({ query_slug: 'Sparql / Arango querying panel', query_type: 'unknown' })
+      num_query_executions.increment(labels: { query_slug: 'Sparql / Arango querying panel', query_type: 'unknown' })
     else
-      num_query_executions.increment({ query_slug: query.slug, query_type: query.query_type })
+      num_query_executions.increment(labels: { query_slug: query.slug, query_type: query.query_type })
     end
 
   end
