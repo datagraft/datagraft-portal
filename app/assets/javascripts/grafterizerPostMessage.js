@@ -53,6 +53,7 @@
     };
 
     Grafterizer.prototype._onReady = function() {
+        this.hideFooter();
         // this.setAuthorization(this._savedAuthorization);
         for (a = this._stuffToDoAtEveryConnection, i = 0, l = a.length; i < l; ++i) {
             this.sendMessage(a[i]);

@@ -50,7 +50,6 @@ class DbmGraphdb < Dbm
   def get_authorization_token
     da = first_enabled_account_ignore_public
     basicToken = Base64.strict_encode64(da.name + ':' + da.password)
-
     return basicToken
   end
 
@@ -62,6 +61,13 @@ class DbmGraphdb < Dbm
     url = rdf_repo.dbm.endpoint + '/rest/repositories'
     basicToken = self.get_authorization_token
     
+    type = case self.db_plan
+    when 'Free' then
+      'free'
+    else
+      'worker'
+    end
+
     request = RestClient::Request.new(
       :method => :put,
       :url => url,
@@ -72,7 +78,7 @@ class DbmGraphdb < Dbm
         'params' => {},
         'sesameType' => 'openrdf:SystemRepository',
         'title' => '',
-        'type' => 'worker'
+        'type' => type
       }.to_json,
       :headers => {
         'Authorization' => 'Basic ' + basicToken,

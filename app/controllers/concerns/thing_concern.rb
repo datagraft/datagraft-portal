@@ -26,9 +26,8 @@ module ThingConcern
       user = User.find_by_username(params[:username]) or not_found
     end
     @thing = user.send(virtual_resources_name).friendly.find(params[:id])
-
+    @latest_thing = @thing
     if params[:version_at]
-      @latest_thing = @thing
       @thing = @thing.paper_trail.version_at(params[:version_at]) or not_found
     end
 
